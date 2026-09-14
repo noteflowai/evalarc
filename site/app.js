@@ -44,7 +44,9 @@ async function loadSuite() {
   $("suite-workspace").hidden = false;
 }
 loadSuite().catch(() => {
-  $("suite-status").textContent = "Suite evidence could not be loaded. Open the standalone suite report below.";
+  $("suite-status").textContent = "Suite evidence could not be loaded. ";
+  const link = document.createElement("a"); link.href = "suite/index.html"; link.textContent = "Open the standalone suite report";
+  $("suite-status").append(link);
 });
 function chooseRepetition(name) {
   const record = repetitions[name];
