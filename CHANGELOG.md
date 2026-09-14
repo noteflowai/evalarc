@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0 — 2026-09-14
+
+- Add the robot-evidence-review task: attributed CUDA source data, coordinate/clock transformations, missing observations, Python/JavaScript references and six independent fault controls.
+- Separate trusted Docker startup readiness from candidate response timing. Keep startup and total-case bounds and distinguish environment failure from candidate failure.
+- Import Harbor results while independently grading candidate code; export recorded trials to ATIF 1.8. Native Harbor oracle/NOP checks and upstream ATIF validation accompany the examples.
+- Publish 27 actual Qwen3-8B trials with every candidate, MCP receipt and independent outcome. Add controlled skill-composition/output auditing and a Funes cross-model handoff pilot. These public development pilots do not establish skill or memory efficacy.
+- Add a non-networked, non-root agent workspace and bounded file/tool operations for reproducible model pilots.
+
+
 ## 0.8.0 · 2026-09-14 · Research preview
 
 - Verify whole suite handoffs from the original TOML, plan, every repetition and

@@ -88,6 +88,11 @@ Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平�
 需要全部任务通过时加 `--require-resolved`。
 [使用说明与校验范围](docs/verification.md)。
 
+## 0.9.0：有原始证据的研究场景
+
+[查看 27 次真实 GPU 技能评测](https://noteflowai.github.io/evalarc/skill-impact/)，并阅读[完整方法与限制](docs/research-pilots.md)。新增[实景 Blender 编辑](https://noteflowai.github.io/robot-reel/scene-lab/)与[官方 LIBERO-Plus 子集回放](https://noteflowai.github.io/robot-reel/libero-plus/)，把原始记录、技能交付与独立验收连接起来。失败尝试全部保留；不宣称技能提分、完整基准成绩或真机效果。
+
+
 ## 直接运行
 
 克隆仓库后，在独立 Python 环境中安装：

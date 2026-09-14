@@ -1,0 +1,59 @@
+{
+  "reason": "Separate Docker startup readiness from candidate response timing; regrade every frozen candidate. Original evaluations retained.",
+  "results": [
+    {
+      "trial": "01-none-17",
+      "score": 0.35,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "02-direct-17",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "03-mcp-17",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "04-direct-41",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "05-mcp-41",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "06-none-41",
+      "score": 0.35,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "07-mcp-97",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "08-none-97",
+      "score": 0.75,
+      "valid": true,
+      "resolved": false
+    },
+    {
+      "trial": "09-direct-97",
+      "score": 0.0,
+      "valid": true,
+      "resolved": false
+    }
+  ]
+}

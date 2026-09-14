@@ -23,6 +23,8 @@ def check(source: Path) -> dict:
     expected = tomllib.loads((source / "pyproject.toml").read_text())["project"]["version"]
     if version("evalarc") != expected:
         raise ValueError("installed version differs from the source")
+    if evalarc.__version__ != expected:
+        raise ValueError("runtime version differs from installed metadata")
     results = {}
     with tempfile.TemporaryDirectory(prefix="evalarc-handoff-") as temporary:
         folder = Path(temporary)
@@ -57,6 +59,29 @@ def check(source: Path) -> dict:
             if not result["verified"] or hashes() != before:
                 raise ValueError("verification failed or changed evidence")
             results[name] = result
+        for language in ("python", "javascript"):
+            target = folder / f"robot-{language}"
+            subprocess.run(
+                [
+                    entry,
+                    "init",
+                    str(target),
+                    "--task",
+                    "robot-evidence-review",
+                    "--reference",
+                    "--language",
+                    language,
+                ],
+                cwd=folder,
+                env=environment,
+                check=True,
+                capture_output=True,
+                timeout=30,
+            )
+            suffix = "py" if language == "python" else "js"
+            expected_bytes = (source / f"src/evalarc/assets/robot_reference.{suffix}").read_bytes()
+            if (target / f"main.{suffix}").read_bytes() != expected_bytes:
+                raise ValueError("installed robot task reference differs from source")
         run(folder / "repetition", 0, "--require-resolved")
         run(folder / "repetition-faulty", 1, "--require-resolved")
         suite = run(folder / "suite", 1, "--require-accepted")

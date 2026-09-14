@@ -1,0 +1,1396 @@
+{
+  "schema": "evalarc.skill-impact-site.v1",
+  "profiles": [
+    {
+      "id": "skill-impact-matched",
+      "title": "Task contract in a file",
+      "description": "Original two-tool discovery; contract read from TASK.md. Original Docker response clock.",
+      "experiment": {
+        "schema": "evalarc.skill-impact-experiment.v1",
+        "harness_files": {
+          "scripts/local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+          "scripts/record_skill_impact.py": "1566342ddc85f6d6af29dd3adfa0822d085be88f54845239ff26d6c75e344c2d",
+          "src/evalarc/agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+          "src/evalarc/robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88"
+        },
+        "conditions": [
+          "none",
+          "direct",
+          "mcp"
+        ],
+        "model_seeds": [
+          17,
+          41,
+          97
+        ],
+        "public_example_seed": 17,
+        "evaluation_seeds": [
+          41,
+          97
+        ],
+        "max_steps": 12,
+        "max_new_tokens_per_step": 4096,
+        "wall_seconds": 600,
+        "temperature": 0.2,
+        "trial_order": "rotate conditions within each seed",
+        "changes_since_development_pilot": "Accept absolute paths strictly inside /workspace as well as relative workspace paths.",
+        "results_policy": "Retain every scheduled condition and seed, including errors. No held-out or general efficacy claim.",
+        "comparison_design": "Same instruction skill and model-facing tool results in direct and MCP; no-skill has no skill tools."
+      },
+      "trials": [
+        {
+          "id": "01-none-17",
+          "condition": "none",
+          "seed": 17,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.35,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 8,
+          "completion_tokens": 2515,
+          "generation_and_tool_seconds": 119.38136616699921,
+          "trial_sha256": "ce5211e4d298c3c86effa979d89d87470161afa534d4d451de8d1daadb8b42d1",
+          "atif_sha256": "c50c8de6e4b9c673209002c93c3c172a5fdc21538dad790163d13b4f5f3b633c",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "3b2387cc01cc2fdfaea13e0578d076e92c11f5171774293c73d02786d0d83a52",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/01-none-17"
+        },
+        {
+          "id": "02-direct-17",
+          "condition": "direct",
+          "seed": 17,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 1625,
+          "generation_and_tool_seconds": 93.35674279299565,
+          "trial_sha256": "33690bfc16d7a2cc24aa64bafb26fe80143f3a49ed3df1fae9756c4793e9b8e9",
+          "atif_sha256": "2a3fd721fc32a807c3c140daae5025d6d95380fa0e8c4b882d92da7304042f11",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file"
+          ],
+          "path": "trials/skill-impact-matched/02-direct-17"
+        },
+        {
+          "id": "03-mcp-17",
+          "condition": "mcp",
+          "seed": 17,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 1625,
+          "generation_and_tool_seconds": 109.50064269499853,
+          "trial_sha256": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+          "atif_sha256": "9d2689879aad451ec6e7ef8be87cbfda5076439fe6409f53738c1304d48731a8",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file"
+          ],
+          "path": "trials/skill-impact-matched/03-mcp-17"
+        },
+        {
+          "id": "04-direct-41",
+          "condition": "direct",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 6,
+          "completion_tokens": 884,
+          "generation_and_tool_seconds": 41.90030654100701,
+          "trial_sha256": "561e739667eacc967e2296c70b0a92f7b732dfca288c39b90756cceccb0da1c7",
+          "atif_sha256": "cd51e61a525950f650bf31c389508850a8bd04f20c757253c4493f901f3c7939",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/04-direct-41"
+        },
+        {
+          "id": "05-mcp-41",
+          "condition": "mcp",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 6,
+          "completion_tokens": 884,
+          "generation_and_tool_seconds": 43.24930781801231,
+          "trial_sha256": "46044c8f2f9104dbf7c64ed51e9cabd3e60c6e261d4b93d9fa09906644e06cc5",
+          "atif_sha256": "1c83d202d760e8af8978465331188aa71dd7988bd34fd95764d45150a157cab1",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/05-mcp-41"
+        },
+        {
+          "id": "06-none-41",
+          "condition": "none",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.35,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1727,
+          "generation_and_tool_seconds": 81.77673964499263,
+          "trial_sha256": "d3e2dfa51378ef90f00cfb7e2e589ef8f7496b2121c922a98fc25369a73f52a9",
+          "atif_sha256": "294d7e1718e859e9dd7e684c47f225b1975cb8f0979d18126e08620bba710ee1",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "d3b1f914f3060d13974c9817a7b375c95b049452e849c706ceedc027a27ef77c",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/06-none-41"
+        },
+        {
+          "id": "07-mcp-97",
+          "condition": "mcp",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1323,
+          "generation_and_tool_seconds": 68.680973103008,
+          "trial_sha256": "a207febd9b52ece2596f7d58e7c8e995b04a852bb5d53c6625b10ceb6f588bbf",
+          "atif_sha256": "3192c773f9ee1e79684a062deae5414a306168a3443553c5c565afce27ad1089",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/07-mcp-97"
+        },
+        {
+          "id": "08-none-97",
+          "condition": "none",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.75,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1280,
+          "generation_and_tool_seconds": 65.4696885029989,
+          "trial_sha256": "a267a5987ddddea7a0ae816ecbf90752e2ac6d31b9c4f2d04d55519c365698be",
+          "atif_sha256": "f5d102bf6f23bda6af879ce9581fced446a7da0eb81db3c096aabc486873f483",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "0a6781a654bf98702b23173330806e9fa66962f7879ed60c55a612e399b0af8e",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/08-none-97"
+        },
+        {
+          "id": "09-direct-97",
+          "condition": "direct",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1323,
+          "generation_and_tool_seconds": 58.75220829099999,
+          "trial_sha256": "adcf116180b38925dbfe97497980cf867a90cc1ec32a392328bcaa84de2bb2f4",
+          "atif_sha256": "24095e183f30163e09b8d0cdc417779c342e2a8c6eb11f35bad2b5d1527051e3",
+          "prompt_sha256": "592b71af847b930cd9861dfa9d4d8082d74da1fae30465eca91aa1d8ee24443e",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-matched/09-direct-97"
+        }
+      ]
+    },
+    {
+      "id": "skill-impact-contract-inline",
+      "title": "Contract in the initial context",
+      "description": "Authoritative contract inline; Docker readiness separated from candidate response time.",
+      "experiment": {
+        "schema": "evalarc.skill-impact-experiment.v1",
+        "conditions": [
+          "none",
+          "direct",
+          "mcp"
+        ],
+        "model_seeds": [
+          17,
+          41,
+          97
+        ],
+        "task_context": "inline",
+        "evaluation_seeds": [
+          41,
+          97
+        ],
+        "public_example_seed": 17,
+        "max_steps": 12,
+        "max_new_tokens_per_step": 4096,
+        "wall_seconds": 600,
+        "temperature": 0.2,
+        "harness_files": {
+          "record_skill_impact.py": "69748516335980314d70b9fd50f8b2bc7b05ffb531f6b5de9a2f50888d5623fc",
+          "local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+          "agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+          "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+          "robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88"
+        },
+        "results_policy": "Retain every scheduled trial, including failures and errors.",
+        "scope": "Public development pilot; no held-out or general efficacy claim."
+      },
+      "trials": [
+        {
+          "id": "01-none-17",
+          "condition": "none",
+          "seed": 17,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.875,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1443,
+          "generation_and_tool_seconds": 64.94244257500395,
+          "trial_sha256": "2f665fd5734bb89435224913d43b4a69d91d53495c33d5ba9c375d2c59710004",
+          "atif_sha256": "8211e2b1a26f9fd3fc98cfe52f4a208f20c63ea39d26f2c7cba844d31d4affb5",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-contract-inline/01-none-17"
+        },
+        {
+          "id": "02-direct-17",
+          "condition": "direct",
+          "seed": 17,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 261,
+          "generation_and_tool_seconds": 14.594351055988227,
+          "trial_sha256": "532337b4a3ffeca4b6dbc9117eb509884de0422c7c087d9626870c7d8aa67c33",
+          "atif_sha256": "8a16f685d12da3a3e6991212c5c2def8f696d4900527cd3ad73bd1fa05936f63",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills"
+          ],
+          "path": "trials/skill-impact-contract-inline/02-direct-17"
+        },
+        {
+          "id": "03-mcp-17",
+          "condition": "mcp",
+          "seed": 17,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 261,
+          "generation_and_tool_seconds": 14.023329962001299,
+          "trial_sha256": "e40bb0fbe16ea4d8e29d123b2764a399a1bc948c6514a7faf5641e58c0c68596",
+          "atif_sha256": "df1a489c72d53e07fd36c6ce6484c639ef44cbcf7006e87d837677ac768acdaa",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills"
+          ],
+          "path": "trials/skill-impact-contract-inline/03-mcp-17"
+        },
+        {
+          "id": "04-direct-41",
+          "condition": "direct",
+          "seed": 41,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 256,
+          "generation_and_tool_seconds": 12.978538796000066,
+          "trial_sha256": "0e31e29b0445667c16f4dbd6d8aa65086fdc5a0b7ce709af5977bc538a2c6b81",
+          "atif_sha256": "ca09b05ac25bc7d3a2900da24d0dd87a8ae238969d3aca09a1369d806a738e31",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills"
+          ],
+          "path": "trials/skill-impact-contract-inline/04-direct-41"
+        },
+        {
+          "id": "05-mcp-41",
+          "condition": "mcp",
+          "seed": 41,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 256,
+          "generation_and_tool_seconds": 13.387197877993458,
+          "trial_sha256": "e4d396d2cc86c631c3948d34a903d9c4844ed533904a448b7fc9a999771bc169",
+          "atif_sha256": "d5184355dd52faec8425946d5e6001524992078b569df2ae81b03837721587f8",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills"
+          ],
+          "path": "trials/skill-impact-contract-inline/05-mcp-41"
+        },
+        {
+          "id": "06-none-41",
+          "condition": "none",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.75,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1175,
+          "generation_and_tool_seconds": 58.2029755859985,
+          "trial_sha256": "0598a9bda0223d0ba9127822f226968b965b039fb1c1fb975698b36488b24e57",
+          "atif_sha256": "c5c13c191814f7cc3d0bf943cfb369f20ba0a722ac4929c50394df2197080fca",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "f255aa78d3a6d0f3fb5419b00940ec51ecafc24c558371cf4ad74287333027e6",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-contract-inline/06-none-41"
+        },
+        {
+          "id": "07-mcp-97",
+          "condition": "mcp",
+          "seed": 97,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.4,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 1372,
+          "generation_and_tool_seconds": 66.91155511600664,
+          "trial_sha256": "361d60c25198554bdc9a7e2bb2f71a9908c4cc71cc0116d4085bce326abec6be",
+          "atif_sha256": "bc0a63117b3a74f348bf9ce831dc97930a507f1767a14c1b6e25f4b9443de6f2",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command"
+          ],
+          "path": "trials/skill-impact-contract-inline/07-mcp-97"
+        },
+        {
+          "id": "08-none-97",
+          "condition": "none",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.875,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 8,
+          "completion_tokens": 2555,
+          "generation_and_tool_seconds": 104.44400848301302,
+          "trial_sha256": "04e4128524ec24c74bc7039f184b4d5c0683c5fbb726b5f69c6fcf2ba4555ad2",
+          "atif_sha256": "ca1b79101263668901b9e232c807f293548de97c523a9637c231454cb14e3066",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "a2726a8a85aa954e1c2bf858363f11c0226ad446464f4c544b7599dc6973e4a5",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-contract-inline/08-none-97"
+        },
+        {
+          "id": "09-direct-97",
+          "condition": "direct",
+          "seed": 97,
+          "workflow_status": "step_budget",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.4,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+              "bundle_sha256": "c1762cbd9855189df50d4e303dc7beeacedbb0498d59ef5b6314e79e5fe50532"
+            }
+          },
+          "steps": 12,
+          "completion_tokens": 1372,
+          "generation_and_tool_seconds": 51.3760663849971,
+          "trial_sha256": "842639c6152bd0f12e37cbd8209e303e09144e48799f7ae7e444c953b89fd9a0",
+          "atif_sha256": "1583e95257009e5fc439d0d5f5e4f53dd1546f445fafe4394b98ad2183275061",
+          "prompt_sha256": "031c2870b9f4e7b2a53dd0d88a2b96214329be41fe9583050dafdb60ef091e50",
+          "tools_sha256": "fbb58da2847a364505c57addec3965a8db474ce3d5a526bb8d02beea9cfc4472",
+          "candidate_sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+          "error": null,
+          "tool_sequence": [
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "find_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command"
+          ],
+          "path": "trials/skill-impact-contract-inline/09-direct-97"
+        }
+      ]
+    },
+    {
+      "id": "skill-impact-catalog-fallback",
+      "title": "Bounded discovery fallback",
+      "description": "Inline contract, clearer description vocabulary, and a list_skills fallback after search misses.",
+      "experiment": {
+        "schema": "evalarc.skill-impact-experiment.v1",
+        "conditions": [
+          "none",
+          "direct",
+          "mcp"
+        ],
+        "model_seeds": [
+          17,
+          41,
+          97
+        ],
+        "task_context": "inline",
+        "evaluation_seeds": [
+          41,
+          97
+        ],
+        "public_example_seed": 17,
+        "max_steps": 12,
+        "max_new_tokens_per_step": 4096,
+        "wall_seconds": 600,
+        "temperature": 0.2,
+        "harness_files": {
+          "agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+          "bridge.mjs": "adaa2b517a367c063eeda25a32a47f232642b0a254718692581cc2a816e81960",
+          "local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+          "record_skill_impact.py": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+          "robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88",
+          "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+          "skill-library/bundle-cli-DuVlt2Sp.js": "a0f6fca6dea92ecc29951a8f54c3599505d88cd8c7f0ebdefe1df87af503e248",
+          "skill-library/check-files-CjcQukSA.js": "ce208980f02d382389c99931b05b8c7650d814744d0eae8d042e120a22fad5cf",
+          "skill-library/cli.js": "5d66c0b484e9e1f4f39ffa9c719549f7b55fd561b94dce397fab6d257092247d",
+          "skill-library/client.js": "57dcc5e93b93cbb61c75a3a3d8e00f618075d63c93200700bf0cc05980827c8f",
+          "skill-library/index.js": "452b1245cbe664856ae8d581aea6dfcda53bc83fb00cc7424bf65008d3a52074",
+          "skill-library/mcp.js": "75c4e0c01def3977a77c4dd6333a2de73c656eb0e6e56c92e87db546f527ec33",
+          "skill-library/provider-D_asoyBt.js": "bab768e469b221cc41795177f953a6288818093421eaf5eaa92d106045379b37",
+          "skill-library/search-DUE-pmE0.js": "da08a467e9146c7152d386a5751797db2a8ee9cd04649447c1548c150805cb58",
+          "skill-library/skill-bundle-rgNKCmVS.js": "2e3bbc99b67b78db87d4055c6b9ec39747397b40d9917eb4f176e9b30c683a0b",
+          "skill-library/skill-check-Da47aHh6.js": "6304cc7dc53422d8013d3742dd3034ced633067a320e2a173958421235afa13e",
+          "skill-library/tools.js": "e10f6d9fb8a87622946c870f5409d8f66192d4aaf0ebb05ce22105c20ca872d8"
+        },
+        "results_policy": "Retain every scheduled trial, including failures and errors.",
+        "scope": "Public development pilot; no held-out or general efficacy claim."
+      },
+      "trials": [
+        {
+          "id": "01-none-17",
+          "condition": "none",
+          "seed": 17,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.875,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 8,
+          "completion_tokens": 2547,
+          "generation_and_tool_seconds": 104.87943160599389,
+          "trial_sha256": "6e4d50395792fff5030eb14c80985363e2a3078957b3af0719fbe5f31f92a6de",
+          "atif_sha256": "4baa80cc4e04d31d9c0d28c95172ebde521605a402ada37be31a3876905b6d85",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "b6b47822ea6128d83f64618ebac02bf10653342bd7be20ee23c907a2953f0051",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/01-none-17"
+        },
+        {
+          "id": "02-direct-17",
+          "condition": "direct",
+          "seed": 17,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1671,
+          "generation_and_tool_seconds": 67.5657305860077,
+          "trial_sha256": "f5716d6e09e99528e79161ef920ea8732b2f47caafac13e4921d4b9377fe09d9",
+          "atif_sha256": "ec8b1ec7d0ef733c324f1a9bde1daee761d2d10320982f916a90a2c38f9e03d7",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/02-direct-17"
+        },
+        {
+          "id": "03-mcp-17",
+          "condition": "mcp",
+          "seed": 17,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1671,
+          "generation_and_tool_seconds": 66.32322139300231,
+          "trial_sha256": "b5690d03f9b9d3df02edadbe13d2b34ab6868b7b6f64cf9fc4713b01a42773e1",
+          "atif_sha256": "450e293c4f1e8c254e2acceac1ecad49aa8663e8452543a73e61ac0f460be97f",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/03-mcp-17"
+        },
+        {
+          "id": "04-direct-41",
+          "condition": "direct",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1549,
+          "generation_and_tool_seconds": 76.03709779400378,
+          "trial_sha256": "bf9fece99810a8038f1733b8dcd25d1deaa8a39178126649b04b9a50b9643bf3",
+          "atif_sha256": "0bd39ce21dd753d7ba43c1eb19ab656eabce94e4e546c3599d0f23e2cce32a2b",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/04-direct-41"
+        },
+        {
+          "id": "05-mcp-41",
+          "condition": "mcp",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 7,
+          "completion_tokens": 1549,
+          "generation_and_tool_seconds": 77.40346332298941,
+          "trial_sha256": "9207c8572e55daba31d460d6453d68d827cae7474e10887e06f8b29c69faeccb",
+          "atif_sha256": "72749e7cefa1dc4d2758efd6b2979c7efb31186de3626cd5e7838a411455dfe3",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "read_file",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/05-mcp-41"
+        },
+        {
+          "id": "06-none-41",
+          "condition": "none",
+          "seed": 41,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": true,
+            "score": 1.0,
+            "status": "passed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1477,
+          "generation_and_tool_seconds": 84.67361476199585,
+          "trial_sha256": "aebb9ee28bdfbb137a72431533b5365156d908dc5222f5f1ee66801f7dd284a5",
+          "atif_sha256": "8ecceb6ee1a1cebb91c22e51ebc747977510113262f70bf4660e9a996c0d44b3",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "95f522ab806fc4ede505e8cf4566a62f75ef28122ee389ad3820fdaa44123543",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/06-none-41"
+        },
+        {
+          "id": "07-mcp-97",
+          "condition": "mcp",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 8,
+          "completion_tokens": 2735,
+          "generation_and_tool_seconds": 127.4044238350034,
+          "trial_sha256": "cb763fb0195f16f2a039bf2fbf3feac74143a3b7f0bc2ef080d08eb1fbe00a9b",
+          "atif_sha256": "eef73b226c4530986b45b3baa4df9d360472721e661cac57d9071fd9d59261ca",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/07-mcp-97"
+        },
+        {
+          "id": "08-none-97",
+          "condition": "none",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": true,
+            "score": 1.0,
+            "status": "passed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 0,
+          "skill_pins": {},
+          "steps": 6,
+          "completion_tokens": 1474,
+          "generation_and_tool_seconds": 68.8226316460059,
+          "trial_sha256": "371af3101c43acef2e45bbf58f60a6472c5e8cdfdd189cf89ce946f5e6108bbf",
+          "atif_sha256": "515e249dff8fd6d1901faf7a7930ab8683a935c8d65c01580d74bc4486830acf",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "b3616b9a80d3fd93656018664f29416742ef84907830297caf6f0ed2b1b867ef",
+          "candidate_sha256": "e27879b01795a5eec886da3797e0e1eaa3c865487381d76f1e07ef86784c3367",
+          "error": null,
+          "tool_sequence": [
+            "read_file",
+            "read_file",
+            "read_file",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/08-none-97"
+        },
+        {
+          "id": "09-direct-97",
+          "condition": "direct",
+          "seed": 97,
+          "workflow_status": "finished",
+          "evaluation": {
+            "valid": true,
+            "resolved": false,
+            "score": 0.0,
+            "status": "failed"
+          },
+          "model": {
+            "model": "Qwen/Qwen3-8B",
+            "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+            "device": "NVIDIA L40S",
+            "dtype": "bfloat16",
+            "torch": "2.11.0+cu130",
+            "transformers": "5.5.4",
+            "thinking_enabled": false
+          },
+          "skill_loads": 1,
+          "skill_pins": {
+            "robot-recording-review": {
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+              "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+            }
+          },
+          "steps": 8,
+          "completion_tokens": 2735,
+          "generation_and_tool_seconds": 146.65618048900797,
+          "trial_sha256": "9d77d8a5b00c89cafbaf98453cf684fae4b3272c473709f8f95d270794585f7c",
+          "atif_sha256": "71bae983e9abbd413fb1a2299c9570625a1239bfaeb9591142d3bf3a5a9c0a66",
+          "prompt_sha256": "956022eef38093c66d2019f3517bd1049e2b5abb01c932f9621969cd4c677f56",
+          "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+          "candidate_sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+          "error": null,
+          "tool_sequence": [
+            "list_skills",
+            "open_skill",
+            "read_file",
+            "write_file",
+            "run_command",
+            "write_file",
+            "run_command",
+            "finish"
+          ],
+          "path": "trials/skill-impact-catalog-fallback/09-direct-97"
+        }
+      ]
+    }
+  ],
+  "scope": "Three successive public engineering profiles, nine trials each. Prompts and discovery differ across profiles. Do not pool them into a single efficacy estimate or attribute differences solely to one change. No held-out benchmark claim."
+}

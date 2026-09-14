@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        task: ["durable-kv", "support-routing"]
+        task: ["durable-kv", "support-routing", "robot-evidence-review"]
         language: ["python", "javascript"]
         include:
           - language: python

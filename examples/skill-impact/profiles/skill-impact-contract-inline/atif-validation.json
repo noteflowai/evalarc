@@ -1,0 +1,50 @@
+{
+  "validator": "harbor 0.23.0 Trajectory",
+  "trials": [
+    {
+      "trial": "01-none-17",
+      "atif_sha256": "8211e2b1a26f9fd3fc98cfe52f4a208f20c63ea39d26f2c7cba844d31d4affb5",
+      "valid": true
+    },
+    {
+      "trial": "02-direct-17",
+      "atif_sha256": "8a16f685d12da3a3e6991212c5c2def8f696d4900527cd3ad73bd1fa05936f63",
+      "valid": true
+    },
+    {
+      "trial": "03-mcp-17",
+      "atif_sha256": "df1a489c72d53e07fd36c6ce6484c639ef44cbcf7006e87d837677ac768acdaa",
+      "valid": true
+    },
+    {
+      "trial": "04-direct-41",
+      "atif_sha256": "ca09b05ac25bc7d3a2900da24d0dd87a8ae238969d3aca09a1369d806a738e31",
+      "valid": true
+    },
+    {
+      "trial": "05-mcp-41",
+      "atif_sha256": "d5184355dd52faec8425946d5e6001524992078b569df2ae81b03837721587f8",
+      "valid": true
+    },
+    {
+      "trial": "06-none-41",
+      "atif_sha256": "c5c13c191814f7cc3d0bf943cfb369f20ba0a722ac4929c50394df2197080fca",
+      "valid": true
+    },
+    {
+      "trial": "07-mcp-97",
+      "atif_sha256": "bc0a63117b3a74f348bf9ce831dc97930a507f1767a14c1b6e25f4b9443de6f2",
+      "valid": true
+    },
+    {
+      "trial": "08-none-97",
+      "atif_sha256": "ca1b79101263668901b9e232c807f293548de97c523a9637c231454cb14e3066",
+      "valid": true
+    },
+    {
+      "trial": "09-direct-97",
+      "atif_sha256": "1583e95257009e5fc439d0d5f5e4f53dd1546f445fafe4394b98ad2183275061",
+      "valid": true
+    }
+  ]
+}

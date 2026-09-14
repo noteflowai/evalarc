@@ -1,0 +1,32 @@
+{
+  "schema": "evalarc.skill-impact-experiment.v1",
+  "conditions": [
+    "none",
+    "direct",
+    "mcp"
+  ],
+  "model_seeds": [
+    17,
+    41,
+    97
+  ],
+  "task_context": "inline",
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "public_example_seed": 17,
+  "max_steps": 12,
+  "max_new_tokens_per_step": 4096,
+  "wall_seconds": 600,
+  "temperature": 0.2,
+  "harness_files": {
+    "record_skill_impact.py": "69748516335980314d70b9fd50f8b2bc7b05ffb531f6b5de9a2f50888d5623fc",
+    "local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+    "agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+    "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+    "robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88"
+  },
+  "results_policy": "Retain every scheduled trial, including failures and errors.",
+  "scope": "Public development pilot; no held-out or general efficacy claim."
+}

@@ -1,0 +1,489 @@
+{
+  "schema": "evalarc.skill-impact-site.v1",
+  "files": {
+    "METHODS.md": {
+      "sha256": "3ef572c799aa424407f09f47e8954c34cfa550fd0c03d7e547211be7fcf5e0cf",
+      "bytes": 3327
+    },
+    "ROBOT_DATA_LICENSE.txt": {
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    "ROBOT_DATA_NOTICE.md": {
+      "sha256": "cd9081380cd230008c7e96f4092272195055e3e4500817d3bfe105280359f0a7",
+      "bytes": 917
+    },
+    "ROBOT_TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "app.js": {
+      "sha256": "4f72654da43cdbf44b048c82bc16d8ead7d8c3050286e466743d23056d60fd4e",
+      "bytes": 5522
+    },
+    "index.html": {
+      "sha256": "6253692b9d736babbd95599fbf3ac4a0212ed7c6676e690bf214adae1c962d8e",
+      "bytes": 7456
+    },
+    "lab.json": {
+      "sha256": "2b1c8dc7cda172b901be79c93f49f3c79743c031c296532575989cfed0997d80",
+      "bytes": 54519
+    },
+    "profiles/skill-impact-catalog-fallback/atif-validation.json": {
+      "sha256": "4a3b89219116ccb1ed4942d1d86b53c4cb68b46bbb12c651eb8b66704d5c2a5a",
+      "bytes": 1426
+    },
+    "profiles/skill-impact-catalog-fallback/experiment.json": {
+      "sha256": "0525de8fb77deed6617984d614906dc28a2c61f66f0970739c81809a8b9af16f",
+      "bytes": 2251
+    },
+    "profiles/skill-impact-contract-inline/atif-validation.json": {
+      "sha256": "a43d99f77e6e1671729e4cc5c050391b0a3798ff8a2fc50723964a29848902f5",
+      "bytes": 1426
+    },
+    "profiles/skill-impact-contract-inline/experiment.json": {
+      "sha256": "5cd35db85d425634f1273eda8a331a47298ded2e8b6b4f2be6ba8c64d23f27c6",
+      "bytes": 1008
+    },
+    "profiles/skill-impact-matched/atif-validation.json": {
+      "sha256": "9e43b8a2c234fd8bd147cb227516bb08451b78e8711dc32920fcb5129fa8659a",
+      "bytes": 2150
+    },
+    "profiles/skill-impact-matched/experiment.json": {
+      "sha256": "f2b8776c2533ccf4951a902516e06e3db3d521eb25990f7d44adb63696ee47c1",
+      "bytes": 1203
+    },
+    "trials/skill-impact-catalog-fallback/01-none-17/evaluation.json": {
+      "sha256": "7f6a0af88792cd23194a59f0f2e5b7b07ace2583974c0d72bcc8134f1c4bcc9e",
+      "bytes": 234708
+    },
+    "trials/skill-impact-catalog-fallback/01-none-17/main.py": {
+      "sha256": "b6b47822ea6128d83f64618ebac02bf10653342bd7be20ee23c907a2953f0051",
+      "bytes": 4142
+    },
+    "trials/skill-impact-catalog-fallback/01-none-17/trajectory.atif.json": {
+      "sha256": "4baa80cc4e04d31d9c0d28c95172ebde521605a402ada37be31a3876905b6d85",
+      "bytes": 44958
+    },
+    "trials/skill-impact-catalog-fallback/01-none-17/trial.json": {
+      "sha256": "6e4d50395792fff5030eb14c80985363e2a3078957b3af0719fbe5f31f92a6de",
+      "bytes": 72304
+    },
+    "trials/skill-impact-catalog-fallback/02-direct-17/evaluation.json": {
+      "sha256": "f97e50deee112b232f8490a6dc3d2c70a49da2cbeb168ecf75fc3a47dee407de",
+      "bytes": 229965
+    },
+    "trials/skill-impact-catalog-fallback/02-direct-17/main.py": {
+      "sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+      "bytes": 5580
+    },
+    "trials/skill-impact-catalog-fallback/02-direct-17/trajectory.atif.json": {
+      "sha256": "ec8b1ec7d0ef733c324f1a9bde1daee761d2d10320982f916a90a2c38f9e03d7",
+      "bytes": 46377
+    },
+    "trials/skill-impact-catalog-fallback/02-direct-17/trial.json": {
+      "sha256": "f5716d6e09e99528e79161ef920ea8732b2f47caafac13e4921d4b9377fe09d9",
+      "bytes": 74091
+    },
+    "trials/skill-impact-catalog-fallback/03-mcp-17/evaluation.json": {
+      "sha256": "43863dd9d2ded17118932d43b7ac13bc4f4d2bff35027e9d2276a3f8a7083e6e",
+      "bytes": 229964
+    },
+    "trials/skill-impact-catalog-fallback/03-mcp-17/main.py": {
+      "sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+      "bytes": 5580
+    },
+    "trials/skill-impact-catalog-fallback/03-mcp-17/trajectory.atif.json": {
+      "sha256": "450e293c4f1e8c254e2acceac1ecad49aa8663e8452543a73e61ac0f460be97f",
+      "bytes": 49421
+    },
+    "trials/skill-impact-catalog-fallback/03-mcp-17/trial.json": {
+      "sha256": "b5690d03f9b9d3df02edadbe13d2b34ab6868b7b6f64cf9fc4713b01a42773e1",
+      "bytes": 76941
+    },
+    "trials/skill-impact-catalog-fallback/04-direct-41/evaluation.json": {
+      "sha256": "eacb59f7b24c9f0e1a82993874616584d9d2108c4cc49029bcb507e4ee31a038",
+      "bytes": 229965
+    },
+    "trials/skill-impact-catalog-fallback/04-direct-41/main.py": {
+      "sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+      "bytes": 5022
+    },
+    "trials/skill-impact-catalog-fallback/04-direct-41/trajectory.atif.json": {
+      "sha256": "0bd39ce21dd753d7ba43c1eb19ab656eabce94e4e546c3599d0f23e2cce32a2b",
+      "bytes": 44603
+    },
+    "trials/skill-impact-catalog-fallback/04-direct-41/trial.json": {
+      "sha256": "bf9fece99810a8038f1733b8dcd25d1deaa8a39178126649b04b9a50b9643bf3",
+      "bytes": 71163
+    },
+    "trials/skill-impact-catalog-fallback/05-mcp-41/evaluation.json": {
+      "sha256": "682893c911d82702b8ad3d95792ac8dcfe99aaab0d6c0f4806554e5329082748",
+      "bytes": 229963
+    },
+    "trials/skill-impact-catalog-fallback/05-mcp-41/main.py": {
+      "sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+      "bytes": 5022
+    },
+    "trials/skill-impact-catalog-fallback/05-mcp-41/trajectory.atif.json": {
+      "sha256": "72749e7cefa1dc4d2758efd6b2979c7efb31186de3626cd5e7838a411455dfe3",
+      "bytes": 47653
+    },
+    "trials/skill-impact-catalog-fallback/05-mcp-41/trial.json": {
+      "sha256": "9207c8572e55daba31d460d6453d68d827cae7474e10887e06f8b29c69faeccb",
+      "bytes": 74018
+    },
+    "trials/skill-impact-catalog-fallback/06-none-41/evaluation.json": {
+      "sha256": "57391b4cf0f0df22bf1ca57372b89113a6b8b44be0330c67b5747cad55a7bc28",
+      "bytes": 234704
+    },
+    "trials/skill-impact-catalog-fallback/06-none-41/main.py": {
+      "sha256": "95f522ab806fc4ede505e8cf4566a62f75ef28122ee389ad3820fdaa44123543",
+      "bytes": 4638
+    },
+    "trials/skill-impact-catalog-fallback/06-none-41/trajectory.atif.json": {
+      "sha256": "8ecceb6ee1a1cebb91c22e51ebc747977510113262f70bf4660e9a996c0d44b3",
+      "bytes": 34918
+    },
+    "trials/skill-impact-catalog-fallback/06-none-41/trial.json": {
+      "sha256": "aebb9ee28bdfbb137a72431533b5365156d908dc5222f5f1ee66801f7dd284a5",
+      "bytes": 57125
+    },
+    "trials/skill-impact-catalog-fallback/07-mcp-97/evaluation.json": {
+      "sha256": "1671d82f6cf005c494c57d7801d54dfaa6663fc84e2e7a73e16fed9d2d63a9a8",
+      "bytes": 229962
+    },
+    "trials/skill-impact-catalog-fallback/07-mcp-97/main.py": {
+      "sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+      "bytes": 5315
+    },
+    "trials/skill-impact-catalog-fallback/07-mcp-97/trajectory.atif.json": {
+      "sha256": "eef73b226c4530986b45b3baa4df9d360472721e661cac57d9071fd9d59261ca",
+      "bytes": 56175
+    },
+    "trials/skill-impact-catalog-fallback/07-mcp-97/trial.json": {
+      "sha256": "cb763fb0195f16f2a039bf2fbf3feac74143a3b7f0bc2ef080d08eb1fbe00a9b",
+      "bytes": 84672
+    },
+    "trials/skill-impact-catalog-fallback/08-none-97/evaluation.json": {
+      "sha256": "1132cbd4b6c7c32e656aaaac426ad34ceabd497d7df0f2e77e6c669e31b0a838",
+      "bytes": 234702
+    },
+    "trials/skill-impact-catalog-fallback/08-none-97/main.py": {
+      "sha256": "e27879b01795a5eec886da3797e0e1eaa3c865487381d76f1e07ef86784c3367",
+      "bytes": 4634
+    },
+    "trials/skill-impact-catalog-fallback/08-none-97/trajectory.atif.json": {
+      "sha256": "515e249dff8fd6d1901faf7a7930ab8683a935c8d65c01580d74bc4486830acf",
+      "bytes": 34912
+    },
+    "trials/skill-impact-catalog-fallback/08-none-97/trial.json": {
+      "sha256": "371af3101c43acef2e45bbf58f60a6472c5e8cdfdd189cf89ce946f5e6108bbf",
+      "bytes": 57117
+    },
+    "trials/skill-impact-catalog-fallback/09-direct-97/evaluation.json": {
+      "sha256": "3b14be886c9c9cb700582ff04131d6094b1312dd69ac480a7ee0d8328df5038f",
+      "bytes": 229965
+    },
+    "trials/skill-impact-catalog-fallback/09-direct-97/main.py": {
+      "sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+      "bytes": 5315
+    },
+    "trials/skill-impact-catalog-fallback/09-direct-97/trajectory.atif.json": {
+      "sha256": "71bae983e9abbd413fb1a2299c9570625a1239bfaeb9591142d3bf3a5a9c0a66",
+      "bytes": 53129
+    },
+    "trials/skill-impact-catalog-fallback/09-direct-97/trial.json": {
+      "sha256": "9d77d8a5b00c89cafbaf98453cf684fae4b3272c473709f8f95d270794585f7c",
+      "bytes": 81822
+    },
+    "trials/skill-impact-contract-inline/01-none-17/evaluation.json": {
+      "sha256": "63bfbf303ff619d470cefb76eb33d242acde044eca39c11dee6c411887eb9f53",
+      "bytes": 234716
+    },
+    "trials/skill-impact-contract-inline/01-none-17/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "trials/skill-impact-contract-inline/01-none-17/trajectory.atif.json": {
+      "sha256": "8211e2b1a26f9fd3fc98cfe52f4a208f20c63ea39d26f2c7cba844d31d4affb5",
+      "bytes": 34634
+    },
+    "trials/skill-impact-contract-inline/01-none-17/trial.json": {
+      "sha256": "2f665fd5734bb89435224913d43b4a69d91d53495c33d5ba9c375d2c59710004",
+      "bytes": 56747
+    },
+    "trials/skill-impact-contract-inline/02-direct-17/evaluation.json": {
+      "sha256": "fe69c643ed00476e5cbe3831c9f654d28aa3e2184b55a14ff974bbec728002ba",
+      "bytes": 234004
+    },
+    "trials/skill-impact-contract-inline/02-direct-17/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "trials/skill-impact-contract-inline/02-direct-17/trajectory.atif.json": {
+      "sha256": "8a16f685d12da3a3e6991212c5c2def8f696d4900527cd3ad73bd1fa05936f63",
+      "bytes": 20821
+    },
+    "trials/skill-impact-contract-inline/02-direct-17/trial.json": {
+      "sha256": "532337b4a3ffeca4b6dbc9117eb509884de0422c7c087d9626870c7d8aa67c33",
+      "bytes": 25273
+    },
+    "trials/skill-impact-contract-inline/03-mcp-17/evaluation.json": {
+      "sha256": "0ca296648b9c678b1a9cc1f8edb802dd93ac96f22d3521763eb9b6667d822f57",
+      "bytes": 234004
+    },
+    "trials/skill-impact-contract-inline/03-mcp-17/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "trials/skill-impact-contract-inline/03-mcp-17/trajectory.atif.json": {
+      "sha256": "df1a489c72d53e07fd36c6ce6484c639ef44cbcf7006e87d837677ac768acdaa",
+      "bytes": 26729
+    },
+    "trials/skill-impact-contract-inline/03-mcp-17/trial.json": {
+      "sha256": "e40bb0fbe16ea4d8e29d123b2764a399a1bc948c6514a7faf5641e58c0c68596",
+      "bytes": 30029
+    },
+    "trials/skill-impact-contract-inline/04-direct-41/evaluation.json": {
+      "sha256": "4ee503b505bd9067b3b6f13b7719376d0282a928589063bd130c912aeb8dba2c",
+      "bytes": 234004
+    },
+    "trials/skill-impact-contract-inline/04-direct-41/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "trials/skill-impact-contract-inline/04-direct-41/trajectory.atif.json": {
+      "sha256": "ca09b05ac25bc7d3a2900da24d0dd87a8ae238969d3aca09a1369d806a738e31",
+      "bytes": 20779
+    },
+    "trials/skill-impact-contract-inline/04-direct-41/trial.json": {
+      "sha256": "0e31e29b0445667c16f4dbd6d8aa65086fdc5a0b7ce709af5977bc538a2c6b81",
+      "bytes": 25215
+    },
+    "trials/skill-impact-contract-inline/05-mcp-41/evaluation.json": {
+      "sha256": "0afe4a246412056e383c075bf86549e82b51a32f06f5a145ac6d2f2024259b21",
+      "bytes": 234002
+    },
+    "trials/skill-impact-contract-inline/05-mcp-41/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "trials/skill-impact-contract-inline/05-mcp-41/trajectory.atif.json": {
+      "sha256": "d5184355dd52faec8425946d5e6001524992078b569df2ae81b03837721587f8",
+      "bytes": 26666
+    },
+    "trials/skill-impact-contract-inline/05-mcp-41/trial.json": {
+      "sha256": "e4d396d2cc86c631c3948d34a903d9c4844ed533904a448b7fc9a999771bc169",
+      "bytes": 29950
+    },
+    "trials/skill-impact-contract-inline/06-none-41/evaluation.json": {
+      "sha256": "2d0d4733a42452076544534005a11f4184f675345bce6315999235bd1428dd14",
+      "bytes": 234690
+    },
+    "trials/skill-impact-contract-inline/06-none-41/main.py": {
+      "sha256": "f255aa78d3a6d0f3fb5419b00940ec51ecafc24c558371cf4ad74287333027e6",
+      "bytes": 3908
+    },
+    "trials/skill-impact-contract-inline/06-none-41/trajectory.atif.json": {
+      "sha256": "c5c13c191814f7cc3d0bf943cfb369f20ba0a722ac4929c50394df2197080fca",
+      "bytes": 33317
+    },
+    "trials/skill-impact-contract-inline/06-none-41/trial.json": {
+      "sha256": "0598a9bda0223d0ba9127822f226968b965b039fb1c1fb975698b36488b24e57",
+      "bytes": 54776
+    },
+    "trials/skill-impact-contract-inline/07-mcp-97/evaluation.json": {
+      "sha256": "c4f329e39f67faceb7aa60be52996695539776a24f6b9797b313d274472885a0",
+      "bytes": 234188
+    },
+    "trials/skill-impact-contract-inline/07-mcp-97/main.py": {
+      "sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+      "bytes": 3854
+    },
+    "trials/skill-impact-contract-inline/07-mcp-97/trajectory.atif.json": {
+      "sha256": "bc0a63117b3a74f348bf9ce831dc97930a507f1767a14c1b6e25f4b9443de6f2",
+      "bytes": 40200
+    },
+    "trials/skill-impact-contract-inline/07-mcp-97/trial.json": {
+      "sha256": "361d60c25198554bdc9a7e2bb2f71a9908c4cc71cc0116d4085bce326abec6be",
+      "bytes": 50972
+    },
+    "trials/skill-impact-contract-inline/08-none-97/evaluation.json": {
+      "sha256": "338d7ef88cc232dde088a6286be4a40896f57330459be8a42ad24449f5c7e901",
+      "bytes": 234707
+    },
+    "trials/skill-impact-contract-inline/08-none-97/main.py": {
+      "sha256": "a2726a8a85aa954e1c2bf858363f11c0226ad446464f4c544b7599dc6973e4a5",
+      "bytes": 4167
+    },
+    "trials/skill-impact-contract-inline/08-none-97/trajectory.atif.json": {
+      "sha256": "ca1b79101263668901b9e232c807f293548de97c523a9637c231454cb14e3066",
+      "bytes": 44980
+    },
+    "trials/skill-impact-contract-inline/08-none-97/trial.json": {
+      "sha256": "04e4128524ec24c74bc7039f184b4d5c0683c5fbb726b5f69c6fcf2ba4555ad2",
+      "bytes": 72385
+    },
+    "trials/skill-impact-contract-inline/09-direct-97/evaluation.json": {
+      "sha256": "4ba4c486566ae46bdf35e45937a4242741af9462248fef3fe8b7720cdb5d6efb",
+      "bytes": 234190
+    },
+    "trials/skill-impact-contract-inline/09-direct-97/main.py": {
+      "sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+      "bytes": 3854
+    },
+    "trials/skill-impact-contract-inline/09-direct-97/trajectory.atif.json": {
+      "sha256": "1583e95257009e5fc439d0d5f5e4f53dd1546f445fafe4394b98ad2183275061",
+      "bytes": 33724
+    },
+    "trials/skill-impact-contract-inline/09-direct-97/trial.json": {
+      "sha256": "842639c6152bd0f12e37cbd8209e303e09144e48799f7ae7e444c953b89fd9a0",
+      "bytes": 45362
+    },
+    "trials/skill-impact-matched/01-none-17/evaluation.json": {
+      "sha256": "58d0f32fcd8f8059a21a989534a26d0050c7bc2b54a40e8bf8630f716e36b151",
+      "bytes": 234500
+    },
+    "trials/skill-impact-matched/01-none-17/main.py": {
+      "sha256": "3b2387cc01cc2fdfaea13e0578d076e92c11f5171774293c73d02786d0d83a52",
+      "bytes": 4207
+    },
+    "trials/skill-impact-matched/01-none-17/trajectory.atif.json": {
+      "sha256": "c50c8de6e4b9c673209002c93c3c172a5fdc21538dad790163d13b4f5f3b633c",
+      "bytes": 42973
+    },
+    "trials/skill-impact-matched/01-none-17/trial.json": {
+      "sha256": "ce5211e4d298c3c86effa979d89d87470161afa534d4d451de8d1daadb8b42d1",
+      "bytes": 70606
+    },
+    "trials/skill-impact-matched/02-direct-17/evaluation.json": {
+      "sha256": "660b1a723055a304a6ff1f14196d8d92a2fd2c3ac40ca4a34ffdc2733ad27b12",
+      "bytes": 230839
+    },
+    "trials/skill-impact-matched/02-direct-17/main.py": {
+      "sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+      "bytes": 2217
+    },
+    "trials/skill-impact-matched/02-direct-17/trajectory.atif.json": {
+      "sha256": "2a3fd721fc32a807c3c140daae5025d6d95380fa0e8c4b882d92da7304042f11",
+      "bytes": 50537
+    },
+    "trials/skill-impact-matched/02-direct-17/trial.json": {
+      "sha256": "33690bfc16d7a2cc24aa64bafb26fe80143f3a49ed3df1fae9756c4793e9b8e9",
+      "bytes": 81452
+    },
+    "trials/skill-impact-matched/03-mcp-17/evaluation.json": {
+      "sha256": "ebdd9da72689af515014eff1beb80ea7dbce4f0d5c78edc24675ac1bae32a7ea",
+      "bytes": 230839
+    },
+    "trials/skill-impact-matched/03-mcp-17/main.py": {
+      "sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+      "bytes": 2217
+    },
+    "trials/skill-impact-matched/03-mcp-17/trajectory.atif.json": {
+      "sha256": "9d2689879aad451ec6e7ef8be87cbfda5076439fe6409f53738c1304d48731a8",
+      "bytes": 53576
+    },
+    "trials/skill-impact-matched/03-mcp-17/trial.json": {
+      "sha256": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+      "bytes": 84300
+    },
+    "trials/skill-impact-matched/04-direct-41/evaluation.json": {
+      "sha256": "a2b55b99ce755cf1606eb8d321ad721f7fbf2f6c358f809c17c36390297c4145",
+      "bytes": 230222
+    },
+    "trials/skill-impact-matched/04-direct-41/main.py": {
+      "sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+      "bytes": 3207
+    },
+    "trials/skill-impact-matched/04-direct-41/trajectory.atif.json": {
+      "sha256": "cd51e61a525950f650bf31c389508850a8bd04f20c757253c4493f901f3c7939",
+      "bytes": 20825
+    },
+    "trials/skill-impact-matched/04-direct-41/trial.json": {
+      "sha256": "561e739667eacc967e2296c70b0a92f7b732dfca288c39b90756cceccb0da1c7",
+      "bytes": 29771
+    },
+    "trials/skill-impact-matched/05-mcp-41/evaluation.json": {
+      "sha256": "a6f370751614b325cc8b696cb311d946ac0c10ca7ae7dacab0baa60fdde09e33",
+      "bytes": 230223
+    },
+    "trials/skill-impact-matched/05-mcp-41/main.py": {
+      "sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+      "bytes": 3207
+    },
+    "trials/skill-impact-matched/05-mcp-41/trajectory.atif.json": {
+      "sha256": "1c83d202d760e8af8978465331188aa71dd7988bd34fd95764d45150a157cab1",
+      "bytes": 23864
+    },
+    "trials/skill-impact-matched/05-mcp-41/trial.json": {
+      "sha256": "46044c8f2f9104dbf7c64ed51e9cabd3e60c6e261d4b93d9fa09906644e06cc5",
+      "bytes": 32618
+    },
+    "trials/skill-impact-matched/06-none-41/evaluation.json": {
+      "sha256": "b8c6398e7c0384cd55469a97a6499822568c7580e194898e90a8da9046f09c80",
+      "bytes": 234500
+    },
+    "trials/skill-impact-matched/06-none-41/main.py": {
+      "sha256": "d3b1f914f3060d13974c9817a7b375c95b049452e849c706ceedc027a27ef77c",
+      "bytes": 5250
+    },
+    "trials/skill-impact-matched/06-none-41/trajectory.atif.json": {
+      "sha256": "294d7e1718e859e9dd7e684c47f225b1975cb8f0979d18126e08620bba710ee1",
+      "bytes": 33635
+    },
+    "trials/skill-impact-matched/06-none-41/trial.json": {
+      "sha256": "d3e2dfa51378ef90f00cfb7e2e589ef8f7496b2121c922a98fc25369a73f52a9",
+      "bytes": 56474
+    },
+    "trials/skill-impact-matched/07-mcp-97/evaluation.json": {
+      "sha256": "af39474e4ad7588040de3f309339d41eab1045a3f728955344a8f9614995165e",
+      "bytes": 561046
+    },
+    "trials/skill-impact-matched/07-mcp-97/main.py": {
+      "sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+      "bytes": 4572
+    },
+    "trials/skill-impact-matched/07-mcp-97/trajectory.atif.json": {
+      "sha256": "3192c773f9ee1e79684a062deae5414a306168a3443553c5c565afce27ad1089",
+      "bytes": 54017
+    },
+    "trials/skill-impact-matched/07-mcp-97/trial.json": {
+      "sha256": "a207febd9b52ece2596f7d58e7c8e995b04a852bb5d53c6625b10ceb6f588bbf",
+      "bytes": 87862
+    },
+    "trials/skill-impact-matched/08-none-97/evaluation.json": {
+      "sha256": "98835b683fdd1d919b49f3b6c82453c2b2ac981f3577306f285f67e88ff13b91",
+      "bytes": 234624
+    },
+    "trials/skill-impact-matched/08-none-97/main.py": {
+      "sha256": "0a6781a654bf98702b23173330806e9fa66962f7879ed60c55a612e399b0af8e",
+      "bytes": 4232
+    },
+    "trials/skill-impact-matched/08-none-97/trajectory.atif.json": {
+      "sha256": "f5d102bf6f23bda6af879ce9581fced446a7da0eb81db3c096aabc486873f483",
+      "bytes": 31336
+    },
+    "trials/skill-impact-matched/08-none-97/trial.json": {
+      "sha256": "a267a5987ddddea7a0ae816ecbf90752e2ac6d31b9c4f2d04d55519c365698be",
+      "bytes": 53101
+    },
+    "trials/skill-impact-matched/09-direct-97/evaluation.json": {
+      "sha256": "8a0a00dad99cb7c2b069b36d7983ac28f5613150e88b28567e8631ef6e7b8045",
+      "bytes": 561045
+    },
+    "trials/skill-impact-matched/09-direct-97/main.py": {
+      "sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+      "bytes": 4572
+    },
+    "trials/skill-impact-matched/09-direct-97/trajectory.atif.json": {
+      "sha256": "24095e183f30163e09b8d0cdc417779c342e2a8c6eb11f35bad2b5d1527051e3",
+      "bytes": 50979
+    },
+    "trials/skill-impact-matched/09-direct-97/trial.json": {
+      "sha256": "adcf116180b38925dbfe97497980cf867a90cc1ec32a392328bcaa84de2bb2f4",
+      "bytes": 85018
+    }
+  }
+}

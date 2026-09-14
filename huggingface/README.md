@@ -101,3 +101,7 @@ is fully resolved. Default verification exits 0 for consistency;
 `--require-accepted` exits 1 because the strict notes gate rejects the result.
 `--require-resolved` separately requires full resolution.
 [Workflow and limits](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md).
+
+## Recorded GPU pilot
+
+[Inspect 27 actual model trials](https://noteflowai.github.io/evalarc/skill-impact/): no skill, direct delivery and real MCP, with independent grading and every failure retained. [Composition and public-session handoff records](https://noteflowai.github.io/evalarc/research/) are separate small pilots. No accuracy or memory efficacy gain is claimed.

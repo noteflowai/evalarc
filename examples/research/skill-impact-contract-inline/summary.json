@@ -1,0 +1,148 @@
+{
+  "trials": [
+    {
+      "path": "01-none-17",
+      "condition": "none",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 64.94244257500395,
+      "completion_tokens": 1443,
+      "skill_loads": 0
+    },
+    {
+      "path": "02-direct-17",
+      "condition": "direct",
+      "seed": 17,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 14.594351055988227,
+      "completion_tokens": 261,
+      "skill_loads": 0
+    },
+    {
+      "path": "03-mcp-17",
+      "condition": "mcp",
+      "seed": 17,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 14.023329962001299,
+      "completion_tokens": 261,
+      "skill_loads": 0
+    },
+    {
+      "path": "04-direct-41",
+      "condition": "direct",
+      "seed": 41,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 12.978538796000066,
+      "completion_tokens": 256,
+      "skill_loads": 0
+    },
+    {
+      "path": "05-mcp-41",
+      "condition": "mcp",
+      "seed": 41,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 13.387197877993458,
+      "completion_tokens": 256,
+      "skill_loads": 0
+    },
+    {
+      "path": "06-none-41",
+      "condition": "none",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.75,
+        "status": "failed"
+      },
+      "elapsed_seconds": 58.2029755859985,
+      "completion_tokens": 1175,
+      "skill_loads": 0
+    },
+    {
+      "path": "07-mcp-97",
+      "condition": "mcp",
+      "seed": 97,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.4,
+        "status": "failed"
+      },
+      "elapsed_seconds": 66.91155511600664,
+      "completion_tokens": 1372,
+      "skill_loads": 1
+    },
+    {
+      "path": "08-none-97",
+      "condition": "none",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 104.44400848301302,
+      "completion_tokens": 2555,
+      "skill_loads": 0
+    },
+    {
+      "path": "09-direct-97",
+      "condition": "direct",
+      "seed": 97,
+      "status": "step_budget",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.4,
+        "status": "failed"
+      },
+      "elapsed_seconds": 51.3760663849971,
+      "completion_tokens": 1372,
+      "skill_loads": 1
+    }
+  ]
+}

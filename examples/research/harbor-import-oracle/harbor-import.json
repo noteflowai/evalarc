@@ -1,0 +1,34 @@
+{
+  "schema_version": "evalarc.harbor-import.v1",
+  "source": {
+    "result_sha256": "850450b131e1c2930e53a95497208f6a95a1362b7c5a161c4ab7b6d558461d05",
+    "trajectory_sha256": null,
+    "trial_name": "harbor-task__pYo9jgP",
+    "task_name": "noteflowai/robot-evidence-review"
+  },
+  "upstream": {
+    "rewards": {
+      "reward": 1.0
+    },
+    "exception": null,
+    "workflow_finished_at": "2026-09-14T10:59:44.651554Z",
+    "agent_completion": null
+  },
+  "trajectory": null,
+  "independent": {
+    "evaluation": "evaluation.json",
+    "candidate_sha256": "9a9922a8dfa396f483afd2228dfcd34a5ba78093dd6e14f1ab29422256cd09e1",
+    "candidate_selection": "explicit caller-supplied directory",
+    "valid": true,
+    "resolved": false,
+    "score": 0.625,
+    "status": "failed"
+  },
+  "acceptance": {
+    "minimum_independent_score": 1.0,
+    "requires_valid_independent_evaluation": true,
+    "requires_upstream_reward": false,
+    "accepted": false
+  },
+  "scope": "Upstream rewards are imported claims. Acceptance uses the explicitly configured independent score threshold; resolved means every independent case passed. A finished Harbor workflow does not establish agent completion. ATIF inspection validates envelope and tool linkage, not the full upstream schema. The caller selects the candidate; source report metadata cannot establish that it is the same program used in the upstream run."
+}

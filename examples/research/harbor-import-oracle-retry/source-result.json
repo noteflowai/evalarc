@@ -1,0 +1,115 @@
+{
+    "id": "fb907498-d184-403e-82e3-40129f2c889b",
+    "task_name": "noteflowai/robot-evidence-review",
+    "trial_name": "harbor-task__pYo9jgP",
+    "trial_uri": "file:///home/dcvuser/work/robot-reel-agents/codex/artifacts/research-rollout-20260914/harbor-jobs/robot-oracle-fixed/harbor-task__pYo9jgP",
+    "task_id": {
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-rollout-20260914/harbor-task"
+    },
+    "source": null,
+    "task_checksum": "b653251ee0b7e9b40a9fde06e01c15f0a823462ad40173ea1ab92a1073352193",
+    "config": {
+        "task": {
+            "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-rollout-20260914/harbor-task",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": null
+        },
+        "trial_name": "harbor-task__pYo9jgP",
+        "trials_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-rollout-20260914/harbor-jobs/robot-oracle-fixed",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "oracle",
+            "import_path": null,
+            "model_name": null,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "7c79ed83-21d5-4972-9693-c17108cd2d71",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "oracle",
+        "version": "1.0.0",
+        "model_info": null
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 1.0
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": null,
+    "started_at": "2026-09-14T10:59:06.251592Z",
+    "finished_at": "2026-09-14T10:59:44.651554Z",
+    "environment_setup": {
+        "started_at": "2026-09-14T10:59:06.297285Z",
+        "finished_at": "2026-09-14T10:59:12.489291Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-14T10:59:12.489347Z",
+        "finished_at": "2026-09-14T10:59:12.489412Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-14T10:59:12.489484Z",
+        "finished_at": "2026-09-14T10:59:13.070392Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-14T10:59:25.222549Z",
+        "finished_at": "2026-09-14T10:59:44.651537Z"
+    },
+    "step_results": null
+}

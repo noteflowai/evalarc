@@ -34,7 +34,20 @@ SUPPORT_MUTANTS = {
     "new-key-on-retry": ("NEW_RETRY_KEY = False", "NEW_RETRY_KEY = True", "notes"),
 }
 
-CONTROL_PACKS = {"durable-kv": MUTANTS, "support-routing": SUPPORT_MUTANTS}
+ROBOT_MUTANTS = {
+    "assume-meters": ("USE_UNITS = True", "USE_UNITS = False", "coordinates"),
+    "ignore-frame-origin": ("USE_ORIGIN = True", "USE_ORIGIN = False", "coordinates"),
+    "ignore-clock-units": ("USE_CLOCK = True", "USE_CLOCK = False", "clock"),
+    "assume-complete": ("CHECK_MISSING = True", "CHECK_MISSING = False", "completeness"),
+    "last-frame-is-peak": ("FIND_PEAK = True", "FIND_PEAK = False", "metrics"),
+    "invent-source": ("PRESERVE_SOURCE = True", "PRESERVE_SOURCE = False", "provenance"),
+}
+
+CONTROL_PACKS = {
+    "durable-kv": MUTANTS,
+    "support-routing": SUPPORT_MUTANTS,
+    "robot-evidence-review": ROBOT_MUTANTS,
+}
 
 
 def write_candidate(path: Path, source: str) -> Path:

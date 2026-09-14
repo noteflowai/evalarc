@@ -222,8 +222,34 @@ async function main() {
         await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
         assert.match(await app.locator("body").innerText(), /retry-after-commit/);
       }
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("skill-impact/", url).href; }, appUrl);
+      await app.locator("#workspace").waitFor({state:"visible"});
+      assert.equal(await app.locator(".trial").count(), 9);
+      assert.match(await app.locator("#profile-totals").innerText(), /2\/9 fully resolved/);
+      await app.getByRole("button", {name:"No skill, seed 41, 100.0 percent, resolved", exact:true}).click();
+      assert.match(await app.locator("#metrics").innerText(), /100.0%/);
+      const skillShared = await app.locator("body").evaluate(() => location.href);
+      await app.locator("body").evaluate((element, url) => { location.href = url; location.reload(); }, skillShared);
+      await app.locator("#workspace").waitFor({state:"visible"});
+      assert.equal(await app.locator("#trial-title").innerText(), "No skill · seed 41");
+      for (const profile of ["skill-impact-matched","skill-impact-contract-inline","skill-impact-catalog-fallback"]) {
+        await app.locator("#profile").selectOption(profile);
+        assert.equal(await app.locator(".trial").count(),9);
+        const href = await app.locator("#downloads a").filter({hasText:"Independent grade"}).getAttribute("href");
+        const grade = await app.locator("body").evaluate(async (element, url) => (await fetch(url)).json(), href);
+        assert.equal(grade.valid,true);
+      }
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      if (width === 1440 && process.env.RESEARCH_SCREENSHOTS) {
+        fs.mkdirSync(process.env.RESEARCH_SCREENSHOTS,{recursive:true});
+        await page.screenshot({path:path.join(process.env.RESEARCH_SCREENSHOTS,"skill-impact.png"),fullPage:true});
+      }
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("research/", url).href; }, appUrl);
+      await app.getByRole("heading",{name:"Skill composition: 12 attempts, 3 accepted"}).waitFor();
+      assert.equal(await app.locator("tbody tr").count(),18);
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, suiteDownloadVerified:true, sharedTraceRestored:true, keyboardCaseReturn:true, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, suiteDownloadVerified:true, sharedTraceRestored:true, keyboardCaseReturn:true, realModelTrials:27, supplementaryTrials:18, errors});
       await page.close();
     }
     if (!process.env.SITE_URL) {
@@ -257,7 +283,14 @@ async function main() {
       assert.match(await page.locator("#share-status").innerText(), /Shared evidence restored/);
       assert.equal(await page.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
-      results.push({independentSectionRetry:true, partialTaskPack:true, pendingLinkRestored:true, errors});
+      failures.add("skill-impact/lab.json");
+      await page.goto(new URL("skill-impact/",base).href);
+      await page.locator("#retry").waitFor({state:"visible"});
+      failures.clear();
+      await page.locator("#retry").click();
+      await page.locator("#workspace").waitFor({state:"visible"});
+      assert.equal(await page.locator(".trial").count(),9);
+      results.push({independentSectionRetry:true, partialTaskPack:true, pendingLinkRestored:true, researchRetry:true, errors});
       await page.close();
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

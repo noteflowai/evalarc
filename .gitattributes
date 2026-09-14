@@ -1,0 +1,4 @@
+
+# Generated public experiment records stay inspectable but do not obscure code review.
+examples/research/** linguist-generated=true
+examples/skill-impact/** linguist-generated=true

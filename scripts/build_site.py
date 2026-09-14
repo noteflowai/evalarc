@@ -19,6 +19,7 @@ SOURCE = "https://github.com/noteflowai/evalarc"
 MANIFEST = "manifest.json"
 
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT))
 
 
 def write_suite_bundle(destination: Path) -> None:
@@ -337,6 +338,12 @@ def build(destination: Path) -> dict:
         else:
             shutil.copyfile(source, target)
     write_suite_bundle(destination / "suite-evidence.zip")
+    from scripts.verify_research import verify_lab, verify_records
+
+    verify_lab(ROOT / "examples/skill-impact")
+    verify_records(ROOT / "examples/research")
+    shutil.copytree(ROOT / "examples/skill-impact", destination / "skill-impact")
+    shutil.copytree(ROOT / "examples/research", destination / "research")
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()
@@ -345,7 +352,10 @@ def build(destination: Path) -> dict:
         "source_repository": SOURCE,
         "source_commit": commit,
         "source_dirty": dirty,
-        "evidence": "Recorded scripted development audits; not live model evaluations.",
+        "evidence": (
+            "Scripted grader controls and separately labeled recorded GPU model pilots; "
+            "no live inference."
+        ),
         "files": {
             path.relative_to(destination).as_posix(): sha256(path)
             for path in sorted(destination.rglob("*"))

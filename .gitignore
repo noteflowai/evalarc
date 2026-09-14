@@ -10,3 +10,7 @@ runs/
 workspace/
 .env
 node_modules/
+
+# Synthetic internal cache artifacts are part of the published composition evidence.
+!examples/research/skill-composition-pilot/*/candidate/build/
+!examples/research/skill-composition-pilot/*/candidate/build/cache.json
