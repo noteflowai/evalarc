@@ -178,8 +178,14 @@ def test_cli_support_init_and_evaluate(tmp_path):
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="Node.js not installed")
-def test_independent_javascript_policy_uses_same_host_verifier():
-    candidate = Path(__file__).resolve().parents[1] / "examples/support-node"
+def test_independent_javascript_policy_uses_same_host_verifier(tmp_path):
+    source = Path(__file__).resolve().parents[1] / "examples/support-node"
+    candidate = tmp_path / "support-node"
+    shutil.copytree(source, candidate)
+    # setup-node installs outside os.defpath on hosted runners. Local execution
+    # deliberately clears the parent environment; name the intended runtime.
+    command = [shutil.which("node"), "main.js"]
+    (candidate / "evalarc.toml").write_text("command = " + json.dumps(command) + "\n")
     report = evaluate(candidate, Runtime(backend="local"), [17, 41, 97], "support-routing")
-    assert report["resolved"] and len(report["cases"]) == 12
-    assert report["runtime"]["command"] == ["node", "main.js"]
+    assert report["resolved"] and len(report["cases"]) == 12, report["cases"]
+    assert report["runtime"]["command"] == command
