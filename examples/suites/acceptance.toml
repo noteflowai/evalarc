@@ -1,0 +1,16 @@
+schema_version = "evalarc.suite-config.v1"
+name = "Coding and support acceptance"
+
+[[jobs]]
+id = "coding-reference"
+task = "durable-kv"
+candidate = "../../workspace/suite-coding"
+seeds = [17]
+attempts = 1
+
+[[jobs]]
+id = "support-reference"
+task = "support-routing"
+candidate = "../../workspace/suite-support"
+seeds = [17]
+attempts = 2

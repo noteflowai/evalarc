@@ -1,7 +1,7 @@
 # Architecture and domain expansion
 
 EvalArc's direction is open environments and auditable evaluations for
-software agents. This document distinguishes the working v0.2 implementation
+software agents. This document distinguishes the working v0.5 implementation
 from interfaces proposed for subsequent releases.
 
 ## Current implementation
@@ -22,6 +22,13 @@ and evidence remain domain-specific.
 
 The current CLI does not invoke a model or expose a browser. The tool policy is
 an external program; Python and JavaScript examples are scripted controls.
+
+`repeat` executes fresh attempts from a frozen candidate and summarizes
+case/check variability. `suite` coordinates repetitions across declared jobs:
+it freezes all candidate inputs before execution and applies per-job acceptance
+rules after scoring. Suite gates never change task verification or mix task
+scores into a common scalar. JUnit represents the gates, while complete task
+evidence stays in each job's reports. See the [suite guide](suites.md).
 
 ## Interface responsibilities
 

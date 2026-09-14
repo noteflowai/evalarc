@@ -23,14 +23,18 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 
 [![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.4 已实现 coding 和业务工具两个场景。**
+**v0.5 已实现 coding 和业务工具两个场景。**
 
 | 任务 | 交互方式 | 验证内容 |
 | --- | --- | --- |
 | `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 |
 | `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 |
 
-v0.4 新增 `evalarc repeat`：固定一份候选快照，在相同场景上重新启动多轮评测，
+v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算及验收门槛，
+先预览执行计划，再批量运行并输出 HTML、JSON 和 JUnit。各任务单独评分。
+详见[套件与 CI 指南](docs/suites.zh-CN.md)。
+
+`evalarc repeat` 固定一份候选快照，在相同场景上重新启动多轮评测，
 保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度
 和受限进程诊断。详见[重复评测指南](docs/reliability.zh-CN.md)。
 

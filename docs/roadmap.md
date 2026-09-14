@@ -17,6 +17,7 @@ question needs substantially more evidence.
 | v0.2, implemented | Shared report metadata with domain-specific checks | Both packs record commands, provenance, validity, outcomes, and evidence |
 | v0.3, implemented | Readiness checks, individual HTML reports, matched-run comparisons, protected output paths | Read-only inspection, per-check regression detection, input consistency checks, and preserved prior runs |
 | v0.4, implemented | Fixed-candidate repeated evaluation, per-check variability, case deadlines, progress events, process diagnostics | Fresh state per attempt, explicit invalid denominators, shared restart budgets, cancellation and cleanup tests |
+| v0.5, implemented | Declarative suites, per-job acceptance gates, HTML/JSON and JUnit export | All-candidate preflight, workload preview, protected dimensions, distinct invalid outcomes, no cross-domain score average |
 | Next | Broader language coverage for coding | A non-Python Durable KV submission passes the same full contract |
 | Next | Independent defect packs and task authors | Reviewer-authored faults and a third independently authored task |
 | Next | Real model-provider adapter | End-to-end run with measured usage, task evidence, repeated attempts |

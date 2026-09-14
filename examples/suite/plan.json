@@ -1,0 +1,77 @@
+{
+  "schema_version": "evalarc.suite-plan.v1",
+  "name": "Partial progress and protected notes",
+  "manifest_sha256": "163e2103b9bd7b540219b140ab73d06d6870362cc4e83c04753eca232da02fa5",
+  "jobs": [
+    {
+      "id": "coding-reference",
+      "task": "durable-kv",
+      "candidate": "/tmp/evalarc-v05-validation-k9tv9_hz/workspace/suite-coding",
+      "seeds": [
+        17
+      ],
+      "attempts": 1,
+      "cases_per_attempt": 15,
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      }
+    },
+    {
+      "id": "support-partial",
+      "task": "support-routing",
+      "candidate": "/tmp/evalarc-v05-validation-k9tv9_hz/workspace/suite-support-fault",
+      "seeds": [
+        17
+      ],
+      "attempts": 2,
+      "cases_per_attempt": 4,
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 0.9,
+        "min_resolution_rate": 0.0,
+        "required_dimensions": []
+      }
+    },
+    {
+      "id": "support-protected",
+      "task": "support-routing",
+      "candidate": "/tmp/evalarc-v05-validation-k9tv9_hz/workspace/suite-support-fault",
+      "seeds": [
+        17
+      ],
+      "attempts": 2,
+      "cases_per_attempt": 4,
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 0.9,
+        "min_resolution_rate": 0.0,
+        "required_dimensions": [
+          "notes"
+        ]
+      }
+    }
+  ],
+  "planned_attempts": 5,
+  "planned_case_executions": 31
+}

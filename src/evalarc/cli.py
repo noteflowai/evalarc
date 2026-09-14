@@ -19,6 +19,7 @@ from evalarc.records import read_evaluation
 from evalarc.repetition import repeat
 from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
 from evalarc.runner import EnvironmentFailure, Runtime
+from evalarc.suite import load_suite, run_suite
 from evalarc.tasks import TASKS, get_task
 from evalarc.trajectory import summarize
 
@@ -79,12 +80,43 @@ def parser() -> argparse.ArgumentParser:
     curve.add_argument("checkpoints", type=Path, help="JSON array of elapsed_seconds + evaluation")
     curve.add_argument("--budget-seconds", type=float, required=True)
     curve.add_argument("--output", type=Path, default=Path("runs/trajectory.json"))
+    suite = commands.add_parser("suite", help="run a declarative multi-job evaluation suite")
+    suite.add_argument(
+        "config", type=Path, help="suite TOML; candidate paths are relative to this file"
+    )
+    suite.add_argument(
+        "--dry-run", action="store_true", help="print the plan without executing code"
+    )
+    suite.add_argument("--trust-local", action="store_true")
+    suite.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
+    suite.add_argument("--progress", action="store_true")
+    suite.add_argument("--output", type=Path, default=Path("runs/suite"))
     return root
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "suite":
+            plan = load_suite(args.config)
+            if args.dry_run:
+                print(json.dumps(plan.describe(), indent=2))
+                return 0
+            result = run_suite(
+                plan,
+                args.output,
+                trust_local=args.trust_local,
+                docker_command=args.docker_command,
+                progress=args.progress,
+            )
+            print(
+                f"Suite: {result['status']} | Accepted gates: "
+                f"{result['accepted_jobs']}/{result['total_jobs']} | "
+                f"Fully resolved jobs: {result['fully_resolved_jobs']} | "
+                f"Invalid jobs: {result['invalid_jobs']}\n"
+                f"Report: {args.output / 'index.html'}\nJUnit: {args.output / 'junit.xml'}"
+            )
+            return 2 if not result["valid"] else (0 if result["accepted"] else 1)
         if args.command == "tasks":
             if args.json:
                 print(

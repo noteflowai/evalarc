@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>EvalArc · Suite</title><style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
+body{max-width:1080px;margin:60px auto;padding:0 24px}
+.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
+h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
+p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
+.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
+.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
+code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
+footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.metadata{overflow-wrap:anywhere;font-size:13px}
+pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
+summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
+.passed{color:#96e8b9}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
+.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
+@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+</style></head><body><div class="eyebrow">EVALARC / SUITE</div><h1>Every job, explicit criteria.</h1><p>Partial progress and protected notes · FAILED</p><div class="cards"><div class="card"><div class="number failed">2/3</div><div class="label">job gates accepted</div></div><div class="card"><div class="number">1</div><div class="label">jobs with every attempt resolved</div></div><div class="card"><div class="number">0</div><div class="label">invalid jobs</div></div></div><p>Each job has its own task, budget, and acceptance rules. Scores stay within their task; there is no cross-domain average.</p><h2>Job decisions</h2><article class="change-card"><h3><a href="jobs/coding-reference/index.html">coding-reference</a></h3><p>durable-kv · coding · Gate: <strong>ACCEPTED</strong></p><p>Mean assessed score: 1. Resolved attempts: 1/1. Completed: 1. Invalid: 0.</p><details><summary>Acceptance rules and checks</summary><pre>{
+  &quot;gate&quot;: {
+    &quot;min_mean_score&quot;: 1.0,
+    &quot;min_resolution_rate&quot;: 1.0,
+    &quot;required_dimensions&quot;: []
+  },
+  &quot;decision&quot;: {
+    &quot;accepted&quot;: true,
+    &quot;valid&quot;: true,
+    &quot;checks&quot;: [
+      {
+        &quot;name&quot;: &quot;mean_score&quot;,
+        &quot;minimum&quot;: 1.0,
+        &quot;observed&quot;: 1.0,
+        &quot;passed&quot;: true
+      },
+      {
+        &quot;name&quot;: &quot;resolution_rate&quot;,
+        &quot;minimum&quot;: 1.0,
+        &quot;observed&quot;: 1.0,
+        &quot;passed&quot;: true
+      }
+    ],
+    &quot;reasons&quot;: []
+  }
+}</pre></details></article><article class="change-card"><h3><a href="jobs/support-partial/index.html">support-partial</a></h3><p>support-routing · business-tools · Gate: <strong>ACCEPTED</strong></p><p>Mean assessed score: 0.9375. Resolved attempts: 0/2. Completed: 2. Invalid: 0.</p><p><strong>Gate accepted with unresolved task outcomes.</strong> The configured thresholds permit partial results.</p><details><summary>Acceptance rules and checks</summary><pre>{
+  &quot;gate&quot;: {
+    &quot;min_mean_score&quot;: 0.9,
+    &quot;min_resolution_rate&quot;: 0.0,
+    &quot;required_dimensions&quot;: []
+  },
+  &quot;decision&quot;: {
+    &quot;accepted&quot;: true,
+    &quot;valid&quot;: true,
+    &quot;checks&quot;: [
+      {
+        &quot;name&quot;: &quot;mean_score&quot;,
+        &quot;minimum&quot;: 0.9,
+        &quot;observed&quot;: 0.9375,
+        &quot;passed&quot;: true
+      },
+      {
+        &quot;name&quot;: &quot;resolution_rate&quot;,
+        &quot;minimum&quot;: 0.0,
+        &quot;observed&quot;: 0.0,
+        &quot;passed&quot;: true
+      }
+    ],
+    &quot;reasons&quot;: []
+  }
+}</pre></details></article><article class="change-card"><h3><a href="jobs/support-protected/index.html">support-protected</a></h3><p>support-routing · business-tools · Gate: <strong>REJECTED</strong></p><p>Mean assessed score: 0.9375. Resolved attempts: 0/2. Completed: 2. Invalid: 0.</p><p class="failed">required_dimension:notes: not every applicable check passed</p><details><summary>Acceptance rules and checks</summary><pre>{
+  &quot;gate&quot;: {
+    &quot;min_mean_score&quot;: 0.9,
+    &quot;min_resolution_rate&quot;: 0.0,
+    &quot;required_dimensions&quot;: [
+      &quot;notes&quot;
+    ]
+  },
+  &quot;decision&quot;: {
+    &quot;accepted&quot;: false,
+    &quot;valid&quot;: true,
+    &quot;checks&quot;: [
+      {
+        &quot;name&quot;: &quot;mean_score&quot;,
+        &quot;minimum&quot;: 0.9,
+        &quot;observed&quot;: 0.9375,
+        &quot;passed&quot;: true
+      },
+      {
+        &quot;name&quot;: &quot;resolution_rate&quot;,
+        &quot;minimum&quot;: 0.0,
+        &quot;observed&quot;: 0.0,
+        &quot;passed&quot;: true
+      },
+      {
+        &quot;name&quot;: &quot;required_dimension:notes&quot;,
+        &quot;passed&quot;: false,
+        &quot;violations&quot;: [
+          {
+            &quot;seed&quot;: 17,
+            &quot;case_id&quot;: &quot;retry-after-commit&quot;,
+            &quot;passed&quot;: 0,
+            &quot;assessed&quot;: 2,
+            &quot;pass_rate&quot;: 0.0,
+            &quot;variable&quot;: false
+          }
+        ]
+      }
+    ],
+    &quot;reasons&quot;: [
+      &quot;required_dimension:notes: not every applicable check passed&quot;
+    ]
+  }
+}</pre></details></article><h2>Run record</h2><p class="metadata">Manifest SHA-256: 163e2103b9bd7b540219b140ab73d06d6870362cc4e83c04753eca232da02fa5<br>Created: 2026-09-14T03:44:40.115311+00:00<br>Host wall seconds: 19.952</p><p><a href="suite.json">Suite JSON</a> · <a href="suite.toml">Original configuration</a> · <a href="plan.json">Resolved plan</a> · <a href="junit.xml">JUnit acceptance gates</a> · <a href="events.jsonl">Progress events</a></p><footer>Acceptance follows each job&#x27;s declared gate. No score is averaged across jobs or domains. Gate acceptance does not imply full task resolution. Repeated observations use fixed public cases and are descriptive only. JUnit contains one test per job gate, rather than one test per individual task case.</footer></body></html>
