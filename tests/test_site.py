@@ -3,6 +3,7 @@
 import importlib.util
 import json
 import shutil
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,9 @@ spec.loader.exec_module(builder)
 def test_bundle_rejects_changed_evidence_and_extra_files(tmp_path):
     folder = tmp_path / "site"
     builder.build(folder)
+    version = tomllib.loads((builder.ROOT / "pyproject.toml").read_text())["project"]["version"]
+    assert f"RESEARCH PREVIEW {version}" in (folder / "index.html").read_text()
+    assert "__EVALARC_VERSION__" not in (folder / "index.html").read_text()
     audit = folder / "support" / "audit.json"
     original = audit.read_bytes()
     audit.write_bytes(original.replace(b'"score": 0.9375', b'"score": 1.0000'))

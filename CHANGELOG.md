@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.1 · 2026-09-14 · Research preview
+
+- Share and restore a specific task pack, control, seed, case and trace step in
+  the evidence explorer, including a selectable link when clipboard access is
+  denied. Out-of-range links show an explicit fallback.
+- Retry failed suite, repetition, comparison or task-pack requests independently.
+  Bound network waits and keep a successfully loaded task pack usable when the
+  other fails; retrying can restore the originally linked evidence.
+- Add section navigation, case-detail focus and return controls, keyboard-readable
+  JSON panels, larger buttons and readable mobile evidence text.
+- Render the site's preview version from package metadata.
+
+Original reports, task contracts, scoring and CLI behavior are unchanged.
+
 ## 0.7.0 · 2026-09-14 · Research preview
 
 - Add `evalarc verify` for received evaluation, repetition and comparison
