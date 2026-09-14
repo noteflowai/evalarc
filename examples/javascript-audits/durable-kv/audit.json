@@ -1,0 +1,4257 @@
+{
+  "schema_version": "evalarc.audit.v2",
+  "valid": true,
+  "reference_passed": true,
+  "reference": {
+    "schema_version": "evalarc.evaluation.v2",
+    "created_at": "2026-09-14T04:53:49.832260+00:00",
+    "evalarc_version": "0.6.0",
+    "task": {
+      "id": "durable-kv",
+      "version": "0.1.0",
+      "domain": "coding",
+      "split": "public-development"
+    },
+    "candidate_sha256": "fab9d6c65ef16a3c8bfb0fdf83ea73fddda5c9484a304f625cf67bff8ec0d097",
+    "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+    "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+    "runtime": {
+      "backend": "docker",
+      "image": "node:22-slim",
+      "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+      "command": [
+        "node",
+        "main.js",
+        "{state}/store.json"
+      ],
+      "response_timeout_seconds": 10.0,
+      "case_timeout_seconds": 60.0,
+      "session_output_limit_bytes": 1048576,
+      "python": "3.12.3",
+      "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+    },
+    "seeds": [
+      17
+    ],
+    "valid": true,
+    "status": "passed",
+    "score": 1.0,
+    "resolved": true,
+    "dimensions": {
+      "basic": {
+        "passed": 3,
+        "total": 3,
+        "assessed": 3,
+        "weight": 0.25,
+        "score": 1.0
+      },
+      "validation": {
+        "passed": 2,
+        "total": 2,
+        "assessed": 2,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "transactions": {
+        "passed": 2,
+        "total": 2,
+        "assessed": 2,
+        "weight": 0.2,
+        "score": 1.0
+      },
+      "compare_swap": {
+        "passed": 2,
+        "total": 2,
+        "assessed": 2,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "persistence": {
+        "passed": 3,
+        "total": 3,
+        "assessed": 3,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "crash_recovery": {
+        "passed": 3,
+        "total": 3,
+        "assessed": 3,
+        "weight": 0.1,
+        "score": 1.0
+      }
+    },
+    "cases": [
+      {
+        "seed": 17,
+        "case_id": "read-write-delete",
+        "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 6,
+        "duration_seconds": 0.528938,
+        "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 171,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "json-types-and-overwrite",
+        "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 16,
+        "duration_seconds": 0.550636,
+        "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 4531,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "reject-and-continue",
+        "dimension": "validation",
+        "checks": {
+          "validation": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 10,
+        "duration_seconds": 0.578917,
+        "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 407,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "empty-and-unicode-keys",
+        "dimension": "validation",
+        "checks": {
+          "validation": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 4,
+        "duration_seconds": 0.648721,
+        "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 190,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "commit-batch",
+        "dimension": "transactions",
+        "checks": {
+          "transactions": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 4,
+        "duration_seconds": 0.70211,
+        "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 86,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "rollback-batch",
+        "dimension": "transactions",
+        "checks": {
+          "transactions": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 7,
+        "duration_seconds": 0.769467,
+        "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 321,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "cas-match-and-mismatch",
+        "dimension": "compare_swap",
+        "checks": {
+          "compare_swap": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 7,
+        "duration_seconds": 0.646747,
+        "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 240,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "cas-type-sensitivity",
+        "dimension": "compare_swap",
+        "checks": {
+          "compare_swap": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 5,
+        "duration_seconds": 0.754041,
+        "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 143,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-acknowledged-write",
+        "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 4,
+        "duration_seconds": 1.900915,
+        "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 95,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 26,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-transaction",
+        "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 3,
+        "duration_seconds": 1.192842,
+        "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 166,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-acknowledgement",
+        "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 2,
+        "duration_seconds": 1.28181,
+        "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 137,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 83,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-atomic-batch",
+        "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 3,
+        "duration_seconds": 1.151454,
+        "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 137,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 166,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-cas",
+        "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 3,
+        "duration_seconds": 1.134884,
+        "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 39,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 37,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-delete",
+        "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 3,
+        "duration_seconds": 1.855847,
+        "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 137,
+            "output_bytes": 12,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          },
+          {
+            "exit_code": 0,
+            "output_bytes": 26,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "case_id": "seeded-state-machine",
+        "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
+        "passed": true,
+        "status": "passed",
+        "checks_completed": 52,
+        "duration_seconds": 0.862338,
+        "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+        "error": null,
+        "processes": [
+          {
+            "exit_code": 0,
+            "output_bytes": 1101,
+            "stderr_tail": "",
+            "stderr_tail_limit_bytes": 2048
+          }
+        ]
+      }
+    ],
+    "evaluation_seconds": 14.576101,
+    "agent_cost_usd": null,
+    "agent_tokens": null
+  },
+  "mutants": [
+    {
+      "name": "ack-without-work",
+      "target_dimension": "basic",
+      "killed": true,
+      "valid": true,
+      "score": 0.0,
+      "failing_cases": [
+        "json-types-and-overwrite",
+        "read-write-delete",
+        "seeded-state-machine"
+      ],
+      "candidate_sha256": "4a2182c4aeb53fccd91851d943a3f6fb55cf27d03941012cbd23942df81df51e",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:00.654947+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "4a2182c4aeb53fccd91851d943a3f6fb55cf27d03941012cbd23942df81df51e",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.0,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 0,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 0.0
+          },
+          "validation": {
+            "passed": 0,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "transactions": {
+            "passed": 0,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 0.0
+          },
+          "compare_swap": {
+            "passed": 0,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "persistence": {
+            "passed": 0,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "crash_recovery": {
+            "passed": 0,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 0.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 0,
+            "duration_seconds": 0.549895,
+            "transcript_sha256": "e9d1c1a4ce952f925f5a3d00a84348bf482007670ba13602f73d0129cc422a60",
+            "error": "response mismatch at request 1; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.584373,
+            "transcript_sha256": "ad684a2e4e62254b35236e279cda7ec03bfe6bf6a01e3c0b24a1810e6c8088d2",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": null}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.584876,
+            "transcript_sha256": "932f3ec3f66ee636feddf02978271d1af20d352d113d51580182f4956132fcbc",
+            "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.578509,
+            "transcript_sha256": "dd5c4b23bf9661f05363e4be2791dffa554d3bb7a6226d1be64e58adc97e7907",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.547386,
+            "transcript_sha256": "660d89f2f1ccd8d228c1871197f23f08289d1c1fe244918053aa9aca3a9ce576",
+            "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.53177,
+            "transcript_sha256": "8d05dbc72469fa9ab22e4943d0e9ed13a8733f443dc95a84a306daa02b2031b4",
+            "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.549798,
+            "transcript_sha256": "92c53f111ed9d1c600b448aaf9e5a529f32d2f085433ad700cd369bd71c55185",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.559346,
+            "transcript_sha256": "88cbf896bd041b5c3a80f99fc01f19d0b473a1a39cdb4f59d621a8abbcaa35e4",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 1.051951,
+            "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.926142,
+            "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.903025,
+            "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.980445,
+            "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.526977,
+            "transcript_sha256": "7ef0ed9705196a8514631dacec2c92eeb5e34cd9811d281f9816e348c50d1a17",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": true}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 24,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 1.481053,
+            "transcript_sha256": "165fee513b6ad33052636d17d8a1f492e3226d1b5f19b246f01f1c20289f5525",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 0.451502,
+            "transcript_sha256": "ce6e264c70b36102aabe44145d2a7558766913a2725261b8f120efea98fa8659",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 36,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 10.820054,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "memory-only",
+      "target_dimension": "persistence",
+      "killed": true,
+      "valid": true,
+      "score": 0.78333333,
+      "failing_cases": [
+        "restart-preserves-acknowledged-write",
+        "restart-preserves-cas",
+        "restart-preserves-transaction"
+      ],
+      "candidate_sha256": "65617a32e2dec95ea2ce1457efae7d1dbe6e26094a6adc5c67514f333813bc23",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:10.972898+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "65617a32e2dec95ea2ce1457efae7d1dbe6e26094a6adc5c67514f333813bc23",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.78333333,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 0,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "crash_recovery": {
+            "passed": 1,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 0.3333333333333333
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.46604,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.474375,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.475647,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.458584,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.464691,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.455858,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.457636,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 5,
+            "duration_seconds": 0.454052,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 143,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.928483,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.958207,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.937998,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.975821,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": -9,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 0.924555,
+            "transcript_sha256": "497082839111501c6aa4912312fe30686befcab05beb84ebbcb99be0d1e8aef1",
+            "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": 321}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": -9,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.389628,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": -9,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 0.483543,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 10.317339,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "partial-batch",
+      "target_dimension": "transactions",
+      "killed": true,
+      "valid": true,
+      "score": 0.9,
+      "failing_cases": [
+        "rollback-batch"
+      ],
+      "candidate_sha256": "25c9faee716ab4c4d81dea864df1e8d8560d01110e153cd84c199ad6ffb0ddb3",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:22.312752+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "25c9faee716ab4c4d81dea864df1e8d8560d01110e153cd84c199ad6ffb0ddb3",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.9,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 1,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 0.5
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.461501,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.530414,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.470365,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.491789,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.479108,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 0.472393,
+            "transcript_sha256": "f6015865dce884224cf6ccccc9fbdd367baad17842dde00fbee476f06b1aab0d",
+            "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": true, \"ok\": true, \"value\": \"must roll back\"}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.492097,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 5,
+            "duration_seconds": 0.497769,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 143,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 1.426448,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.929136,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 2,
+            "duration_seconds": 0.987817,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.923095,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.96986,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.474352,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 0.718944,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 11.339695,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "cas-always-wins",
+      "target_dimension": "compare_swap",
+      "killed": true,
+      "valid": true,
+      "score": 0.85,
+      "failing_cases": [
+        "cas-match-and-mismatch",
+        "cas-type-sensitivity"
+      ],
+      "candidate_sha256": "6ab2bd9883cf0eff59df9198d55c7934827b6fb539453f6b7eb17a9db113a8b8",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:33.188001+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "6ab2bd9883cf0eff59df9198d55c7934827b6fb539453f6b7eb17a9db113a8b8",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.85,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 0,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.570831,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.583597,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.547586,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.522098,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.508744,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.494022,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.490188,
+            "transcript_sha256": "71199e89272547e9c1a1961a85a650b93c30e2f848912b6be28ea262907eda56",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.530264,
+            "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 1.323756,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.841123,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 2,
+            "duration_seconds": 0.84372,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.848225,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.826512,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.292735,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 0.642089,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 10.874828,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "boolean-equals-one",
+      "target_dimension": "compare_swap",
+      "killed": true,
+      "valid": true,
+      "score": 0.925,
+      "failing_cases": [
+        "cas-type-sensitivity"
+      ],
+      "candidate_sha256": "202d2f3820eb71874cffb461ddc9f695af43ed3d4126aac7784475a97f1b6bb5",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:44.053559+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "202d2f3820eb71874cffb461ddc9f695af43ed3d4126aac7784475a97f1b6bb5",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.925,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 1,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 0.5
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.460583,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.473433,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.433965,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.396075,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.455688,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.432909,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.450149,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.435249,
+            "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 1.268524,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.865693,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 2,
+            "duration_seconds": 1.084807,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.982003,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": -9,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.977971,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.427617,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 0.710429,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 10.86503,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "delete-noop",
+      "target_dimension": "basic",
+      "killed": true,
+      "valid": true,
+      "score": 0.65,
+      "failing_cases": [
+        "read-write-delete",
+        "seeded-state-machine"
+      ],
+      "candidate_sha256": "0500d54aca41a5403568b3950be43efd2ecadbf09c2f003043c7a0a7324f2807",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:54:55.080156+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "0500d54aca41a5403568b3950be43efd2ecadbf09c2f003043c7a0a7324f2807",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.65,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 1,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 0.3333333333333333
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 1,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 0.5
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 2,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 0.6666666666666666
+          },
+          "crash_recovery": {
+            "passed": 2,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 0.6666666666666666
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 4,
+            "duration_seconds": 0.484824,
+            "transcript_sha256": "4122b55bc205e4703a3a9f62a5397de448a833f424e54edc914bbbf5465c70d1",
+            "error": "response mismatch at request 5; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 216,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.543204,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.555981,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.475617,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 0.435511,
+            "transcript_sha256": "da7df3388998e4f6fd4743177baa1ddcd8625d54fded8d5c6cfbdf813d50cdba",
+            "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.433667,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.449461,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 5,
+            "duration_seconds": 0.435147,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 143,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 3,
+            "duration_seconds": 1.273556,
+            "transcript_sha256": "0ae3e20082ef3346a8027b09f61e373e1c733234603e3e12d5e61853d6df9c8f",
+            "error": "response mismatch at request 4; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.025015,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 2,
+            "duration_seconds": 0.934191,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.852946,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.050153,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 1.495149,
+            "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 8,
+            "duration_seconds": 0.569837,
+            "transcript_sha256": "0132892f9b4bac6264eb6ef2dae9da8b7bac7a6a158b56357f1319c853615de7",
+            "error": "response mismatch at request 9; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 193,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 11.0261,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "accept-nonstring-keys",
+      "target_dimension": "validation",
+      "killed": true,
+      "valid": true,
+      "score": 0.925,
+      "failing_cases": [
+        "reject-and-continue"
+      ],
+      "candidate_sha256": "e17d1eeddba4a649c867c98b683de7ce64c4cbd5da448e8e29723569c8c0de5f",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:55:07.877997+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "e17d1eeddba4a649c867c98b683de7ce64c4cbd5da448e8e29723569c8c0de5f",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.925,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 1,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 0.5
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.505065,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.527997,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 4,
+            "duration_seconds": 0.523412,
+            "transcript_sha256": "dc07c86f871afd6b2f208e9751bdd459e52368d54d008ca0622a8edd61a7008b",
+            "error": "response mismatch at request 5; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 141,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.504849,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.509386,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.51418,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.537505,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 5,
+            "duration_seconds": 0.502504,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 143,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 1.441501,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 0.975848,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 2,
+            "duration_seconds": 1.016199,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.075213,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.133081,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.903977,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 1.11267,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 12.797362,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "commit-on-exit",
+      "target_dimension": "crash_recovery",
+      "killed": true,
+      "valid": true,
+      "score": 0.9,
+      "failing_cases": [
+        "sigkill-after-acknowledgement",
+        "sigkill-after-atomic-batch",
+        "sigkill-after-delete"
+      ],
+      "candidate_sha256": "884f21ad792983fc73e53f6b55ba9531b003b4cbaf51b362690b1c17431981e7",
+      "evaluation": {
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T04:55:22.421082+00:00",
+        "evalarc_version": "0.6.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "domain": "coding",
+          "split": "public-development"
+        },
+        "candidate_sha256": "884f21ad792983fc73e53f6b55ba9531b003b4cbaf51b362690b1c17431981e7",
+        "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "node:22-slim",
+          "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+          "command": [
+            "node",
+            "main.js",
+            "{state}/store.json"
+          ],
+          "response_timeout_seconds": 10.0,
+          "case_timeout_seconds": 60.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "valid": true,
+        "status": "failed",
+        "score": 0.9,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "assessed": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 0,
+            "total": 3,
+            "assessed": 3,
+            "weight": 0.1,
+            "score": 0.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 6,
+            "duration_seconds": 0.749596,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 171,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 16,
+            "duration_seconds": 0.669885,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 4531,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 10,
+            "duration_seconds": 0.682262,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 407,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.800129,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 190,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 0.694564,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 86,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.645486,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 321,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 7,
+            "duration_seconds": 0.891929,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 240,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 5,
+            "duration_seconds": 0.673617,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 143,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 4,
+            "duration_seconds": 2.004075,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 95,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.184324,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 166,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 1.130183,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 1,
+            "duration_seconds": 1.0895,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}",
+            "processes": [
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 26,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 3,
+            "duration_seconds": 1.085192,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 39,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 0,
+                "output_bytes": 37,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
+            "passed": false,
+            "status": "failed",
+            "checks_completed": 2,
+            "duration_seconds": 1.640536,
+            "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}",
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 12,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              },
+              {
+                "exit_code": 137,
+                "output_bytes": 83,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
+            "passed": true,
+            "status": "passed",
+            "checks_completed": 52,
+            "duration_seconds": 0.581022,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null,
+            "processes": [
+              {
+                "exit_code": 0,
+                "output_bytes": 1101,
+                "stderr_tail": "",
+                "stderr_tail_limit_bytes": 2048
+              }
+            ]
+          }
+        ],
+        "evaluation_seconds": 14.54055,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    }
+  ],
+  "mutation_score": 1.0,
+  "killed": 8,
+  "total": 8,
+  "passed": true,
+  "interpretation": "Coverage of 8 declared behavioral fault models only. This is not a bound on reward hacking or a model benchmark."
+}

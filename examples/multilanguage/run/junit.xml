@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites name="Python and JavaScript reference conformance" tests="3" failures="0" errors="0" skipped="0" time="26.910796">
+  <testsuite name="Python and JavaScript reference conformance" tests="3" failures="0" errors="0" skipped="0" time="26.910796">
+    <testcase classname="evalarc.durable-kv" name="python-coding" time="13.759954">
+      <system-out>{"fully_resolved": true, "observed": {"requested_attempts": 1, "completed_attempts": 1, "assessed_attempts": 1, "invalid_attempts": 0, "resolved_attempts": 1, "mean_score": 1.0, "assessed_resolution_rate": 1.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 1.0, "min_resolution_rate": 1.0, "required_dimensions": []}, "evidence": "jobs/python-coding/index.html"}</system-out>
+    </testcase>
+    <testcase classname="evalarc.durable-kv" name="javascript-coding" time="11.272241">
+      <system-out>{"fully_resolved": true, "observed": {"requested_attempts": 1, "completed_attempts": 1, "assessed_attempts": 1, "invalid_attempts": 0, "resolved_attempts": 1, "mean_score": 1.0, "assessed_resolution_rate": 1.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 1.0, "min_resolution_rate": 1.0, "required_dimensions": []}, "evidence": "jobs/javascript-coding/index.html"}</system-out>
+    </testcase>
+    <testcase classname="evalarc.support-routing" name="javascript-support" time="1.878601">
+      <system-out>{"fully_resolved": true, "observed": {"requested_attempts": 1, "completed_attempts": 1, "assessed_attempts": 1, "invalid_attempts": 0, "resolved_attempts": 1, "mean_score": 1.0, "assessed_resolution_rate": 1.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 1.0, "min_resolution_rate": 1.0, "required_dimensions": []}, "evidence": "jobs/javascript-support/index.html"}</system-out>
+    </testcase>
+  </testsuite>
+</testsuites>

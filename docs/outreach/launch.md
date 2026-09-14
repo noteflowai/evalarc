@@ -12,6 +12,8 @@ EvalArc 是面向 AI 智能体的开源评测与评分器审计工具，帮助�
 并保留重复评测、版本回归与全部运行证据，适合 PAI 智能体创新场景的评测设计、
 验收验证与技术交流。HF Casebook 进一步提供可筛选、可用 Python 读取的公开
 证据表，分别保留 167 条用例、6 次重复尝试和 3 项验收作业及其原始记录。
+v0.6 支持生成 Python／JavaScript 候选，并通过独立实现验证同一任务约定，
+可在统一套件中为不同语言明确指定运行镜像。
 当前为研究预览版，演示使用脚本对照，尚未给出真实大模型
 性能或强化学习收益结论。
 
@@ -43,6 +45,11 @@ The Hugging Face Casebook makes 167 audit cases, six repeated attempts and three
 suite jobs filterable and readable from Python as separate development
 configurations. Each row retains a pointer and hash for its original source
 record. This is a tabular view of existing evidence, not additional model trials.
+
+Version 0.6 supplies Python and JavaScript starters and independent references
+for both tasks. The Node audits exercise the same declared faults, and a
+mixed-language suite retains three resolved jobs. Shared task contracts do not
+establish a language ranking.
 
 ## Entry points
 

@@ -1,0 +1,227 @@
+{
+  "schema_version": "evalarc.repetition.v1",
+  "evalarc_version": "0.6.0",
+  "created_at": "2026-09-14T04:55:44.415724+00:00",
+  "task": {
+    "id": "support-routing",
+    "version": "0.1.0",
+    "domain": "business-tools",
+    "split": "public-development"
+  },
+  "candidate_sha256": "2ffefac03336d7126393ce0a8311a1990eed4c69d4956d66351f663a0188b143",
+  "grader_sha256": "887aea97efec396118521f720f6d8753be9ae964ab92eaa655d6575185326593",
+  "cases_sha256": "b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df",
+  "runtime": {
+    "backend": "docker",
+    "image": "node:22-slim",
+    "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+    "command": [
+      "node",
+      "main.js"
+    ],
+    "response_timeout_seconds": 10.0,
+    "case_timeout_seconds": 60.0,
+    "session_output_limit_bytes": 1048576,
+    "python": "3.12.3",
+    "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+  },
+  "seeds": [
+    17
+  ],
+  "requested_attempts": 1,
+  "completed_attempts": 1,
+  "complete": true,
+  "valid": true,
+  "status": "passed",
+  "all_attempts_resolved": true,
+  "assessed_attempts": 1,
+  "invalid_attempts": 0,
+  "resolved_attempts": 1,
+  "assessed_resolution_rate": 1.0,
+  "mean_score": 1.0,
+  "min_score": 1.0,
+  "max_score": 1.0,
+  "variable_cases": 0,
+  "variable_checks": 0,
+  "cases": [
+    {
+      "seed": 17,
+      "case_id": "close-resolved-ticket",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "routing": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "notes": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "closure": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "scope": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "protocol": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "retry-after-commit",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "routing": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "notes": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "closure": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "scope": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "protocol": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "retry-before-commit",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "routing": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "notes": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "closure": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "scope": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "protocol": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "route-open-ticket",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "routing": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "notes": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "closure": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "scope": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        },
+        "protocol": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "attempt": 1,
+      "valid": true,
+      "status": "passed",
+      "score": 1.0,
+      "resolved": true,
+      "created_at": "2026-09-14T04:55:44.411869+00:00"
+    }
+  ],
+  "interpretation": "Descriptive outcomes on the same public cases. Invalid attempts are explicit; mean scores and resolution rates use assessed attempts only. No independence assumption, confidence interval, or population success rate is claimed."
+}
