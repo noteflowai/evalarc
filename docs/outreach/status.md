@@ -1,19 +1,30 @@
 # Publication log
 
+## 0.7.1 UI publication · 2026-09-14
+
+[Release 0.7.1](https://github.com/noteflowai/evalarc/releases/tag/v0.7.1) is public.
+[Release validation](https://github.com/noteflowai/evalarc/actions/runs/34813660899) passed;
+the real Hugging Face iframe was exercised at 1440, 390 and 320 pixels.
+Exact case/step links, keyboard case return, bounded network requests and independent retries are public. Original evidence is unchanged. The attached wheel and source archive matched anonymous downloads, and the installed wheel passed offline checks with an empty PATH.
+
+The existing weekly and HelloGitHub submissions and HF introduction were rewritten around the current workflow, then read back exactly. Both editorial submissions remain open with no comments; no new issue or reminder comment was created. The existing five-item HF collection was updated. [Publication receipts](publication-0.7.1.json).
+
+Earlier publication history follows.
+
 Verified on 2026-09-14. The project was previously local-only. Source, the
 interactive evidence lab, and maintainer announcements are now public.
 
 | Channel | Status |
 | --- | --- |
 | [GitHub source](https://github.com/noteflowai/evalarc) | Public; source and deployment CI passed |
-| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.7.0 research preview published; wheel, source archive and checksums verified by anonymous download |
+| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.7.1 research preview published; wheel, source archive and checksums verified by anonymous download |
 | [GitHub Pages](https://noteflowai.github.io/evalarc/) | Live; desktop and mobile checks passed |
-| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.7 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
+| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.7.1 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
 | [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) | Public dataset; all 32 files and every row read back anonymously; actual table checked on desktop and mobile |
-| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.7 verification and the Casebook; readback matched |
-| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.7 Space note verified |
-| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.7 and the Casebook; open, awaiting editorial review |
-| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.7 and the Casebook; open, awaiting editorial review |
+| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.7.1 evidence sharing and recovery; readback matched |
+| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.7.1 Space note verified |
+| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.7.1 and the Casebook; open, awaiting editorial review |
+| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.7.1 and the Casebook; open, awaiting editorial review |
 | [X maintainer launch](https://x.com/glay_oneai/status/2099338382518399269) | Overview and three project replies verified in the published conversation; the EvalArc reply describes the v0.3 comparison |
 
 The weekly README explicitly invites software submissions through issues.

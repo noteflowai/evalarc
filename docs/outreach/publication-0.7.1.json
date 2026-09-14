@@ -1,0 +1,41 @@
+{
+  "version": "0.7.1",
+  "checked": "2026-09-14",
+  "release": "https://github.com/noteflowai/evalarc/releases/tag/v0.7.1",
+  "validation_run": "https://github.com/noteflowai/evalarc/actions/runs/34813660899",
+  "public_browser_widths": [
+    1440,
+    390,
+    320
+  ],
+  "existing_posts_updated": [
+    {
+      "channel": "weekly",
+      "repo": "ruanyf/weekly",
+      "number": 11671,
+      "url": "https://github.com/ruanyf/weekly/issues/11671",
+      "state": "open",
+      "comments": 0,
+      "body_sha256": "5c01ca11d416f1079c115135de357777f2067790895b7c8ecb3ceecf18fda6d7"
+    },
+    {
+      "channel": "hello",
+      "repo": "521xueweihan/HelloGitHub",
+      "number": 3698,
+      "url": "https://github.com/521xueweihan/HelloGitHub/issues/3698",
+      "state": "open",
+      "comments": 0,
+      "body_sha256": "ff55888fea142171815833013fbde138c797c8a0c3616968f801108df9518753"
+    },
+    {
+      "channel": "huggingface",
+      "repo": "glayguo/evalarc",
+      "discussion": 1,
+      "comment_id": "6aa755bc3011374ab7468d9f",
+      "title": "v0.7.1: share the exact failure and recover missing evidence",
+      "body_sha256": "5b83ed57db70393bfe4af867b43385cf979d138e804667aeb905f57621a07d9a"
+    }
+  ],
+  "new_posts_created": 0,
+  "editorial_acceptance": false
+}
