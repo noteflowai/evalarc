@@ -42,6 +42,10 @@ def test_bundle_rejects_changed_evidence_and_extra_files(tmp_path):
     version = tomllib.loads((builder.ROOT / "pyproject.toml").read_text())["project"]["version"]
     assert f"RESEARCH PREVIEW {version}" in (folder / "index.html").read_text()
     assert "__EVALARC_VERSION__" not in (folder / "index.html").read_text()
+    assert "__AUDIT_COVERAGE__" not in (folder / "index.html").read_text()
+    assert (folder / "index.html").read_text().count("single-case dependencies") == 3
+    assert (folder / "robot/index.html").is_file()
+    assert "single-case dependency" in (folder / "robot/index.html").read_text()
     audit = folder / "support" / "audit.json"
     original = audit.read_bytes()
     audit.write_bytes(original.replace(b'"score": 0.9375', b'"score": 1.0000'))

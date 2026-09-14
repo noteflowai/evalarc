@@ -40,6 +40,8 @@ async function main() {
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await app.locator("#repeat-workspace").waitFor({state:"visible"});
       await app.locator("#suite-workspace").waitFor({state:"visible"});
+      assert.equal(await app.locator(".coverage-card").count(),3);
+      assert.equal(await app.locator(".coverage-card li").count(),6);
       await page.waitForLoadState("networkidle");
       for (const name of ["partial", "protected"]) {
         assert.equal(await app.locator("#suite-" + name + "-score").innerText(), "93.75%");
@@ -248,6 +250,16 @@ async function main() {
       await app.getByRole("heading",{name:"Skill composition: 12 attempts, 3 accepted"}).waitFor();
       assert.equal(await app.locator("tbody tr").count(),18);
       assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      const coveragePage = await browser.newPage({viewport:{width,height:1000}});
+      try {
+        await coveragePage.goto(new URL("robot/index.html#fault-3", suiteBase).href);
+        await coveragePage.locator("#fault-3").waitFor({state:"visible"});
+        assert.match(await coveragePage.locator("#fault-3").innerText(), /incomplete-recording/);
+        assert.equal(await coveragePage.locator(".audit-control").count(),6);
+        assert(await coveragePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        await coveragePage.locator("#fault-3 details summary").first().click();
+        assert.match(await coveragePage.locator("#fault-3 pre").first().innerText(), /"completeness": false/);
+      } finally { await coveragePage.close(); }
       assert.deepEqual(errors, []);
       results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, suiteDownloadVerified:true, sharedTraceRestored:true, keyboardCaseReturn:true, realModelTrials:27, supplementaryTrials:18, errors});
       await page.close();

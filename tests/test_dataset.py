@@ -31,11 +31,22 @@ def test_casebook_preserves_source_objects_and_distinct_gate_outcomes(tmp_path):
     folder = tmp_path / "casebook"
     manifest = build_dataset.build(folder)
     assert manifest["row_counts"] == {
-        "audit_cases": 167,
+        "audit_cases": 251,
         "repetition_attempts": 6,
         "suite_jobs": 3,
     }
     cases = table(folder, "audit_cases")
+    assert {row["task"] for row in cases} == {
+        "durable-kv",
+        "support-routing",
+        "robot-evidence-review",
+    }
+    assert len([row for row in cases if row["task"] == "robot-evidence-review"]) == 84
+    assert all(
+        row["control_detection_margin"] is None
+        for row in cases
+        if row["control_kind"] == "reference"
+    )
     for row in cases:
         case = original(folder, row)
         assert json.loads(row["case_json"]) == case
