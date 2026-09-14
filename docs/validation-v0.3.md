@@ -57,3 +57,10 @@ Abrupt worker termination may leave unpublished temporary files.
 - The public workflow runs the Python 3.11–3.13 matrix, both Docker audits,
   package builds and browser checks before deploying the tested artifact.
   Publication receipts are kept in [the outreach log](outreach/status.md).
+- [PR #1](https://github.com/noteflowai/evalarc/pull/1) and
+  [main CI run 34801187828](https://github.com/noteflowai/evalarc/actions/runs/34801187828)
+  passed all configured checks. The actual public Hugging Face iframe and
+  GitHub Pages site then passed the same desktop/mobile checks, including
+  comparison-to-report navigation and expanded evaluation evidence.
+- All 18 Space bundle files were read back anonymously. The release wheel,
+  source archive and checksum file also matched anonymous downloads.
