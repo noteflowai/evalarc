@@ -144,7 +144,10 @@ def build(destination: Path) -> dict:
     (destination / "data").mkdir(parents=True)
     for name, values in rows.items():
         (destination / "data" / f"{name}.jsonl").write_text(
-            "".join(compact(row) + "\n" for row in values)
+            # Preserve presentation order: outcome columns precede long fingerprints.
+            "".join(
+                json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n" for row in values
+            )
         )
     for path in sorted(inputs):
         target = destination / "evidence" / path.relative_to(ROOT)
