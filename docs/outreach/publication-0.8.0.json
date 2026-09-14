@@ -1,0 +1,81 @@
+{
+  "version": "0.8.0",
+  "checked": "2026-09-14",
+  "release": "https://github.com/noteflowai/evalarc/releases/tag/v0.8.0",
+  "release_source_commit": "e9cba3c5db80411ffee35fe2568fee23a74997da",
+  "validation_run": "https://github.com/noteflowai/evalarc/actions/runs/34817758768",
+  "public_browser_widths": [
+    1440,
+    390,
+    320
+  ],
+  "package_readback": {
+    "version": "0.8.0",
+    "anonymous_readback": {
+      "evalarc-0.8.0-py3-none-any.whl": "243e54042f132fdcccaf317f818a74d430cb73cf2d995502e95df3f634df0c1a",
+      "evalarc-0.8.0.tar.gz": "3ce6a7f5be25a2d930948137a6654354864328d560948fc2ce1de15477d1e475",
+      "SHA256SUMS": "bf790d42b217a0137cf4b4a75f03288c105b450b0b57c649d41f25af1faf2470",
+      "suite-evidence.zip": "ebb68a7393e351a5c60b1bb03cc7cb193bf94c03fca7e5377537b10041997115"
+    }
+  },
+  "space_readback": {
+    "repo": "glayguo/evalarc",
+    "kind": "space",
+    "hub_commit": "7eb1b0a08ffba78b7185ba97d4b40a7973c0f89d",
+    "source_commit": "e9cba3c5db80411ffee35fe2568fee23a74997da",
+    "files_verified": 61,
+    "bytes_verified": 1280837,
+    "anonymous": true,
+    "served_manifest_matches": true
+  },
+  "existing_posts_updated": [
+    {
+      "project": "evalarc",
+      "channel": "weekly",
+      "repo": "ruanyf/weekly",
+      "number": 11671,
+      "url": "https://github.com/ruanyf/weekly/issues/11671",
+      "state": "open",
+      "comments": 0,
+      "body_sha256": "f84cd8162482fa8ffa03353b7f97f92e302e4570707992055dbb2ac0a1ae48a1"
+    },
+    {
+      "project": "evalarc",
+      "channel": "hello",
+      "repo": "521xueweihan/HelloGitHub",
+      "number": 3698,
+      "url": "https://github.com/521xueweihan/HelloGitHub/issues/3698",
+      "state": "open",
+      "comments": 0,
+      "body_sha256": "b6d0bed4c13aef8b3e863b6dde56ac2126c0e7426393d1e00ece0b9e58556d44"
+    },
+    {
+      "project": "evalarc",
+      "channel": "huggingface",
+      "repo": "glayguo/evalarc",
+      "discussion": 1,
+      "comment_id": "6aa755bc3011374ab7468d9f",
+      "title": "v0.8.0: download the evidence and verify every suite gate offline",
+      "body_sha256": "134a5f89e02b7996a8c49fce3477692c655dd84671efdd543ada14bf8a30a891"
+    }
+  ],
+  "collection": {
+    "slug": "glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856",
+    "items": 5,
+    "updated_notes": {
+      "glayguo/dsh-skills-anywhere": "Skills Anywhere 0.8.0: legacy and MCP 2026-07-28 stdio, reviewed file hashes, shared skills and a local browser checker.",
+      "glayguo/evalarc": "EvalArc 0.8.0: download a complete suite and verify its original configuration, attempts, acceptance gates and JUnit offline."
+    }
+  },
+  "new_posts_created": 0,
+  "editorial_acceptance": false,
+  "dataset_readback": {
+    "repo": "glayguo/evalarc-casebook",
+    "kind": "dataset",
+    "hub_commit": "0d211f22b2c693f6f6e553fd2cfb74324c4ef442",
+    "source_commit": "e9cba3c5db80411ffee35fe2568fee23a74997da",
+    "files_verified": 31,
+    "bytes_verified": 1049356,
+    "anonymous": true
+  }
+}
