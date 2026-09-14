@@ -33,6 +33,13 @@ details to the case list, and retry failed sections independently.
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
+**v0.8: verify the whole handoff.** Download the suite evidence ZIP from the
+lab, then run `evalarc verify suite-evidence --json` to recompute its original
+TOML, plan, five attempts, custom gates and JUnit. Add `--require-accepted`
+for CI acceptance. Consistency, configured acceptance and full resolution are
+reported separately. No candidate execution is required.
+[Offline verification and limits](docs/verification.md).
+
 **Two working task packs** share an evidence format and
 configurable candidate commands:
 

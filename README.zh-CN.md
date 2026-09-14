@@ -26,6 +26,12 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 
 [![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
+**v0.8：完整验收证据可离线复核。** 从首页下载套件 ZIP，解压后运行
+`evalarc verify suite-evidence --json`，复核原始 TOML、执行计划、五次尝试、
+验收规则与 JUnit。使用 `--require-accepted` 接入 CI 验收；证据一致、规则接受、
+任务完全完成分别报告。整个检查不执行候选程序。
+[离线验证流程与边界](docs/verification.md)。
+
 **已实现 coding 和业务工具两个场景。**
 
 | 任务 | 交互方式 | 验证内容 |

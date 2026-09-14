@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,24 @@ SOURCE = "https://github.com/noteflowai/evalarc"
 MANIFEST = "manifest.json"
 
 sys.path.insert(0, str(ROOT / "src"))
+
+
+def write_suite_bundle(destination: Path) -> None:
+    """Package only verified input bytes, with stable ZIP metadata."""
+    from evalarc.verify import verify as verify_evidence
+
+    source = ROOT / "examples" / "suite"
+    receipt = verify_evidence(source)
+    with zipfile.ZipFile(destination, "x", compression=zipfile.ZIP_DEFLATED) as archive:
+        for name, identity in sorted(receipt["files"].items()):
+            content = (source / name).read_bytes()
+            if hashlib.sha256(content).hexdigest() != identity["sha256"]:
+                raise ValueError("Suite evidence changed while packaging")
+            member = zipfile.ZipInfo(f"suite-evidence/{name}", date_time=(2020, 1, 1, 0, 0, 0))
+            member.compress_type = zipfile.ZIP_DEFLATED
+            member.create_system = 3
+            member.external_attr = 0o100644 << 16
+            archive.writestr(member, content)
 
 
 def verify_comparison() -> None:
@@ -317,6 +336,7 @@ def build(destination: Path) -> dict:
             target.write_bytes(source.read_text().encode("ascii", errors="xmlcharrefreplace"))
         else:
             shutil.copyfile(source, target)
+    write_suite_bundle(destination / "suite-evidence.zip")
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()

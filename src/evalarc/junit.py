@@ -21,7 +21,8 @@ def _xml_text(value: str) -> str:
     )
 
 
-def render_junit(data: dict, destination: Path) -> None:
+def junit_tree(data: dict) -> ET.Element:
+    """Build the exported gate results without performing filesystem writes."""
     jobs = data["jobs"]
     failures = sum(row["decision"]["valid"] and not row["decision"]["accepted"] for row in jobs)
     errors = sum(not row["decision"]["valid"] for row in jobs)
@@ -70,6 +71,11 @@ def render_junit(data: dict, destination: Path) -> None:
                 allow_nan=False,
             )
         )
+    return root
+
+
+def render_junit(data: dict, destination: Path) -> None:
+    root = junit_tree(data)
     ET.indent(root, space="  ")
     destination.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(root).write(destination, encoding="utf-8", xml_declaration=True)

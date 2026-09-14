@@ -12,6 +12,7 @@ from evalarc.cli import main
 from evalarc.junit import render_junit
 from evalarc.repetition import summarize_attempts
 from evalarc.suite import Gate, assess_gate, load_suite, run_suite
+from evalarc.verify import verify
 
 
 def job(identity, candidate, task="support-routing", *, extra="", backend="local", attempts=1):
@@ -291,6 +292,7 @@ def test_mixed_domain_suite_writes_complete_evidence_and_matching_progress(
         "evalarc.durable-kv",
         "evalarc.support-routing",
     }
+    assert verify(output)["accepted"]
 
 
 def test_invalid_job_does_not_hide_later_jobs_and_junit_errors_are_distinct(tmp_path, reference):
@@ -317,6 +319,9 @@ def test_invalid_job_does_not_hide_later_jobs_and_junit_errors_are_distinct(tmp_
     assert xml.find(".//testcase[@name='invalid']/error") is not None
     assert xml.find(".//testcase[@name='failed']/failure") is not None
     assert xml.find(".//testcase[@name='passing']/failure") is None
+    checked = verify(output)
+    assert checked["verified"] and not checked["records_valid"]
+    assert main(["verify", str(output), "--require-accepted"]) == 2
 
 
 def test_permissive_acceptance_still_exposes_unresolved_outcomes(tmp_path):
@@ -332,6 +337,10 @@ def test_permissive_acceptance_still_exposes_unresolved_outcomes(tmp_path):
     assert data["accepted"] and data["fully_resolved_jobs"] == 0
     assert "Gate accepted with unresolved task outcomes" in (output / "index.html").read_text()
     assert ET.parse(output / "junit.xml").getroot().attrib["failures"] == "0"
+    checked = verify(output)
+    assert checked["accepted"] and not checked["fully_resolved"]
+    assert main(["verify", str(output), "--require-accepted"]) == 0
+    assert main(["verify", str(output), "--require-resolved"]) == 1
     path.write_text(path.read_text() + 'required_dimensions = ["notes"]\n')
     assert (
         main(

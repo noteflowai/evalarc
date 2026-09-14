@@ -49,7 +49,7 @@ def check(source: Path) -> dict:
                 if p.is_file()
             }
 
-        for name in ("evaluation", "repetition", "repetition-faulty", "comparison"):
+        for name in ("evaluation", "repetition", "repetition-faulty", "comparison", "suite"):
             target = folder / name
             shutil.copytree(source / "examples" / name, target)
             before = hashes()
@@ -59,6 +59,15 @@ def check(source: Path) -> dict:
             results[name] = result
         run(folder / "repetition", 0, "--require-resolved")
         run(folder / "repetition-faulty", 1, "--require-resolved")
+        suite = run(folder / "suite", 1, "--require-accepted")
+        if suite["accepted_jobs"] != 2 or suite["fully_resolved_jobs"] != 1:
+            raise ValueError("suite acceptance and resolution were conflated")
+        junit = folder / "suite" / "junit.xml"
+        junit.write_text(
+            junit.read_text().replace("<failure", "<error").replace("</failure", "</error")
+        )
+        if run(folder / "suite", 2)["verified"]:
+            raise ValueError("changed JUnit was accepted")
         changed = folder / "comparison" / "comparison.json"
         data = json.loads(changed.read_text())
         data["score_delta"] = 0.123

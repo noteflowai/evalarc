@@ -16,7 +16,7 @@ from evalarc.artifacts import check_output_location, new_run
 from evalarc.evaluate import write_json
 from evalarc.events import EventCallback, EventLog, emit
 from evalarc.junit import render_junit
-from evalarc.records import numeric
+from evalarc.records import numeric, read_bytes
 from evalarc.repetition import repeat
 from evalarc.report import render_evaluation, render_repetition, render_suite
 from evalarc.runner import Runtime, snapshot
@@ -87,11 +87,8 @@ class SuitePlan:
         }
 
 
-def load_suite(path: Path) -> SuitePlan:
-    """Parse bounded configuration without starting candidates or contacting Docker."""
-    source = path.resolve()
-    with source.open("rb") as stream:
-        content = stream.read(MAX_CONFIG_BYTES + 1)
+def parse_suite_config(content: bytes) -> dict:
+    """Normalize schema-v1 settings without inspecting paths, tasks or runtimes."""
     if len(content) > MAX_CONFIG_BYTES:
         raise ValueError("suite configuration exceeds 1 MiB")
     data = _keys(
@@ -128,9 +125,8 @@ def load_suite(path: Path) -> SuitePlan:
             )
         seen.add(identity)
         label = f"{label} ({identity})"
-        if not isinstance(raw["task"], str):
+        if not isinstance(raw["task"], str) or not raw["task"]:
             raise ValueError(f"{label}: task must be a string")
-        task = get_task(raw["task"])
         candidate = raw["candidate"]
         if (
             not isinstance(candidate, str)
@@ -141,9 +137,6 @@ def load_suite(path: Path) -> SuitePlan:
             raise ValueError(
                 f"{label}: candidate must be a nonempty path of at most 4096 characters"
             )
-        candidate = (source.parent / candidate).resolve()
-        if not candidate.is_dir():
-            raise ValueError(f"{label}: candidate directory does not exist: {candidate}")
         seeds = raw.get("seeds", [17, 41, 97])
         if (
             not isinstance(seeds, list)
@@ -171,11 +164,15 @@ def load_suite(path: Path) -> SuitePlan:
             or not runtime.image.isprintable()
         ):
             raise ValueError(f"{label}: image must be a nonempty printable string")
-        # Validate limits without resolving an image or executing a configured command.
-        try:
-            replace(runtime, backend="local").prepare()
-        except ValueError as error:
-            raise ValueError(f"{label}: {error}") from error
+        if (
+            any(
+                not numeric(value) or value <= 0
+                for value in (runtime.timeout, runtime.case_timeout)
+            )
+            or type(runtime.output_limit) is not int
+            or runtime.output_limit < 1
+        ):
+            raise ValueError(f"{label}: runtime limits must be positive finite values")
         acceptance = _keys(
             raw.get("gate", {}),
             {"min_mean_score", "min_resolution_rate", "required_dimensions"},
@@ -189,30 +186,62 @@ def load_suite(path: Path) -> SuitePlan:
         dimensions = acceptance.get("required_dimensions", [])
         if (
             not isinstance(dimensions, list)
-            or any(not isinstance(item, str) or item not in task.dimensions for item in dimensions)
+            or any(not isinstance(item, str) or not item for item in dimensions)
             or len(set(dimensions)) != len(dimensions)
         ):
-            raise ValueError(
-                f"{label}: required_dimensions must name unique dimensions of {task.id}"
-            )
+            raise ValueError(f"{label}: required_dimensions must name unique dimensions")
         gate = Gate(
             acceptance.get("min_mean_score", 1.0),
             acceptance.get("min_resolution_rate", 1.0),
             tuple(dimensions),
         )
         jobs.append(
+            {
+                "id": identity,
+                "task": raw["task"],
+                "candidate": candidate,
+                "seeds": seeds,
+                "attempts": attempts,
+                "runtime": {
+                    key: getattr(runtime, key)
+                    for key in ("backend", "image", "timeout", "case_timeout", "output_limit")
+                },
+                "gate": asdict(gate),
+            }
+        )
+    if sum(job["attempts"] for job in jobs) > 1000:
+        raise ValueError("suite exceeds 1000 attempts")
+    return {"schema_version": data["schema_version"], "name": name, "jobs": jobs}
+
+
+def load_suite(path: Path) -> SuitePlan:
+    """Plan an execution; candidate and case checks belong only to this path."""
+    source = path.resolve()
+    content = read_bytes(source, limit=MAX_CONFIG_BYTES)
+    config = parse_suite_config(content)
+    jobs = []
+    for raw in config["jobs"]:
+        task = get_task(raw["task"])
+        candidate = (source.parent / raw["candidate"]).resolve()
+        if not candidate.is_dir():
+            raise ValueError(f"job {raw['id']}: candidate directory does not exist: {candidate}")
+        if not set(raw["gate"]["required_dimensions"]) <= set(task.dimensions):
+            raise ValueError(
+                f"job {raw['id']}: required_dimensions must name dimensions of {task.id}"
+            )
+        jobs.append(
             SuiteJob(
-                identity,
+                raw["id"],
                 task.id,
                 candidate,
-                tuple(seeds),
-                attempts,
-                runtime,
-                gate,
-                sum(len(task.generate_cases(seed)) for seed in seeds),
+                tuple(raw["seeds"]),
+                raw["attempts"],
+                Runtime(**raw["runtime"]),
+                Gate(**raw["gate"]),
+                sum(len(task.generate_cases(seed)) for seed in raw["seeds"]),
             )
         )
-    plan = SuitePlan(name, source, content, tuple(jobs))
+    plan = SuitePlan(config["name"], source, content, tuple(jobs))
     description = plan.describe()
     if description["planned_attempts"] > 1000 or description["planned_case_executions"] > 100_000:
         raise ValueError("suite exceeds 1000 attempts or 100000 planned case executions")
@@ -270,6 +299,72 @@ def assess_gate(summary: dict, gate: Gate) -> dict:
             for check in checks
             if not check["passed"]
         ],
+    }
+
+
+def summarize_job(identity: str, repetition: dict, gate: Gate, duration_seconds: float) -> dict:
+    """Recompute one suite row from its verified repetition and configured gate."""
+    decision = assess_gate(repetition, gate)
+    return {
+        "id": identity,
+        "task": repetition["task"],
+        "candidate_sha256": repetition["candidate_sha256"],
+        "grader_sha256": repetition["grader_sha256"],
+        "cases_sha256": repetition["cases_sha256"],
+        "runtime": repetition["runtime"],
+        "seeds": repetition["seeds"],
+        "gate": asdict(gate),
+        "decision": decision,
+        "status": (
+            "environment_error"
+            if not decision["valid"]
+            else ("passed" if decision["accepted"] else "failed")
+        ),
+        "fully_resolved": repetition["all_attempts_resolved"],
+        "observed": {
+            key: repetition[key]
+            for key in (
+                "requested_attempts",
+                "completed_attempts",
+                "assessed_attempts",
+                "invalid_attempts",
+                "resolved_attempts",
+                "mean_score",
+                "assessed_resolution_rate",
+                "variable_cases",
+                "variable_checks",
+            )
+        },
+        "duration_seconds": duration_seconds,
+    }
+
+
+def summarize_suite(
+    name: str, manifest_sha256: str, rows: list[dict], duration_seconds: float
+) -> dict:
+    """Keep acceptance, validity and full resolution separate at suite level."""
+    valid = all(row["decision"]["valid"] for row in rows)
+    accepted = valid and all(row["decision"]["accepted"] for row in rows)
+    return {
+        "schema_version": "evalarc.suite.v1",
+        "evalarc_version": __version__,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "name": name,
+        "manifest_sha256": manifest_sha256,
+        "valid": valid,
+        "accepted": accepted,
+        "status": "environment_error" if not valid else ("passed" if accepted else "failed"),
+        "total_jobs": len(rows),
+        "accepted_jobs": sum(row["decision"]["accepted"] for row in rows),
+        "invalid_jobs": sum(not row["decision"]["valid"] for row in rows),
+        "fully_resolved_jobs": sum(row["fully_resolved"] for row in rows),
+        "duration_seconds": duration_seconds,
+        "jobs": rows,
+        "interpretation": (
+            "Acceptance follows each job's declared gate. No score is averaged across jobs "
+            "or domains. Gate acceptance does not imply full task resolution. "
+            "Repeated observations use fixed public cases and are descriptive only."
+        ),
     }
 
 
@@ -352,71 +447,24 @@ def run_suite(
                 raise ValueError(f"frozen candidate changed during suite execution: {job.id}")
             write_json(directory / "repetition.json", repetition)
             render_repetition(repetition, directory / "index.html")
-            decision = assess_gate(repetition, job.gate)
-            row = {
-                "id": job.id,
-                "task": repetition["task"],
-                "candidate_sha256": fingerprint,
-                "grader_sha256": repetition["grader_sha256"],
-                "cases_sha256": repetition["cases_sha256"],
-                "runtime": repetition["runtime"],
-                "seeds": list(job.seeds),
-                "gate": asdict(job.gate),
-                "decision": decision,
-                "status": (
-                    "environment_error"
-                    if not decision["valid"]
-                    else ("passed" if decision["accepted"] else "failed")
-                ),
-                "fully_resolved": repetition["all_attempts_resolved"],
-                "observed": {
-                    key: repetition[key]
-                    for key in (
-                        "requested_attempts",
-                        "completed_attempts",
-                        "assessed_attempts",
-                        "invalid_attempts",
-                        "resolved_attempts",
-                        "mean_score",
-                        "assessed_resolution_rate",
-                        "variable_cases",
-                        "variable_checks",
-                    )
-                },
-                "duration_seconds": round(time.monotonic() - job_started, 6),
-            }
+            row = summarize_job(
+                job.id, repetition, job.gate, round(time.monotonic() - job_started, 6)
+            )
             rows.append(row)
             emit(
                 notify,
                 "job_completed",
                 job=job.id,
                 status=row["status"],
-                accepted=decision["accepted"],
+                accepted=row["decision"]["accepted"],
                 fully_resolved=row["fully_resolved"],
             )
-        valid = all(row["decision"]["valid"] for row in rows)
-        accepted = valid and all(row["decision"]["accepted"] for row in rows)
-        report = {
-            "schema_version": "evalarc.suite.v1",
-            "evalarc_version": __version__,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "name": plan.name,
-            "manifest_sha256": description["manifest_sha256"],
-            "valid": valid,
-            "accepted": accepted,
-            "status": "environment_error" if not valid else ("passed" if accepted else "failed"),
-            "total_jobs": len(rows),
-            "accepted_jobs": sum(row["decision"]["accepted"] for row in rows),
-            "invalid_jobs": sum(not row["decision"]["valid"] for row in rows),
-            "fully_resolved_jobs": sum(row["fully_resolved"] for row in rows),
-            "duration_seconds": round(time.monotonic() - started, 6),
-            "jobs": rows,
-            "interpretation": (
-                "Acceptance follows each job's declared gate. No score is averaged across jobs "
-                "or domains. Gate acceptance does not imply full task resolution. "
-                "Repeated observations use fixed public cases and are descriptive only."
-            ),
-        }
+        report = summarize_suite(
+            plan.name,
+            description["manifest_sha256"],
+            rows,
+            round(time.monotonic() - started, 6),
+        )
         write_json(output / "suite.json", report)
         render_suite(report, output / "index.html")
         render_junit(report, output / "junit.xml")

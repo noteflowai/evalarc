@@ -20,6 +20,7 @@ EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
         ("repetition", "repetition", 4, True),
         ("repetition-faulty", "repetition", 4, False),
         ("comparison", "comparison", 3, False),
+        ("suite", "suite", 12, False),
     ],
 )
 def test_archived_evidence_verifies_without_runtime_or_writes(
@@ -110,12 +111,147 @@ def test_pipe_is_rejected_without_waiting_for_writer(tmp_path):
         verify(path)
 
 
-def test_suite_and_ambiguous_folder_are_explicitly_unsupported(tmp_path):
-    with pytest.raises(ValueError, match="for a suite"):
-        verify(EXAMPLES / "suite")
+def test_ambiguous_folder_requires_an_explicit_report(tmp_path):
     shutil.copytree(EXAMPLES / "repetition", tmp_path / "bundle")
     shutil.copyfile(
         EXAMPLES / "evaluation" / "evaluation.json", tmp_path / "bundle/evaluation.json"
     )
     with pytest.raises(ValueError, match="choose one"):
         verify(tmp_path / "bundle")
+
+
+def change_json(path, update):
+    data = json.loads(path.read_text())
+    update(data)
+    path.write_text(json.dumps(data))
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "accepted",
+        "job-decision",
+        "boolean-count",
+        "job-order",
+        "runtime",
+        "manifest-gate",
+        "repetition",
+        "junit-failure",
+        "junit-output",
+        "missing-job",
+        "extra-job",
+        "missing-junit",
+        "missing-plan",
+    ],
+)
+def test_suite_rejects_inconsistent_configuration_decisions_and_junit(tmp_path, capsys, change):
+    folder = tmp_path / "suite"
+    shutil.copytree(EXAMPLES / "suite", folder)
+    if change == "accepted":
+        change_json(folder / "suite.json", lambda d: d.update(accepted=True))
+    elif change == "job-decision":
+        change_json(folder / "suite.json", lambda d: d["jobs"][2]["decision"].update(accepted=True))
+    elif change == "boolean-count":
+        change_json(folder / "suite.json", lambda d: d.update(fully_resolved_jobs=True))
+    elif change == "job-order":
+        change_json(folder / "plan.json", lambda d: d["jobs"].reverse())
+    elif change == "runtime":
+        change_json(folder / "plan.json", lambda d: d["jobs"][0]["runtime"].update(timeout=500))
+    elif change == "manifest-gate":
+        config = folder / "suite.toml"
+        config.write_text(
+            config.read_text().replace(
+                'required_dimensions = ["notes"]', "required_dimensions = []"
+            )
+        )
+        digest = hashlib.sha256(config.read_bytes()).hexdigest()
+        for name in ("suite.json", "plan.json"):
+            change_json(folder / name, lambda d: d.update(manifest_sha256=digest))
+        change_json(
+            folder / "plan.json", lambda d: d["jobs"][2]["gate"].update(required_dimensions=[])
+        )
+    elif change == "repetition":
+        change_json(
+            folder / "jobs/support-partial/repetition.json", lambda d: d.update(mean_score=1)
+        )
+    elif change.startswith("junit-"):
+        path = folder / "junit.xml"
+        old, new = (
+            ("failure", "error")
+            if change == "junit-failure"
+            else ('"fully_resolved": false', '"fully_resolved": true')
+        )
+        path.write_text(path.read_text().replace(old, new))
+    elif change == "missing-job":
+        shutil.rmtree(folder / "jobs/support-protected")
+    elif change == "extra-job":
+        (folder / "jobs/unreported").mkdir()
+    else:
+        (folder / ("junit.xml" if change == "missing-junit" else "plan.json")).unlink()
+    assert main(["verify", str(folder), "--json"]) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert not result["verified"] and result["error"]
+
+
+@pytest.mark.parametrize("filename", ["suite.toml", "junit.xml", "plan.json"])
+def test_suite_rejects_symlinked_inputs(tmp_path, filename):
+    folder = tmp_path / "suite"
+    shutil.copytree(EXAMPLES / "suite", folder)
+    (folder / filename).unlink()
+    (folder / filename).symlink_to(EXAMPLES / "suite" / filename)
+    with pytest.raises(ValueError, match="symlink"):
+        verify(folder)
+
+
+def test_suite_verification_never_resolves_original_paths_or_prepares_runtime(monkeypatch):
+    from evalarc.runner import Runtime
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline evidence checking cannot prepare an execution")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(Runtime, "prepare", forbidden)
+        patch.setattr(Path, "resolve", forbidden)
+        patch.setattr(subprocess, "Popen", forbidden)
+        result = verify(EXAMPLES / "suite")
+    assert result["accepted_jobs"] == 2
+    assert result["fully_resolved_jobs"] == 1
+    assert not result["accepted"]
+    assert {"suite.toml", "plan.json", "junit.xml"} <= result["files"].keys()
+
+
+def test_suite_gate_requirement_differs_from_record_consistency(capsys):
+    path = str(EXAMPLES / "suite")
+    assert main(["verify", path, "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["verified"]
+    assert main(["verify", path, "--json", "--require-accepted"]) == 1
+    assert not json.loads(capsys.readouterr().out)["accepted"]
+    assert main(["verify", str(EXAMPLES / "repetition"), "--json", "--require-accepted"]) == 2
+    assert "requires suite" in json.loads(capsys.readouterr().out)["error"]
+
+
+@pytest.mark.parametrize(
+    "xml",
+    [
+        '<!DOCTYPE testsuites [<!ENTITY x SYSTEM "file:///not-read">]><testsuites>&x;</testsuites>',
+        "<testsuites>" + "<a>" * 20 + "</a>" * 20 + "</testsuites>",
+        "<testsuites><invalid></testsuites>",
+    ],
+)
+def test_junit_rejects_entities_invalid_xml_and_deep_structures(tmp_path, xml):
+    folder = tmp_path / "suite"
+    shutil.copytree(EXAMPLES / "suite", folder)
+    (folder / "junit.xml").write_text(xml)
+    with pytest.raises(ValueError):
+        verify(folder)
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="POSIX named pipes")
+@pytest.mark.parametrize("filename", ["suite.toml", "junit.xml"])
+def test_suite_non_json_inputs_must_be_regular_files(tmp_path, filename):
+    folder = tmp_path / "suite"
+    shutil.copytree(EXAMPLES / "suite", folder)
+    (folder / filename).unlink()
+    os.mkfifo(folder / filename)
+    with pytest.raises(ValueError, match="regular file"):
+        verify(folder)
