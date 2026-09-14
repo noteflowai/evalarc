@@ -257,7 +257,13 @@ def build(destination: Path) -> dict:
     destination.mkdir(parents=True)
     for path in (ROOT / "site").iterdir():
         if path.is_file():
-            shutil.copyfile(path, destination / path.name)
+            if path.name == "index.html":
+                version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+                (destination / path.name).write_text(
+                    path.read_text().replace("__EVALARC_VERSION__", version)
+                )
+            else:
+                shutil.copyfile(path, destination / path.name)
     for name, directory, *_ in specifications:
         target = destination / name
         target.mkdir()

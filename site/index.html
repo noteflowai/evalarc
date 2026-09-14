@@ -19,7 +19,7 @@
   <main>
     <section class="hero">
       <div>
-        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.6</p>
+        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW __EVALARC_VERSION__</p>
         <h1>Look past<br>the <em>score.</em></h1>
         <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
         <p class="muted">EvalArc tests whether an agent's grader catches the difference between plausible progress and a completed task.</p>
@@ -36,18 +36,20 @@
         <p class="caption">Scripted negative control &middot; public seed 17<br>No model call or live customer data.</p>
       </a>
     </section>
-    <p class="muted">New in v0.6: generate Python or JavaScript candidates and audit independent controls against the same task contracts. <a href="https://github.com/noteflowai/evalarc/blob/main/docs/languages.md">Try both runtimes &#8599;</a>. The recorded showcases below retain their original versions and fingerprints.</p>
+    <p class="muted">Generate Python or JavaScript candidates and audit independent controls against the same task contracts. <a href="https://github.com/noteflowai/evalarc/blob/main/docs/languages.md">Try both runtimes &#8599;</a>. The recorded showcases below retain their original versions and fingerprints.</p>
     <div class="facts" aria-label="Audit scope">
       <div><strong>2</strong><span>task packs</span></div>
       <div><strong>15</strong><span>declared faults caught</span></div>
       <div><strong>JSON</strong><span>downloadable evidence</span></div>
       <div><strong>CPU</strong><span>reproduce without a model API</span></div>
     </div>
+    <nav class="section-nav" aria-label="Evidence sections"><a href="#suite">Acceptance gates</a><a href="#repeat">Repeated attempts</a><a href="#regression">Revision comparison</a><a href="#explorer">Case explorer</a></nav>
     <section id="suite" class="suite">
       <div class="section-top"><div><p class="eyebrow">NEW IN 0.5 / DECLARE YOUR ACCEPTANCE RULES</p><h2>Same score. Different gate.</h2></div><p>One frozen policy.<br>Two explicit acceptance rules.</p></div>
       <p class="muted">Both support jobs score 93.75% and resolve 0/2 attempts. A deliberately permissive gate accepts the result; requiring every notes check to pass rejects it. The task outcome stays the same.</p>
       <p id="suite-status" role="status">Loading the recorded suite&hellip;</p>
-      <div id="suite-workspace" hidden>
+      <div id="suite-recovery" class="recovery" hidden><button id="suite-retry" type="button">Retry suite</button><a href="suite/index.html">Open the standalone suite report</a></div>
+      <div id="suite-workspace" tabindex="-1" role="region" aria-label="Recorded acceptance gates" hidden>
         <div class="suite-comparison">
           <article id="suite-partial"><p class="eyebrow">PERMISSIVE / NO REQUIRED DIMENSION</p><h3>Partial progress allowed <span id="suite-partial-verdict" class="badge"></span></h3><strong id="suite-partial-score"></strong><p id="suite-partial-resolution" class="fail"></p><pre id="suite-partial-gate"></pre><a href="suite/jobs/support-partial/index.html">Inspect both attempts &#8599;</a></article>
           <article id="suite-protected"><p class="eyebrow">PROTECTED / EVERY NOTES CHECK REQUIRED</p><h3>Notes must be correct <span id="suite-protected-verdict" class="badge"></span></h3><strong id="suite-protected-score"></strong><p id="suite-protected-resolution" class="fail"></p><pre id="suite-protected-gate"></pre><a href="suite/jobs/support-protected/index.html">Inspect both attempts &#8599;</a></article>
@@ -69,7 +71,8 @@
         <button id="repeat-faulty" type="button" aria-pressed="true">02 &nbsp; Duplicate write<span>The same declared defect, three attempts</span></button>
       </div>
       <p id="repeat-status" role="status">Loading the recorded attempts&hellip;</p>
-      <div id="repeat-workspace" hidden>
+      <div id="repeat-recovery" class="recovery" hidden><button id="repeat-retry" type="button">Retry attempts</button><a href="repeat/reference/index.html">Reference report</a><a href="repeat/faulty/index.html">Faulty control report</a></div>
+      <div id="repeat-workspace" tabindex="-1" role="region" aria-label="Recorded repeated attempts" hidden>
         <div class="repeat-summary" aria-live="polite">
           <div><span class="eyebrow">RESOLVED ATTEMPTS</span><strong id="repeat-resolved"></strong></div>
           <div><span class="eyebrow">MEAN ASSESSED SCORE</span><strong id="repeat-score"></strong></div>
@@ -89,7 +92,8 @@
       <div class="section-top"><div><p class="eyebrow">NEW IN 0.3 / COMPARE TWO REVISIONS</p><h2>Better score. New failure.</h2></div><p>Two closure checks improve.<br>A previously passing note check fails.</p></div>
       <p class="muted">These recorded policies use the same task, seeds, grader and runtime. Select a changed case to compare the observed outcomes.</p>
       <p id="comparison-status" role="status">Loading the recorded comparison&hellip;</p>
-      <div id="comparison-workspace" hidden>
+      <div id="comparison-recovery" class="recovery" hidden><button id="comparison-retry" type="button">Retry comparison</button><a href="comparison/index.html">Open the standalone comparison</a></div>
+      <div id="comparison-workspace" tabindex="-1" role="region" aria-label="Recorded revision comparison" hidden>
         <div class="comparison-summary">
           <div><span class="eyebrow">BASELINE / CLOSE-UNRESOLVED</span><strong id="before-score"></strong></div>
           <div class="comparison-arrow" aria-hidden="true">&#8594;</div>
@@ -113,11 +117,12 @@
     <section id="explorer" class="explorer">
       <div class="section-top"><div><p class="eyebrow">FOLLOW THE EVIDENCE</p><h2>One score never tells the whole story.</h2></div><p>Switch the control. Inspect the checks.<br>Follow each recorded state change.</p></div>
       <div class="task-switch" role="group" aria-label="Task pack">
-        <button id="support-task" type="button" aria-pressed="true">01 &nbsp; Support tools <span>Retries &amp; state</span></button>
-        <button id="coding-task" type="button" aria-pressed="false">02 &nbsp; Coding artifact <span>Durability &amp; contracts</span></button>
+        <button id="support-task" type="button" aria-pressed="true" disabled>01 &nbsp; Support tools <span>Retries &amp; state</span></button>
+        <button id="coding-task" type="button" aria-pressed="false" disabled>02 &nbsp; Coding artifact <span>Durability &amp; contracts</span></button>
       </div>
       <p id="load-status" role="status">Loading recorded audit evidence&hellip;</p>
-      <div id="workspace" hidden>
+      <div id="audit-recovery" class="recovery" hidden><button id="audit-retry" type="button">Retry missing task packs</button><a href="support/index.html">Support report</a><a href="coding/index.html">Coding report</a></div>
+      <div id="workspace" tabindex="-1" role="region" aria-label="Recorded audit evidence" hidden>
         <div class="selection">
           <div><label for="control">Implementation under evaluation</label><select id="control"></select></div>
           <div class="selection-links"><a id="report-link" href="support/index.html">Full report &#8599;</a><a id="download-link" href="support/audit.json" download>Download audit JSON &#8595;</a></div>
@@ -131,19 +136,22 @@
         <div id="dimensions" class="dimensions" aria-label="Scores by dimension"></div>
         <div class="evidence">
           <aside><h3>Recorded cases</h3><div id="cases" role="group" aria-label="Recorded cases"></div></aside>
-          <div class="case-detail">
-            <div class="case-heading"><h3 id="case-title"></h3><span id="case-verdict" class="badge"></span></div>
+          <section class="case-detail" id="case-detail" aria-labelledby="case-title">
+            <div class="case-heading"><h3 id="case-title" tabindex="-1"></h3><span id="case-verdict" class="badge"></span></div>
+            <div class="case-actions"><button id="back-to-cases" type="button">Back to cases &#8593;</button><button id="share-case" type="button">Copy evidence link</button></div>
+            <p id="share-status" class="caption" role="status"></p>
+            <input id="share-url" aria-label="Evidence link to copy" readonly hidden>
             <div id="case-checks" class="check-list"></div>
             <p id="case-error"></p>
             <div id="trace-panel" hidden>
               <label for="trace-step">Tool trace <span id="step-label"></span></label>
               <input type="range" id="trace-step" min="0" max="0" value="0">
               <div class="step-buttons"><button id="previous-step" type="button">&#8592; Previous</button><button id="next-step" type="button">Next &#8594;</button></div>
-              <div class="trace-grid"><div><h4>Action &amp; result</h4><pre id="trace-action"></pre></div><div><h4>State changes in this step</h4><pre id="trace-changes"></pre></div></div>
-              <details><summary>Initial and final state</summary><pre id="states"></pre></details>
+              <div class="trace-grid"><div><h4>Action &amp; result</h4><pre id="trace-action" tabindex="0" aria-label="Recorded action and result"></pre></div><div><h4>State changes in this step</h4><pre id="trace-changes" tabindex="0" aria-label="Recorded state changes"></pre></div></div>
+              <details><summary>Initial and final state</summary><pre id="states" tabindex="0" aria-label="Initial and final state"></pre></details>
             </div>
-            <div id="coding-panel" hidden><p>The coding grader checks observable responses and restart behavior. This record contains the failure message and a transcript fingerprint; it does not include the agent's coding process or a full response transcript.</p><pre id="coding-evidence"></pre></div>
-          </div>
+            <div id="coding-panel" hidden><p>The coding grader checks observable responses and restart behavior. This record contains the failure message and a transcript fingerprint; it does not include the agent's coding process or a full response transcript.</p><pre id="coding-evidence" tabindex="0" aria-label="Recorded coding evidence"></pre></div>
+          </section>
         </div>
         <details class="provenance"><summary>Reproduction record &amp; fingerprints</summary><pre id="provenance"></pre></details>
       </div>

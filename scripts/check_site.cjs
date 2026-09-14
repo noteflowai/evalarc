@@ -26,8 +26,12 @@ async function main() {
   const browser = await chromium.launch({headless:true});
   try {
     const results = [];
-    for (const width of [1440, 390]) {
+    for (const width of [1440, 390, 320]) {
       const page = await browser.newPage({viewport:{width, height:1000}});
+      await page.emulateMedia({reducedMotion:"reduce"});
+      await page.addInitScript(() => {
+        Object.defineProperty(navigator, "clipboard", {configurable:true, value:{writeText:async () => { throw new Error("Clipboard denied"); }}});
+      });
       const errors = [];
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(base, {waitUntil:"networkidle", timeout:60000});
@@ -118,6 +122,31 @@ async function main() {
       await app.locator("#next-step").click();
       const faulty = JSON.parse(await app.locator("#trace-changes").innerText());
       assert.equal(Object.values(faulty)[0].after.notes.length, 3);
+      const detailBounds = await app.locator("#case-detail").boundingBox();
+      const traceBounds = await app.locator("#trace-action").boundingBox();
+      assert(traceBounds.x + traceBounds.width <= detailBounds.x + detailBounds.width, "Trace panel must scroll within its card");
+      assert.equal(await app.locator("#trace-step").getAttribute("aria-valuetext"), "Step 4 of 6");
+      await app.locator("#share-case").click();
+      const shared = await app.locator("#share-url").inputValue();
+      const sharedParams = new URLSearchParams(new URL(shared).hash.slice(1));
+      assert.equal(sharedParams.get("case"), "retry-after-commit");
+      assert.equal(sharedParams.get("step"), "3");
+      assert.equal(await app.locator("body").evaluate(() => document.activeElement.id), "share-url");
+      await app.locator("body").evaluate(() => location.reload());
+      await app.locator("#share-status").filter({hasText:"Shared evidence restored"}).waitFor();
+      assert.equal(await app.locator("#trace-step").inputValue(), "3");
+      assert.deepEqual(JSON.parse(await app.locator("#trace-changes").innerText()), faulty);
+      assert.equal(await app.locator("body").evaluate(() => document.activeElement.id), "case-title");
+      await app.locator("#back-to-cases").click();
+      assert.equal(await app.locator("body").evaluate(() => document.activeElement.getAttribute("aria-pressed")), "true");
+      await app.locator("body").evaluate(() => { location.hash = "v=1&pack=support&control=missing&case=missing&seed=NaN&step=99999"; });
+      await app.locator("#share-status").filter({hasText:"Some link values were outside"}).waitFor();
+      assert(await app.locator("#next-step").isDisabled());
+      await app.locator("body").evaluate(() => history.back());
+      await app.locator("#share-status").filter({hasText:"Shared evidence restored"}).waitFor();
+      assert.equal(await app.locator("#trace-step").inputValue(), "3");
+      await app.locator('nav[aria-label="Evidence sections"] a[href="#suite"]').click();
+      assert.equal(await app.locator("#trace-step").inputValue(), "3");
       await app.locator("#control").selectOption("reference");
       assert.equal(await app.locator("#score").innerText(), "100%");
       assert.equal(await app.locator("#verdict").innerText(), "FULLY RESOLVED");
@@ -128,6 +157,8 @@ async function main() {
       assert.equal(await app.locator("#score").innerText(), "92.5%");
       assert.match(await app.locator("#case-title").innerText(), /cas-type-sensitivity/);
       assert.match(await app.locator("#coding-evidence").innerText(), /response mismatch/);
+      await app.locator("#share-case").click();
+      assert.equal(new URLSearchParams(new URL(await app.locator("#share-url").inputValue()).hash.slice(1)).get("step"), "0");
       for (const task of ["support", "coding"]) {
         await app.locator(`#${task}-task`).click();
         const values = await app.locator("#control option").evaluateAll(options => options.map(o => o.value));
@@ -137,6 +168,7 @@ async function main() {
           for (let i=0; i<await app.locator("#cases button").count();i++) {
             await app.locator("#cases button").nth(i).click();
             assert.ok((await app.locator("#case-title").innerText()).includes("seed 17"));
+            assert.equal(await app.locator("body").evaluate(() => document.activeElement.id), "case-title");
           }
         }
       }
@@ -181,7 +213,41 @@ async function main() {
         assert.match(await app.locator("body").innerText(), /retry-after-commit/);
       }
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, sharedTraceRestored:true, keyboardCaseReturn:true, errors});
+      await page.close();
+    }
+    if (!process.env.SITE_URL) {
+      const page = await browser.newPage({viewport:{width:390,height:1000}, reducedMotion:"reduce"});
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
+      const failures = new Set(["suite/suite.json", "repeat/faulty/repetition.json", "comparison/current.json", "coding/audit.json"]);
+      await page.route("**/*.json", route => {
+        const url = new URL(route.request().url());
+        return [...failures].some(file => url.pathname.endsWith("/" + file)) ? route.abort() : route.continue();
+      });
+      await page.goto(base + "#v=1&pack=coding&control=boolean-equals-one&case=cas-type-sensitivity&seed=17&step=0");
+      for (const name of ["suite", "repeat", "comparison", "audit"]) {
+        await page.locator("#" + name + "-recovery").waitFor({state:"visible"});
+        assert(await page.locator("#" + name + "-retry").isEnabled());
+      }
+      assert(await page.locator("#workspace").isVisible());
+      assert.equal(await page.locator("#score").innerText(), "93.75%");
+      assert(await page.locator("#coding-task").isDisabled());
+      assert.match(await page.locator("#share-status").innerText(), /linked coding evidence is unavailable/);
+      failures.clear();
+      for (const name of ["suite", "repeat", "comparison", "audit"]) {
+        await page.locator("#" + name + "-retry").click();
+        await page.locator("#" + name + "-recovery").waitFor({state:"hidden"});
+      }
+      assert(await page.locator("#coding-task").isEnabled());
+      assert.equal(await page.locator("#score").innerText(), "92.5%");
+      assert.equal(await page.locator("#changed-cases button").count(), 3);
+      assert.equal(await page.locator("#repeat-attempts a").count(), 3);
+      assert.equal(await page.locator("#cases button").count(), 15);
+      assert.match(await page.locator("#share-status").innerText(), /Shared evidence restored/);
+      assert.equal(await page.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      assert.deepEqual(errors, []);
+      results.push({independentSectionRetry:true, partialTaskPack:true, pendingLinkRestored:true, errors});
       await page.close();
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

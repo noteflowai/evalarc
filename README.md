@@ -27,10 +27,13 @@ The [interactive evidence lab](https://huggingface.co/spaces/glayguo/evalarc)
 lets you compare revisions side by side, switch between correct and faulty
 implementations, and step through the tool call that changed the state. It replays the
 committed Docker audits without a model API or installation.
+Share the exact case and trace step with **Copy evidence link**, return from
+details to the case list, and retry failed sections independently.
+[Explorer guide](docs/explorer.md).
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.6 includes two working task packs**, a shared evidence format, and
+**Two working task packs** share an evidence format and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |

@@ -21,10 +21,12 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 [交互证据实验室](https://huggingface.co/spaces/glayguo/evalarc)
 可以并排比较两个版本，查看一处退步、两处改进，再逐步检查工具调用和状态变化。
 页面读取仓库保存的 Docker 审计记录，无需安装，也不调用模型。
+使用 **Copy evidence link** 分享具体案例和步骤；打开详情后可返回原案例，
+某一分区加载失败时可单独重试。[交互使用说明](docs/explorer.md)。
 
 [![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.6 已实现 coding 和业务工具两个场景。**
+**已实现 coding 和业务工具两个场景。**
 
 | 任务 | 交互方式 | 验证内容 |
 | --- | --- | --- |

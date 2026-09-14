@@ -18,7 +18,12 @@ tags:
 
 # EvalArc — Look past the score.
 
-**New in v0.6: Python and JavaScript candidates.** Generate starters or independent
+**Share the exact evidence.** Select a case and trace step, then **Copy evidence
+link**. Recipients reopen the same recorded observation. Keyboard users can
+inspect a case and return to its list; failed sections can be retried separately.
+If one task pack fails to load, the other remains inspectable.
+
+**Python and JavaScript candidates.** Generate starters or independent
 references for both task packs, audit the declared faults, and combine runtimes
 in one suite. The task contracts and graders are unchanged. See the
 [language guide](https://github.com/noteflowai/evalarc/blob/main/docs/languages.md)
@@ -76,7 +81,7 @@ dependencies; the bundled trusted controls can run on a CPU.
 
 ## Scope
 
-Research preview 0.6.0. These are scripted controls and public development
+Research preview 0.7.1. These are scripted controls and public development
 tasks, not held-out frontier-model results. Detection applies only to the
 declared faults. No arbitrary reward-hack resistance, human time horizon,
 hardware-agent validation or RL improvement is established. Repeated fixed

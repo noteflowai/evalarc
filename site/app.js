@@ -14,10 +14,43 @@ let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
 const repetitions = {};
+async function fetchRecord(path) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(path, {signal: controller.signal});
+    if (!response.ok) throw new Error(`Evidence request failed (${response.status})`);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+async function loadSection(name, load, retry = false) {
+  const status = $(name === "audit" ? "load-status" : name + "-status");
+  const workspace = $(name === "audit" ? "workspace" : name + "-workspace");
+  const button = $(name + "-retry"), recovery = $(name + "-recovery");
+  button.disabled = true;
+  status.hidden = false;
+  status.textContent = "Loading recorded evidence…";
+  workspace.setAttribute("aria-busy", "true");
+  try {
+    const partial = await load();
+    workspace.hidden = false;
+    status.hidden = !partial;
+    status.textContent = partial || "";
+    recovery.hidden = !partial;
+    const restored = name === "audit" && restoreView();
+    if (retry && !restored) workspace.focus();
+  } catch {
+    status.textContent = "This evidence could not be loaded. Retry this section or open its standalone report; other sections remain available.";
+    recovery.hidden = false;
+  } finally {
+    workspace.setAttribute("aria-busy", "false");
+    button.disabled = false;
+  }
+}
 async function loadSuite() {
-  const response = await fetch("suite/suite.json");
-  if (!response.ok) throw new Error("Suite evidence unavailable");
-  const suite = await response.json();
+  const suite = await fetchRecord("suite/suite.json");
   const jobs = {};
   for (const name of ["partial", "protected"]) {
     const job = suite.jobs.find(row => row.id === "support-" + name);
@@ -40,14 +73,7 @@ async function loadSuite() {
     protected_gate: jobs.protected.decision,
     interpretation: suite.interpretation,
   });
-  $("suite-status").hidden = true;
-  $("suite-workspace").hidden = false;
 }
-loadSuite().catch(() => {
-  $("suite-status").textContent = "Suite evidence could not be loaded. ";
-  const link = document.createElement("a"); link.href = "suite/index.html"; link.textContent = "Open the standalone suite report";
-  $("suite-status").append(link);
-});
 function chooseRepetition(name) {
   const record = repetitions[name];
   if (!record) return;
@@ -99,26 +125,17 @@ function chooseRepetition(name) {
   });
 }
 for (const name of ["reference", "faulty"]) $("repeat-" + name).addEventListener("click", () => chooseRepetition(name));
-Promise.all(["reference", "faulty"].map(async (name) => {
-  const response = await fetch(`repeat/${name}/repetition.json`);
-  if (!response.ok) throw new Error("Repetition evidence unavailable");
-  repetitions[name] = await response.json();
-})).then(() => {
+async function loadRepetitions() {
+  await Promise.all(["reference", "faulty"].map(async (name) => {
+    repetitions[name] = await fetchRecord(`repeat/${name}/repetition.json`);
+  }));
   chooseRepetition("faulty");
-  $("repeat-status").hidden = true;
-  $("repeat-workspace").hidden = false;
-}).catch(() => {
-  $("repeat-status").textContent = "Repetition evidence could not be loaded. Open a standalone report:";
-  for (const name of ["reference", "faulty"]) {
-    const link = document.createElement("a"); link.href = `repeat/${name}/index.html`; link.textContent = ` ${name} report`;
-    $("repeat-status").append(link);
-  }
-});
+}
 function badge(element, passed, text) {
   element.className = `badge ${passed ? "pass" : "fail"}`;
   element.textContent = text;
 }
-function choosePack(nextPack) {
+function choosePack(nextPack, view) {
   pack = nextPack;
   for (const name of Object.keys(packs)) $(name + "-task").setAttribute("aria-pressed", String(pack === name));
   const select = $("control");
@@ -130,11 +147,12 @@ function choosePack(nextPack) {
     select.append(option);
   }
   select.value = packs[pack].defaultControl;
+  if (view?.control && [...select.options].some(option => option.value === view.control)) select.value = view.control;
   $("report-link").href = `${packs[pack].path}/index.html`;
   $("download-link").href = `${packs[pack].path}/audit.json`;
-  chooseControl();
+  chooseControl(view);
 }
-function chooseControl() {
+function chooseControl(view) {
   const name = $("control").value;
   const audit = audits[pack];
   const mutant = audit.mutants.find((row) => row.name === name);
@@ -159,7 +177,8 @@ function chooseControl() {
     const button = document.createElement("button"); button.type = "button";
     const status = document.createElement("span"); status.className = row.passed ? "pass" : "fail"; status.textContent = row.passed ? "PASS" : row.status.toUpperCase();
     button.append(status, document.createTextNode(row.case_id));
-    button.addEventListener("click", () => chooseCase(index));
+    button.setAttribute("aria-controls", "case-detail");
+    button.addEventListener("click", () => { chooseCase(index); rememberView(); $("case-title").focus(); });
     $("cases").append(button);
   });
   $("provenance").textContent = pretty({
@@ -170,9 +189,13 @@ function chooseControl() {
   });
   let index = evaluation.cases.findIndex((row) => !row.passed);
   if (index < 0) index = evaluation.cases.findIndex((row) => row.case_id === packs[pack].defaultCase);
-  chooseCase(Math.max(index, 0));
+  if (view) {
+    const requested = evaluation.cases.findIndex(row => row.case_id === view.case && String(row.seed) === view.seed);
+    if (requested >= 0) index = requested;
+  }
+  chooseCase(Math.max(index, 0), view?.step);
 }
-function chooseCase(index) {
+function chooseCase(index, step = 0) {
   selectedCase = evaluation.cases[index];
   [...$("cases").children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
   $("case-title").textContent = `${selectedCase.case_id} / seed ${selectedCase.seed}`;
@@ -188,7 +211,7 @@ function chooseCase(index) {
   if (hasTrace) {
     $("states").textContent = pretty({initial_state: selectedCase.initial_state, final_state: selectedCase.final_state});
     $("trace-step").max = selectedCase.trace.length - 1;
-    $("trace-step").value = 0;
+    $("trace-step").value = Math.max(0, Math.min(selectedCase.trace.length - 1, step));
     showStep();
   } else {
     $("coding-evidence").textContent = pretty(selectedCase);
@@ -198,11 +221,66 @@ function showStep() {
   const index = Number($("trace-step").value);
   const step = selectedCase.trace[index];
   $("step-label").textContent = `${index + 1} / ${selectedCase.trace.length}`;
+  $("trace-step").setAttribute("aria-valuetext", `Step ${index + 1} of ${selectedCase.trace.length}`);
   $("trace-action").textContent = pretty(Object.fromEntries(Object.entries(step).filter(([key]) => key !== "changes")));
   $("trace-changes").textContent = step.changes && Object.keys(step.changes).length ? pretty(step.changes) : "No state change in this step.";
   $("previous-step").disabled = index === 0;
   $("next-step").disabled = index === selectedCase.trace.length - 1;
 }
+function viewFragment() {
+  return "#" + new URLSearchParams({
+    v: "1", pack, control: $("control").value, case: selectedCase.case_id,
+    seed: String(selectedCase.seed), step: $("trace-panel").hidden ? "0" : $("trace-step").value,
+  });
+}
+function rememberView() {
+  $("share-url").hidden = true;
+  $("share-status").textContent = "";
+  try { history.replaceState(null, "", viewFragment()); } catch { /* Restricted embeds can still copy links. */ }
+}
+function restoreView(focus = true) {
+  if (!location.hash.includes("=")) return false;
+  const params = new URLSearchParams(location.hash.slice(1));
+  if (location.hash.length > 2048 || params.get("v") !== "1" || !Object.hasOwn(packs, params.get("pack"))) {
+    $("share-status").textContent = "This evidence link is not supported. Choose a task, control and case below.";
+    return false;
+  }
+  const requestedPack = params.get("pack");
+  if (!audits[requestedPack]) {
+    $("share-status").textContent = `The linked ${requestedPack} evidence is unavailable. Retry the missing task pack to open this view.`;
+    return false;
+  }
+  const step = Number(params.get("step"));
+  const view = {control: params.get("control"), case: params.get("case"), seed: params.get("seed"),
+    step: Number.isSafeInteger(step) && step >= 0 ? step : 0};
+  choosePack(requestedPack, view);
+  const exact = $("control").value === view.control && selectedCase.case_id === view.case &&
+    String(selectedCase.seed) === view.seed && params.has("step") && String(view.step) === params.get("step") &&
+    (selectedCase.trace?.length ? Number($("trace-step").value) === view.step : view.step === 0);
+  $("share-url").hidden = true;
+  $("share-status").textContent = exact
+    ? "Shared evidence restored. The link selects a recorded case and trace step."
+    : "Some link values were outside this recording. Showing the nearest available view; check the selected case and step.";
+  if (focus) $("case-title").focus();
+  return true;
+}
+$("share-case").addEventListener("click", async () => {
+  const url = new URL(location.href);
+  url.hash = viewFragment();
+  try {
+    await navigator.clipboard.writeText(url.href);
+    $("share-url").hidden = true;
+    $("share-status").textContent = "Evidence link copied: task, control, seed, case and trace step.";
+  } catch {
+    $("share-url").hidden = false;
+    $("share-url").value = url.href;
+    $("share-url").focus();
+    $("share-url").select();
+    $("share-status").textContent = "Clipboard unavailable here. Select and copy the evidence link.";
+  }
+});
+$("back-to-cases").addEventListener("click", () => $("cases").querySelector('[aria-pressed="true"]')?.focus());
+window.addEventListener("hashchange", () => { if (evaluation) restoreView(); });
 function chooseTransition(index) {
   const transition = comparison.case_transitions[index];
   [...$("changed-cases").children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
@@ -224,15 +302,12 @@ function chooseTransition(index) {
   }
 }
 async function loadComparison() {
-  [comparison, baseline, current] = await Promise.all(["comparison", "baseline", "current"].map(async (name) => {
-    const response = await fetch(`comparison/${name}.json`);
-    if (!response.ok) throw new Error("Comparison evidence unavailable");
-    return response.json();
-  }));
+  [comparison, baseline, current] = await Promise.all(["comparison", "baseline", "current"].map(name => fetchRecord(`comparison/${name}.json`)));
   $("before-score").textContent = percent(comparison.baseline.score);
   $("after-score").textContent = percent(comparison.current.score);
   $("regression-count").textContent = `${comparison.regressions.length} REGRESSED CHECK`;
   $("compare-delta").textContent = `+${Number((comparison.score_delta * 100).toFixed(4))} percentage points`;
+  $("changed-cases").replaceChildren();
   comparison.case_transitions.forEach((transition, index) => {
     const button = document.createElement("button"); button.type = "button";
     const tag = document.createElement("span"); tag.className = transition.regressed_checks.length ? "fail" : "pass";
@@ -242,33 +317,28 @@ async function loadComparison() {
     $("changed-cases").append(button);
   });
   chooseTransition(0);
-  $("comparison-status").hidden = true;
-  $("comparison-workspace").hidden = false;
 }
-loadComparison().catch(() => {
-  $("comparison-status").textContent = "Comparison evidence could not be loaded. Reload the page or open the standalone report.";
-  const link = document.createElement("a"); link.href = "comparison/index.html"; link.textContent = "Open comparison report";
-  $("comparison-status").append(document.createTextNode(" "), link);
+$("control").addEventListener("change", () => { chooseControl(); rememberView(); });
+$("trace-step").addEventListener("input", () => { showStep(); rememberView(); });
+$("previous-step").addEventListener("click", () => { $("trace-step").stepDown(); showStep(); rememberView(); });
+$("next-step").addEventListener("click", () => { $("trace-step").stepUp(); showStep(); rememberView(); });
+for (const name of Object.keys(packs)) $(name + "-task").addEventListener("click", () => {
+  if (audits[name]) { choosePack(name); rememberView(); }
 });
-$("control").addEventListener("change", chooseControl);
-$("trace-step").addEventListener("input", showStep);
-$("previous-step").addEventListener("click", () => { $("trace-step").stepDown(); showStep(); });
-$("next-step").addEventListener("click", () => { $("trace-step").stepUp(); showStep(); });
-for (const name of Object.keys(packs)) $(name + "-task").addEventListener("click", () => { if (audits[name]) choosePack(name); });
-Promise.all(Object.entries(packs).map(async ([name, config]) => {
-  const response = await fetch(`${config.path}/audit.json`);
-  if (!response.ok) throw new Error(`Evidence request failed (${response.status})`);
-  audits[name] = await response.json();
-})).then(() => {
-  choosePack("support");
-  $("load-status").hidden = true;
-  $("workspace").hidden = false;
-}).catch(() => {
-  $("load-status").textContent = "Evidence could not be loaded. Reload this page, or open the standalone support and coding reports linked below.";
-  const links = document.createElement("p");
-  for (const [name, config] of Object.entries(packs)) {
-    const link = document.createElement("a"); link.href = `${config.path}/index.html`; link.textContent = `Open ${name} report`;
-    links.append(link, document.createTextNode("  "));
-  }
-  $("load-status").after(links);
-});
+async function loadAudits() {
+  await Promise.allSettled(Object.entries(packs).filter(([name]) => !audits[name]).map(async ([name, config]) => {
+    const record = await fetchRecord(`${config.path}/audit.json`);
+    if (!Array.isArray(record.reference?.cases) || !Array.isArray(record.mutants) ||
+        record.mutants.some(row => !Array.isArray(row.evaluation?.cases))) throw new Error("Incomplete audit evidence");
+    audits[name] = record;
+    $(name + "-task").disabled = false;
+  }));
+  const available = Object.keys(audits), missing = Object.keys(packs).filter(name => !audits[name]);
+  if (!available.length) throw new Error("No task pack available");
+  if (!evaluation) choosePack(audits.support ? "support" : available[0]);
+  return missing.length ? `Could not load ${missing.join(" and ")} evidence. The other task pack is ready; retry to load the missing pack.` : "";
+}
+for (const [name, load] of [["suite", loadSuite], ["repeat", loadRepetitions], ["comparison", loadComparison], ["audit", loadAudits]]) {
+  $(name + "-retry").addEventListener("click", () => void loadSection(name, load, true));
+  void loadSection(name, load);
+}
