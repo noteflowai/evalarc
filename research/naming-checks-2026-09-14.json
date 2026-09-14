@@ -2,7 +2,7 @@
   "checked_at": "2026-09-14T01:00:06.502431+00:00",
   "recommendation": "EvalArc",
   "backup": "EvalTrail",
-  "status": "Naming proposal only; the repository has not been renamed.",
+  "status": "EvalArc selected; local repository, Python package and CLI renamed.",
   "scope": "Public repository search, PyPI/npm endpoints, registry RDAP records. No trademark clearance or guaranteed registration availability is claimed.",
   "candidates": [
     {
@@ -294,5 +294,11 @@
       ]
     }
   ],
-  "search_limitations": "General web-search results returned unrelated material and were excluded. Exact GitHub name checks covered all results returned for each finalist. RDAP 404 is reported as no record found, not a purchase guarantee."
+  "search_limitations": "General web-search results returned unrelated material and were excluded. Exact GitHub name checks covered all results returned for each finalist. RDAP 404 is reported as no record found, not a purchase guarantee.",
+  "decision": {
+    "selected_name": "EvalArc",
+    "selected_on": "2026-09-14",
+    "previous_prototype_name": "GradeRail",
+    "public_registry_queries": "Historical snapshot; not refreshed by this rename."
+  }
 }

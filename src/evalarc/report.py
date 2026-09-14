@@ -29,7 +29,7 @@ def render_audit(data: dict, destination: Path) -> None:
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy"
  content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<title>GradeRail · Grader audit</title>
+<title>EvalArc · Grader audit</title>
 <style>
 :root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
 body{max-width:1080px;margin:60px auto;padding:0 24px}
@@ -46,7 +46,7 @@ code{font-family:ui-monospace,monospace}h2{margin-top:42px}
 footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
 .metadata{overflow-wrap:anywhere;font-size:13px}
 </style>
-<div class="eyebrow">GRADERAIL / DEVELOPMENT AUDIT</div>
+<div class="eyebrow">EVALARC / DEVELOPMENT AUDIT</div>
 <h1>Test the grader.<br>Then trust the signal.</h1>
 <p>Behavioral negative controls for an executable coding task. Each flawed implementation
 is evaluated against the same externally enforced contract.</p>

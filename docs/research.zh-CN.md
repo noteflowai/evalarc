@@ -1,7 +1,7 @@
 # 从 Mechanize 到代码智能体评测：调研与开源项目选择
 
 **调研日期：2026 年 9 月 14 日。推荐方向：代码智能体工程环境的评分器审计。
-本地项目：GradeRail。**
+本地项目：EvalArc。**
 
 这份调研的目标是找到一个值得做、能够交付、可以接入现有生态的开源切口。
 “最热”无法事先保证；本文用论文贡献、现有产品能力、近期官方更新和实现可行性
@@ -54,7 +54,7 @@ verifier 分析、SWE-smith 的方法与局限、SWE-EVO 的 Fix Rate 定义。
 另一个直接的需求信号是 Terminal-Bench 于 2026-04-19 发布的
 [Leaderboard Integrity Update][s15]：官方说明已发现作弊与 reward hacking，
 并要求通过的试验提供轨迹。它支持“评分与证据链需要审查”的判断，但不代表
-GradeRail 当前八种功能缺陷对照就能检测这些真实攻击。
+EvalArc 当前八种功能缺陷对照就能检测这些真实攻击。
 
 这给小团队的启示是：先交付一个能证明评分可信度的具体工具，比构建完整云平台
 更容易形成可验证价值。这是本调研的产品判断，不是文献已经证明的商业结论。
@@ -65,7 +65,7 @@ GradeRail 当前八种功能缺陷对照就能检测这些真实攻击。
 不表示它一定未在其他地方发表。不要把各论文的历史成绩当作 2026 年实时榜单。
 完整结构化记录见 [papers.json](../research/papers.json)。
 
-| 优先级 | 论文 | 本次确认的发表信息 | 核心贡献 | 对 GradeRail 的具体启发 |
+| 优先级 | 论文 | 本次确认的发表信息 | 核心贡献 | 对 EvalArc 的具体启发 |
 | --- | --- | --- | --- | --- |
 | A | **SWE-Gym** — Training Software Engineering Agents and Verifiers with SWE-Gym | ICML 2025；arXiv 首版 2024-12 | 可执行 SWE 训练环境；训练 agents 和 verifiers | 任务、运行环境和验收条件一起版本化；明确训练集与评测集用途。[P02][p2] |
 | A | **SWE-smith** — Scaling Data for Software Engineering Agents | NeurIPS 2025 Datasets & Benchmarks Spotlight；以作者仓库确认 | 从真实仓库构造环境并合成破坏既有测试的任务 | 把“错误实现是否被检测”做成可重复的工程过程；其主论文演示是 SFT，不能宣称已经证明 RL 收益。[P03][p3]、[作者仓库][s13] |
@@ -88,7 +88,7 @@ GradeRail 当前八种功能缺陷对照就能检测这些真实攻击。
   总推理预算和选择流程。[P06 §4][p6full]
 - **SWE-EVO 的 Fix Rate 不是单纯“通过测试的比例”。**
   v6 定义中，PASS_TO_PASS 测试有回归时，该实例的严格 Fix Rate 为零；
-  GradeRail 目前采用维度加权分和单独的完整通过标志，并未复现该指标。
+  EvalArc 目前采用维度加权分和单独的完整通过标志，并未复现该指标。
   [P08 评分方法][p8full]
 - **METR 的时长不等于让模型跑多久。**
   TH1.1 还明确区分实际测得与估算的人类时间；不能把一个未标定的 demo
@@ -112,7 +112,7 @@ GradeRail 当前八种功能缺陷对照就能检测这些真实攻击。
 已经不是一个新 repo 独有的差异化**。Terminal-Bench 4.0 的公告甚至已经把
 后续 verifier 改进列入里程碑。[S09][s9]、[S10][s10]
 
-## 5. 为什么选 GradeRail？
+## 5. 为什么选 EvalArc？
 
 | 备选方向 | 机会 | 主要阻力 | 选择 |
 | --- | --- | --- | --- |
@@ -121,7 +121,7 @@ GradeRail 当前八种功能缺陷对照就能检测这些真实攻击。
 | 长程任务运行器 | 使用面较广 | Harbor 等已具备大量基础功能 | 集成现有生态 |
 | **工程环境评分器审计** | 产物明确；故障对照可复现；能用于任务评审 | 需要证明跨任务与真实模型失败的迁移价值 | **推荐切口** |
 
-**GradeRail：Test the grader before you train the agent.**
+**EvalArc：Test the grader before you train the agent.**
 
 首批目标用户是 RL 环境作者、代码智能体评测维护者、研究实验室的任务审查者。
 他们需要回答的具体问题是：这个奖励是否会放过“只返回成功、实际没有提交事务”

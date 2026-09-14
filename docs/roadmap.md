@@ -1,26 +1,36 @@
 # Research and development roadmap
 
-The core question is whether auditing graders with independent negative
-controls improves the relationship between evaluation reward and software
-quality on unseen tasks. Passing this repository's audit is a first engineering
-check; answering that question needs substantially more evidence.
+EvalArc targets auditable evaluations across software agents. The first
+implemented task pack is for coding. The next milestone is a simulated support
+workflow, so a second, different interaction model can validate the proposed
+[shared interfaces](architecture.md).
+
+The research question is whether independent grader audits improve the
+relationship between evaluation reward and actual task outcomes on unseen
+tasks. Passing the current audit is a first engineering check; answering that
+question needs substantially more evidence.
 
 | Stage | Deliverable | Acceptance evidence |
 | --- | --- | --- |
-| v0.1, implemented | Stateful task, grader, eight controls, provenance, checkpoint statistics | Positive and negative controls, protocol tests, Docker execution |
-| Next | Task-author API and externally supplied defect packs | A second independent task and reviewer-authored defects |
+| v0.1, implemented | Coding task, grader, eight controls, provenance, checkpoint statistics | Positive and negative controls, protocol tests, Docker execution |
+| Next | Task definitions and configurable candidate commands | Coding submissions in two languages, same observable contract |
+| Next | Simulated support-ticket workflow and an agent adapter | State-based grading, tool-call traces, correct and faulty scripted policies |
+| Next | Shared task/verifier API and independent defect packs | Both task domains use the same evidence format; reviewer-authored faults |
+| Later | Browser environment adapter | Reproducible initial state, backend outcome checks, isolated sessions |
 | Next | Harbor integration using supported verifier boundaries | Actual upstream task execution, pinned compatibility version |
 | Next | Procedural task variants with separated public and private acceptance | Measured exposure controls; distribution-level split |
 | Research pilot | Three deep task families | Human baselines, repeated real agent attempts, failure taxonomy |
 | Research study | Grader-audit ablations and downstream training | Unseen-family transfer, matched budgets, uncertainty intervals |
 
-Candidate deep task families:
+Candidate task families:
 
 1. Persistent storage: schema migration, transaction recovery, and backward
    compatibility under evolving requirements.
-2. Workflow execution: retries, idempotency, cancellation, durable scheduling,
-   and external side effects.
-3. Protocol compatibility: incremental parsers, behavioral conformance,
+2. Business tools: ticket routing, retries, idempotency, cancellation, and
+   verifiable changes to a simulated service.
+3. Browser workflows: complete an operation and validate the resulting state
+   independently of the agent's final message.
+4. Protocol compatibility: incremental parsers, behavioral conformance,
    malformed-input handling, and bounded resource use.
 
 Do not assign an “8-hour” label until appropriate humans have actually been

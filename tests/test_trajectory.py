@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from graderail.trajectory import summarize
+from evalarc.trajectory import summarize
 
 
 def checkpoint(time, score, resolved=False):

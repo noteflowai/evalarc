@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from graderail.audit import asset, audit, write_candidate
-from graderail.cli import main
-from graderail.evaluate import evaluate
-from graderail.runner import CandidateError, Runtime, snapshot
+from evalarc.audit import asset, audit, write_candidate
+from evalarc.cli import main
+from evalarc.evaluate import evaluate
+from evalarc.runner import CandidateError, Runtime, snapshot
 
 
 def test_positive_and_behavioral_negative_controls():

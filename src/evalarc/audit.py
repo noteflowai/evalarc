@@ -6,8 +6,8 @@ import tempfile
 from importlib.resources import files
 from pathlib import Path
 
-from graderail.evaluate import evaluate
-from graderail.runner import Runtime
+from evalarc.evaluate import evaluate
+from evalarc.runner import Runtime
 
 MUTANTS = {
     "ack-without-work": ("ACK_ONLY = False", "ACK_ONLY = True", "basic"),
@@ -22,7 +22,7 @@ MUTANTS = {
 
 
 def asset(name: str) -> str:
-    return files("graderail").joinpath("assets", name).read_text()
+    return files("evalarc").joinpath("assets", name).read_text()
 
 
 def write_candidate(path: Path, source: str) -> Path:
@@ -40,7 +40,7 @@ def mutate(source: str, old: str, new: str) -> str:
 def audit(runtime: Runtime, seeds: list[int]) -> dict:
     source = asset("reference.py")
     rows = []
-    with tempfile.TemporaryDirectory(prefix="graderail-audit-") as directory:
+    with tempfile.TemporaryDirectory(prefix="evalarc-audit-") as directory:
         root = Path(directory)
         reference = evaluate(write_candidate(root / "reference", source), runtime, seeds)
         for name, (old, new, target) in MUTANTS.items():
@@ -64,7 +64,7 @@ def audit(runtime: Runtime, seeds: list[int]) -> dict:
             )
     killed = sum(row["killed"] for row in rows)
     return {
-        "schema_version": "graderail.audit.v1",
+        "schema_version": "evalarc.audit.v1",
         "reference_passed": reference["resolved"],
         "reference": reference,
         "mutants": rows,

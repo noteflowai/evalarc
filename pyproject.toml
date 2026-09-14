@@ -3,13 +3,13 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "graderail"
+name = "evalarc"
 version = "0.1.0"
-description = "Audit executable graders for coding agents with behavioral negative controls."
+description = "Auditable evaluations for AI agents, starting with executable grader audits."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-authors = [{name = "GradeRail contributors"}]
+authors = [{name = "EvalArc contributors"}]
 keywords = ["agents", "evaluation", "reinforcement-learning", "software-engineering"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -19,7 +19,7 @@ classifiers = [
 dependencies = []
 
 [project.scripts]
-graderail = "graderail.cli:main"
+evalarc = "evalarc.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1,<2"]
@@ -28,7 +28,7 @@ dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1,<2"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-graderail = ["assets/*.py", "assets/*.md"]
+evalarc = ["assets/*.py", "assets/*.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

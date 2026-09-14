@@ -1,4 +1,4 @@
-from graderail.report import render_audit
+from evalarc.report import render_audit
 
 
 def test_report_escapes_external_content(tmp_path):

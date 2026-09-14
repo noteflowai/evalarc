@@ -1,20 +1,24 @@
-<p align="center"><img src="docs/assets/banner.svg" alt="GradeRail：训练智能体之前，先检验评分器。" width="960"></p>
+<p align="center"><img src="docs/assets/banner.svg" alt="EvalArc — Run agents. Measure outcomes." width="960"></p>
 
-# GradeRail
+# EvalArc
 
-**面向代码智能体的可执行评分器审计工具。**
+**面向 AI 智能体的开放任务环境与可审计评测。**
 
 Python 3.11+，Linux 主机，零运行时第三方依赖，MIT 许可证。
 
 [English](README.md) · [中文调研与论文分析](docs/research.zh-CN.md) ·
-[方法说明](docs/methodology.md) · [开发路线](docs/roadmap.md)
+[架构设计](docs/architecture.md) · [方法说明](docs/methodology.md) · [开发路线](docs/roadmap.md)
 
-智能体通过测试，不一定代表交付的软件正确。GradeRail 用一个正确实现和
-一组刻意带有缺陷的实现，验证评分器究竟能发现哪些问题，并生成带有证据的报告。
+EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据。
+首版先验证评分器的区分能力：用正确实现和刻意带有缺陷的实现进行对照，
+检查它能发现哪些问题，并保存可复查的报告。
 
-首版提供 **Durable KV 有状态工程任务**：从读写服务，到原子批处理、CAS、
-持久化和进程异常终止后的恢复。它是能运行的研究起点；尚未经过前沿模型、
-真实人类工时或强化学习收益标定。
+**v0.1 已实现的场景是 coding：Durable KV 有状态工程任务。**
+它覆盖读写服务、原子批处理、CAS、持久化和进程异常终止后的恢复。
+浏览器、客服工单、业务工具等属于后续扩展范围，当前尚未实现这些环境或
+交互式 agent 执行。多场景架构与下一步验收条件见[架构设计](docs/architecture.md)。
+
+当前版本尚未经过前沿模型、真实人类工时或强化学习收益标定。
 
 ## 直接运行
 
@@ -25,14 +29,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
 docker pull python:3.12-slim
-graderail audit --seeds 17 41 97 --output runs/audit
+evalarc audit --seeds 17 41 97 --output runs/audit
 ```
 
 输出 `runs/audit/audit.json` 和可独立打开的 `runs/audit/index.html`。
 对仓库自带的可信对照代码，可以运行更快的本机演示：
 
 ```bash
-graderail audit --backend local --trust-local --output runs/local-audit
+evalarc audit --backend local --trust-local --output runs/local-audit
 ```
 
 本机模式具有当前用户的文件和网络权限。Docker 模式的边界见
@@ -52,14 +56,21 @@ graderail audit --backend local --trust-local --output runs/local-audit
 ## 用自己的代码智能体完成任务
 
 ```bash
-graderail init workspace/durable-kv
+evalarc init workspace/durable-kv
 # 将 workspace/durable-kv 与 TASK.md 交给代码智能体。
 # 完成 main.py 后：
-graderail evaluate workspace/durable-kv --output runs/candidate
+evalarc evaluate workspace/durable-kv --output runs/candidate
 ```
 
 当前版本负责评分交付物，不负责调用模型。Harbor、Prime Intellect 的原生适配，
 以及真正困难的多小时任务集，都在路线图中。
+
+## 项目名称
+
+项目已由本地原型名 GradeRail 更名为 **EvalArc**。仓库、Python 包、
+导入路径、CLI、新报告 schema 与环境变量均使用新名称。
+具体变化见[迁移说明](docs/migration.md)，原始名称检索记录保留在
+[命名复评](docs/naming.zh-CN.md)中。
 
 ## 调研结论
 

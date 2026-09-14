@@ -67,7 +67,7 @@ class Runtime:
 class Process:
     def __init__(self, runtime: Runtime, workspace: Path, state: Path):
         self.runtime = runtime
-        self.name = f"graderail-{uuid.uuid4().hex}"
+        self.name = f"evalarc-{uuid.uuid4().hex}"
         self.buffer = bytearray()
         self.output_bytes = 0
         self.closed = False

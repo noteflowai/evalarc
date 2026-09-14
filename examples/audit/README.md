@@ -1,10 +1,10 @@
 # Recorded development audit
 
 `audit.json` and `index.html` were generated on 2026-09-14 from the v0.1.0
-implementation using Docker and seed 17:
+EvalArc implementation using Docker and seed 17:
 
 ```bash
-graderail audit --seeds 17 --output examples/audit
+evalarc audit --seeds 17 --output examples/audit
 ```
 
 The development machine required the Docker CLI wrapper `sudo -n docker`;

@@ -11,9 +11,9 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from graderail import __version__
-from graderail.runner import CandidateError, Runtime, snapshot
-from graderail.task import (
+from evalarc import __version__
+from evalarc.runner import CandidateError, Runtime, snapshot
+from evalarc.task import (
     DIMENSIONS,
     TASK_ID,
     TASK_VERSION,
@@ -63,7 +63,7 @@ def evaluate(candidate: Path, runtime: Runtime, seeds: list[int]) -> dict:
     runtime.prepare()
     started = time.monotonic()
     results = []
-    with tempfile.TemporaryDirectory(prefix="graderail-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="evalarc-") as temporary:
         root = Path(temporary)
         workspace = root / "candidate"
         candidate_hash = snapshot(candidate, workspace)
@@ -93,9 +93,9 @@ def evaluate(candidate: Path, runtime: Runtime, seeds: list[int]) -> dict:
         grader_digest.update(name.encode())
         grader_digest.update(Path(__file__).with_name(name).read_bytes())
     return {
-        "schema_version": "graderail.evaluation.v1",
+        "schema_version": "evalarc.evaluation.v1",
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "graderail_version": __version__,
+        "evalarc_version": __version__,
         "task": {"id": TASK_ID, "version": TASK_VERSION, "split": "public-development"},
         "candidate_sha256": candidate_hash,
         "grader_sha256": grader_digest.hexdigest(),

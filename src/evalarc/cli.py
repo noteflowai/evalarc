@@ -1,4 +1,4 @@
-"""GradeRail command line."""
+"""EvalArc command line."""
 
 from __future__ import annotations
 
@@ -9,16 +9,16 @@ import os
 import sys
 from pathlib import Path
 
-from graderail.audit import asset, audit
-from graderail.evaluate import evaluate, write_json
-from graderail.report import render_audit
-from graderail.runner import Runtime
-from graderail.trajectory import summarize
+from evalarc.audit import asset, audit
+from evalarc.evaluate import evaluate, write_json
+from evalarc.report import render_audit
+from evalarc.runner import Runtime
+from evalarc.trajectory import summarize
 
 
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(
-        prog="graderail", description="Audit executable graders for coding agents."
+        prog="evalarc", description="Auditable evaluations for AI agents."
     )
     commands = root.add_subparsers(dest="command", required=True)
     init = commands.add_parser("init", help="create a candidate workspace")
@@ -34,7 +34,7 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--backend", choices=["docker", "local"], default="docker")
         command.add_argument("--trust-local", action="store_true")
         command.add_argument("--image", default="python:3.12-slim")
-        command.add_argument("--docker-command", default=os.getenv("GRADERAIL_DOCKER", "docker"))
+        command.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
         command.add_argument("--timeout", type=float, default=10.0)
         command.add_argument("--seeds", type=int, nargs="+", default=[17, 41, 97])
         command.add_argument("--output", type=Path, default=Path("runs") / name)
@@ -93,5 +93,5 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0 if result["resolved"] else 1
     except (ValueError, OSError, KeyError, TypeError) as error:
-        print(f"graderail: {error}", file=sys.stderr)
+        print(f"evalarc: {error}", file=sys.stderr)
         return 2

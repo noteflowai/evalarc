@@ -29,7 +29,7 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install .
       - run: docker pull python:3.12-slim
-      - run: graderail audit --seeds 17 --output runs/docker-audit
+      - run: evalarc audit --seeds 17 --output runs/docker-audit
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -2,7 +2,7 @@
 
 ## What the result means
 
-GradeRail v0.1 tests one task distribution, `durable-kv@0.1.0`, using public,
+EvalArc v0.1 tests one task distribution, `durable-kv@0.1.0`, using public,
 seeded scenarios. It checks whether observed responses match a host-side
 in-memory oracle. The independent reference submission uses SQLite.
 
@@ -45,7 +45,7 @@ measurements, not candidate algorithm performance benchmarks.
 
 ## Checkpoint analysis
 
-`graderail trajectory` accepts a JSON array:
+`evalarc trajectory` accepts a JSON array:
 
 ```json
 [
@@ -66,7 +66,7 @@ measurements, not candidate algorithm performance benchmarks.
 Use actual complete `evaluation.json` objects in your data. The abbreviated
 object above illustrates the schema and is not a measured experiment. The
 experiment harness supplies elapsed time from its own monotonic start clock;
-GradeRail does not independently authenticate these times.
+EvalArc does not independently authenticate these times.
 
 For a budget `B`, the utility computes `(1/B) * integral_0^B score(t) dt`.
 It uses a left-step curve: score is zero until the first observation, each

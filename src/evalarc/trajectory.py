@@ -39,7 +39,7 @@ def summarize(checkpoints: list[dict], budget_seconds: float) -> dict:
         previous, score = t, current_score
     area += (budget_seconds - previous) * score
     return {
-        "schema_version": "graderail.trajectory.v1",
+        "schema_version": "evalarc.trajectory.v1",
         "budget_seconds": budget_seconds,
         "normalized_score_area": area / budget_seconds,
         "final_score": score,
