@@ -1,5 +1,30 @@
 # Publication log
 
+## 0.8.0 suite handoff publication · 2026-09-14
+
+[PR #8](https://github.com/noteflowai/evalarc/pull/8) added offline verification
+of original suite TOML, plan, every attempt, custom gates and JUnit, plus a
+12-file evidence ZIP download. Main commit
+`e9cba3c5db80411ffee35fe2568fee23a74997da` passed all 254 tests on Python
+3.11–3.13, four Docker task/language audits, browser checks and deployment
+[CI](https://github.com/noteflowai/evalarc/actions/runs/34817758768).
+
+The 0.8.0 research preview includes wheel, source archive, evidence ZIP and
+SHA256SUMS. All four assets matched anonymous downloads. The final wheel
+passed offline verification outside the checkout with empty PATH, including
+modified-JUnit rejection. The archive preserves all original evidence bytes.
+
+Anonymous readback checked the Space's 61 manifest entries and the Casebook's
+31 entries against their recorded hashes and release source commit. The actual
+Hub iframe passed 1440/390/320px checks, including ZIP download and its manifest
+hash. Consistency, configured acceptance and full resolution remain separate.
+
+The existing HF introduction, collection note, weekly submission and HelloGitHub
+submission were updated and read back exactly. Both editorial issues remain
+open with no comments. No new issue, reminder comment or X post was created;
+no PyPI publication was made. [Publication receipts](publication-0.8.0.json).
+
+
 ## 0.7.1 UI publication · 2026-09-14
 
 [Release 0.7.1](https://github.com/noteflowai/evalarc/releases/tag/v0.7.1) is public.
@@ -17,14 +42,14 @@ interactive evidence lab, and maintainer announcements are now public.
 | Channel | Status |
 | --- | --- |
 | [GitHub source](https://github.com/noteflowai/evalarc) | Public; source and deployment CI passed |
-| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.7.1 research preview published; wheel, source archive and checksums verified by anonymous download |
+| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.8.0 research preview published; wheel, source archive, evidence ZIP and checksums verified by anonymous download |
 | [GitHub Pages](https://noteflowai.github.io/evalarc/) | Live; desktop and mobile checks passed |
-| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.7.1 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
-| [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) | Public dataset; all 32 files and every row read back anonymously; actual table checked on desktop and mobile |
-| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.7.1 evidence sharing and recovery; readback matched |
-| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.7.1 Space note verified |
-| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.7.1 and the Casebook; open, awaiting editorial review |
-| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.7.1 and the Casebook; open, awaiting editorial review |
+| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.8.0 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
+| [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) | Public dataset; all 31 manifest entries and every row read back anonymously; actual table checked on desktop and mobile |
+| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.8.0 suite handoff verification; readback matched |
+| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.8.0 Space note verified |
+| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.8.0 and the Casebook; open, awaiting editorial review |
+| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.8.0 and the Casebook; open, awaiting editorial review |
 | [X maintainer launch](https://x.com/glay_oneai/status/2099338382518399269) | Overview and three project replies verified in the published conversation; the EvalArc reply describes the v0.3 comparison |
 
 The weekly README explicitly invites software submissions through issues.
