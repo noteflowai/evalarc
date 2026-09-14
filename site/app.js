@@ -13,6 +13,105 @@ let audits = {}, pack = "support", evaluation, selectedCase;
 let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
+const repetitions = {};
+async function loadSuite() {
+  const response = await fetch("suite/suite.json");
+  if (!response.ok) throw new Error("Suite evidence unavailable");
+  const suite = await response.json();
+  const jobs = {};
+  for (const name of ["partial", "protected"]) {
+    const job = suite.jobs.find(row => row.id === "support-" + name);
+    jobs[name] = job;
+    badge($("suite-" + name + "-verdict"), job.decision.accepted, job.decision.accepted ? "GATE ACCEPTED" : "GATE REJECTED");
+    $("suite-" + name + "-score").textContent = percent(job.observed.mean_score);
+    $("suite-" + name + "-resolution").textContent = `${job.observed.resolved_attempts} / ${job.observed.completed_attempts} attempts fully resolved`;
+    $("suite-" + name + "-gate").textContent =
+      `Minimum mean score: ${percent(job.gate.min_mean_score)}\nMinimum resolution rate: ${percent(job.gate.min_resolution_rate)}\nRequired dimensions: ${job.gate.required_dimensions.join(", ") || "none"}`;
+  }
+  $("suite-summary").textContent = `${suite.accepted_jobs} / ${suite.total_jobs} gates accepted. ${suite.fully_resolved_jobs} / ${suite.total_jobs} jobs fully resolved. ${suite.invalid_jobs} invalid jobs. The coding reference passes its default strict gate.`;
+  $("suite-provenance").textContent = pretty({
+    manifest_sha256: suite.manifest_sha256,
+    same_candidate: jobs.partial.candidate_sha256 === jobs.protected.candidate_sha256,
+    candidate_sha256: jobs.partial.candidate_sha256,
+    grader_sha256: jobs.partial.grader_sha256,
+    cases_sha256: jobs.partial.cases_sha256,
+    runtime: jobs.partial.runtime,
+    permissive_gate: jobs.partial.decision,
+    protected_gate: jobs.protected.decision,
+    interpretation: suite.interpretation,
+  });
+  $("suite-status").hidden = true;
+  $("suite-workspace").hidden = false;
+}
+loadSuite().catch(() => {
+  $("suite-status").textContent = "Suite evidence could not be loaded. Open the standalone suite report below.";
+});
+function chooseRepetition(name) {
+  const record = repetitions[name];
+  if (!record) return;
+  for (const control of ["reference", "faulty"]) $("repeat-" + control).setAttribute("aria-pressed", String(control === name));
+  $("repeat-resolved").textContent = `${record.resolved_attempts} / ${record.requested_attempts}`;
+  $("repeat-score").textContent = percent(record.mean_score);
+  $("repeat-invalid").textContent = String(record.invalid_attempts);
+  $("repeat-variable").textContent = String(record.variable_checks);
+  $("repeat-attempts").replaceChildren();
+  for (const attempt of record.attempts) {
+    const card = document.createElement("a");
+    card.className = `repeat-attempt ${attempt.resolved ? "pass" : "fail"}`;
+    card.href = `repeat/${name}/attempts/${String(attempt.attempt).padStart(4, "0")}/index.html`;
+    const label = document.createElement("span"); label.textContent = `ATTEMPT ${String(attempt.attempt).padStart(2, "0")}`;
+    const score = document.createElement("strong"); score.textContent = percent(attempt.score);
+    const verdict = document.createElement("span"); verdict.className = "badge";
+    verdict.textContent = !attempt.valid ? "INVALID RUN" : attempt.resolved ? "RESOLVED" : "NOT RESOLVED";
+    const link = document.createElement("span"); link.className = "caption"; link.textContent = "Open full evidence \u2197";
+    card.append(label, score, verdict, link); $("repeat-attempts").append(card);
+  }
+  $("repeat-cases").replaceChildren();
+  for (const row of record.cases) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    const title = document.createElement("span"); title.textContent = `${row.case_id} / seed ${row.seed}`;
+    const outcome = document.createElement("span"); outcome.className = row.failed ? "fail" : "pass";
+    outcome.textContent = `${row.passed} / ${row.assessed} passed`;
+    summary.append(title, outcome); details.append(summary);
+    const checks = document.createElement("div"); checks.className = "check-list";
+    for (const [check, count] of Object.entries(row.checks)) {
+      const item = document.createElement("span"); item.className = count.passed < count.assessed ? "fail" : "pass";
+      item.textContent = `${check}: ${count.passed} / ${count.assessed}`; checks.append(item);
+    }
+    details.append(checks);
+    const invalid = document.createElement("p"); invalid.className = "caption";
+    invalid.textContent = `${row.unassessed} unassessed observations. Check counts use assessed observations only.`;
+    details.append(invalid); $("repeat-cases").append(details);
+  }
+  $("repeat-context").textContent = name === "faulty"
+    ? "A stable score can describe a stable defect. All three attempts fail the retry-after-commit note check; none is selected or discarded."
+    : "All three reference attempts resolve the same four public cases. This is a functional control; repeated passes do not expand task coverage.";
+  for (const [id, file] of [["report", "index.html"], ["json", "repetition.json"], ["events", "events.jsonl"]]) $("repeat-" + id).href = `repeat/${name}/${file}`;
+  $("repeat-provenance").textContent = pretty({
+    candidate_sha256: record.candidate_sha256, grader_sha256: record.grader_sha256,
+    cases_sha256: record.cases_sha256, task: record.task, seeds: record.seeds,
+    runtime: record.runtime, completed_attempts: record.completed_attempts,
+    assessed_attempts: record.assessed_attempts, invalid_attempts: record.invalid_attempts,
+    interpretation: record.interpretation,
+  });
+}
+for (const name of ["reference", "faulty"]) $("repeat-" + name).addEventListener("click", () => chooseRepetition(name));
+Promise.all(["reference", "faulty"].map(async (name) => {
+  const response = await fetch(`repeat/${name}/repetition.json`);
+  if (!response.ok) throw new Error("Repetition evidence unavailable");
+  repetitions[name] = await response.json();
+})).then(() => {
+  chooseRepetition("faulty");
+  $("repeat-status").hidden = true;
+  $("repeat-workspace").hidden = false;
+}).catch(() => {
+  $("repeat-status").textContent = "Repetition evidence could not be loaded. Open a standalone report:";
+  for (const name of ["reference", "faulty"]) {
+    const link = document.createElement("a"); link.href = `repeat/${name}/index.html`; link.textContent = ` ${name} report`;
+    $("repeat-status").append(link);
+  }
+});
 function badge(element, passed, text) {
   element.className = `badge ${passed ? "pass" : "fail"}`;
   element.textContent = text;

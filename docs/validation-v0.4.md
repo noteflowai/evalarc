@@ -6,7 +6,7 @@ task packs. The [v0.3 record](validation-v0.3.md) remains historical.
 
 | Check | Observed result |
 | --- | --- |
-| Python test suite | 121 passed, including the existing site checks |
+| Python test suite before publication work | 121 passed, including the existing site checks |
 | Ruff | Repository lint and formatting passed |
 | Coding Docker audit, seed 17 | Reference resolved 15 cases; 8/8 declared faults detected |
 | Support Docker audit, seed 17 | Reference resolved 4 cases; 7/7 declared faults detected |
@@ -25,8 +25,8 @@ were inspected locally. The existing public-demo records were not regenerated.
 
 Wheel and source distributions were built from an isolated Git tree. The wheel
 was installed in a fresh virtual environment and exercised from outside the
-checkout. The existing JavaScript site tooling keeps its own v0.3 version;
-this functional release does not change the public evidence explorer.
+checkout. The publication follow-up below adds the v0.4 repetition explorer;
+the earlier audit and comparison records retain their original provenance.
 
 Tests exercise frozen inputs despite changes to the original candidate,
 callback isolation, explicit invalid denominators, incomplete attempts,
@@ -52,3 +52,24 @@ No model API, RL trainer, browser-agent environment, confidence interval, or
 population reliability estimate was involved. Repeated passing controls show
 functional behavior on these cases. Variability aggregation uses clearly marked
 synthetic test observations, not fabricated model runs.
+
+## Publication follow-up
+
+The reviewed publication tree passed **123 Python tests**, Ruff lint and
+formatting, and fresh seed-17 Docker audits of both task packs. A new real
+Docker repetition of the duplicate-write control assessed all three attempts:
+mean score 0.9375, zero resolved attempts, zero invalid attempts and no observed
+check variation. Its grader, cases and runtime match the preserved reference
+repetition.
+
+The browser exposes all six attempts and 24 case episodes, with per-check
+counts, frozen-candidate fingerprints, JSONL downloads and links to complete
+reports. Desktop (1440 px) and mobile (390 px) checks passed, including all
+17 existing audit implementations, 167 audit cases, three comparison cases,
+both repetition controls and standalone report navigation. No page errors or
+horizontal overflow were observed. Failed attempt badges retain their failure
+color when hovered.
+
+Site builds independently recompute each repetition summary from every saved
+attempt. Regression checks reject a forged resolution rate and a missing
+attempt. The final bundle contains 36 files, including its ownership manifest.

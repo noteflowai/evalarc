@@ -41,11 +41,25 @@ v0.5 adds `evalarc suite`: declare tasks, candidates, repeats, budgets, and
 acceptance gates in TOML. Preview the plan, execute all jobs, and inspect HTML,
 JSON, and JUnit results. Scores remain task-specific. See the
 [suite and CI guide](docs/suites.md).
+The [new acceptance-gate showcase](https://glayguo-evalarc.static.hf.space/#suite)
+uses one frozen faulty policy in two jobs: both score 93.75% with no resolved
+attempts. A permissive rule accepts the partial result; requiring every notes
+check rejects it. The full three-job Docker suite, five attempts, TOML and JUnit
+remain inspectable. Configured acceptance is separate from task resolution.
+
+[![EvalArc v0.5: the same score meets one gate and fails another](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
 
 `evalarc repeat` freezes one candidate, runs fresh attempts on fixed
 cases, and reports every outcome with per-check pass rates. Runs now record
 JSONL progress, enforce a total case budget, and save bounded process diagnostics.
 See the [repeatability guide](docs/reliability.md).
+The [repeatability showcase](https://glayguo-evalarc.static.hf.space/#repeat)
+preserves three Docker attempts of each scripted control: the reference resolves
+3/3, while the duplicate-write policy resolves 0/3 despite its 93.75% mean score.
+Open every attempt's full evidence and per-check counts. No variation was observed;
+this is not a model reliability estimate.
+
+[![EvalArc v0.4: three 93.75% attempts, zero fully resolved runs](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
 
 The workflow includes `evalarc doctor`, individual HTML reports, and `evalarc compare` for
 check regressions that a higher average score can hide. Every run preserves

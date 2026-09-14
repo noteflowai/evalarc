@@ -53,3 +53,25 @@ browser-agent environment, or end-to-end hosted CI importer run was performed.
 Tests and builds used an isolated Git worktree containing the functional
 changes. The installed-wheel checks ran outside that worktree and the development
 checkout. The active runtime has no third-party Python dependencies.
+
+## Publication integration
+
+The isolated publication checkout merges the completed suite update with the
+published v0.4 repeatability explorer. It passed **172 Python tests**, Ruff lint
+and formatting. Fresh Docker suite runs accepted both reference jobs (23 cases,
+exit 0) and rejected the protected-notes job in the partial-progress suite
+(31 cases, exit 1); the expected rejection is an assessed failure, not an
+infrastructure error.
+
+The browser now shows the same 93.75% policy under two explicit gates, with
+0/2 resolved attempts visible in both. Desktop (1440 px) and mobile (390 px)
+checks cover both decisions, the shared candidate, JUnit with three job tests
+and one failure, suite/job/attempt report navigation, and every existing
+regression and repetition showcase. No page errors or horizontal overflow
+were observed. The bundle contains 61 files, including its manifest.
+
+Before building, each job summary is recomputed from its complete attempt
+records; gate decisions are recomputed from the original TOML. The JUnit
+export is regenerated and compared with the saved file. Regression tests
+reject a changed decision and a failure relabeled as an environment error.
+Historical v0.3/v0.4 records retain their original provenance.

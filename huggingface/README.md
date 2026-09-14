@@ -7,7 +7,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: Score up, new failure. Compare agent evaluation evidence.
+short_description: Inspect scores, acceptance gates and every agent attempt.
 tags:
   - agent-evaluation
   - tool-use
@@ -20,7 +20,23 @@ tags:
 
 **The score rose from 90% to 93.75%. A previously passing check now fails.**
 
-New in **v0.3**: compare two recorded support policies side by side. Two closure
+**New in v0.5: same score, different gate.** Two support jobs use the same
+frozen defective policy and score 93.75%, with 0/2 resolved attempts each.
+A deliberately permissive gate accepts the partial result; requiring every
+notes check rejects it. Inspect the three-job Docker suite, all five attempts,
+the original TOML, and JUnit output distinguishing a failed gate from an
+environment error. Gate acceptance remains separate from full task resolution.
+A hosted CI importer was not exercised.
+
+**Every v0.4 attempt remains visible.** Switch between three
+recorded Docker attempts of the reference and three of the duplicate-write
+control. The reference resolves 3/3 attempts; the faulty control resolves 0/3
+despite a mean score of 93.75%. Open every attempt, inspect per-check
+denominators, and download the full summary and progress JSONL.
+No check variation was observed in either scripted control.
+
+The **v0.3 comparison** remains available: compare two recorded support
+policies side by side. Two closure
 checks improve, while a retry introduces a duplicate note. Inspect all three
 changed cases, then open the standalone comparison and individual reports.
 `evalarc compare` returns exit code 1 for the regression despite the higher score.
@@ -48,10 +64,11 @@ dependencies; the bundled trusted controls can run on a CPU.
 
 ## Scope
 
-Research preview 0.3.0. These are scripted controls and public development
+Research preview 0.5.0. These are scripted controls and public development
 tasks, not held-out frontier-model results. Detection applies only to the
 declared faults. No arbitrary reward-hack resistance, human time horizon,
-hardware-agent validation or RL improvement is established.
+hardware-agent validation or RL improvement is established. Repeated fixed
+cases do not establish reliability on unseen tasks or a model success rate.
 
 The source and evidence are MIT licensed. `manifest.json` identifies the source
 commit and SHA-256 of each published file. Publication is performed by the

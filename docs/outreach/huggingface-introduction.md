@@ -1,9 +1,38 @@
 I'm publishing EvalArc as its maintainer: an open toolkit for auditing the
 graders behind AI-agent evaluations.
 
-**Updated for v0.3: a better score can introduce a new failure.**
+**Updated for v0.5: same score, different acceptance gate.**
 
-The new side-by-side comparison starts at 90% and rises to 93.75%. Two closure
+The new suite showcase puts the same frozen defective policy through two
+explicit rules. Both support jobs score 93.75% and resolve 0/2 attempts.
+A deliberately permissive gate accepts the partial result; requiring every
+notes check rejects it. Task scores and resolution flags stay unchanged.
+
+The recorded Docker suite retains three jobs, five attempts, the original TOML,
+progress streams and JUnit. The browser build recomputes every gate from the
+configuration and verified attempt records, then checks the exported JUnit.
+Configured acceptance is shown separately from full task resolution. The JUnit
+export distinguishes failures from environment errors; a hosted CI importer
+was not exercised.
+
+`evalarc suite` previews a TOML plan without starting candidates, freezes all
+inputs before the first job, and preserves complete evidence for each job.
+There is no average score across coding and support tasks.
+
+The existing repeatability explorer preserves six actual Docker attempts: three
+of the scripted reference and three of the duplicate-write control. The
+reference resolves 3/3 attempts. The faulty control resolves 0/3, although
+each attempt scores 93.75%. Switch controls, inspect per-check counts, and open
+every attempt's full report, final state and bounded process diagnostics.
+The summaries are recomputed from all six saved evaluations during site builds.
+
+`evalarc repeat` freezes the candidate before the first attempt and uses fresh
+workspaces and state. It records invalid denominators explicitly, shares a total
+case deadline across restarts, and saves host-generated JSONL progress.
+These controls show no observed check variation; they are not stochastic model
+trials or evidence of reliability on unseen tasks.
+
+The earlier v0.3 side-by-side comparison starts at 90% and rises to 93.75%. Two closure
 checks improve, but a previously passing note check now fails. Select each
 changed case to inspect the ticket state before and after the revision.
 The new CLI comparison returns exit code 1 for that regression despite the
@@ -31,9 +60,12 @@ This is an MIT-licensed research preview with public development tasks and
 scripted controls. It does not establish frontier-model performance, arbitrary
 reward-hack resistance or RL gains.
 
-Version 0.3 also adds `evalarc doctor` for readiness checks without executing
+The existing workflow includes `evalarc doctor` for readiness checks without executing
 candidate code, and protects earlier run outputs by requiring a fresh directory.
 
 Feedback is welcome on plausible defects the current controls miss, clearer
 task contracts, and independent reference implementations. A small reproducible
 case is especially useful.
+
+Maintainer disclosure: this independent project and announcement were developed
+with AI assistance.

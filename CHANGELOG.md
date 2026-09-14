@@ -15,6 +15,10 @@
   errors; other jobs still run after a recorded invalid evaluation.
 - Local execution still needs explicit CLI trust. Existing outputs remain
   protected; JSONL progress includes job identity.
+- The browser compares permissive and notes-protecting gates applied to the
+  same frozen faulty policy. The three-job, five-attempt Docker suite includes
+  original TOML, JUnit and every report. Site builds recompute gate decisions
+  from the configuration and attempt evidence and verify the JUnit export.
 
 Task contracts, scoring code, runtime enforcement, and evaluation/repetition
 schemas are unchanged from v0.4. Matching v0.4/v0.5 evaluations remain comparable.
@@ -35,11 +39,14 @@ No new model-provider or browser-agent integration is claimed.
   release local processes and pipes where possible, and preserve cancellation.
 - Bilingual guidance, fresh Docker audits, and a three-attempt scripted
   repetition example accompany the release.
+- The browser now exposes six actual Docker attempts across the reference and
+  duplicate-write control, per-check counts, every attempt report, and progress
+  downloads. Site builds recompute repetition summaries from all attempt records.
 
 Both task contracts remain v0.1.0 and evaluation schema v2 remains readable.
 Runtime metadata and grading fingerprints change: re-run candidates under
-matching v0.4 conditions before comparing them. The existing public evidence
-explorer continues to use its historical v0.3 showcase.
+matching v0.4 conditions before comparing them. The earlier comparison and audit
+explorers retain their historical records alongside the new v0.4 repetitions.
 
 ## 0.3.0 · 2026-09-14 · Research preview
 

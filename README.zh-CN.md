@@ -34,9 +34,23 @@ v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算�
 先预览执行计划，再批量运行并输出 HTML、JSON 和 JUnit。各任务单独评分。
 详见[套件与 CI 指南](docs/suites.zh-CN.md)。
 
+[新增验收规则展示](https://glayguo-evalarc.static.hf.space/#suite)让同一份缺陷策略分别按两套规则验收：
+都是 93.75%、0/2 轮完全通过，宽松规则允许部分进展，要求备注检查全部通过的规则则拒绝。
+完整三项评测作业的 Docker 记录、五轮尝试、TOML 和 JUnit 均可检查；“规则接受”与“任务完全完成”
+分别展示。
+
+[![EvalArc v0.5：相同分数，不同验收结果](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
+
 `evalarc repeat` 固定一份候选快照，在相同场景上重新启动多轮评测，
 保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度
 和受限进程诊断。详见[重复评测指南](docs/reliability.zh-CN.md)。
+
+[重复评测展示](https://glayguo-evalarc.static.hf.space/#repeat)保留了两种脚本策略各三次
+Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平均分为 93.75%，却 0/3 轮
+完全通过。可以查看每轮原始证据和逐项计数。这些观察中未出现检查结果波动，
+也不能据此估计模型在未见任务上的可靠性。
+
+[![EvalArc v0.4：三轮平均分 93.75%，但没有一轮完全通过](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
 
 现有流程包含环境预检查、单次评测 HTML 报告和逐项回归比较，即使总分上升也能指出
 退步的检查；输出保护会保留之前的运行证据。详见[使用流程](docs/workflow.zh-CN.md)。
