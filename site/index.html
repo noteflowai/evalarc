@@ -44,7 +44,14 @@
       <div><strong>JSON</strong><span>downloadable evidence</span></div>
       <div><strong>CPU</strong><span>reproduce without a model API</span></div>
     </div>
-    <nav class="section-nav" aria-label="Evidence sections"><a href="#suite">Acceptance gates</a><a href="#repeat">Repeated attempts</a><a href="#regression">Revision comparison</a><a href="#explorer">Case explorer</a></nav>
+    <nav class="section-nav" aria-label="Evidence sections"><a href="#coverage">Audit coverage</a><a href="#suite">Acceptance gates</a><a href="#repeat">Repeated attempts</a><a href="#regression">Revision comparison</a><a href="#explorer">Case explorer</a></nav>
+    <section id="coverage" aria-labelledby="coverage-title">
+      <p class="eyebrow">THREE TASK PACKS / DECLARED FAULTS</p>
+      <h2 id="coverage-title">A perfect score.<br>How much coverage remains?</h2>
+      <p class="muted">A fault detected by one case loses its coverage if that case is removed or weakened. Open each dependency to inspect the recorded checks, status and seed. Margins count distinct case IDs, not repeated runs.</p>
+      <div class="coverage-grid">__AUDIT_COVERAGE__</div>
+      <p class="muted">These summaries derive from the original scripted audit records. They are not new agent runs or a guarantee against unseen faults.</p>
+    </section>
     <section id="suite" class="suite">
       <div class="section-top"><div><p class="eyebrow">NEW IN 0.5 / DECLARE YOUR ACCEPTANCE RULES</p><h2>Same score. Different gate.</h2></div><p>One frozen policy.<br>Two explicit acceptance rules.</p></div>
       <p class="muted">Both support jobs score 93.75% and resolve 0/2 attempts. A deliberately permissive gate accepts the result; requiring every notes check to pass rejects it. The task outcome stays the same.</p>

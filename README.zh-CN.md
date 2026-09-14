@@ -91,6 +91,11 @@ Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平�
 需要全部任务通过时加 `--require-resolved`。
 [使用说明与校验范围](docs/verification.md)。
 
+
+[![三个任务包的覆盖薄弱点与原始证据入口](docs/coverage-review.png)](https://noteflowai.github.io/evalarc/#coverage)
+
+**在信任满分前，先检查覆盖薄弱点。** 网页现展示全部三个任务包，可从仅靠一个用例检出的缺陷直接定位到原始检查与种子记录。离线审计报告也提供相同的证据展开入口，不依赖脚本或远程资源；新增界面沿用原始数据，不冒充新模型运行。
+
 ## 0.9.0：有原始证据的研究场景
 
 [查看 27 次真实 GPU 技能评测](https://noteflowai.github.io/evalarc/skill-impact/)，并阅读[完整方法与限制](docs/research-pilots.md)。新增[实景 Blender 编辑](https://noteflowai.github.io/robot-reel/scene-lab/)与[官方 LIBERO-Plus 子集回放](https://noteflowai.github.io/robot-reel/libero-plus/)，把原始记录、技能交付与独立验收连接起来。失败尝试全部保留；不宣称技能提分、完整基准成绩或真机效果。

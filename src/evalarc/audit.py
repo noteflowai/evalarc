@@ -126,7 +126,7 @@ def audit(
             )
     killed = sum(row["killed"] for row in rows)
     valid = reference["valid"] and all(row["valid"] for row in rows)
-    margins = {row["name"]: row["detection_margin"] for row in rows if row["killed"]}
+    margins = {row["name"]: row["detection_margin"] for row in rows if row["valid"]}
     # A case that is the only detector of some fault cannot be removed or
     # loosened without losing coverage the mutation score still claims.
     sole_detectors = sorted(
@@ -144,7 +144,7 @@ def audit(
         # Reported next to the score because a perfect score says nothing about
         # how much of the suite has to survive for it to stay perfect.
         "detection": {
-            "weakest_margin": min(margins.values()) if margins else None,
+            "weakest_margin": min(margins.values()) if valid and margins else None,
             "single_case_detections": sorted(name for name, n in margins.items() if n == 1),
             "sole_detector_cases": sole_detectors,
         },

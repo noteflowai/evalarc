@@ -23,6 +23,13 @@ footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:1
 .metadata{overflow-wrap:anywhere;font-size:13px}
 pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
 summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+summary{min-height:44px;padding:10px 0}
+a:focus-visible,summary:focus-visible{outline:3px solid #96e8b9;outline-offset:4px}
+.audit-control{border:1px solid #33463d;border-radius:12px;padding:12px 18px}
+.audit-control summary{overflow-wrap:anywhere}.audit-control p{overflow-wrap:anywhere}
+.audit-coverage{border-left:3px solid #edb68d;padding:12px 20px;background:#17221c}
+@media(max-width:640px){body{margin:28px auto;padding:0 16px}.cards{gap:12px}
+.card{min-width:0;flex-basis:100%}.dimension{flex-wrap:wrap}.audit-control{padding:10px 14px}}
 a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
 .passed{color:#96e8b9}td{overflow-wrap:anywhere}
 .scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
@@ -37,7 +44,13 @@ def render_audit(data: dict, destination: Path) -> None:
     score_text = lambda value: "unassessed" if value is None else f"{value:.3f}"  # noqa: E731
     margin_text = lambda value: "—" if value is None else str(value)  # noqa: E731
     rows = []
-    for row in data["mutants"]:
+    fragile = [
+        row
+        for row in data["mutants"]
+        if row.get("valid") is not False and row["killed"] and len(set(row["failing_cases"])) == 1
+    ]
+    for index, row in enumerate(data["mutants"]):
+        margin = None if row.get("valid") is False else len(set(row["failing_cases"]))
         state = (
             "UNASSESSED"
             if row.get("valid") is False
@@ -47,8 +60,8 @@ def render_audit(data: dict, destination: Path) -> None:
             f"<tr><td><code>{esc(row['name'])}</code></td>"
             f"<td>{esc(row['target_dimension'])}</td>"
             f"<td>{score_text(row['score'])}</td><td>{state}</td>"
-            f"<td>{esc(margin_text(row.get('detection_margin')))}</td>"
-            f"<td>{esc(', '.join(row['failing_cases']))}</td></tr>"
+            f"<td>{esc(margin_text(margin))}</td>"
+            f'<td><a href="#fault-{index}">Inspect recorded cases</a></td></tr>'
         )
     reference = data["reference"]
     bars = "".join(
@@ -88,14 +101,55 @@ submissions are evaluated against the same externally enforced contract.</p>
         '<div class="label">reference correctness</div></div>'
         f'<div class="card"><div class="number">{esc(reference["runtime"]["backend"])}</div>'
         '<div class="label">execution backend</div></div></div>'
-        '<h2>Does the grader detect plausible defects?</h2><div class="scroll">'
+        '<section class="audit-coverage" aria-labelledby="coverage-title">'
+        '<h2 id="coverage-title">Which faults depend on one case?</h2>'
+        f"<p><strong>{len(fragile)} of {data['total']}</strong> declared faults have "
+        "exactly one distinct detecting case in the assessed records. Repeating a "
+        "case under more seeds does not increase this margin. A surviving fault has "
+        "margin zero; an environment failure remains unassessed.</p>"
+        "<p>Margins below are derived from the saved failing case IDs. "
+        "Rendering an older audit does not rerun its controls.</p></section>"
+        "<h2>Does the grader detect plausible defects?</h2>"
+        '<div class="scroll" tabindex="0" role="region" aria-label="Declared fault coverage">'
         "<table><thead><tr><th>Negative control</th><th>Target</th>"
         "<th>Candidate score</th><th>Result</th>"
         '<th title="Cases that caught this fault independently. One means the suite '
         'loses this fault if that case changes.">Margin</th>'
         "<th>Evidence</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>"
-        "<h2>Positive control</h2>" + bars
     )
+    document += "<h2>Inspect the detecting cases</h2>"
+    for index, row in enumerate(data["mutants"]):
+        margin = None if row.get("valid") is False else len(set(row["failing_cases"]))
+        label = (
+            "unassessed"
+            if margin is None
+            else ("single-case dependency" if margin == 1 else f"{margin} detecting cases")
+        )
+        case_ids = ", ".join(sorted(set(row["failing_cases"]))) or "none"
+        document += (
+            f'<details class="audit-control"><summary>{esc(row["name"])} · {label}</summary>'
+            f'<div id="fault-{index}"><p>Target: {esc(row["target_dimension"])}. '
+            f"Detecting case IDs: {esc(case_ids)}.</p>"
+        )
+        cases = [
+            case
+            for case in row.get("evaluation", {}).get("cases", [])
+            if case.get("checks", {}).get(row["target_dimension"]) is False
+        ]
+        if cases:
+            for case in cases:
+                document += (
+                    f"<details><summary>{esc(case['case_id'])} · seed {esc(case['seed'])}"
+                    f" · {esc(case['status'])}</summary><pre>"
+                    f"{esc(json.dumps(case, ensure_ascii=False, indent=2))}</pre></details>"
+                )
+        else:
+            document += (
+                "<p>No detecting-case trace is embedded for this control. "
+                "Consult the complete JSON evidence for its recorded validity and outcome.</p>"
+            )
+        document += "</div></details>"
+    document += "<h2>Positive control</h2>" + bars
     traces = [case for case in reference.get("cases", []) if "trace" in case]
     if traces:
         document += "<h2>Reference execution evidence</h2>"

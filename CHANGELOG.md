@@ -2,6 +2,10 @@
 
 ## 0.10.0 — 2026-09-14
 
+- Add a three-task audit coverage section with direct links from single-case dependencies to recorded fault evidence. Re-render all three reports from unchanged saved JSON, with accessible disclosures and layouts for narrow screens.
+- Include assessed surviving faults as zero in the weakest detection margin; environment failures remain unassessed.
+- Extend the Hugging Face casebook to all three task packs: 251 case rows, with the parent control's distinct-case detection margin. Preserve the original source records and distinguish reference controls with a null margin.
+
 - Report detection margins beside the mutation score: how many cases caught each declared fault, the weakest margin in the pack, the faults caught by exactly one case, and the cases that are the sole detector of some fault. All three packs score 1.0, and six of their 21 declared faults rest on a single case each; that fragility was previously invisible.
 - Count margins over distinct cases rather than case runs, so adding a seed cannot inflate them. Measured margins are identical under the Python and JavaScript references.
 - State the relation to the hack-verifiable environments methodology and record both papers as verified primary sources. HVE plants a hack in the environment to measure whether an agent exploits it; an audit here plants a fault in the submission to measure whether the checks catch it. Opposite directions, no equivalence claimed.

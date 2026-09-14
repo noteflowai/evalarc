@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import shutil
@@ -242,6 +243,31 @@ def verify(folder: Path) -> dict:
     return record
 
 
+def coverage_cards(audits: dict) -> str:
+    cards = []
+    for name, audit in audits.items():
+        fragile = [
+            (i, row)
+            for i, row in enumerate(audit["mutants"])
+            if row["valid"] and row["killed"] and len(set(row["failing_cases"])) == 1
+        ]
+        links = "".join(
+            f'<li><a href="{name}/index.html#fault-{index}">'
+            f"{html.escape(row['name'])}"
+            f"</a><span> Sole case: {html.escape(row['failing_cases'][0])}</span></li>"
+            for index, row in fragile
+        )
+        cards.append(
+            '<article class="coverage-card">'
+            f"<h3>{html.escape(audit['reference']['task']['id'])}</h3>"
+            f"<p><strong>{audit['killed']}/{audit['total']}</strong> declared faults detected</p>"
+            f'<p class="coverage-fragile">{len(fragile)} single-case dependencies</p>'
+            f'<ul>{links}</ul><a href="{name}/index.html">'
+            "Inspect all controls &#8599;</a></article>"
+        )
+    return "".join(cards)
+
+
 def build(destination: Path) -> dict:
     destination = destination.resolve()
     if destination.exists():
@@ -255,8 +281,20 @@ def build(destination: Path) -> dict:
         ("coding", "audit", "durable-kv", 8, "boolean-equals-one", 0.925),
         ("support", "support-audit", "support-routing", 7, "new-key-on-retry", 0.9375),
     ]
-    for _, directory, task, count, spotlight, score in specifications:
+    specifications.append(
+        (
+            "robot",
+            "research/robot-audit-python",
+            "robot-evidence-review",
+            6,
+            "invent-source",
+            0.9,
+        )
+    )
+    audits = {}
+    for name, directory, task, count, spotlight, score in specifications:
         audit = json.loads((ROOT / "examples" / directory / "audit.json").read_text())
+        audits[name] = audit
         if (
             not audit["valid"]
             or not audit["reference_passed"]
@@ -271,6 +309,16 @@ def build(destination: Path) -> dict:
         highlighted = next(row for row in audit["mutants"] if row["name"] == spotlight)
         if highlighted["score"] != score or highlighted["evaluation"]["resolved"]:
             raise ValueError(f"Spotlight outcome changed: {spotlight}")
+        for row in audit["mutants"]:
+            observed = sorted(
+                {
+                    case["case_id"]
+                    for case in row["evaluation"]["cases"]
+                    if case["checks"].get(row["target_dimension"]) is False
+                }
+            )
+            if observed != sorted(set(row["failing_cases"])):
+                raise ValueError(f"Audit detection evidence disagrees: {row['name']}")
     verify_comparison()
     verify_repetitions()
     verify_suite()
@@ -280,22 +328,22 @@ def build(destination: Path) -> dict:
             if path.name == "index.html":
                 version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
                 (destination / path.name).write_text(
-                    path.read_text().replace("__EVALARC_VERSION__", version)
+                    path.read_text()
+                    .replace("__EVALARC_VERSION__", version)
+                    .replace("__AUDIT_COVERAGE__", coverage_cards(audits))
                 )
             else:
                 shutil.copyfile(path, destination / path.name)
     for name, directory, *_ in specifications:
         target = destination / name
         target.mkdir()
-        for filename in ("audit.json", "index.html"):
-            source = ROOT / "examples" / directory / filename
-            if filename.endswith(".html"):
-                # Avoid multibyte HTML corruption by the static Space injector.
-                (target / filename).write_bytes(
-                    source.read_text().encode("ascii", errors="xmlcharrefreplace")
-                )
-            else:
-                shutil.copyfile(source, target / filename)
+        # Render current, accessible UI from unchanged recorded evidence.
+        from evalarc.report import render_audit
+
+        shutil.copyfile(ROOT / "examples" / directory / "audit.json", target / "audit.json")
+        render_audit(audits[name], target / "index.html")
+        page = target / "index.html"
+        page.write_bytes(page.read_text().encode("ascii", errors="xmlcharrefreplace"))
     for directory, filenames in (
         ("comparison", ("index.html", "comparison.json", "baseline.json", "current.json")),
         ("evaluation", ("index.html", "evaluation.json")),

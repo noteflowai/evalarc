@@ -47,7 +47,7 @@ and `fully_resolved` are separate columns.
 | Configuration | Rows | Unit and purpose |
 | --- | ---: | --- |
 | `suite_jobs` | 3 | One configured gate per job, backed by five Docker attempts; compare acceptance and full resolution. |
-| `audit_cases` | 167 | One case execution per scripted control: 135 coding and 32 support cases across two references and 15 declared faults. |
+| `audit_cases` | 251 | One case execution per scripted control: 135 coding, 32 support and 84 robot-evidence cases across three references and 21 declared faults. |
 | `repetition_attempts` | 6 | One recorded attempt of a frozen support policy; three reference and three faulty attempts. |
 
 Each configuration has a single **`development`** split. These are different
@@ -55,6 +55,9 @@ units, so their row counts must not be summed into a number of independent
 trials or benchmark examples. `evaluation_score` in the case table is the
 parent evaluation's score, repeated for navigation; averaging that column
 across case rows would reweight evaluations incorrectly.
+`control_detection_margin` counts distinct detecting case IDs for the parent
+faulty control; references have null in this field. It is repeated for filtering,
+and must not be summed across case rows or interpreted as independent trials.
 
 These are saved **scripted controls on public development tasks**, not runs of
 a trained language model. Support tickets, identifiers and messages are
@@ -89,7 +92,7 @@ The suite configuration, plan, all five attempts and JUnit are included under
 `evidence/examples/suite/`. Repetition summaries and all six attempts are included
 under their original example directories.
 
-The original records come from EvalArc 0.2, 0.4 and 0.5. Their
+The original records come from EvalArc 0.2, 0.4, 0.5 and 0.9. Their
 `recorded_evalarc_version` and grader fingerprints are preserved. Do not treat
 the three configurations as matched version comparisons; use the lab's separate
 matched comparison for that question.

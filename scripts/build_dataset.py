@@ -12,7 +12,7 @@ import build_site
 
 ROOT = build_site.ROOT
 SCHEMA = "evalarc.casebook.v1"
-COUNTS = {"audit_cases": 167, "repetition_attempts": 6, "suite_jobs": 3}
+COUNTS = {"audit_cases": 251, "repetition_attempts": 6, "suite_jobs": 3}
 
 
 def compact(value: object) -> str:
@@ -62,9 +62,13 @@ def build(destination: Path) -> dict:
             "runtime_json": compact(evaluation["runtime"]),
         }
 
-    for directory in ("audit", "support-audit"):
+    for directory in ("audit", "support-audit", "research/robot-audit-python"):
         path = ROOT / "examples" / directory / "audit.json"
         audit = json.loads(path.read_text())
+        margins = {
+            item["name"]: len(set(item["failing_cases"])) if item["valid"] else None
+            for item in audit["mutants"]
+        }
         controls = [("reference", "/reference", audit["reference"], "reference")]
         controls.extend(
             (item["name"], f"/mutants/{i}/evaluation", item["evaluation"], "declared-fault")
@@ -78,6 +82,7 @@ def build(destination: Path) -> dict:
                         "id": f"{evaluation['task']['id']}/{name}/{case['seed']}/{case['case_id']}",
                         "control": name,
                         "control_kind": kind,
+                        "control_detection_margin": margins.get(name),
                         "case_id": case["case_id"],
                         "seed": case["seed"],
                         "case_passed": case["passed"],
