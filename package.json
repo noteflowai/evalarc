@@ -1,0 +1,12 @@
+{
+  "name": "evalarc-evidence-site",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Browser checks for the static EvalArc evidence explorer",
+  "scripts": {
+    "test:site": "node scripts/check_site.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

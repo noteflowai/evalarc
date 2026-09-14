@@ -1,7 +1,9 @@
 name: CI
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -41,3 +43,76 @@ jobs:
         with:
           name: grader-audit-${{ matrix.task }}
           path: runs/docker-audit/
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: python scripts/build_site.py --output dist/site
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evidence-site
+          path: dist/site/
+          include-hidden-files: true
+  pages:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.repository == 'noteflowai/evalarc'
+    needs: [test, docker-audit, site]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Require the current main commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: test "$(gh api repos/$GITHUB_REPOSITORY/git/ref/heads/main --jq .object.sha)" = "$GITHUB_SHA"
+      - uses: actions/download-artifact@v4
+        with:
+          name: evidence-site
+          path: site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
+        id: deployment
+  huggingface:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.repository == 'noteflowai/evalarc'
+    needs: [test, docker-audit, site]
+    runs-on: ubuntu-latest
+    concurrency:
+      group: huggingface
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: evidence-site
+          path: dist/site
+      - run: python -m pip install huggingface_hub==1.31.0
+      - name: Publish and verify public files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: |
+          test "$(gh api repos/$GITHUB_REPOSITORY/git/ref/heads/main --jq .object.sha)" = "$GITHUB_SHA"
+          python scripts/publish_space.py --bundle dist/site

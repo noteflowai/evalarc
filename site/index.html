@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A 93.75% score. A duplicated write. Explore the evidence with EvalArc, an open grader audit toolkit for AI agents.">
+  <meta name="theme-color" content="#101618">
+  <title>EvalArc | Look past the score.</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#explorer">Skip to evidence explorer</a>
+  <header>
+    <a class="wordmark" href="./"><img src="icon.svg" width="30" height="30" alt="">EvalArc<span>/ evidence lab</span></a>
+    <nav aria-label="Main"><a href="https://github.com/noteflowai/evalarc">GitHub &#8599;</a><a href="https://github.com/noteflowai/evalarc/blob/main/README.zh-CN.md" lang="zh-CN">&#20013;&#25991;</a></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.2</p>
+        <h1>Look past<br>the <em>score.</em></h1>
+        <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
+        <p class="muted">EvalArc tests whether an agent's grader catches the difference between plausible progress and a completed task.</p>
+        <a class="primary" href="#explorer">Inspect the failed retry <span>&#8600;</span></a>
+      </div>
+      <a class="hero-proof" href="#explorer" aria-label="Inspect why a 93.75 percent score fails acceptance">
+        <div class="proof-top"><span>RECORDED CONTROL / 01</span><span class="badge fail">NOT RESOLVED</span></div>
+        <div class="hero-score">93.75<span>%</span></div>
+        <p>Partial score. Duplicated write.</p>
+        <div class="spark" aria-hidden="true"><i></i><i></i><i></i><i class="broken"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="receipt"><span>add_note</span><b>committed</b><span>response</span><b class="coral">transient error</b><span>retry with new key</span><b class="coral">duplicate note</b></div>
+        <p class="caption">Scripted negative control &middot; public seed 17<br>No model call or live customer data.</p>
+      </a>
+    </section>
+    <div class="facts" aria-label="Audit scope">
+      <div><strong>2</strong><span>task packs</span></div>
+      <div><strong>15</strong><span>declared faults caught</span></div>
+      <div><strong>JSON</strong><span>downloadable evidence</span></div>
+      <div><strong>CPU</strong><span>reproduce without a model API</span></div>
+    </div>
+    <section id="explorer" class="explorer">
+      <div class="section-top"><div><p class="eyebrow">FOLLOW THE EVIDENCE</p><h2>One score never tells the whole story.</h2></div><p>Switch the control. Inspect the checks.<br>Follow each recorded state change.</p></div>
+      <div class="task-switch" role="group" aria-label="Task pack">
+        <button id="support-task" type="button" aria-pressed="true">01 &nbsp; Support tools <span>Retries &amp; state</span></button>
+        <button id="coding-task" type="button" aria-pressed="false">02 &nbsp; Coding artifact <span>Durability &amp; contracts</span></button>
+      </div>
+      <p id="load-status" role="status">Loading recorded audit evidence&hellip;</p>
+      <div id="workspace" hidden>
+        <div class="selection">
+          <div><label for="control">Implementation under evaluation</label><select id="control"></select></div>
+          <div class="selection-links"><a id="report-link" href="support/index.html">Full report &#8599;</a><a id="download-link" href="support/audit.json" download>Download audit JSON &#8595;</a></div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div><span class="eyebrow">WEIGHTED SCORE</span><strong id="score"></strong></div>
+          <div><span id="verdict" class="badge"></span><p id="result-context"></p></div>
+          <div><span class="eyebrow">ACCEPTANCE</span><strong id="checks-count"></strong><span class="muted">cases passed</span></div>
+        </div>
+        <p id="story" class="story"></p>
+        <div id="dimensions" class="dimensions" aria-label="Scores by dimension"></div>
+        <div class="evidence">
+          <aside><h3>Recorded cases</h3><div id="cases" role="group" aria-label="Recorded cases"></div></aside>
+          <div class="case-detail">
+            <div class="case-heading"><h3 id="case-title"></h3><span id="case-verdict" class="badge"></span></div>
+            <div id="case-checks" class="check-list"></div>
+            <p id="case-error"></p>
+            <div id="trace-panel" hidden>
+              <label for="trace-step">Tool trace <span id="step-label"></span></label>
+              <input type="range" id="trace-step" min="0" max="0" value="0">
+              <div class="step-buttons"><button id="previous-step" type="button">&#8592; Previous</button><button id="next-step" type="button">Next &#8594;</button></div>
+              <div class="trace-grid"><div><h4>Action &amp; result</h4><pre id="trace-action"></pre></div><div><h4>State changes in this step</h4><pre id="trace-changes"></pre></div></div>
+              <details><summary>Initial and final state</summary><pre id="states"></pre></details>
+            </div>
+            <div id="coding-panel" hidden><p>The coding grader checks observable responses and restart behavior. This record contains the failure message and a transcript fingerprint; it does not include the agent's coding process or a full response transcript.</p><pre id="coding-evidence"></pre></div>
+          </div>
+        </div>
+        <details class="provenance"><summary>Reproduction record &amp; fingerprints</summary><pre id="provenance"></pre></details>
+      </div>
+      <noscript><p>This explorer requires JavaScript. Read the standalone <a href="support/index.html">support report</a> or <a href="coding/index.html">coding report</a> without it.</p></noscript>
+    </section>
+    <section class="reproduce">
+      <div><p class="eyebrow">FROM THE BROWSER TO YOUR TERMINAL</p><h2>Make the grader<br>earn your trust.</h2><p>Run the known-good reference and the declared faulty controls. Keep the outcomes, seeds, runtime limits and fingerprints together.</p><a href="https://github.com/noteflowai/evalarc#run-an-audit">Installation &amp; execution guide &#8599;</a></div>
+      <div class="terminal"><div>TRUSTED BUNDLED CONTROLS / LINUX / PYTHON 3.11+</div><pre><code>git clone https://github.com/noteflowai/evalarc.git
+cd evalarc
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -e .
+
+evalarc audit --task support-routing \
+  --backend local --trust-local \
+  --output runs/support</code></pre><p>Local mode runs with your user privileges. Use the documented Docker backend for candidate isolation.</p></div>
+    </section>
+    <section class="scope"><h3>What this evidence establishes</h3><p>The bundled references pass and the 15 declared faulty implementations fail their intended checks. These are public development tasks and scripted policies. They do not establish frontier-model performance, coverage of arbitrary reward hacks, a human time horizon, or RL training gains. The browser replays saved reports; it does not execute submissions.</p></section>
+  </main>
+  <footer><a class="wordmark" href="https://github.com/noteflowai/evalarc">EvalArc</a><p>Run agents. Measure outcomes.</p><a href="https://github.com/noteflowai/evalarc/blob/main/docs/methodology.md">Methodology</a><a href="LICENSE">MIT license</a><a href="manifest.json">Build provenance</a></footer>
+</body>
+</html>

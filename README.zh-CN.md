@@ -6,12 +6,22 @@
 
 Python 3.11+，Linux 主机，零运行时第三方依赖，MIT 许可证。
 
+[在线交互演示](https://huggingface.co/spaces/glayguo/evalarc) ·
+[网页镜像](https://noteflowai.github.io/evalarc/) ·
+[版本下载](https://github.com/noteflowai/evalarc/releases) ·
 [English](README.md) · [中文调研与论文分析](docs/research.zh-CN.md) ·
 [架构设计](docs/architecture.md) · [方法说明](docs/methodology.md) · [开发路线](docs/roadmap.md)
 
 EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据。
 通过正确实现和刻意带有缺陷的实现进行对照，
 检查它能发现哪些问题，并保存可复查的报告。
+
+**如果智能体重复写入了一条备注，你会接受 93.75% 的分数吗？**
+[交互证据实验室](https://huggingface.co/spaces/glayguo/evalarc)
+可以切换正确策略与缺陷策略，逐步查看工具调用、失败检查和状态变化。
+页面读取仓库保存的 Docker 审计记录，无需安装，也不调用模型。
+
+[![EvalArc 交互证据实验室：93.75% 的分数仍未通过验收](docs/assets/evidence-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
 **v0.2 已实现 coding 和业务工具两个场景。**
 
@@ -29,9 +39,11 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 
 ## 直接运行
 
-在当前仓库目录执行：
+克隆仓库后，在独立 Python 环境中安装：
 
 ```bash
+git clone https://github.com/noteflowai/evalarc.git
+cd evalarc
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .

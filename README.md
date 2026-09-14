@@ -6,6 +6,9 @@
 </p>
 
 <p align="center">
+  <a href="https://huggingface.co/spaces/glayguo/evalarc">Interactive evidence lab</a> ·
+  <a href="https://noteflowai.github.io/evalarc/">Web demo</a> ·
+  <a href="https://github.com/noteflowai/evalarc/releases">Releases</a> ·
   <a href="README.zh-CN.md">简体中文</a> ·
   <a href="docs/research.zh-CN.md">Research & papers</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
@@ -17,6 +20,14 @@ EvalArc is a research preview for **auditable agent evaluations**. It starts by
 checking whether a grader can distinguish correct work from plausible defects:
 run known-good and deliberately flawed submissions, inspect the evidence, and
 record exactly what was evaluated.
+
+**Would you accept a 93.75% score if the agent duplicated a write?**
+The [interactive evidence lab](https://huggingface.co/spaces/glayguo/evalarc)
+lets you switch between correct and faulty implementations, inspect failed
+checks, and step through the tool call that changed the state. It replays the
+committed Docker audits without a model API or installation.
+
+[![EvalArc evidence lab: a 93.75% score still fails acceptance](docs/assets/evidence-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
 **v0.2 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
@@ -33,9 +44,11 @@ integrations remain planned. No frontier-model benchmark result is claimed.
 
 ## Run an audit
 
-From this checkout:
+Clone the source, then install in an isolated Python environment:
 
 ```bash
+git clone https://github.com/noteflowai/evalarc.git
+cd evalarc
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .

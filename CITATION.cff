@@ -7,6 +7,8 @@ authors:
 version: 0.2.0
 date-released: 2026-09-14
 license: MIT
+repository-code: "https://github.com/noteflowai/evalarc"
+url: "https://noteflowai.github.io/evalarc/"
 keywords:
   - agent evaluation
   - reinforcement learning environments

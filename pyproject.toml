@@ -18,6 +18,13 @@ classifiers = [
 ]
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/noteflowai/evalarc"
+Documentation = "https://github.com/noteflowai/evalarc/blob/main/README.md"
+Repository = "https://github.com/noteflowai/evalarc"
+Issues = "https://github.com/noteflowai/evalarc/issues"
+Demo = "https://huggingface.co/spaces/glayguo/evalarc"
+
 [project.scripts]
 evalarc = "evalarc.cli:main"
 
