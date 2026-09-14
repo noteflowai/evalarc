@@ -3,6 +3,14 @@ graders behind AI-agent evaluations.
 
 **Updated for v0.5: same score, different acceptance gate.**
 
+**New data companion:** the
+[EvalArc Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
+makes the recorded evidence filterable in Hugging Face: 167 audit cases, six
+repeated attempts and three suite jobs in separate development configurations.
+Start with `suite_jobs` to compare acceptance with full resolution, or load the
+JSONL in Python. Every row links to unchanged source JSON and a fixed code
+revision. This is a small scripted casebook, not a new model benchmark.
+
 The new suite showcase puts the same frozen defective policy through two
 explicit rules. Both support jobs score 93.75% and resolve 0/2 attempts.
 A deliberately permissive gate accepts the partial result; requiring every

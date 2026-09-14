@@ -8,6 +8,7 @@ Python 3.11+，Linux 主机，零运行时第三方依赖，MIT 许可证。
 
 [在线交互演示](https://huggingface.co/spaces/glayguo/evalarc) ·
 [网页镜像](https://noteflowai.github.io/evalarc/) ·
+[可筛选证据数据集](https://huggingface.co/datasets/glayguo/evalarc-casebook) ·
 [版本下载](https://github.com/noteflowai/evalarc/releases) ·
 [English](README.md) · [中文调研与论文分析](docs/research.zh-CN.md) ·
 [架构设计](docs/architecture.md) · [方法说明](docs/methodology.md) · [开发路线](docs/roadmap.md)
@@ -40,6 +41,12 @@ v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算�
 分别展示。
 
 [![EvalArc v0.5：相同分数，不同验收结果](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
+
+[Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
+把 167 条审计用例、6 次重复尝试和 3 项验收作业分别整理为可筛选的表，
+保留未经改写的原始 JSON 和版本指纹。可先选择 `suite_jobs`，
+对照 `gate_accepted` 与 `fully_resolved`，或用 Python 读取。
+这些是公开开发任务中的脚本对照，不是隐藏模型测试集。详见[数据说明](docs/casebook.md)。
 
 `evalarc repeat` 固定一份候选快照，在相同场景上重新启动多轮评测，
 保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度

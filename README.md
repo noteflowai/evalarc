@@ -8,6 +8,7 @@
 <p align="center">
   <a href="https://huggingface.co/spaces/glayguo/evalarc">Interactive evidence lab</a> ·
   <a href="https://noteflowai.github.io/evalarc/">Web demo</a> ·
+  <a href="https://huggingface.co/datasets/glayguo/evalarc-casebook">Filterable casebook</a> ·
   <a href="https://github.com/noteflowai/evalarc/releases">Releases</a> ·
   <a href="README.zh-CN.md">简体中文</a> ·
   <a href="docs/research.zh-CN.md">Research & papers</a> ·
@@ -48,6 +49,13 @@ check rejects it. The full three-job Docker suite, five attempts, TOML and JUnit
 remain inspectable. Configured acceptance is separate from task resolution.
 
 [![EvalArc v0.5: the same score meets one gate and fails another](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
+
+Prefer tables or Python? The [Hugging Face casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
+separates 167 audit cases, six repeated attempts and three suite jobs into
+filterable configurations, with unchanged source JSON and provenance.
+Start with `suite_jobs` to compare `gate_accepted` and `fully_resolved`.
+These are scripted public-development records, not a held-out model benchmark.
+[Data guide and reproduction](docs/casebook.md).
 
 `evalarc repeat` freezes one candidate, runs fresh attempts on fixed
 cases, and reports every outcome with per-check pass rates. Runs now record
