@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import stat
 from pathlib import Path
 
 MAX_REPORT_BYTES = 64 * 1024 * 1024
@@ -30,16 +32,30 @@ def _object(pairs: list[tuple[str, object]]) -> dict:
     return result
 
 
-def read_evaluation(path: Path) -> dict:
-    with path.open("rb") as source:
-        content = source.read(MAX_REPORT_BYTES + 1)
-    if len(content) > MAX_REPORT_BYTES:
+def read_json(path: Path, *, limit: int = MAX_REPORT_BYTES) -> tuple[dict, bytes]:
+    """Read finite, unambiguous JSON from a bounded regular file."""
+    fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_NOFOLLOW", 0))
+    with os.fdopen(fd, "rb") as source:
+        info = os.fstat(source.fileno())
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("report must be a regular file")
+        if info.st_size > limit:
+            raise ValueError("evaluation report exceeds the 64 MiB read limit")
+        content = source.read(limit + 1)
+    if len(content) > limit:
         raise ValueError("evaluation report exceeds the 64 MiB read limit")
     try:
         data = json.loads(content, object_pairs_hook=_object)
         json.dumps(data, allow_nan=False)
+        if not isinstance(data, dict):
+            raise ValueError("report must be an object")
     except (ValueError, UnicodeDecodeError, RecursionError) as error:
         raise ValueError(f"cannot read finite, unambiguous report JSON: {error}") from error
+    return data, content
+
+
+def read_evaluation(path: Path) -> dict:
+    data, _ = read_json(path)
     validate_evaluation(data)
     return data
 

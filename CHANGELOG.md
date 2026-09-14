@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.7.0 · 2026-09-14 · Research preview
+
+- Add `evalarc verify` for received evaluation, repetition and comparison
+  records. Recompute summaries and source identities without candidate
+  execution, a source checkout, Docker or the original interpreter.
+- Return machine-readable results and hashes of every checked JSON input.
+  Separate consistency success from `--require-resolved` acceptance.
+- Bound input sizes and attempt inventory; reject duplicate keys, non-finite
+  numbers, symlinks and special files. Keep historical evidence readable.
+- Document unsupported aggregate formats and the distinction between record
+  consistency, independent grader execution and producer authentication.
+
+Task contracts, runtime enforcement and scoring rules are unchanged. This
+release verifies existing evidence; it does not add new model trials.
+
+
 ## 0.6.0 · 2026-09-14 · Research preview
 
 - `init --language python|javascript` supplies starters and references for both

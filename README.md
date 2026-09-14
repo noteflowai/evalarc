@@ -85,6 +85,11 @@ ambiguous write outcomes. Python and JavaScript scripted policies use the same
 host verifier. Browser environments, LLM-provider adapters, and RL training
 integrations remain planned. No frontier-model benchmark result is claimed.
 
+**Received a report? Verify it without running the candidate.**
+`evalarc verify path/to/report --json` checks evaluation, repetition or comparison
+evidence and fingerprints every input. Use `--require-resolved` when your handoff
+also requires all checks to pass. [Verification and limits](docs/verification.md).
+
 ## Run an audit
 
 Clone the source, then install in an isolated Python environment:

@@ -85,3 +85,10 @@ cases do not establish reliability on unseen tasks or a model success rate.
 The source and evidence are MIT licensed. `manifest.json` identifies the source
 commit and SHA-256 of each published file. Publication is performed by the
 maintainer and does not imply endorsement by Hugging Face.
+
+### Verify a handoff offline
+
+With EvalArc 0.7+, run `evalarc verify path/to/report --json` on an evaluation,
+repetition or comparison report. It checks the recorded inputs without executing
+a candidate; `--require-resolved` separately requires fully resolved results.
+[Workflow and limits](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md).
