@@ -28,6 +28,12 @@ the original TOML, and JUnit output distinguishing a failed gate from an
 environment error. Gate acceptance remains separate from full task resolution.
 A hosted CI importer was not exercised.
 
+**Explore the data as tables:** the
+[EvalArc Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
+offers three separate configurations for 167 audit cases, six repeated attempts
+and three suite jobs. Filter the results or load the JSONL in Python; original
+source records and fingerprints accompany every row.
+
 **Every v0.4 attempt remains visible.** Switch between three
 recorded Docker attempts of the reference and three of the duplicate-write
 control. The reference resolves 3/3 attempts; the faulty control resolves 0/3

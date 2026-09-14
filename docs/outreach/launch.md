@@ -10,7 +10,9 @@ EvalArc 是面向 AI 智能体的开源评测与评分器审计工具，帮助�
 和 JUnit 导出：同样是 93.75%、没有完全通过的尝试，宽松规则可允许部分进展，
 要求备注检查全部通过的规则则拒绝。页面分别展示任务完成情况和规则决策，
 并保留重复评测、版本回归与全部运行证据，适合 PAI 智能体创新场景的评测设计、
-验收验证与技术交流。当前为研究预览版，演示使用脚本对照，尚未给出真实大模型
+验收验证与技术交流。HF Casebook 进一步提供可筛选、可用 Python 读取的公开
+证据表，分别保留 167 条用例、6 次重复尝试和 3 项验收作业及其原始记录。
+当前为研究预览版，演示使用脚本对照，尚未给出真实大模型
 性能或强化学习收益结论。
 
 ## English
@@ -37,12 +39,18 @@ permissive threshold but fails a gate requiring every notes check. Three jobs,
 five attempts and the complete configuration remain inspectable. No hosted
 CI importer or model-provider integration is claimed.
 
+The Hugging Face Casebook makes 167 audit cases, six repeated attempts and three
+suite jobs filterable and readable from Python as separate development
+configurations. Each row retains a pointer and hash for its original source
+record. This is a tabular view of existing evidence, not additional model trials.
+
 ## Entry points
 
 - Source: https://github.com/noteflowai/evalarc
 - Demo: https://huggingface.co/spaces/glayguo/evalarc
 - Web mirror: https://noteflowai.github.io/evalarc/
 - Releases: https://github.com/noteflowai/evalarc/releases
+- Data: https://huggingface.co/datasets/glayguo/evalarc-casebook
 
 For each community, write a description appropriate to its rules and audience.
 Disclose maintainer affiliation. Do not present pending editorial submissions
