@@ -17,9 +17,11 @@ def run_case(case: Case, workspace: Path, state: Path, runtime: Runtime) -> dict
     transcript = hashlib.sha256()
     error = None
     status = "passed"
+    processes = []
     try:
         for session in case.sessions:
             with runtime.start(workspace, state) as process:
+                processes.append(process)
                 for request in session.requests:
                     expected = oracle(expected_state, request)
                     actual = process.request(request)
@@ -50,4 +52,5 @@ def run_case(case: Case, workspace: Path, state: Path, runtime: Runtime) -> dict
         "duration_seconds": round(time.monotonic() - started, 6),
         "transcript_sha256": transcript.hexdigest(),
         "error": error,
+        "processes": [process.diagnostics() for process in processes],
     }

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 from pathlib import Path
@@ -15,9 +14,11 @@ from evalarc.audit import asset, audit
 from evalarc.compare import compare
 from evalarc.doctor import diagnose
 from evalarc.evaluate import evaluate, write_json
+from evalarc.events import EventLog, emit
 from evalarc.records import read_evaluation
-from evalarc.report import render_audit, render_comparison, render_evaluation
-from evalarc.runner import Runtime
+from evalarc.repetition import repeat
+from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
+from evalarc.runner import EnvironmentFailure, Runtime
 from evalarc.tasks import TASKS, get_task
 from evalarc.trajectory import summarize
 
@@ -37,16 +38,28 @@ def parser() -> argparse.ArgumentParser:
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
+        ("repeat", "measure repeatability of one frozen candidate on fixed cases"),
     ):
         command = commands.add_parser(name, help=help_text)
-        if name == "evaluate":
+        if name in ("evaluate", "repeat"):
             command.add_argument("candidate", type=Path)
+        if name == "repeat":
+            command.add_argument("--attempts", type=int, default=3)
         command.add_argument("--task", choices=TASKS, default="durable-kv")
         command.add_argument("--backend", choices=["docker", "local"], default="docker")
         command.add_argument("--trust-local", action="store_true")
         command.add_argument("--image", default="python:3.12-slim")
         command.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
         command.add_argument("--timeout", type=float, default=10.0)
+        command.add_argument(
+            "--case-timeout",
+            type=float,
+            default=60.0,
+            help="total protocol seconds per case, shared across process restarts",
+        )
+        command.add_argument(
+            "--progress", action="store_true", help="stream JSONL events to stderr"
+        )
         command.add_argument("--seeds", type=int, nargs="+", default=[17, 41, 97])
         command.add_argument("--output", type=Path, default=Path("runs") / name)
     doctor = commands.add_parser(
@@ -140,20 +153,22 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.backend == "local" and not args.trust_local:
             raise ValueError("local mode executes host code; add --trust-local for trusted code")
-        if not math.isfinite(args.timeout):
-            raise ValueError("timeout must be finite")
         runtime = Runtime(
             backend=args.backend,
             timeout=args.timeout,
+            case_timeout=args.case_timeout,
             image=args.image,
             docker_command=args.docker_command,
         )
-        if args.command == "evaluate":
+        if args.command in ("evaluate", "repeat"):
             check_output_location(args.candidate, args.output)
         if args.command == "audit":
-            with new_run(args.output) as output:
+            with (
+                new_run(args.output) as output,
+                EventLog(output / "events.jsonl", stream=args.progress) as events,
+            ):
                 runtime.prepare()
-                result = audit(runtime, args.seeds, args.task)
+                result = audit(runtime, args.seeds, args.task, on_event=events)
                 write_json(output / "audit.json", result)
                 render_audit(result, output / "index.html")
             reference_status = (
@@ -170,8 +185,42 @@ def main(argv: list[str] | None = None) -> int:
                 f"Report: {args.output / 'index.html'}"
             )
             return 2 if not result["valid"] else (0 if result["passed"] else 1)
-        with new_run(args.output) as output:
-            result = evaluate(args.candidate, runtime, args.seeds, args.task)
+        if args.command == "repeat":
+            with (
+                new_run(args.output) as output,
+                EventLog(output / "events.jsonl", stream=args.progress) as events,
+            ):
+
+                def save_attempt(index: int, result: dict) -> None:
+                    directory = output / "attempts" / f"{index:04d}"
+                    write_json(directory / "evaluation.json", result)
+                    render_evaluation(result, directory / "index.html")
+
+                result = repeat(
+                    args.candidate,
+                    runtime,
+                    args.seeds,
+                    args.attempts,
+                    args.task,
+                    on_event=events,
+                    on_attempt=save_attempt,
+                )
+                write_json(output / "repetition.json", result)
+                render_repetition(result, output / "index.html")
+            print(
+                f"Status: {result['status']} | "
+                f"Resolved attempts: {result['resolved_attempts']}/"
+                f"{result['requested_attempts']} | "
+                f"Invalid attempts: {result['invalid_attempts']} | "
+                f"Variable checks: {result['variable_checks']}\n"
+                f"Report: {args.output / 'index.html'}"
+            )
+            return 2 if not result["valid"] else (0 if result["all_attempts_resolved"] else 1)
+        with (
+            new_run(args.output) as output,
+            EventLog(output / "events.jsonl", stream=args.progress) as events,
+        ):
+            result = evaluate(args.candidate, runtime, args.seeds, args.task, on_event=events)
             write_json(output / "evaluation.json", result)
             render_evaluation(result, output / "index.html")
         score = "unavailable" if result["score"] is None else f"{result['score']:.4f}"
@@ -180,6 +229,22 @@ def main(argv: list[str] | None = None) -> int:
             f"Report: {args.output / 'index.html'}"
         )
         return 2 if not result["valid"] else (0 if result["resolved"] else 1)
-    except (ValueError, OSError, KeyError, TypeError) as error:
-        print(f"evalarc: {error}", file=sys.stderr)
+    except KeyboardInterrupt:
+        _error(args, "run_cancelled", "cancelled")
+        return 130
+    except (ValueError, OSError, KeyError, TypeError, EnvironmentFailure) as error:
+        _error(args, "run_error", str(error))
         return 2
+
+
+def _error(args: argparse.Namespace, event: str, message: str) -> None:
+    if getattr(args, "progress", False):
+        emit(
+            lambda record: print(
+                json.dumps(record, ensure_ascii=True), file=sys.stderr, flush=True
+            ),
+            event,
+            message=message,
+        )
+    else:
+        print(f"evalarc: {message}", file=sys.stderr)

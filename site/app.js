@@ -13,6 +13,73 @@ let audits = {}, pack = "support", evaluation, selectedCase;
 let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
+const repetitions = {};
+function chooseRepetition(name) {
+  const record = repetitions[name];
+  if (!record) return;
+  for (const control of ["reference", "faulty"]) $("repeat-" + control).setAttribute("aria-pressed", String(control === name));
+  $("repeat-resolved").textContent = `${record.resolved_attempts} / ${record.requested_attempts}`;
+  $("repeat-score").textContent = percent(record.mean_score);
+  $("repeat-invalid").textContent = String(record.invalid_attempts);
+  $("repeat-variable").textContent = String(record.variable_checks);
+  $("repeat-attempts").replaceChildren();
+  for (const attempt of record.attempts) {
+    const card = document.createElement("a");
+    card.className = `repeat-attempt ${attempt.resolved ? "pass" : "fail"}`;
+    card.href = `repeat/${name}/attempts/${String(attempt.attempt).padStart(4, "0")}/index.html`;
+    const label = document.createElement("span"); label.textContent = `ATTEMPT ${String(attempt.attempt).padStart(2, "0")}`;
+    const score = document.createElement("strong"); score.textContent = percent(attempt.score);
+    const verdict = document.createElement("span"); verdict.className = "badge";
+    verdict.textContent = !attempt.valid ? "INVALID RUN" : attempt.resolved ? "RESOLVED" : "NOT RESOLVED";
+    const link = document.createElement("span"); link.className = "caption"; link.textContent = "Open full evidence \u2197";
+    card.append(label, score, verdict, link); $("repeat-attempts").append(card);
+  }
+  $("repeat-cases").replaceChildren();
+  for (const row of record.cases) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    const title = document.createElement("span"); title.textContent = `${row.case_id} / seed ${row.seed}`;
+    const outcome = document.createElement("span"); outcome.className = row.failed ? "fail" : "pass";
+    outcome.textContent = `${row.passed} / ${row.assessed} passed`;
+    summary.append(title, outcome); details.append(summary);
+    const checks = document.createElement("div"); checks.className = "check-list";
+    for (const [check, count] of Object.entries(row.checks)) {
+      const item = document.createElement("span"); item.className = count.passed < count.assessed ? "fail" : "pass";
+      item.textContent = `${check}: ${count.passed} / ${count.assessed}`; checks.append(item);
+    }
+    details.append(checks);
+    const invalid = document.createElement("p"); invalid.className = "caption";
+    invalid.textContent = `${row.unassessed} unassessed observations. Check counts use assessed observations only.`;
+    details.append(invalid); $("repeat-cases").append(details);
+  }
+  $("repeat-context").textContent = name === "faulty"
+    ? "A stable score can describe a stable defect. All three attempts fail the retry-after-commit note check; none is selected or discarded."
+    : "All three reference attempts resolve the same four public cases. This is a functional control; repeated passes do not expand task coverage.";
+  for (const [id, file] of [["report", "index.html"], ["json", "repetition.json"], ["events", "events.jsonl"]]) $("repeat-" + id).href = `repeat/${name}/${file}`;
+  $("repeat-provenance").textContent = pretty({
+    candidate_sha256: record.candidate_sha256, grader_sha256: record.grader_sha256,
+    cases_sha256: record.cases_sha256, task: record.task, seeds: record.seeds,
+    runtime: record.runtime, completed_attempts: record.completed_attempts,
+    assessed_attempts: record.assessed_attempts, invalid_attempts: record.invalid_attempts,
+    interpretation: record.interpretation,
+  });
+}
+for (const name of ["reference", "faulty"]) $("repeat-" + name).addEventListener("click", () => chooseRepetition(name));
+Promise.all(["reference", "faulty"].map(async (name) => {
+  const response = await fetch(`repeat/${name}/repetition.json`);
+  if (!response.ok) throw new Error("Repetition evidence unavailable");
+  repetitions[name] = await response.json();
+})).then(() => {
+  chooseRepetition("faulty");
+  $("repeat-status").hidden = true;
+  $("repeat-workspace").hidden = false;
+}).catch(() => {
+  $("repeat-status").textContent = "Repetition evidence could not be loaded. Open a standalone report:";
+  for (const name of ["reference", "faulty"]) {
+    const link = document.createElement("a"); link.href = `repeat/${name}/index.html`; link.textContent = ` ${name} report`;
+    $("repeat-status").append(link);
+  }
+});
 function badge(element, passed, text) {
   element.className = `badge ${passed ? "pass" : "fail"}`;
   element.textContent = text;

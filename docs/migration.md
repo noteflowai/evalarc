@@ -1,5 +1,29 @@
 # Migration notes
 
+## EvalArc v0.3 → v0.4
+
+`evalarc repeat` runs 1–100 attempts of one frozen candidate, writes every
+attempt's evaluation JSON and HTML, and produces `evalarc.repetition.v1`.
+An invalid attempt stops repetition; the summary preserves the requested,
+completed, assessed, and invalid counts. See [repeatability](reliability.md).
+
+`evaluate`, `audit`, and `repeat` save `events.jsonl` using `evalarc.event.v1`.
+`--progress` streams the same events to stderr. Standard output retains the
+human-readable command result. Cancellation exits with code 130 and removes
+unpublished output; externally redirected progress remains available.
+
+`--case-timeout` defaults to 60 seconds, alongside the existing 10-second
+response timeout. Its deadline spans process restarts within a case; cleanup
+can extend wall time beyond the protocol budget. Evaluation schema v2 adds
+`runtime.case_timeout_seconds` and per-case `processes` diagnostics, including
+captured output bytes, exit code, and the last 2048 captured stderr bytes.
+
+Both task contracts remain v0.1.0, with unchanged cases and scoring weights.
+Runtime enforcement and grading-source fingerprints change. Old v2 files
+remain readable, but comparisons and checkpoint trajectories must not combine
+v0.3 and v0.4 runs. Re-run both candidates with matching v0.4 conditions.
+Historical example reports retain their original version and evidence.
+
 ## EvalArc v0.2 → v0.3
 
 The package version is `0.3.0`. Both task contracts, grading rules, and evaluation

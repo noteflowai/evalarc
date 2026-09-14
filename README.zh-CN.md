@@ -23,14 +23,25 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 
 [![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.3 已实现 coding 和业务工具两个场景。**
+**v0.4 已实现 coding 和业务工具两个场景。**
 
 | 任务 | 交互方式 | 验证内容 |
 | --- | --- | --- |
 | `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 |
 | `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 |
 
-v0.3 新增环境预检查、单次评测 HTML 报告和逐项回归比较，即使总分上升也能指出
+v0.4 新增 `evalarc repeat`：固定一份候选快照，在相同场景上重新启动多轮评测，
+保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度
+和受限进程诊断。详见[重复评测指南](docs/reliability.zh-CN.md)。
+
+[新增在线展示](https://glayguo-evalarc.static.hf.space/#repeat)保留了两种脚本策略各三次
+Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平均分为 93.75%，却 0/3 轮
+完全通过。可以查看每轮原始证据和逐项计数。这些观察中未出现检查结果波动，
+也不能据此估计模型在未见任务上的可靠性。
+
+[![EvalArc v0.4：三轮平均分 93.75%，但没有一轮完全通过](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
+
+现有流程包含环境预检查、单次评测 HTML 报告和逐项回归比较，即使总分上升也能指出
 退步的检查；输出保护会保留之前的运行证据。详见[使用流程](docs/workflow.zh-CN.md)。
 
 两个场景使用共同的报告元数据，各自定义评分规则。工单环境记录工具调用和

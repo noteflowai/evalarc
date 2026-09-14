@@ -29,7 +29,7 @@ committed Docker audits without a model API or installation.
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.3 includes two working task packs**, a shared evidence format, and
+**v0.4 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |
@@ -37,7 +37,19 @@ configurable candidate commands:
 | `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
 | `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
 
-v0.3 adds `evalarc doctor`, individual HTML reports, and `evalarc compare` for
+v0.4 adds `evalarc repeat`: freeze one candidate, run fresh attempts on fixed
+cases, and inspect every outcome with per-check pass rates. Runs now record
+JSONL progress, enforce a total case budget, and save bounded process diagnostics.
+See the [repeatability guide](docs/reliability.md).
+The [new browser showcase](https://glayguo-evalarc.static.hf.space/#repeat)
+preserves three Docker attempts of each scripted control: the reference resolves
+3/3, while the duplicate-write policy resolves 0/3 despite its 93.75% mean score.
+Open every attempt's full evidence and per-check counts. No variation was observed;
+this is not a model reliability estimate.
+
+[![EvalArc v0.4: three 93.75% attempts, zero fully resolved runs](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
+
+The workflow includes `evalarc doctor`, individual HTML reports, and `evalarc compare` for
 check regressions that a higher average score can hide. Every run preserves
 earlier outputs. See the [run-and-compare guide](docs/workflow.md).
 

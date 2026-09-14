@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 · 2026-09-14 · Research preview
+
+- `evalarc repeat` freezes one candidate across fresh attempts, preserves every
+  evaluation, and reports case/check pass rates and varying outcomes.
+- Invalid attempts and incomplete runs remain explicit; repetition stops after
+  the first invalid evaluation. No best-attempt selection or statistical
+  population estimate is provided.
+- A 60-second default case budget spans protocol exchanges and process restarts,
+  alongside the existing per-response timeout.
+- Evaluations, audits, and repetitions save host-generated `events.jsonl`;
+  `--progress` streams those events to stderr.
+- Case evidence includes bounded process diagnostics. Cleanup exceptions still
+  release local processes and pipes where possible, and preserve cancellation.
+- Bilingual guidance, fresh Docker audits, and a three-attempt scripted
+  repetition example accompany the release.
+- The browser now exposes six actual Docker attempts across the reference and
+  duplicate-write control, per-check counts, every attempt report, and progress
+  downloads. Site builds recompute repetition summaries from all attempt records.
+
+Both task contracts remain v0.1.0 and evaluation schema v2 remains readable.
+Runtime metadata and grading fingerprints change: re-run candidates under
+matching v0.4 conditions before comparing them. The earlier comparison and audit
+explorers retain their historical records alongside the new v0.4 repetitions.
+
 ## 0.3.0 · 2026-09-14 · Research preview
 
 - `evalarc doctor` checks runtime readiness and candidate configuration without

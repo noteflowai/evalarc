@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evalarc"
-version = "0.3.0"
+version = "0.4.0"
 description = "Auditable task environments and evaluations for coding and tool-using agents."
 readme = "README.md"
 requires-python = ">=3.11"

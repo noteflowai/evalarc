@@ -4,8 +4,22 @@ The Docker backend runs only the candidate workspace in an unprivileged containe
 with network disabled, a read-only root filesystem, a read-only candidate mount,
 CPU/memory/PID limits, and no Docker socket or grader mount. The host grader owns
 the expected responses and final scores. It limits stdout/stderr and enforces a
-deadline on each protocol exchange. Each case receives a fresh writable state
+deadline on each protocol exchange and a total deadline shared across process
+restarts within a case. Each case receives a fresh writable state
 directory; only restarts within that case share state.
+
+Protocol deadlines use the host monotonic clock. Process startup and elapsed
+time between restarts consume the case budget. Final cleanup has separate grace
+periods (up to 20 seconds for Docker removal and 5 seconds for the local process).
+A Docker cleanup exception still triggers local process and pipe cleanup, and
+makes the case unassessed. A deadline is not a hard wall-clock worker termination
+guarantee; abrupt host loss or repeated interruption may leave resources behind.
+
+Reports include the last 2048 captured stderr bytes for each process. Treat
+these as untrusted diagnostic text. HTML escapes them; progress events contain
+host metadata, not candidate output. Review evidence for confidential content
+before sharing it. `repeat` snapshots its input once and uses fresh evaluation
+workspaces and state; local mode still requires trusted code.
 
 The support-routing service and its authoritative ticket state live in the host
 process. Only observations and tool results cross the JSONL boundary. Tool
