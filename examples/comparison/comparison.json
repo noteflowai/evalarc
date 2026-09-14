@@ -1,0 +1,97 @@
+{
+  "schema_version": "evalarc.comparison.v1",
+  "created_at": "2026-09-14T01:58:21.259930+00:00",
+  "task": {
+    "id": "support-routing",
+    "version": "0.1.0",
+    "domain": "business-tools",
+    "split": "public-development"
+  },
+  "grader_sha256": "2dced2a842369299e6e924db626fedc120071d5731cd9b79202dba7395b90255",
+  "cases_sha256": "b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df",
+  "runtime": {
+    "backend": "docker",
+    "image": "python:3.12-slim",
+    "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+    "command": [
+      "{python}",
+      "-I",
+      "-B",
+      "main.py"
+    ],
+    "response_timeout_seconds": 10.0,
+    "session_output_limit_bytes": 1048576,
+    "python": "3.12.3",
+    "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+  },
+  "seeds": [
+    17
+  ],
+  "baseline": {
+    "candidate_sha256": "a34429419d7c794420d43f7873ce5b1474f73821329f414609d5e4d18fc174c3",
+    "score": 0.9,
+    "resolved": false,
+    "created_at": "2026-09-14T01:58:19.087946+00:00"
+  },
+  "current": {
+    "candidate_sha256": "b89a99819c03e8290096ca268f637c5517d465b3ec5f0b5fe2b21c35509ff202",
+    "score": 0.9375,
+    "resolved": false,
+    "created_at": "2026-09-14T01:58:21.160793+00:00"
+  },
+  "score_delta": 0.0375,
+  "regressions": [
+    {
+      "seed": 17,
+      "case_id": "retry-after-commit",
+      "check": "notes"
+    }
+  ],
+  "improvements": [
+    {
+      "seed": 17,
+      "case_id": "retry-before-commit",
+      "check": "closure"
+    },
+    {
+      "seed": 17,
+      "case_id": "route-open-ticket",
+      "check": "closure"
+    }
+  ],
+  "case_transitions": [
+    {
+      "seed": 17,
+      "case_id": "retry-after-commit",
+      "before": "passed",
+      "after": "failed",
+      "regressed_checks": [
+        "notes"
+      ],
+      "improved_checks": []
+    },
+    {
+      "seed": 17,
+      "case_id": "retry-before-commit",
+      "before": "failed",
+      "after": "passed",
+      "regressed_checks": [],
+      "improved_checks": [
+        "closure"
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "route-open-ticket",
+      "before": "failed",
+      "after": "passed",
+      "regressed_checks": [],
+      "improved_checks": [
+        "closure"
+      ]
+    }
+  ],
+  "current_failed_cases": 1,
+  "has_regressions": true,
+  "interpretation": "Matched observed checks only. No regression is not full task resolution. Scores and fingerprints do not authenticate a report's producer."
+}

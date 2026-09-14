@@ -1,6 +1,8 @@
 """Publishing must not silently accept an altered evidence bundle."""
 
 import importlib.util
+import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -34,3 +36,15 @@ def test_bundle_never_overwrites_existing_output(tmp_path):
     with pytest.raises(ValueError, match="already exists"):
         builder.build(destination)
     assert original.read_text() == "preserve"
+
+
+def test_featured_comparison_is_recomputed_from_evidence(tmp_path, monkeypatch):
+    for name in ("comparison", "evaluation"):
+        shutil.copytree(builder.ROOT / "examples" / name, tmp_path / "examples" / name)
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    path = tmp_path / "examples" / "comparison" / "comparison.json"
+    data = json.loads(path.read_text())
+    data["regressions"] = []
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="disagrees with its input"):
+        builder.verify_comparison()

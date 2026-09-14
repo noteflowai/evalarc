@@ -34,7 +34,7 @@ def test_no_checkpoint_means_no_observed_progress():
     assert result["first_resolved_seconds"] is None
 
 
-@pytest.mark.parametrize("times", [[-1], [11], [2, 2], [4, 3], [math.nan]])
+@pytest.mark.parametrize("times", [[-1], [11], [2, 2], [4, 3], [math.nan], [True], ["2"]])
 def test_invalid_times_rejected(times):
     with pytest.raises(ValueError):
         summarize([checkpoint(t, 0.5) for t in times], 10)
@@ -47,3 +47,9 @@ def test_incomparable_cases_rejected():
     second["evaluation"]["cases_sha256"] = "different-cases"
     with pytest.raises(ValueError, match="same task"):
         summarize([first, second], 10)
+
+
+@pytest.mark.parametrize("points", [{}, [1], [{"evaluation": []}]])
+def test_malformed_checkpoint_structure_rejected(points):
+    with pytest.raises(ValueError, match="checkpoint"):
+        summarize(points, 10)

@@ -8,11 +8,41 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "https://github.com/noteflowai/evalarc"
 MANIFEST = "manifest.json"
+
+sys.path.insert(0, str(ROOT / "src"))
+
+
+def verify_comparison() -> None:
+    from evalarc.compare import compare
+    from evalarc.records import read_evaluation
+
+    folder = ROOT / "examples" / "comparison"
+    computed = compare(
+        read_evaluation(folder / "baseline.json"), read_evaluation(folder / "current.json")
+    )
+    recorded = json.loads((folder / "comparison.json").read_text())
+    computed.pop("created_at")
+    recorded.pop("created_at")
+    if computed != recorded:
+        raise ValueError("Recorded comparison disagrees with its input evaluations")
+    if (
+        recorded["baseline"]["score"] != 0.9
+        or recorded["current"]["score"] != 0.9375
+        or recorded["score_delta"] != 0.0375
+        or recorded["regressions"]
+        != [{"seed": 17, "case_id": "retry-after-commit", "check": "notes"}]
+        or len(recorded["improvements"]) != 2
+    ):
+        raise ValueError("Comparison no longer supports the featured regression")
+    individual = read_evaluation(ROOT / "examples" / "evaluation" / "evaluation.json")
+    if individual != read_evaluation(folder / "current.json"):
+        raise ValueError("Individual example differs from the current comparison evidence")
 
 
 def sha256(path: Path) -> str:
@@ -66,6 +96,7 @@ def build(destination: Path) -> dict:
         highlighted = next(row for row in audit["mutants"] if row["name"] == spotlight)
         if highlighted["score"] != score or highlighted["evaluation"]["resolved"]:
             raise ValueError(f"Spotlight outcome changed: {spotlight}")
+    verify_comparison()
     destination.mkdir(parents=True)
     for path in (ROOT / "site").iterdir():
         if path.is_file():
@@ -77,6 +108,20 @@ def build(destination: Path) -> dict:
             source = ROOT / "examples" / directory / filename
             if filename.endswith(".html"):
                 # Avoid multibyte HTML corruption by the static Space injector.
+                (target / filename).write_bytes(
+                    source.read_text().encode("ascii", errors="xmlcharrefreplace")
+                )
+            else:
+                shutil.copyfile(source, target / filename)
+    for directory, filenames in (
+        ("comparison", ("index.html", "comparison.json", "baseline.json", "current.json")),
+        ("evaluation", ("index.html", "evaluation.json")),
+    ):
+        target = destination / directory
+        target.mkdir()
+        for filename in filenames:
+            source = ROOT / "examples" / directory / filename
+            if filename.endswith(".html"):
                 (target / filename).write_bytes(
                     source.read_text().encode("ascii", errors="xmlcharrefreplace")
                 )

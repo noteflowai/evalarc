@@ -1,5 +1,8 @@
 # Validation record · v0.2.0 · 2026-09-14
 
+The subsequent [v0.3 workflow validation](validation-v0.3.md) covers diagnostics,
+individual reports, protected outputs, and matched-run regression checks.
+
 Validation ran locally on Linux with Python 3.12.3 and Node.js v22.23.2.
 The wheel was installed into a separate fresh virtual environment and executed
 outside the checkout. The public

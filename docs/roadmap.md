@@ -15,6 +15,7 @@ question needs substantially more evidence.
 | v0.2, implemented | Task definitions and configurable candidate commands | Python and independent JavaScript support policies use the same verifier |
 | v0.2, implemented | Simulated support-ticket workflow and a JSONL policy loop | State-based grading, tool-call traces, correct and seven faulty policies |
 | v0.2, implemented | Shared report metadata with domain-specific checks | Both packs record commands, provenance, validity, outcomes, and evidence |
+| v0.3, implemented | Readiness checks, individual HTML reports, matched-run comparisons, protected output paths | Read-only inspection, per-check regression detection, input consistency checks, and preserved prior runs |
 | Next | Broader language coverage for coding | A non-Python Durable KV submission passes the same full contract |
 | Next | Independent defect packs and task authors | Reviewer-authored faults and a third independently authored task |
 | Next | Real model-provider adapter | End-to-end run with measured usage, task evidence, repeated attempts |

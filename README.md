@@ -21,21 +21,25 @@ checking whether a grader can distinguish correct work from plausible defects:
 run known-good and deliberately flawed submissions, inspect the evidence, and
 record exactly what was evaluated.
 
-**Would you accept a 93.75% score if the agent duplicated a write?**
+**The score rose from 90% to 93.75%. A previously passing check now fails.**
 The [interactive evidence lab](https://huggingface.co/spaces/glayguo/evalarc)
-lets you switch between correct and faulty implementations, inspect failed
-checks, and step through the tool call that changed the state. It replays the
+lets you compare revisions side by side, switch between correct and faulty
+implementations, and step through the tool call that changed the state. It replays the
 committed Docker audits without a model API or installation.
 
-[![EvalArc evidence lab: a 93.75% score still fails acceptance](docs/assets/evidence-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
+[![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.2 includes two working task packs**, a shared evidence format, and
+**v0.3 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |
 | --- | --- | --- | ---: |
 | `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
 | `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
+
+v0.3 adds `evalarc doctor`, individual HTML reports, and `evalarc compare` for
+check regressions that a higher average score can hide. Every run preserves
+earlier outputs. See the [run-and-compare guide](docs/workflow.md).
 
 The support pack records tool calls and state changes, including retries after
 ambiguous write outcomes. Python and JavaScript scripted policies use the same

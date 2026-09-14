@@ -6,7 +6,9 @@ EvalArc 是面向 AI 智能体的开源评测与评分器审计工具，帮助�
 背后是否仍存在关键交付缺陷。当前提供代码服务和业务工具两个任务环境，
 通过正确实现与 15 种已声明缺陷进行对照，验证事务、异常恢复、工具重试、
 幂等写入及最终业务状态。在线演示可逐步查看调用、失败检查和状态变化，
-并下载带有运行配置与指纹的原始证据，适合 PAI 智能体创新场景的评测设计、
+并下载带有运行配置与指纹的原始证据。v0.3 新增环境预检查、独立评测报告与
+版本比较：即使总分从 90% 提高到 93.75%，也会指出新增的失败检查，
+适合 PAI 智能体创新场景的评测设计、
 验收验证与技术交流。当前为研究预览版，演示使用脚本对照，尚未给出真实大模型
 性能或强化学习收益结论。
 
@@ -19,6 +21,9 @@ support policy scores 93.75% while duplicating a write; a coding artifact scores
 92.5% while violating compare-and-swap. Explore why each fails acceptance,
 compare the reference, and download the full audit. MIT licensed, CPU-friendly,
 and currently a research preview with scripted controls, not model rankings.
+Version 0.3 adds runtime readiness checks, standalone evaluation reports, and
+matched revision comparisons. Its new showcase exposes a regressed note check
+even as two closure improvements raise the score from 90% to 93.75%.
 
 ## Entry points
 
