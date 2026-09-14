@@ -1,0 +1,298 @@
+{
+  "checked_at": "2026-09-14T01:00:06.502431+00:00",
+  "recommendation": "EvalArc",
+  "backup": "EvalTrail",
+  "status": "Naming proposal only; the repository has not been renamed.",
+  "scope": "Public repository search, PyPI/npm endpoints, registry RDAP records. No trademark clearance or guaranteed registration availability is claimed.",
+  "candidates": [
+    {
+      "name": "evalarc",
+      "packages": {
+        "name": "evalarc",
+        "pypi": {
+          "status": "not_found",
+          "http_status": 404
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      },
+      "github": {
+        "name": "evalarc",
+        "total_matches": 5,
+        "exact_matches": [],
+        "checked_results": 5
+      },
+      "domains": [
+        {
+          "domain": "evalarc.com",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.verisign.com/com/v1/domain/evalarc.com"
+        },
+        {
+          "domain": "evalarc.dev",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://pubapi.registry.google/rdap/domain/evalarc.dev"
+        },
+        {
+          "domain": "evalarc.ai",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.identitydigital.services/rdap/domain/evalarc.ai"
+        }
+      ],
+      "sources": {
+        "github": "https://api.github.com/search/repositories?q=evalarc%20in%3Aname&per_page=100",
+        "pypi": "https://pypi.org/pypi/evalarc/json",
+        "npm": "https://registry.npmjs.org/evalarc"
+      }
+    },
+    {
+      "name": "evaltrail",
+      "packages": {
+        "name": "evaltrail",
+        "pypi": {
+          "status": "not_found",
+          "http_status": 404
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      },
+      "github": {
+        "name": "evaltrail",
+        "total_matches": 0,
+        "exact_matches": [],
+        "checked_results": 0
+      },
+      "domains": [
+        {
+          "domain": "evaltrail.com",
+          "status": "registered",
+          "events": [
+            {
+              "eventAction": "registration",
+              "eventDate": "2026-08-21T17:34:10Z"
+            },
+            {
+              "eventAction": "expiration",
+              "eventDate": "2027-08-21T17:34:10Z"
+            }
+          ],
+          "source": "https://rdap.verisign.com/com/v1/domain/evaltrail.com"
+        },
+        {
+          "domain": "evaltrail.dev",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://pubapi.registry.google/rdap/domain/evaltrail.dev"
+        },
+        {
+          "domain": "evaltrail.ai",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.identitydigital.services/rdap/domain/evaltrail.ai"
+        }
+      ],
+      "sources": {
+        "github": "https://api.github.com/search/repositories?q=evaltrail%20in%3Aname&per_page=100",
+        "pypi": "https://pypi.org/pypi/evaltrail/json",
+        "npm": "https://registry.npmjs.org/evaltrail"
+      }
+    },
+    {
+      "name": "evalmark",
+      "packages": {
+        "name": "evalmark",
+        "pypi": {
+          "status": "not_found",
+          "http_status": 404
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      },
+      "github": {
+        "name": "evalmark",
+        "total_matches": 0,
+        "exact_matches": [],
+        "checked_results": 0
+      },
+      "domains": [
+        {
+          "domain": "evalmark.com",
+          "status": "registered",
+          "events": [
+            {
+              "eventAction": "registration",
+              "eventDate": "2025-08-12T17:52:33Z"
+            },
+            {
+              "eventAction": "expiration",
+              "eventDate": "2027-08-12T17:52:33Z"
+            }
+          ],
+          "source": "https://rdap.verisign.com/com/v1/domain/evalmark.com"
+        },
+        {
+          "domain": "evalmark.dev",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://pubapi.registry.google/rdap/domain/evalmark.dev"
+        },
+        {
+          "domain": "evalmark.ai",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.identitydigital.services/rdap/domain/evalmark.ai"
+        }
+      ],
+      "sources": {
+        "github": "https://api.github.com/search/repositories?q=evalmark%20in%3Aname&per_page=100",
+        "pypi": "https://pypi.org/pypi/evalmark/json",
+        "npm": "https://registry.npmjs.org/evalmark"
+      }
+    },
+    {
+      "name": "graderail",
+      "packages": {
+        "name": "graderail",
+        "pypi": {
+          "status": "not_found",
+          "http_status": 404
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      },
+      "github": {
+        "name": "graderail",
+        "total_matches": 1,
+        "exact_matches": [],
+        "checked_results": 1
+      },
+      "domains": [
+        {
+          "domain": "graderail.com",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.verisign.com/com/v1/domain/graderail.com"
+        },
+        {
+          "domain": "graderail.dev",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://pubapi.registry.google/rdap/domain/graderail.dev"
+        },
+        {
+          "domain": "graderail.ai",
+          "status": "not_found",
+          "http_status": 404,
+          "source": "https://rdap.identitydigital.services/rdap/domain/graderail.ai"
+        }
+      ],
+      "sources": {
+        "github": "https://api.github.com/search/repositories?q=graderail%20in%3Aname&per_page=100",
+        "pypi": "https://pypi.org/pypi/graderail/json",
+        "npm": "https://registry.npmjs.org/graderail"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "name": "agentrail",
+      "reason": "A package already exists in an adjacent AI-agent/evaluation domain.",
+      "packages": {
+        "name": "agentrail",
+        "pypi": {
+          "status": "published",
+          "description": "Python SDK for the AgentRail Task Lifecycle API"
+        },
+        "npm": {
+          "status": "published",
+          "description": "Collect and normalize events from AI coding agents (Claude Code, Codex, Gemini CLI)"
+        }
+      }
+    },
+    {
+      "name": "proofrail",
+      "reason": "A package already exists in an adjacent AI-agent/evaluation domain.",
+      "packages": {
+        "name": "proofrail",
+        "pypi": {
+          "status": "published",
+          "description": "Check whether an AI coding agent's delivered commit supports what it claims it completed."
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      }
+    },
+    {
+      "name": "runproof",
+      "reason": "A package already exists in an adjacent AI-agent/evaluation domain.",
+      "packages": {
+        "name": "runproof",
+        "pypi": {
+          "status": "published",
+          "description": "Run coding-agent work unattended in an isolated git worktree, and refuse to accept it unless it passes the checks you declared."
+        },
+        "npm": {
+          "status": "not_found",
+          "http_status": 404
+        }
+      }
+    },
+    {
+      "name": "veritrail",
+      "reason": "A package already exists in an adjacent AI-agent/evaluation domain.",
+      "packages": {
+        "name": "veritrail",
+        "pypi": {
+          "status": "published",
+          "description": "Verifiable provenance and forensics for autonomous AI agents — a tamper-evident flight recorder and cryptographic chain-of-custody for agentic actions."
+        },
+        "npm": {
+          "status": "published",
+          "description": "Tamper-evident, verifiable append-only logs and maps for TypeScript. RFC 6962 Merkle trees with inclusion & consistency proofs, Ed25519-signed checkpoints, and a sparse Merkle verifiable map. Zero dependencies."
+        }
+      }
+    },
+    {
+      "name": "agentmeter",
+      "reason": "A package already exists in an adjacent AI-agent/evaluation domain.",
+      "packages": {
+        "name": "agentmeter",
+        "pypi": {
+          "status": "published",
+          "description": "Python SDK for AgentMeter usage tracking and billing"
+        },
+        "npm": {
+          "status": "published",
+          "description": "TypeScript SDK for AgentMeter usage-based billing API"
+        }
+      }
+    },
+    {
+      "name": "trialdock",
+      "reason": "An existing clinical research platform uses this name.",
+      "source": "https://www.trialdock.com/"
+    },
+    {
+      "name": "evalmesh",
+      "reason": "Existing public projects describe agent evaluation or agent infrastructure.",
+      "sources": [
+        "https://github.com/doublew6/evalmesh",
+        "https://github.com/deswanth12/EvalMesh"
+      ]
+    }
+  ],
+  "search_limitations": "General web-search results returned unrelated material and were excluded. Exact GitHub name checks covered all results returned for each finalist. RDAP 404 is reported as no record found, not a purchase guarantee."
+}
