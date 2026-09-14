@@ -125,3 +125,20 @@ def test_checkpoint_comparison_includes_execution_command(tmp_path):
             ],
             10,
         )
+
+
+def test_the_two_declared_versions_agree():
+    """The version lives in pyproject and in the package.
+
+    CI catches a mismatch only after building a wheel, which the documented local
+    gate does not do, so a bump that updates one file and not the other passes
+    locally and fails remotely. Tie them here instead.
+    """
+    import tomllib
+    from pathlib import Path
+
+    import evalarc
+
+    root = Path(__file__).resolve().parent.parent
+    declared = tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
+    assert evalarc.__version__ == declared
