@@ -1,0 +1,244 @@
+{
+  "schema_version": "evalarc.suite.v1",
+  "evalarc_version": "0.5.0",
+  "created_at": "2026-09-14T03:44:40.115311+00:00",
+  "name": "Partial progress and protected notes",
+  "manifest_sha256": "163e2103b9bd7b540219b140ab73d06d6870362cc4e83c04753eca232da02fa5",
+  "valid": true,
+  "accepted": false,
+  "status": "failed",
+  "total_jobs": 3,
+  "accepted_jobs": 2,
+  "invalid_jobs": 0,
+  "fully_resolved_jobs": 1,
+  "duration_seconds": 19.952319,
+  "jobs": [
+    {
+      "id": "coding-reference",
+      "task": {
+        "id": "durable-kv",
+        "version": "0.1.0",
+        "domain": "coding",
+        "split": "public-development"
+      },
+      "candidate_sha256": "378209f3f88e8e610eb07203e42dea1890d14e96408ed2e0593468e8f88ec0fe",
+      "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+      "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "command": [
+          "{python}",
+          "-I",
+          "-B",
+          "main.py",
+          "{state}/store.db"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      },
+      "decision": {
+        "accepted": true,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          }
+        ],
+        "reasons": []
+      },
+      "status": "passed",
+      "fully_resolved": true,
+      "observed": {
+        "requested_attempts": 1,
+        "completed_attempts": 1,
+        "assessed_attempts": 1,
+        "invalid_attempts": 0,
+        "resolved_attempts": 1,
+        "mean_score": 1.0,
+        "assessed_resolution_rate": 1.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 11.425083
+    },
+    {
+      "id": "support-partial",
+      "task": {
+        "id": "support-routing",
+        "version": "0.1.0",
+        "domain": "business-tools",
+        "split": "public-development"
+      },
+      "candidate_sha256": "24fce7b13e3689fed2af2a7dbd9d6ecdc1c21d7d94f4207bfe6ef261aca998ac",
+      "grader_sha256": "887aea97efec396118521f720f6d8753be9ae964ab92eaa655d6575185326593",
+      "cases_sha256": "b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df",
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "command": [
+          "{python}",
+          "-I",
+          "-B",
+          "main.py"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 0.9,
+        "min_resolution_rate": 0.0,
+        "required_dimensions": []
+      },
+      "decision": {
+        "accepted": true,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 0.9,
+            "observed": 0.9375,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 0.0,
+            "observed": 0.0,
+            "passed": true
+          }
+        ],
+        "reasons": []
+      },
+      "status": "passed",
+      "fully_resolved": false,
+      "observed": {
+        "requested_attempts": 2,
+        "completed_attempts": 2,
+        "assessed_attempts": 2,
+        "invalid_attempts": 0,
+        "resolved_attempts": 0,
+        "mean_score": 0.9375,
+        "assessed_resolution_rate": 0.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 4.475867
+    },
+    {
+      "id": "support-protected",
+      "task": {
+        "id": "support-routing",
+        "version": "0.1.0",
+        "domain": "business-tools",
+        "split": "public-development"
+      },
+      "candidate_sha256": "24fce7b13e3689fed2af2a7dbd9d6ecdc1c21d7d94f4207bfe6ef261aca998ac",
+      "grader_sha256": "887aea97efec396118521f720f6d8753be9ae964ab92eaa655d6575185326593",
+      "cases_sha256": "b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df",
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "command": [
+          "{python}",
+          "-I",
+          "-B",
+          "main.py"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 0.9,
+        "min_resolution_rate": 0.0,
+        "required_dimensions": [
+          "notes"
+        ]
+      },
+      "decision": {
+        "accepted": false,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 0.9,
+            "observed": 0.9375,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "name": "required_dimension:notes",
+            "passed": false,
+            "violations": [
+              {
+                "seed": 17,
+                "case_id": "retry-after-commit",
+                "passed": 0,
+                "assessed": 2,
+                "pass_rate": 0.0,
+                "variable": false
+              }
+            ]
+          }
+        ],
+        "reasons": [
+          "required_dimension:notes: not every applicable check passed"
+        ]
+      },
+      "status": "failed",
+      "fully_resolved": false,
+      "observed": {
+        "requested_attempts": 2,
+        "completed_attempts": 2,
+        "assessed_attempts": 2,
+        "invalid_attempts": 0,
+        "resolved_attempts": 0,
+        "mean_score": 0.9375,
+        "assessed_resolution_rate": 0.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 3.827519
+    }
+  ],
+  "interpretation": "Acceptance follows each job's declared gate. No score is averaged across jobs or domains. Gate acceptance does not imply full task resolution. Repeated observations use fixed public cases and are descriptive only."
+}

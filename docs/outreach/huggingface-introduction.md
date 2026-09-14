@@ -1,9 +1,25 @@
 I'm publishing EvalArc as its maintainer: an open toolkit for auditing the
 graders behind AI-agent evaluations.
 
-**Updated for v0.4: one frozen candidate, every attempt.**
+**Updated for v0.5: same score, different acceptance gate.**
 
-The new repeatability explorer preserves six actual Docker attempts: three
+The new suite showcase puts the same frozen defective policy through two
+explicit rules. Both support jobs score 93.75% and resolve 0/2 attempts.
+A deliberately permissive gate accepts the partial result; requiring every
+notes check rejects it. Task scores and resolution flags stay unchanged.
+
+The recorded Docker suite retains three jobs, five attempts, the original TOML,
+progress streams and JUnit. The browser build recomputes every gate from the
+configuration and verified attempt records, then checks the exported JUnit.
+Configured acceptance is shown separately from full task resolution. The JUnit
+export distinguishes failures from environment errors; a hosted CI importer
+was not exercised.
+
+`evalarc suite` previews a TOML plan without starting candidates, freezes all
+inputs before the first job, and preserves complete evidence for each job.
+There is no average score across coding and support tasks.
+
+The existing repeatability explorer preserves six actual Docker attempts: three
 of the scripted reference and three of the duplicate-write control. The
 reference resolves 3/3 attempts. The faulty control resolves 0/3, although
 each attempt scores 93.75%. Switch controls, inspect per-check counts, and open

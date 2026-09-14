@@ -1,0 +1,332 @@
+{
+  "schema_version": "evalarc.repetition.v1",
+  "evalarc_version": "0.5.0",
+  "created_at": "2026-09-14T03:44:31.810178+00:00",
+  "task": {
+    "id": "durable-kv",
+    "version": "0.1.0",
+    "domain": "coding",
+    "split": "public-development"
+  },
+  "candidate_sha256": "378209f3f88e8e610eb07203e42dea1890d14e96408ed2e0593468e8f88ec0fe",
+  "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+  "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+  "runtime": {
+    "backend": "docker",
+    "image": "python:3.12-slim",
+    "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+    "command": [
+      "{python}",
+      "-I",
+      "-B",
+      "main.py",
+      "{state}/store.db"
+    ],
+    "response_timeout_seconds": 10.0,
+    "case_timeout_seconds": 60.0,
+    "session_output_limit_bytes": 1048576,
+    "python": "3.12.3",
+    "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+  },
+  "seeds": [
+    17
+  ],
+  "requested_attempts": 1,
+  "completed_attempts": 1,
+  "complete": true,
+  "valid": true,
+  "status": "passed",
+  "all_attempts_resolved": true,
+  "assessed_attempts": 1,
+  "invalid_attempts": 0,
+  "resolved_attempts": 1,
+  "assessed_resolution_rate": 1.0,
+  "mean_score": 1.0,
+  "min_score": 1.0,
+  "max_score": 1.0,
+  "variable_cases": 0,
+  "variable_checks": 0,
+  "cases": [
+    {
+      "seed": 17,
+      "case_id": "cas-match-and-mismatch",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "compare_swap": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "cas-type-sensitivity",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "compare_swap": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "commit-batch",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "transactions": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "empty-and-unicode-keys",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "validation": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "json-types-and-overwrite",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "basic": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "read-write-delete",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "basic": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "reject-and-continue",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "validation": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-acknowledged-write",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "persistence": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-cas",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "persistence": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-transaction",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "persistence": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "rollback-batch",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "transactions": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "seeded-state-machine",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "basic": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-acknowledgement",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "crash_recovery": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-atomic-batch",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "crash_recovery": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-delete",
+      "passed": 1,
+      "assessed": 1,
+      "failed": 0,
+      "unassessed": 0,
+      "pass_rate": 1.0,
+      "variable": false,
+      "checks": {
+        "crash_recovery": {
+          "passed": 1,
+          "assessed": 1,
+          "pass_rate": 1.0,
+          "variable": false
+        }
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "attempt": 1,
+      "valid": true,
+      "status": "passed",
+      "score": 1.0,
+      "resolved": true,
+      "created_at": "2026-09-14T03:44:31.804346+00:00"
+    }
+  ],
+  "interpretation": "Descriptive outcomes on the same public cases. Invalid attempts are explicit; mean scores and resolution rates use assessed attempts only. No independence assumption, confidence interval, or population success rate is claimed."
+}

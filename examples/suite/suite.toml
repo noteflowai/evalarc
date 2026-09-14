@@ -1,0 +1,32 @@
+schema_version = "evalarc.suite-config.v1"
+name = "Partial progress and protected notes"
+
+[[jobs]]
+id = "coding-reference"
+task = "durable-kv"
+candidate = "../../workspace/suite-coding"
+seeds = [17]
+attempts = 1
+
+[[jobs]]
+id = "support-partial"
+task = "support-routing"
+candidate = "../../workspace/suite-support-fault"
+seeds = [17]
+attempts = 2
+
+[jobs.gate]
+min_mean_score = 0.90
+min_resolution_rate = 0.0
+
+[[jobs]]
+id = "support-protected"
+task = "support-routing"
+candidate = "../../workspace/suite-support-fault"
+seeds = [17]
+attempts = 2
+
+[jobs.gate]
+min_mean_score = 0.90
+min_resolution_rate = 0.0
+required_dimensions = ["notes"]

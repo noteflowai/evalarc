@@ -14,6 +14,40 @@ let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
 const repetitions = {};
+async function loadSuite() {
+  const response = await fetch("suite/suite.json");
+  if (!response.ok) throw new Error("Suite evidence unavailable");
+  const suite = await response.json();
+  const jobs = {};
+  for (const name of ["partial", "protected"]) {
+    const job = suite.jobs.find(row => row.id === "support-" + name);
+    jobs[name] = job;
+    badge($("suite-" + name + "-verdict"), job.decision.accepted, job.decision.accepted ? "GATE ACCEPTED" : "GATE REJECTED");
+    $("suite-" + name + "-score").textContent = percent(job.observed.mean_score);
+    $("suite-" + name + "-resolution").textContent = `${job.observed.resolved_attempts} / ${job.observed.completed_attempts} attempts fully resolved`;
+    $("suite-" + name + "-gate").textContent =
+      `Minimum mean score: ${percent(job.gate.min_mean_score)}\nMinimum resolution rate: ${percent(job.gate.min_resolution_rate)}\nRequired dimensions: ${job.gate.required_dimensions.join(", ") || "none"}`;
+  }
+  $("suite-summary").textContent = `${suite.accepted_jobs} / ${suite.total_jobs} gates accepted. ${suite.fully_resolved_jobs} / ${suite.total_jobs} jobs fully resolved. ${suite.invalid_jobs} invalid jobs. The coding reference passes its default strict gate.`;
+  $("suite-provenance").textContent = pretty({
+    manifest_sha256: suite.manifest_sha256,
+    same_candidate: jobs.partial.candidate_sha256 === jobs.protected.candidate_sha256,
+    candidate_sha256: jobs.partial.candidate_sha256,
+    grader_sha256: jobs.partial.grader_sha256,
+    cases_sha256: jobs.partial.cases_sha256,
+    runtime: jobs.partial.runtime,
+    permissive_gate: jobs.partial.decision,
+    protected_gate: jobs.protected.decision,
+    interpretation: suite.interpretation,
+  });
+  $("suite-status").hidden = true;
+  $("suite-workspace").hidden = false;
+}
+loadSuite().catch(() => {
+  $("suite-status").textContent = "Suite evidence could not be loaded. ";
+  const link = document.createElement("a"); link.href = "suite/index.html"; link.textContent = "Open the standalone suite report";
+  $("suite-status").append(link);
+});
 function chooseRepetition(name) {
   const record = repetitions[name];
   if (!record) return;

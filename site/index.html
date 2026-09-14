@@ -19,12 +19,13 @@
   <main>
     <section class="hero">
       <div>
-        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.4</p>
+        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.5</p>
         <h1>Look past<br>the <em>score.</em></h1>
         <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
         <p class="muted">EvalArc tests whether an agent's grader catches the difference between plausible progress and a completed task.</p>
-        <a class="primary" href="#regression">See the hidden regression <span>&#8600;</span></a>
-        <a class="hero-secondary" href="#repeat">New: inspect every attempt &#8595;</a>
+        <a class="primary" href="#suite">Inspect the acceptance gate <span>&#8600;</span></a>
+        <a class="hero-secondary" href="#repeat">Every repeated attempt &#8595;</a>
+        <a class="hero-secondary" href="#regression">Compare revision regressions &#8595;</a>
       </div>
       <a class="hero-proof" href="#explorer" aria-label="Inspect why a 93.75 percent score fails acceptance">
         <div class="proof-top"><span>RECORDED CONTROL / 01</span><span class="badge fail">NOT RESOLVED</span></div>
@@ -41,6 +42,23 @@
       <div><strong>JSON</strong><span>downloadable evidence</span></div>
       <div><strong>CPU</strong><span>reproduce without a model API</span></div>
     </div>
+    <section id="suite" class="suite">
+      <div class="section-top"><div><p class="eyebrow">NEW IN 0.5 / DECLARE YOUR ACCEPTANCE RULES</p><h2>Same score. Different gate.</h2></div><p>One frozen policy.<br>Two explicit acceptance rules.</p></div>
+      <p class="muted">Both support jobs score 93.75% and resolve 0/2 attempts. A deliberately permissive gate accepts the result; requiring every notes check to pass rejects it. The task outcome stays the same.</p>
+      <p id="suite-status" role="status">Loading the recorded suite&hellip;</p>
+      <div id="suite-workspace" hidden>
+        <div class="suite-comparison">
+          <article id="suite-partial"><p class="eyebrow">PERMISSIVE / NO REQUIRED DIMENSION</p><h3>Partial progress allowed <span id="suite-partial-verdict" class="badge"></span></h3><strong id="suite-partial-score"></strong><p id="suite-partial-resolution" class="fail"></p><pre id="suite-partial-gate"></pre><a href="suite/jobs/support-partial/index.html">Inspect both attempts &#8599;</a></article>
+          <article id="suite-protected"><p class="eyebrow">PROTECTED / EVERY NOTES CHECK REQUIRED</p><h3>Notes must be correct <span id="suite-protected-verdict" class="badge"></span></h3><strong id="suite-protected-score"></strong><p id="suite-protected-resolution" class="fail"></p><pre id="suite-protected-gate"></pre><a href="suite/jobs/support-protected/index.html">Inspect both attempts &#8599;</a></article>
+        </div>
+        <p class="story">Gate acceptance is a configured decision, separate from full task resolution. The permissive gate intentionally accepts an unresolved policy. No score is averaged across coding and support jobs.</p>
+        <p id="suite-summary" class="muted" aria-live="polite"></p>
+        <div class="comparison-links"><a href="suite/index.html">Full suite report &#8599;</a><a href="suite/junit.xml" download>JUnit XML &#8595;</a><a href="suite/suite.json" download>Suite JSON &#8595;</a><a href="suite/suite.toml" download>Recorded TOML &#8595;</a><a href="suite/events.jsonl" download>Progress JSONL &#8595;</a></div>
+        <details class="provenance"><summary>Shared candidate, gate decisions &amp; provenance</summary><pre id="suite-provenance"></pre></details>
+      </div>
+      <p class="caption">Recorded Docker suite: three jobs, five attempts, 31 case executions. JUnit distinguishes a rejected gate from an environment error; a hosted CI importer was not exercised. This is scripted development evidence.</p>
+      <noscript><p>Read the <a href="suite/index.html">standalone suite report</a> without JavaScript.</p></noscript>
+    </section>
     <section id="repeat" class="repeat">
       <div class="section-top"><div><p class="eyebrow">NEW IN 0.4 / REPEAT ONE FROZEN CANDIDATE</p><h2>One run is not the whole record.</h2></div><p>Same cases. Fresh state.<br>Every attempt stays visible.</p></div>
       <p class="muted">Three Docker attempts per scripted control. The reference passes every time; the duplicate-write policy keeps its 93.75% score and fails acceptance every time. Switch controls and open any attempt's full evidence.</p>

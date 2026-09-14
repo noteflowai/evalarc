@@ -29,7 +29,7 @@ committed Docker audits without a model API or installation.
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.4 includes two working task packs**, a shared evidence format, and
+**v0.5 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |
@@ -37,11 +37,23 @@ configurable candidate commands:
 | `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
 | `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
 
-v0.4 adds `evalarc repeat`: freeze one candidate, run fresh attempts on fixed
-cases, and inspect every outcome with per-check pass rates. Runs now record
+v0.5 adds `evalarc suite`: declare tasks, candidates, repeats, budgets, and
+acceptance gates in TOML. Preview the plan, execute all jobs, and inspect HTML,
+JSON, and JUnit results. Scores remain task-specific. See the
+[suite and CI guide](docs/suites.md).
+The [new acceptance-gate showcase](https://glayguo-evalarc.static.hf.space/#suite)
+uses one frozen faulty policy in two jobs: both score 93.75% with no resolved
+attempts. A permissive rule accepts the partial result; requiring every notes
+check rejects it. The full three-job Docker suite, five attempts, TOML and JUnit
+remain inspectable. Configured acceptance is separate from task resolution.
+
+[![EvalArc v0.5: the same score meets one gate and fails another](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
+
+`evalarc repeat` freezes one candidate, runs fresh attempts on fixed
+cases, and reports every outcome with per-check pass rates. Runs now record
 JSONL progress, enforce a total case budget, and save bounded process diagnostics.
 See the [repeatability guide](docs/reliability.md).
-The [new browser showcase](https://glayguo-evalarc.static.hf.space/#repeat)
+The [repeatability showcase](https://glayguo-evalarc.static.hf.space/#repeat)
 preserves three Docker attempts of each scripted control: the reference resolves
 3/3, while the duplicate-write policy resolves 0/3 despite its 93.75% mean score.
 Open every attempt's full evidence and per-check counts. No variation was observed;

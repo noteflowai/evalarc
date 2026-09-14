@@ -70,3 +70,23 @@ def test_featured_repetition_cannot_drop_an_attempt(tmp_path, monkeypatch):
     (tmp_path / "examples/repetition-faulty/attempts/0003/evaluation.json").unlink()
     with pytest.raises(ValueError, match="disagrees with its attempt"):
         builder.verify_repetitions()
+
+
+def test_featured_suite_recomputes_its_gate_decisions(tmp_path, monkeypatch):
+    shutil.copytree(builder.ROOT / "examples/suite", tmp_path / "examples/suite")
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    path = tmp_path / "examples/suite/suite.json"
+    data = json.loads(path.read_text())
+    data["jobs"][2]["decision"]["accepted"] = True
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="gate disagrees"):
+        builder.verify_suite()
+
+
+def test_featured_suite_keeps_junit_failure_and_error_distinct(tmp_path, monkeypatch):
+    shutil.copytree(builder.ROOT / "examples/suite", tmp_path / "examples/suite")
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    path = tmp_path / "examples/suite/junit.xml"
+    path.write_text(path.read_text().replace("<failure", "<error").replace("</failure", "</error"))
+    with pytest.raises(ValueError, match="JUnit disagrees"):
+        builder.verify_suite()

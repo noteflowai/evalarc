@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 · 2026-09-14 · Research preview
+
+- `evalarc suite` executes versioned TOML plans across multiple candidates and
+  built-in tasks, with per-job seeds, repetitions, runtime limits, and gates.
+- `--dry-run` validates configuration and previews workload without starting
+  candidates or contacting Docker.
+- Every candidate is snapshotted and preflighted before the first job runs.
+  Candidate paths resolve relative to the configuration file.
+- Gates default to full resolution. Optional score/rate thresholds and required
+  dimensions expose partial acceptance without hiding unresolved outcomes.
+- Reports preserve individual attempts and task scores, with no cross-domain
+  average. JUnit exports one test per gate, separating failures from environment
+  errors; other jobs still run after a recorded invalid evaluation.
+- Local execution still needs explicit CLI trust. Existing outputs remain
+  protected; JSONL progress includes job identity.
+- The browser compares permissive and notes-protecting gates applied to the
+  same frozen faulty policy. The three-job, five-attempt Docker suite includes
+  original TOML, JUnit and every report. Site builds recompute gate decisions
+  from the configuration and attempt evidence and verify the JUnit export.
+
+Task contracts, scoring code, runtime enforcement, and evaluation/repetition
+schemas are unchanged from v0.4. Matching v0.4/v0.5 evaluations remain comparable.
+No new model-provider or browser-agent integration is claimed.
+
 ## 0.4.0 · 2026-09-14 · Research preview
 
 - `evalarc repeat` freezes one candidate across fresh attempts, preserves every

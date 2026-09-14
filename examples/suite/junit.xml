@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites name="Partial progress and protected notes" tests="3" failures="1" errors="0" skipped="0" time="19.728469">
+  <testsuite name="Partial progress and protected notes" tests="3" failures="1" errors="0" skipped="0" time="19.728469">
+    <testcase classname="evalarc.durable-kv" name="coding-reference" time="11.425083">
+      <system-out>{"fully_resolved": true, "observed": {"requested_attempts": 1, "completed_attempts": 1, "assessed_attempts": 1, "invalid_attempts": 0, "resolved_attempts": 1, "mean_score": 1.0, "assessed_resolution_rate": 1.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 1.0, "min_resolution_rate": 1.0, "required_dimensions": []}, "evidence": "jobs/coding-reference/index.html"}</system-out>
+    </testcase>
+    <testcase classname="evalarc.support-routing" name="support-partial" time="4.475867">
+      <system-out>{"fully_resolved": false, "observed": {"requested_attempts": 2, "completed_attempts": 2, "assessed_attempts": 2, "invalid_attempts": 0, "resolved_attempts": 0, "mean_score": 0.9375, "assessed_resolution_rate": 0.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 0.9, "min_resolution_rate": 0.0, "required_dimensions": []}, "evidence": "jobs/support-partial/index.html"}</system-out>
+    </testcase>
+    <testcase classname="evalarc.support-routing" name="support-protected" time="3.827519">
+      <failure message="required_dimension:notes: not every applicable check passed" type="AcceptanceGate">required_dimension:notes: not every applicable check passed</failure>
+      <system-out>{"fully_resolved": false, "observed": {"requested_attempts": 2, "completed_attempts": 2, "assessed_attempts": 2, "invalid_attempts": 0, "resolved_attempts": 0, "mean_score": 0.9375, "assessed_resolution_rate": 0.0, "variable_cases": 0, "variable_checks": 0}, "gate": {"min_mean_score": 0.9, "min_resolution_rate": 0.0, "required_dimensions": ["notes"]}, "evidence": "jobs/support-protected/index.html"}</system-out>
+    </testcase>
+  </testsuite>
+</testsuites>

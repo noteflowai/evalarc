@@ -1,5 +1,28 @@
 # Migration notes
 
+## EvalArc v0.4 → v0.5
+
+`evalarc suite CONFIG.toml` adds declarative, sequential multi-job execution.
+Use `--dry-run` to validate a plan without starting candidates. Local jobs need
+`--trust-local` on the CLI; a configuration file cannot grant itself host trust
+or specify a Docker wrapper. See the [suite guide](suites.md).
+
+New schemas are `evalarc.suite-config.v1`, `evalarc.suite-plan.v1`, and
+`evalarc.suite.v1`. Each job uses the existing `evalarc.repetition.v1` and
+`evalarc.evaluation.v2` evidence. A suite exports one JUnit test per job gate.
+Invalid jobs produce JUnit errors and exit code 2; assessed gate failures
+produce JUnit failures and exit code 1.
+
+Gate thresholds only affect suite acceptance. They do not rewrite task scores,
+checks, or full-resolution flags. The default gate requires all attempts to
+resolve. A more permissive gate can accept unresolved work; that distinction is
+explicit in both the JSON and HTML reports.
+
+The grading sources, task contracts, runtime enforcement, and fingerprints are
+unchanged from v0.4. Evaluations remain comparable when their task, seeds,
+grader, cases, command, and runtime metadata match. The new suite coordinator
+is not part of the grading fingerprint.
+
 ## EvalArc v0.3 → v0.4
 
 `evalarc repeat` runs 1–100 attempts of one frozen candidate, writes every

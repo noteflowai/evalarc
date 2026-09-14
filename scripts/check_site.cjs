@@ -35,7 +35,28 @@ async function main() {
       await app.locator("#workspace").waitFor({state:"visible"});
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await app.locator("#repeat-workspace").waitFor({state:"visible"});
+      await app.locator("#suite-workspace").waitFor({state:"visible"});
       await page.waitForLoadState("networkidle");
+      for (const name of ["partial", "protected"]) {
+        assert.equal(await app.locator("#suite-" + name + "-score").innerText(), "93.75%");
+        assert.equal(await app.locator("#suite-" + name + "-resolution").innerText(), "0 / 2 attempts fully resolved");
+      }
+      assert.equal(await app.locator("#suite-partial-verdict").innerText(), "GATE ACCEPTED");
+      assert.equal(await app.locator("#suite-protected-verdict").innerText(), "GATE REJECTED");
+      assert.match(await app.locator("#suite-summary").innerText(), /2 \/ 3 gates accepted\. 1 \/ 3 jobs fully resolved\. 0 invalid jobs/);
+      await app.locator("#suite-provenance").locator("..").locator("summary").click();
+      const suiteProvenance = JSON.parse(await app.locator("#suite-provenance").innerText());
+      assert.equal(suiteProvenance.same_candidate, true);
+      assert.equal(suiteProvenance.protected_gate.reasons.length, 1);
+      await app.locator("#suite-provenance").locator("..").locator("summary").click();
+      const suiteBase = await app.locator("body").evaluate(() => location.href);
+      const junitResponse = await page.request.get(new URL("suite/junit.xml", suiteBase).href);
+      assert.equal(junitResponse.status(), 200);
+      const junit = await page.evaluate(xml => {
+        const document = new DOMParser().parseFromString(xml, "application/xml");
+        return {tests:document.querySelectorAll("testcase").length, failures:document.querySelectorAll("failure").length, errors:document.querySelectorAll("error").length, rejected:document.querySelector("failure")?.parentElement.getAttribute("name"), parserErrors:document.querySelectorAll("parsererror").length};
+      }, await junitResponse.text());
+      assert.deepEqual(junit, {tests:3,failures:1,errors:0,rejected:"support-protected",parserErrors:0});
       assert.equal(await app.locator("#repeat-resolved").innerText(), "0 / 3");
       assert.equal(await app.locator("#repeat-score").innerText(), "93.75%");
       assert.equal(await app.locator("#repeat-invalid").innerText(), "0");
@@ -128,6 +149,7 @@ async function main() {
         await page.screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `evalarc-${width}.png`), fullPage:true});
         await app.locator("#regression").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `regression-${width}.png`)});
         await app.locator("#repeat").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `repeat-${width}.png`)});
+        await app.locator("#suite").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `suite-${width}.png`)});
       }
       const appUrl = await app.locator("body").evaluate(() => location.href);
       await app.getByRole("link", {name:"Full comparison report", exact:false}).click();
@@ -147,8 +169,19 @@ async function main() {
       await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
       assert.match(await app.locator("body").innerText(), /retry-after-commit/);
       assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("suite/index.html", url).href; }, appUrl);
+      await app.getByRole("heading", {name:"Every job, explicit criteria."}).waitFor();
+      assert.match(await app.locator("body").innerText(), /Gate accepted with unresolved task outcomes/);
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      for (const name of ["partial", "protected"]) {
+        await app.locator("body").evaluate((element, url) => { location.href = url; }, new URL(`suite/jobs/support-${name}/index.html`, appUrl).href);
+        await app.getByRole("heading", {name:"See every attempt."}).waitFor();
+        await app.locator('a[href="attempts/0001/index.html"]').click();
+        await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
+        assert.match(await app.locator("body").innerText(), /retry-after-commit/);
+      }
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, offlineReports:4, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, errors});
       await page.close();
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

@@ -9,6 +9,8 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,31 +47,44 @@ def verify_comparison() -> None:
         raise ValueError("Individual example differs from the current comparison evidence")
 
 
-def verify_repetitions() -> None:
+def verified_repetition(folder: Path) -> dict:
     from evalarc.records import read_evaluation
     from evalarc.repetition import summarize_attempts
 
+    recorded = json.loads((folder / "repetition.json").read_text())
+    attempts = sorted((folder / "attempts").glob("*/evaluation.json"))
+    reports = [read_evaluation(path) for path in attempts]
+    computed = summarize_attempts(reports, recorded["requested_attempts"])
+    for field in ("created_at", "evalarc_version"):
+        computed.pop(field)
+    expected = {
+        key: value
+        for key, value in recorded.items()
+        if key not in ("created_at", "evalarc_version")
+    }
+    expected_paths = [
+        folder / "attempts" / f"{index:04d}" / "evaluation.json"
+        for index in range(1, recorded["completed_attempts"] + 1)
+    ]
+    if (
+        computed != expected
+        or attempts != expected_paths
+        or any(not path.with_name("index.html").is_file() for path in attempts)
+    ):
+        raise ValueError("Recorded repetition disagrees with its attempt evaluations or reports")
+    return recorded
+
+
+def verify_repetitions() -> None:
     summaries = []
     for directory, resolved, score in (
         ("repetition", 3, 1.0),
         ("repetition-faulty", 0, 0.9375),
     ):
         folder = ROOT / "examples" / directory
-        recorded = json.loads((folder / "repetition.json").read_text())
-        attempts = sorted((folder / "attempts").glob("*/evaluation.json"))
-        reports = [read_evaluation(path) for path in attempts]
-        computed = summarize_attempts(reports, recorded["requested_attempts"])
-        for field in ("created_at", "evalarc_version"):
-            computed.pop(field)
-        expected = {
-            key: value
-            for key, value in recorded.items()
-            if key not in ("created_at", "evalarc_version")
-        }
-        if computed != expected:
-            raise ValueError("Recorded repetition disagrees with its attempt evaluations")
+        recorded = verified_repetition(folder)
         if (
-            len(attempts) != 3
+            recorded["completed_attempts"] != 3
             or not recorded["valid"]
             or recorded["requested_attempts"] != 3
             or recorded["resolved_attempts"] != resolved
@@ -83,6 +98,106 @@ def verify_repetitions() -> None:
     for field in ("task", "grader_sha256", "cases_sha256", "runtime", "seeds"):
         if summaries[0][field] != summaries[1][field]:
             raise ValueError("Featured repetition controls use different evaluation conditions")
+
+
+def verify_suite() -> None:
+    from evalarc.junit import render_junit
+    from evalarc.suite import Gate, assess_gate
+
+    folder = ROOT / "examples" / "suite"
+    record = json.loads((folder / "suite.json").read_text())
+    plan = json.loads((folder / "plan.json").read_text())
+    config = tomllib.loads((folder / "suite.toml").read_text())
+    identities = ["coding-reference", "support-partial", "support-protected"]
+    digest = sha256(folder / "suite.toml")
+    if (
+        record["manifest_sha256"] != digest
+        or plan["manifest_sha256"] != digest
+        or any(
+            [job["id"] for job in source["jobs"]] != identities for source in (record, plan, config)
+        )
+    ):
+        raise ValueError("Suite provenance or job inventory differs from its configuration")
+    for job, raw in zip(record["jobs"], config["jobs"], strict=True):
+        summary = verified_repetition(folder / "jobs" / job["id"])
+        gate = Gate(**raw.get("gate", {}))
+        normalized_gate = json.loads(
+            json.dumps(
+                {
+                    "min_mean_score": gate.min_mean_score,
+                    "min_resolution_rate": gate.min_resolution_rate,
+                    "required_dimensions": gate.required_dimensions,
+                }
+            )
+        )
+        decision = assess_gate(summary, gate)
+        observed_keys = (
+            "requested_attempts",
+            "completed_attempts",
+            "assessed_attempts",
+            "invalid_attempts",
+            "resolved_attempts",
+            "mean_score",
+            "assessed_resolution_rate",
+            "variable_cases",
+            "variable_checks",
+        )
+        if (
+            job["gate"] != normalized_gate
+            or job["decision"] != decision
+            or job["fully_resolved"] != summary["all_attempts_resolved"]
+            or job["observed"] != {key: summary[key] for key in observed_keys}
+            or any(
+                job[key] != summary[key]
+                for key in (
+                    "task",
+                    "candidate_sha256",
+                    "grader_sha256",
+                    "cases_sha256",
+                    "runtime",
+                    "seeds",
+                )
+            )
+            or summary["requested_attempts"] != raw.get("attempts", 1)
+            or summary["seeds"] != raw.get("seeds", [17, 41, 97])
+        ):
+            raise ValueError("Recorded suite gate disagrees with its configuration or attempts")
+    reference, partial, protected = record["jobs"]
+    if (
+        not reference["fully_resolved"]
+        or not partial["decision"]["accepted"]
+        or protected["decision"]["accepted"]
+        or partial["fully_resolved"]
+        or protected["fully_resolved"]
+        or any(
+            partial[key] != protected[key]
+            for key in (
+                "candidate_sha256",
+                "grader_sha256",
+                "cases_sha256",
+                "runtime",
+                "seeds",
+                "observed",
+            )
+        )
+        or partial["observed"]["mean_score"] != 0.9375
+        or partial["observed"]["completed_attempts"] != 2
+        or record["total_jobs"] != 3
+        or record["accepted_jobs"] != 2
+        or record["fully_resolved_jobs"] != 1
+        or record["invalid_jobs"] != 0
+        or not record["valid"]
+        or record["accepted"]
+        or record["status"] != "failed"
+        or plan["planned_attempts"] != 5
+        or plan["planned_case_executions"] != 31
+    ):
+        raise ValueError("Suite no longer supports the featured acceptance comparison")
+    with tempfile.TemporaryDirectory(prefix="evalarc-site-junit-") as temporary:
+        expected = Path(temporary) / "junit.xml"
+        render_junit(record, expected)
+        if expected.read_bytes() != (folder / "junit.xml").read_bytes():
+            raise ValueError("Recorded JUnit disagrees with suite gate decisions")
 
 
 def sha256(path: Path) -> str:
@@ -138,6 +253,7 @@ def build(destination: Path) -> dict:
             raise ValueError(f"Spotlight outcome changed: {spotlight}")
     verify_comparison()
     verify_repetitions()
+    verify_suite()
     destination.mkdir(parents=True)
     for path in (ROOT / "site").iterdir():
         if path.is_file():
@@ -179,6 +295,22 @@ def build(destination: Path) -> dict:
                 target.write_bytes(source.read_text().encode("ascii", errors="xmlcharrefreplace"))
             else:
                 shutil.copyfile(source, target)
+    source_root = ROOT / "examples" / "suite"
+    for source in sorted(source_root.rglob("*")):
+        if not source.is_file() or source.suffix not in (
+            ".html",
+            ".json",
+            ".jsonl",
+            ".xml",
+            ".toml",
+        ):
+            continue
+        target = destination / "suite" / source.relative_to(source_root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if source.suffix == ".html":
+            target.write_bytes(source.read_text().encode("ascii", errors="xmlcharrefreplace"))
+        else:
+            shutil.copyfile(source, target)
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()

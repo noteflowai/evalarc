@@ -7,7 +7,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: Inspect agent regressions and every repeated attempt.
+short_description: Inspect scores, acceptance gates and every agent attempt.
 tags:
   - agent-evaluation
   - tool-use
@@ -20,7 +20,15 @@ tags:
 
 **The score rose from 90% to 93.75%. A previously passing check now fails.**
 
-**New in v0.4: one frozen candidate, every attempt.** Switch between three
+**New in v0.5: same score, different gate.** Two support jobs use the same
+frozen defective policy and score 93.75%, with 0/2 resolved attempts each.
+A deliberately permissive gate accepts the partial result; requiring every
+notes check rejects it. Inspect the three-job Docker suite, all five attempts,
+the original TOML, and JUnit output distinguishing a failed gate from an
+environment error. Gate acceptance remains separate from full task resolution.
+A hosted CI importer was not exercised.
+
+**Every v0.4 attempt remains visible.** Switch between three
 recorded Docker attempts of the reference and three of the duplicate-write
 control. The reference resolves 3/3 attempts; the faulty control resolves 0/3
 despite a mean score of 93.75%. Open every attempt, inspect per-check
@@ -56,7 +64,7 @@ dependencies; the bundled trusted controls can run on a CPU.
 
 ## Scope
 
-Research preview 0.4.0. These are scripted controls and public development
+Research preview 0.5.0. These are scripted controls and public development
 tasks, not held-out frontier-model results. Detection applies only to the
 declared faults. No arbitrary reward-hack resistance, human time horizon,
 hardware-agent validation or RL improvement is established. Repeated fixed

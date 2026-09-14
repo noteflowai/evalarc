@@ -336,3 +336,63 @@ def render_repetition(data: dict, destination: Path) -> None:
         "Repeated success on these cases does not establish general agent reliability.</footer>"
     )
     _page("Repeatability", "See every attempt.", body, destination)
+
+
+def render_suite(data: dict, destination: Path) -> None:
+    body = (
+        f"<p>{_esc(data['name'])} · {_esc(data['status'].upper())}</p>"
+        '<div class="cards">'
+        + _card(
+            f"{data['accepted_jobs']}/{data['total_jobs']}",
+            "job gates accepted",
+            alert=not data["accepted"],
+        )
+        + _card(data["fully_resolved_jobs"], "jobs with every attempt resolved")
+        + _card(data["invalid_jobs"], "invalid jobs", alert=bool(data["invalid_jobs"]))
+        + "</div><p>Each job has its own task, budget, and acceptance rules. "
+        "Scores stay within their task; there is no cross-domain average.</p>"
+        "<h2>Job decisions</h2>"
+    )
+    for row in data["jobs"]:
+        observed = row["observed"]
+        gate_status = (
+            "UNASSESSED"
+            if not row["decision"]["valid"]
+            else ("ACCEPTED" if row["decision"]["accepted"] else "REJECTED")
+        )
+        body += (
+            '<article class="change-card">'
+            f'<h3><a href="jobs/{_esc(row["id"])}/index.html">{_esc(row["id"])}</a></h3>'
+            f"<p>{_esc(row['task']['id'])} · {_esc(row['task']['domain'])} · "
+            f"Gate: <strong>{gate_status}</strong></p>"
+            f"<p>Mean assessed score: {_score(observed['mean_score'])}. "
+            f"Resolved attempts: {observed['resolved_attempts']}/{observed['requested_attempts']}. "
+            f"Completed: {observed['completed_attempts']}. Invalid: {observed['invalid_attempts']}."
+            "</p>"
+        )
+        if row["decision"]["accepted"] and not row["fully_resolved"]:
+            body += (
+                "<p><strong>Gate accepted with unresolved task outcomes.</strong> "
+                "The configured thresholds permit partial results.</p>"
+            )
+        for reason in row["decision"]["reasons"]:
+            body += f'<p class="failed">{_esc(reason)}</p>'
+        body += (
+            f"<details><summary>Acceptance rules and checks</summary><pre>"
+            f"{_esc(json.dumps({'gate': row['gate'], 'decision': row['decision']}, indent=2))}"
+            "</pre></details></article>"
+        )
+    body += (
+        '<h2>Run record</h2><p class="metadata">'
+        f"Manifest SHA-256: {_esc(data['manifest_sha256'])}<br>"
+        f"Created: {_esc(data['created_at'])}<br>"
+        f"Host wall seconds: {data['duration_seconds']:.3f}</p>"
+        '<p><a href="suite.json">Suite JSON</a> · '
+        '<a href="suite.toml">Original configuration</a> · '
+        '<a href="plan.json">Resolved plan</a> · '
+        '<a href="junit.xml">JUnit acceptance gates</a> · '
+        '<a href="events.jsonl">Progress events</a></p>'
+        f"<footer>{_esc(data['interpretation'])} JUnit contains one test per job gate, "
+        "rather than one test per individual task case.</footer>"
+    )
+    _page("Suite", "Every job, explicit criteria.", body, destination)

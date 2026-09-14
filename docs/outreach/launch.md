@@ -6,10 +6,10 @@ EvalArc 是面向 AI 智能体的开源评测与评分器审计工具，帮助�
 背后是否仍存在关键交付缺陷。当前提供代码服务和业务工具两个任务环境，
 通过正确实现与 15 种已声明缺陷进行对照，验证事务、异常恢复、工具重试、
 幂等写入及最终业务状态。在线演示可逐步查看调用、失败检查和状态变化，
-并下载带有运行配置与指纹的原始证据。v0.4 新增固定候选快照的重复评测、逐项
-通过计数、场景总时限和进度日志；在线展示保留六次真实 Docker 评测，揭示
-“三次都是 93.75%，却没有一次完全通过”的稳定缺陷。既有版本比较也会指出
-总分上升背后的新增失败，适合 PAI 智能体创新场景的评测设计、
+并下载带有运行配置与指纹的原始证据。v0.5 新增 TOML 评测套件、自定义验收规则
+和 JUnit 导出：同样是 93.75%、没有完全通过的尝试，宽松规则可允许部分进展，
+要求备注检查全部通过的规则则拒绝。页面分别展示任务完成情况和规则决策，
+并保留重复评测、版本回归与全部运行证据，适合 PAI 智能体创新场景的评测设计、
 验收验证与技术交流。当前为研究预览版，演示使用脚本对照，尚未给出真实大模型
 性能或强化学习收益结论。
 
@@ -30,6 +30,12 @@ assessed/invalid denominators, case deadlines and progress events. The browser
 exposes six recorded Docker attempts: the reference resolves 3/3; the faulty
 policy resolves 0/3 despite three 93.75% scores. No check variation was observed,
 and repeated public cases do not establish general model reliability.
+Version 0.5 coordinates multi-task TOML suites with explicit per-job gates and
+JUnit exports. The new recorded showcase keeps scores and full resolution
+separate from configurable acceptance: the same faulty policy meets a
+permissive threshold but fails a gate requiring every notes check. Three jobs,
+five attempts and the complete configuration remain inspectable. No hosted
+CI importer or model-provider integration is claimed.
 
 ## Entry points
 
