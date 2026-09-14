@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-import math
+from evalarc.records import numeric
 
 
 def summarize(checkpoints: list[dict], budget_seconds: float) -> dict:
-    if not math.isfinite(budget_seconds) or budget_seconds <= 0:
+    if not numeric(budget_seconds) or budget_seconds <= 0:
         raise ValueError("budget_seconds must be finite and positive")
+    if not isinstance(checkpoints, list):
+        raise ValueError("checkpoints must be an array")
     previous = 0.0
     score = 0.0
     area = 0.0
@@ -15,15 +17,19 @@ def summarize(checkpoints: list[dict], budget_seconds: float) -> dict:
     first_resolved = None
     identity = None
     for index, checkpoint in enumerate(checkpoints):
+        if not isinstance(checkpoint, dict) or not isinstance(checkpoint.get("evaluation"), dict):
+            raise ValueError("each checkpoint must contain an evaluation object")
         t = checkpoint["elapsed_seconds"]
         report = checkpoint["evaluation"]
         if report.get("valid") is False or report.get("score") is None:
             raise ValueError("checkpoint must have a valid evaluated score")
         current_score = report["score"]
-        if not math.isfinite(t) or t < 0 or t > budget_seconds or (index and t <= previous):
+        if not numeric(t) or t < 0 or t > budget_seconds or (index and t <= previous):
             raise ValueError("checkpoint times must increase and stay within the budget")
-        if not math.isfinite(current_score) or not 0 <= current_score <= 1:
+        if not numeric(current_score) or not 0 <= current_score <= 1:
             raise ValueError("checkpoint scores must be finite and between zero and one")
+        if type(report.get("resolved")) is not bool:
+            raise ValueError("checkpoint resolution must be Boolean")
         current_identity = (
             report.get("schema_version"),
             report["task"],

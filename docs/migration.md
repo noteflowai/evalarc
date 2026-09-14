@@ -1,5 +1,21 @@
 # Migration notes
 
+## EvalArc v0.2 → v0.3
+
+The package version is `0.3.0`. Both task contracts, grading rules, and evaluation
+schema v2 remain unchanged. `evaluate` now writes an offline HTML report beside
+its JSON. `doctor` inspects runtime readiness, and `compare` identifies check
+regressions across matching evaluations. See the [workflow guide](workflow.md).
+
+CLI outputs no longer overwrite existing paths. `audit`, `evaluate`, and
+`compare` require a new output directory; `trajectory` requires a new file.
+Scripts that previously reused a default output path should supply unique run
+names. Output within a candidate workspace is rejected.
+
+Comparisons support consistent `evalarc.evaluation.v2` records, including v0.2
+reports. They reject invalid evaluations and mismatched experimental conditions.
+New outputs use `evalarc.comparison.v1` and `evalarc.doctor.v1`.
+
 ## EvalArc v0.1 → v0.2
 
 The package version is now `0.2.0`; both built-in task contracts are version

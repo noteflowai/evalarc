@@ -6,6 +6,9 @@ independent JavaScript support policy; that test is skipped if Node is absent.
 CI explicitly provisions Node. See [task authoring](docs/task-authoring.md) for
 the current built-in registry and evidence contract.
 
+The [workflow guide](docs/workflow.md) covers readiness checks and comparisons.
+Use new output paths for manual runs so earlier evidence remains available.
+
 A useful contribution makes an evaluation claim more testable. For a new task
 or grader change, include:
 
