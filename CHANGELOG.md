@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0 — 2026-09-14
+
+- Report detection margins beside the mutation score: how many cases caught each declared fault, the weakest margin in the pack, the faults caught by exactly one case, and the cases that are the sole detector of some fault. All three packs score 1.0, and six of their 21 declared faults rest on a single case each; that fragility was previously invisible.
+- Count margins over distinct cases rather than case runs, so adding a seed cannot inflate them. Measured margins are identical under the Python and JavaScript references.
+- State the relation to the hack-verifiable environments methodology and record both papers as verified primary sources. HVE plants a hack in the environment to measure whether an agent exploits it; an audit here plants a fault in the submission to measure whether the checks catch it. Opposite directions, no equivalence claimed.
+- Correct the task-pack count and table in both READMEs: robot-evidence-review shipped in 0.9.0 but was described as if only two packs existed, and the JavaScript reference was said to cover 15 faults rather than 21.
+
 ## 0.9.0 — 2026-09-14
 
 - Add the robot-evidence-review task: attributed CUDA source data, coordinate/clock transformations, missing observations, Python/JavaScript references and six independent fault controls.

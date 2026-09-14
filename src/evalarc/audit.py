@@ -113,6 +113,10 @@ def audit(
                     "name": name,
                     "target_dimension": target,
                     "killed": result["valid"] and bool(failures),
+                    # How many cases caught this fault independently. A detected
+                    # fault with a margin of one is a deleted case away from
+                    # undetected, while the mutation score still reads 1.0.
+                    "detection_margin": len(set(failures)) if result["valid"] else None,
                     "valid": result["valid"],
                     "score": result["score"],
                     "failing_cases": sorted(set(failures)),
@@ -122,6 +126,12 @@ def audit(
             )
     killed = sum(row["killed"] for row in rows)
     valid = reference["valid"] and all(row["valid"] for row in rows)
+    margins = {row["name"]: row["detection_margin"] for row in rows if row["killed"]}
+    # A case that is the only detector of some fault cannot be removed or
+    # loosened without losing coverage the mutation score still claims.
+    sole_detectors = sorted(
+        {row["failing_cases"][0] for row in rows if row["killed"] and row["detection_margin"] == 1}
+    )
     return {
         "schema_version": "evalarc.audit.v2",
         "valid": valid,
@@ -131,9 +141,18 @@ def audit(
         "mutation_score": killed / len(rows) if valid else None,
         "killed": killed,
         "total": len(rows),
+        # Reported next to the score because a perfect score says nothing about
+        # how much of the suite has to survive for it to stay perfect.
+        "detection": {
+            "weakest_margin": min(margins.values()) if margins else None,
+            "single_case_detections": sorted(name for name, n in margins.items() if n == 1),
+            "sole_detector_cases": sole_detectors,
+        },
         "passed": valid and reference["resolved"] and killed == len(rows),
         "interpretation": (
             f"Coverage of {len(rows)} declared behavioral fault models only. "
-            "This is not a bound on reward hacking or a model benchmark."
+            "This is not a bound on reward hacking or a model benchmark. "
+            "Detection margins state how many cases caught each fault; a margin "
+            "of one means the suite loses that fault if that single case changes."
         ),
     }

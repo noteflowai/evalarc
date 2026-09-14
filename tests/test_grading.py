@@ -17,6 +17,50 @@ def test_positive_and_behavioral_negative_controls():
         assert mutant["failing_cases"], mutant["name"]
 
 
+def test_a_perfect_mutation_score_still_reports_how_narrowly_it_was_earned():
+    result = audit(Runtime(backend="local", timeout=2), [17])
+    assert result["mutation_score"] == 1.0
+    detection = result["detection"]
+    # Every mutant reports how many cases caught it independently.
+    for mutant in result["mutants"]:
+        assert mutant["detection_margin"] == len(set(mutant["failing_cases"])), mutant["name"]
+    assert detection["weakest_margin"] == min(m["detection_margin"] for m in result["mutants"])
+    # This pack really does rest on single cases; a perfect score hides that.
+    assert detection["single_case_detections"] == [
+        "accept-nonstring-keys",
+        "boolean-equals-one",
+        "partial-batch",
+    ]
+    # Naming the sole detectors is what makes the fragility actionable: remove
+    # one of these cases and its fault goes undetected at an unchanged score.
+    assert detection["sole_detector_cases"] == [
+        "cas-type-sensitivity",
+        "reject-and-continue",
+        "rollback-batch",
+    ]
+    assert set(detection["sole_detector_cases"]).isdisjoint(detection["single_case_detections"])
+
+
+def test_margins_count_distinct_cases_so_adding_seeds_cannot_inflate_them():
+    one = audit(Runtime(backend="local", timeout=4), [17])
+    two = audit(Runtime(backend="local", timeout=4), [17, 41])
+    # A case that fails under both seeds is still one case. Counting runs instead
+    # would double every margin per added seed, so a suite would look twice as
+    # robust for changing nothing.
+    assert {m["name"]: m["detection_margin"] for m in one["mutants"]} == {
+        m["name"]: m["detection_margin"] for m in two["mutants"]
+    }
+    mutant = next(m for m in two["mutants"] if m["name"] == "ack-without-work")
+    runs = [
+        case["case_id"]
+        for case in mutant["evaluation"]["cases"]
+        if case["checks"].get(mutant["target_dimension"]) is False
+    ]
+    # The premise of the test: the raw list really does repeat across seeds.
+    assert len(runs) > len(set(runs))
+    assert mutant["detection_margin"] == len(set(runs))
+
+
 @pytest.mark.parametrize(
     "source,message",
     [

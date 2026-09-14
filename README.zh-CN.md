@@ -32,16 +32,19 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 任务完全完成分别报告。整个检查不执行候选程序。
 [离线验证流程与边界](docs/verification.md)。
 
-**已实现 coding 和业务工具两个场景。**
+**已实现 coding、业务工具与记录复核三个场景。**
 
-| 任务 | 交互方式 | 验证内容 |
-| --- | --- | --- |
-| `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 |
-| `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 |
+| 任务 | 交互方式 | 验证内容 | 声明缺陷 | 仅单个用例检出 |
+| --- | --- | --- | ---: | ---: |
+| `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 | 8 | 3 |
+| `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 | 7 | 2 |
+| `robot-evidence-review` | 基于有出处的记录数据出报告 | 坐标与时钟换算、缺失观测、来源归属 | 6 | 1 |
+
+三个任务包都检出了全部声明缺陷：21 个缺陷，21 个检出。但其中有六个各自只靠一个用例检出，那个用例一旦被弱化，对应缺陷就会失去覆盖——而 1.0 的变异分数不会告诉你这件事。现在每次审计都会在分数旁报告这些检出余量。[与 hack-verifiable environments 的关系](docs/methodology.md#relation-to-hack-verifiable-environments)。
 
 v0.6 为两个任务都提供 **Python 和 JavaScript 工作区模板**：
 `init --language javascript` 生成起步代码，添加 `--reference` 生成脚本对照；
-`audit --language javascript` 使用独立的 Node.js 实现检查相同的 15 类故障。
+`audit --language javascript` 使用独立的 Node.js 实现检查相同的 21 类故障，实测检出余量与 Python 完全一致。
 JavaScript 需要 Node.js 22+，Docker 模式显式指定 `--image node:22-slim`。
 详见[多语言接入指南](docs/languages.zh-CN.md)。
 

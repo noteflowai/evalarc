@@ -40,13 +40,20 @@ for CI acceptance. Consistency, configured acceptance and full resolution are
 reported separately. No candidate execution is required.
 [Offline verification and limits](docs/verification.md).
 
-**Two working task packs** share an evidence format and
+**Three working task packs** share an evidence format and
 configurable candidate commands:
 
-| Task | Interaction | Host verification | Declared faults |
-| --- | --- | --- | ---: |
-| `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
-| `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
+| Task | Interaction | Host verification | Declared faults | Caught by one case |
+| --- | --- | --- | ---: | ---: |
+| `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 | 3 |
+| `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 | 2 |
+| `robot-evidence-review` | Report on attributed recording data | Coordinate and clock transforms, missing observations, source attribution | 6 | 1 |
+
+Every pack detects every declared fault: 21 faults, 21 detected. Six of the 21 are detected by a single case each, so the
+suite would lose them if that one case were weakened — which a mutation score of
+1.0 does not tell you. Every audit now reports these detection margins beside
+the score.
+[How this relates to hack-verifiable environments](docs/methodology.md#relation-to-hack-verifiable-environments).
 
 v0.6 adds **Python and JavaScript workspace templates for both tasks**.
 Use `init --language javascript` for a starter or `--reference` for a scripted

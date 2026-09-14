@@ -38,6 +38,69 @@ the trace alongside actual state changes and retry receipts. Recovering from
 them can yield a passing episode. Agent protocol errors produce `agent_error`;
 ordinary wrong outcomes produce `failed`.
 
+## Relation to hack-verifiable environments
+
+Planting known defects to get automated, deterministic verification is the same
+move made by the **hack-verifiable environments** (HVE) methodology
+([arXiv:2605.20744](https://arxiv.org/abs/2605.20744v1), and its terminal-task
+adaptation HVTB, [arXiv:2608.22103](https://arxiv.org/abs/2608.22103v1)). Both
+lines exist because the alternative — inspecting trajectories after the fact, by
+hand or with an LLM judge — is unreliable.
+
+They measure opposite directions, and EvalArc is not an HVE implementation:
+
+| | HVE / HVTB | EvalArc audit |
+| --- | --- | --- |
+| What is planted | A detectable hacking opportunity, in the environment | A declared fault, in the submission |
+| Subject measured | The agent | The grader and its checks |
+| Question | Does the agent exploit it? | Does the evaluation catch it, and by how much? |
+| Reported | Reward-hacking rate across models | Detection of every declared fault, with margins |
+
+The two are complements rather than substitutes. HVE takes for granted that a
+planted hack is detectable by construction, which is what makes an exploitation
+rate meaningful. An audit here asks the prior question: does this suite detect a
+deliberate defect at all? A grader that does not is exactly the condition under
+which reward hacking goes unmeasured, because the intended objective is violated
+and the signal never moves.
+
+Neither an audit nor a mutation score bounds reward hacking. The denominator is
+this pack's declared fault models, not the space of possible exploits, and no
+model is being ranked.
+
+## Detection margins
+
+A mutation score of 1.0 says every declared fault was caught. It does not say
+how narrowly. Each mutant therefore reports `detection_margin`, the number of
+cases that independently failed on it, and the audit reports the weakest margin
+across the pack, the faults caught by exactly one case, and the cases that are
+the sole detector of some fault.
+
+The measured margins for the two shipped packs, from real runs:
+
+| Pack | Declared faults | Detected | Weakest margin | Caught by a single case |
+| --- | ---: | ---: | ---: | --- |
+| `durable-kv` | 8 | 8 | 1 | `accept-nonstring-keys`, `boolean-equals-one`, `partial-batch` |
+| `support-routing` | 7 | 7 | 1 | `new-key-on-retry`, `skip-retry` |
+| `robot-evidence-review` | 6 | 6 | 1 | `assume-complete` |
+
+All three packs score 1.0. Six of the twenty-one declared faults rest on a
+single case each, and their sole detectors are `cas-type-sensitivity`,
+`reject-and-continue`, `rollback-batch`, `retry-after-commit`,
+`retry-before-commit` and `incomplete-recording`. Weaken or drop any one of
+those six cases and the corresponding fault becomes invisible while the mutation
+score still reads 1.0. That is the number worth publishing next to a perfect
+score, and it is a statement about this suite's own coverage, not about any
+candidate.
+
+A margin counts distinct cases, not case runs. The same case failing under two
+seeds is one detector; counting runs would double every margin per added seed
+and make a suite look more robust for changing nothing.
+
+The margins above are identical under the Python and the JavaScript reference
+implementations, for all three packs. That is what should happen if a margin
+measures the check suite rather than a particular candidate, and it is reported
+as an observation from these runs, not as a proof of language independence.
+
 ## State and process boundaries
 
 Every coding case gets a fresh state directory. Sessions within that case reuse its

@@ -161,6 +161,38 @@
       "accessed_on": "2026-09-14",
       "read_depth": "abstract and metadata",
       "status_note": "Only the arXiv record was verified; venue is unconfirmed in this review, not asserted absent."
+    },
+    {
+      "id": "P11",
+      "title": "Hack-Verifiable Environments: Towards Evaluating Reward Hacking at Scale",
+      "first_author": "Amit Roth",
+      "first_submission_year": 2026,
+      "arxiv_id": "2605.20744",
+      "verified_revision": "v1",
+      "revision_date": "2026-05-20",
+      "verified_venue": null,
+      "venue_evidence": null,
+      "primary_source": "https://arxiv.org/abs/2605.20744",
+      "versioned_source": "https://arxiv.org/abs/2605.20744v1",
+      "accessed_on": "2026-09-14",
+      "read_depth": "abstract and metadata",
+      "status_note": "Names the hack-verifiable environments methodology: detectable hacking opportunities are embedded in environments so exploitation is verifiable by design. Measures whether an agent exploits them. EvalArc's audit plants faults in submissions and measures whether the checks catch them, which is the opposite direction; no equivalence is claimed. Only the arXiv record was verified; venue is unconfirmed in this review, not asserted absent."
+    },
+    {
+      "id": "P12",
+      "title": "Hack-Verifiable Terminal Bench: Evaluating Reward Hacking in Terminal Tasks",
+      "first_author": "Amit Roth",
+      "first_submission_year": 2026,
+      "arxiv_id": "2608.22103",
+      "verified_revision": "v1",
+      "revision_date": "2026-08-22",
+      "verified_venue": null,
+      "venue_evidence": null,
+      "primary_source": "https://arxiv.org/abs/2608.22103",
+      "versioned_source": "https://arxiv.org/abs/2608.22103v1",
+      "accessed_on": "2026-09-14",
+      "read_depth": "abstract and metadata",
+      "status_note": "Applies the methodology to Terminal Bench and states the shared motivation directly: measuring reward hacking is hard because detection usually rests on human inspection or LLM judges, both unreliable. EvalArc addresses the same unreliability from the grader side with host-side deterministic checks. Only the arXiv record was verified; venue is unconfirmed in this review, not asserted absent."
     }
   ]
 }

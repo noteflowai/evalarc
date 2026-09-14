@@ -321,9 +321,23 @@ def main(argv: list[str] | None = None) -> int:
             audit_status = (
                 "INVALID" if not result["valid"] else ("PASS" if result["passed"] else "FAIL")
             )
+            detection = result.get("detection") or {}
+            single = detection.get("single_case_detections") or []
+            # Printed beside the count because "all detected" and "robustly
+            # detected" are different claims, and only the first is obvious.
+            margin_line = (
+                f"Weakest detection margin: {detection.get('weakest_margin')} case(s)"
+                + (
+                    f" | Detected by a single case: {len(single)}/{result['total']}"
+                    f" ({', '.join(single)})"
+                    if single
+                    else ""
+                )
+            )
             print(
                 f"Audit: {audit_status} | Reference: {reference_status} | "
                 f"Negative controls detected: {result['killed']}/{result['total']}\n"
+                f"{margin_line}\n"
                 f"Report: {args.output / 'index.html'}"
             )
             return 2 if not result["valid"] else (0 if result["passed"] else 1)
