@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graderail"
+version = "0.1.0"
+description = "Audit executable graders for coding agents with behavioral negative controls."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "GradeRail contributors"}]
+keywords = ["agents", "evaluation", "reinforcement-learning", "software-engineering"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Testing",
+]
+dependencies = []
+
+[project.scripts]
+graderail = "graderail.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1,<2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+graderail = ["assets/*.py", "assets/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

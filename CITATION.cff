@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, cite this development version."
+title: "GradeRail: Behavioral Audits for Executable Coding-Agent Graders"
+type: software
+authors:
+  - name: GradeRail contributors
+version: 0.1.0
+date-released: 2026-09-14
+license: MIT
+keywords:
+  - agent evaluation
+  - reinforcement learning environments
+  - grader auditing

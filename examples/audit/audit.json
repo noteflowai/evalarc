@@ -1,0 +1,2079 @@
+{
+  "schema_version": "graderail.audit.v1",
+  "reference_passed": true,
+  "reference": {
+    "schema_version": "graderail.evaluation.v1",
+    "created_at": "2026-09-14T00:50:08.964736+00:00",
+    "graderail_version": "0.1.0",
+    "task": {
+      "id": "durable-kv",
+      "version": "0.1.0",
+      "split": "public-development"
+    },
+    "candidate_sha256": "c6907b887b14c1db09aa928cb91c549168956346d149fb1426c91c6028e8aa66",
+    "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+    "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+    "runtime": {
+      "backend": "docker",
+      "image": "python:3.12-slim",
+      "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+      "response_timeout_seconds": 10.0,
+      "session_output_limit_bytes": 1048576,
+      "python": "3.12.3",
+      "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+    },
+    "seeds": [
+      17
+    ],
+    "score": 1.0,
+    "resolved": true,
+    "dimensions": {
+      "basic": {
+        "passed": 3,
+        "total": 3,
+        "weight": 0.25,
+        "score": 1.0
+      },
+      "validation": {
+        "passed": 2,
+        "total": 2,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "transactions": {
+        "passed": 2,
+        "total": 2,
+        "weight": 0.2,
+        "score": 1.0
+      },
+      "compare_swap": {
+        "passed": 2,
+        "total": 2,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "persistence": {
+        "passed": 3,
+        "total": 3,
+        "weight": 0.15,
+        "score": 1.0
+      },
+      "crash_recovery": {
+        "passed": 3,
+        "total": 3,
+        "weight": 0.1,
+        "score": 1.0
+      }
+    },
+    "cases": [
+      {
+        "seed": 17,
+        "case_id": "read-write-delete",
+        "dimension": "basic",
+        "passed": true,
+        "checks_completed": 6,
+        "duration_seconds": 0.552483,
+        "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "json-types-and-overwrite",
+        "dimension": "basic",
+        "passed": true,
+        "checks_completed": 16,
+        "duration_seconds": 0.627995,
+        "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "reject-and-continue",
+        "dimension": "validation",
+        "passed": true,
+        "checks_completed": 10,
+        "duration_seconds": 0.546388,
+        "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "empty-and-unicode-keys",
+        "dimension": "validation",
+        "passed": true,
+        "checks_completed": 4,
+        "duration_seconds": 0.556161,
+        "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "commit-batch",
+        "dimension": "transactions",
+        "passed": true,
+        "checks_completed": 4,
+        "duration_seconds": 0.562022,
+        "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "rollback-batch",
+        "dimension": "transactions",
+        "passed": true,
+        "checks_completed": 7,
+        "duration_seconds": 0.560089,
+        "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "cas-match-and-mismatch",
+        "dimension": "compare_swap",
+        "passed": true,
+        "checks_completed": 7,
+        "duration_seconds": 0.552845,
+        "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "cas-type-sensitivity",
+        "dimension": "compare_swap",
+        "passed": true,
+        "checks_completed": 5,
+        "duration_seconds": 0.52516,
+        "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-acknowledged-write",
+        "dimension": "persistence",
+        "passed": true,
+        "checks_completed": 4,
+        "duration_seconds": 1.420064,
+        "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-transaction",
+        "dimension": "persistence",
+        "passed": true,
+        "checks_completed": 3,
+        "duration_seconds": 0.94093,
+        "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-acknowledgement",
+        "dimension": "crash_recovery",
+        "passed": true,
+        "checks_completed": 2,
+        "duration_seconds": 1.000753,
+        "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-atomic-batch",
+        "dimension": "crash_recovery",
+        "passed": true,
+        "checks_completed": 3,
+        "duration_seconds": 0.983552,
+        "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "restart-preserves-cas",
+        "dimension": "persistence",
+        "passed": true,
+        "checks_completed": 3,
+        "duration_seconds": 1.013552,
+        "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "sigkill-after-delete",
+        "dimension": "crash_recovery",
+        "passed": true,
+        "checks_completed": 3,
+        "duration_seconds": 1.649218,
+        "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+        "error": null
+      },
+      {
+        "seed": 17,
+        "case_id": "seeded-state-machine",
+        "dimension": "basic",
+        "passed": true,
+        "checks_completed": 52,
+        "duration_seconds": 0.791722,
+        "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+        "error": null
+      }
+    ],
+    "evaluation_seconds": 12.293174,
+    "agent_cost_usd": null,
+    "agent_tokens": null
+  },
+  "mutants": [
+    {
+      "name": "ack-without-work",
+      "target_dimension": "basic",
+      "killed": true,
+      "score": 0.0,
+      "failing_cases": [
+        "json-types-and-overwrite",
+        "read-write-delete",
+        "seeded-state-machine"
+      ],
+      "candidate_sha256": "7d0d19a54735f8534e00b650689cd1a669c8c71ee27a208d6e3621af3ef1a0a2",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:50:20.247529+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "7d0d19a54735f8534e00b650689cd1a669c8c71ee27a208d6e3621af3ef1a0a2",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.0,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 0,
+            "total": 3,
+            "weight": 0.25,
+            "score": 0.0
+          },
+          "validation": {
+            "passed": 0,
+            "total": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "transactions": {
+            "passed": 0,
+            "total": 2,
+            "weight": 0.2,
+            "score": 0.0
+          },
+          "compare_swap": {
+            "passed": 0,
+            "total": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "persistence": {
+            "passed": 0,
+            "total": 3,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "crash_recovery": {
+            "passed": 0,
+            "total": 3,
+            "weight": 0.1,
+            "score": 0.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": false,
+            "checks_completed": 0,
+            "duration_seconds": 0.535264,
+            "transcript_sha256": "e9d1c1a4ce952f925f5a3d00a84348bf482007670ba13602f73d0129cc422a60",
+            "error": "response mismatch at request 1; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.512674,
+            "transcript_sha256": "ad684a2e4e62254b35236e279cda7ec03bfe6bf6a01e3c0b24a1810e6c8088d2",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": null}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.577903,
+            "transcript_sha256": "932f3ec3f66ee636feddf02978271d1af20d352d113d51580182f4956132fcbc",
+            "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.573681,
+            "transcript_sha256": "dd5c4b23bf9661f05363e4be2791dffa554d3bb7a6226d1be64e58adc97e7907",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.612446,
+            "transcript_sha256": "660d89f2f1ccd8d228c1871197f23f08289d1c1fe244918053aa9aca3a9ce576",
+            "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.574798,
+            "transcript_sha256": "8d05dbc72469fa9ab22e4943d0e9ed13a8733f443dc95a84a306daa02b2031b4",
+            "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.587186,
+            "transcript_sha256": "92c53f111ed9d1c600b448aaf9e5a529f32d2f085433ad700cd369bd71c55185",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.56687,
+            "transcript_sha256": "88cbf896bd041b5c3a80f99fc01f19d0b473a1a39cdb4f59d621a8abbcaa35e4",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 1.220282,
+            "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 1.049392,
+            "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.98918,
+            "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.978596,
+            "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.497123,
+            "transcript_sha256": "7ef0ed9705196a8514631dacec2c92eeb5e34cd9811d281f9816e348c50d1a17",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": true}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 1.48941,
+            "transcript_sha256": "165fee513b6ad33052636d17d8a1f492e3226d1b5f19b246f01f1c20289f5525",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 0.507472,
+            "transcript_sha256": "ce6e264c70b36102aabe44145d2a7558766913a2725261b8f120efea98fa8659",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
+          }
+        ],
+        "evaluation_seconds": 11.279804,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "memory-only",
+      "target_dimension": "persistence",
+      "killed": true,
+      "score": 0.78333333,
+      "failing_cases": [
+        "restart-preserves-acknowledged-write",
+        "restart-preserves-cas",
+        "restart-preserves-transaction"
+      ],
+      "candidate_sha256": "6c442b5afde9b592ea84c83531f458005280af426a50d16898ca21f51f5c8462",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:50:31.002954+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "6c442b5afde9b592ea84c83531f458005280af426a50d16898ca21f51f5c8462",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.78333333,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 0,
+            "total": 3,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "crash_recovery": {
+            "passed": 1,
+            "total": 3,
+            "weight": 0.1,
+            "score": 0.3333333333333333
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.482384,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.499965,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.485945,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.481092,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.488973,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.487795,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.481157,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 5,
+            "duration_seconds": 0.48317,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.98526,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.983985,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.970647,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.981971,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 0.963712,
+            "transcript_sha256": "497082839111501c6aa4912312fe30686befcab05beb84ebbcb99be0d1e8aef1",
+            "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": 321}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.453354,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.519007,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 10.755081,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "partial-batch",
+      "target_dimension": "transactions",
+      "killed": true,
+      "score": 0.9,
+      "failing_cases": [
+        "rollback-batch"
+      ],
+      "candidate_sha256": "9740eecf0ee4fcbd04cf9d508469d97f2b3bf425815da9cd2a6999e69f9452be",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:50:42.719468+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "9740eecf0ee4fcbd04cf9d508469d97f2b3bf425815da9cd2a6999e69f9452be",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.9,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 1,
+            "total": 2,
+            "weight": 0.2,
+            "score": 0.5
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.511258,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.549022,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.517587,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.507877,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.497644,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 0.510756,
+            "transcript_sha256": "f6015865dce884224cf6ccccc9fbdd367baad17842dde00fbee476f06b1aab0d",
+            "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": true, \"ok\": true, \"value\": \"must roll back\"}"
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.512551,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 5,
+            "duration_seconds": 0.502376,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 1.453467,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.986885,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 2,
+            "duration_seconds": 1.018059,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.998182,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.007549,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.467998,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.668101,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 11.716262,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "cas-always-wins",
+      "target_dimension": "compare_swap",
+      "killed": true,
+      "score": 0.85,
+      "failing_cases": [
+        "cas-match-and-mismatch",
+        "cas-type-sensitivity"
+      ],
+      "candidate_sha256": "beaf403e4bd5ae429cebb876baebf37c01b5cf1e74707e8fa1a7a92a08759046",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:50:54.540761+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "beaf403e4bd5ae429cebb876baebf37c01b5cf1e74707e8fa1a7a92a08759046",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.85,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 0,
+            "total": 2,
+            "weight": 0.15,
+            "score": 0.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.50654,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.54948,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.512448,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.513668,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.512993,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.51334,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.523116,
+            "transcript_sha256": "71199e89272547e9c1a1961a85a650b93c30e2f848912b6be28ea262907eda56",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.500747,
+            "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 1.468842,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.011395,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 2,
+            "duration_seconds": 1.005063,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.033634,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.025314,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.497359,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.640599,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 11.821073,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "boolean-equals-one",
+      "target_dimension": "compare_swap",
+      "killed": true,
+      "score": 0.925,
+      "failing_cases": [
+        "cas-type-sensitivity"
+      ],
+      "candidate_sha256": "8d94d45a2ff8d19c76475920a1289c4279cd827ba9f10da79b85fa7194bc7ed0",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:51:06.321561+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "8d94d45a2ff8d19c76475920a1289c4279cd827ba9f10da79b85fa7194bc7ed0",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.925,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 1,
+            "total": 2,
+            "weight": 0.15,
+            "score": 0.5
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.517847,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.540963,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.518597,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.511552,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.517549,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.471197,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.470218,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.569559,
+            "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
+            "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 1.479213,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.011923,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 2,
+            "duration_seconds": 1.006394,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.021724,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.992055,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.506664,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.638075,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 11.780648,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "delete-noop",
+      "target_dimension": "basic",
+      "killed": true,
+      "score": 0.65,
+      "failing_cases": [
+        "read-write-delete",
+        "seeded-state-machine"
+      ],
+      "candidate_sha256": "c9305a417a0fd1ec008dc2fdd2f8958cab4cc569b506d184a10446b45c942938",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:51:17.910900+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "c9305a417a0fd1ec008dc2fdd2f8958cab4cc569b506d184a10446b45c942938",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.65,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 1,
+            "total": 3,
+            "weight": 0.25,
+            "score": 0.3333333333333333
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 1,
+            "total": 2,
+            "weight": 0.2,
+            "score": 0.5
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 2,
+            "total": 3,
+            "weight": 0.15,
+            "score": 0.6666666666666666
+          },
+          "crash_recovery": {
+            "passed": 2,
+            "total": 3,
+            "weight": 0.1,
+            "score": 0.6666666666666666
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": false,
+            "checks_completed": 4,
+            "duration_seconds": 0.509207,
+            "transcript_sha256": "4122b55bc205e4703a3a9f62a5397de448a833f424e54edc914bbbf5465c70d1",
+            "error": "response mismatch at request 5; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.544774,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.505522,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.50219,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.522158,
+            "transcript_sha256": "da7df3388998e4f6fd4743177baa1ddcd8625d54fded8d5c6cfbdf813d50cdba",
+            "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.492094,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.506519,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 5,
+            "duration_seconds": 0.498628,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": false,
+            "checks_completed": 3,
+            "duration_seconds": 1.489239,
+            "transcript_sha256": "0ae3e20082ef3346a8027b09f61e373e1c733234603e3e12d5e61853d6df9c8f",
+            "error": "response mismatch at request 4; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.984775,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 2,
+            "duration_seconds": 0.999009,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.01037,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.988908,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 1.500824,
+            "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": false,
+            "checks_completed": 8,
+            "duration_seconds": 0.525921,
+            "transcript_sha256": "0132892f9b4bac6264eb6ef2dae9da8b7bac7a6a158b56357f1319c853615de7",
+            "error": "response mismatch at request 9; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          }
+        ],
+        "evaluation_seconds": 11.589085,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "accept-nonstring-keys",
+      "target_dimension": "validation",
+      "killed": true,
+      "score": 0.925,
+      "failing_cases": [
+        "reject-and-continue"
+      ],
+      "candidate_sha256": "a91ee188a0d906fad8939fc8fa7bfae9235244eca3078f276fbb10911319c69e",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:51:29.584220+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "a91ee188a0d906fad8939fc8fa7bfae9235244eca3078f276fbb10911319c69e",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.925,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 1,
+            "total": 2,
+            "weight": 0.15,
+            "score": 0.5
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.1,
+            "score": 1.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.530108,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.5935,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": false,
+            "checks_completed": 4,
+            "duration_seconds": 0.552318,
+            "transcript_sha256": "dc07c86f871afd6b2f208e9751bdd459e52368d54d008ca0622a8edd61a7008b",
+            "error": "response mismatch at request 5; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.510132,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.498993,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.496854,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.4985,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 5,
+            "duration_seconds": 0.495732,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 1.45393,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.994972,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 2,
+            "duration_seconds": 0.971121,
+            "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.995085,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.985684,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.424116,
+            "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.665194,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 11.67317,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    },
+    {
+      "name": "commit-on-exit",
+      "target_dimension": "crash_recovery",
+      "killed": true,
+      "score": 0.9,
+      "failing_cases": [
+        "sigkill-after-acknowledgement",
+        "sigkill-after-atomic-batch",
+        "sigkill-after-delete"
+      ],
+      "candidate_sha256": "8bc0d797dbad11fad4237553f68d4fb3c6d4bf704488493401c6a94254354c2a",
+      "evaluation": {
+        "schema_version": "graderail.evaluation.v1",
+        "created_at": "2026-09-14T00:51:41.269629+00:00",
+        "graderail_version": "0.1.0",
+        "task": {
+          "id": "durable-kv",
+          "version": "0.1.0",
+          "split": "public-development"
+        },
+        "candidate_sha256": "8bc0d797dbad11fad4237553f68d4fb3c6d4bf704488493401c6a94254354c2a",
+        "grader_sha256": "f40c1f57da0d4a09795d68ea211aaedf3729c47f91f2d0fd08c51d890d707fd4",
+        "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+        "runtime": {
+          "backend": "docker",
+          "image": "python:3.12-slim",
+          "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "response_timeout_seconds": 10.0,
+          "session_output_limit_bytes": 1048576,
+          "python": "3.12.3",
+          "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+        },
+        "seeds": [
+          17
+        ],
+        "score": 0.9,
+        "resolved": false,
+        "dimensions": {
+          "basic": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.25,
+            "score": 1.0
+          },
+          "validation": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "transactions": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.2,
+            "score": 1.0
+          },
+          "compare_swap": {
+            "passed": 2,
+            "total": 2,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "persistence": {
+            "passed": 3,
+            "total": 3,
+            "weight": 0.15,
+            "score": 1.0
+          },
+          "crash_recovery": {
+            "passed": 0,
+            "total": 3,
+            "weight": 0.1,
+            "score": 0.0
+          }
+        },
+        "cases": [
+          {
+            "seed": 17,
+            "case_id": "read-write-delete",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 6,
+            "duration_seconds": 0.505617,
+            "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "json-types-and-overwrite",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 16,
+            "duration_seconds": 0.496533,
+            "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "reject-and-continue",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 10,
+            "duration_seconds": 0.491974,
+            "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "empty-and-unicode-keys",
+            "dimension": "validation",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.506414,
+            "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "commit-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 0.512141,
+            "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "rollback-batch",
+            "dimension": "transactions",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.50765,
+            "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-match-and-mismatch",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 7,
+            "duration_seconds": 0.514606,
+            "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "cas-type-sensitivity",
+            "dimension": "compare_swap",
+            "passed": true,
+            "checks_completed": 5,
+            "duration_seconds": 0.495969,
+            "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-acknowledged-write",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 4,
+            "duration_seconds": 1.407514,
+            "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-transaction",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 0.961555,
+            "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-acknowledgement",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 1.002903,
+            "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-atomic-batch",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 1,
+            "duration_seconds": 0.987794,
+            "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
+            "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
+          },
+          {
+            "seed": 17,
+            "case_id": "restart-preserves-cas",
+            "dimension": "persistence",
+            "passed": true,
+            "checks_completed": 3,
+            "duration_seconds": 1.017676,
+            "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+            "error": null
+          },
+          {
+            "seed": 17,
+            "case_id": "sigkill-after-delete",
+            "dimension": "crash_recovery",
+            "passed": false,
+            "checks_completed": 2,
+            "duration_seconds": 1.746077,
+            "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
+            "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
+          },
+          {
+            "seed": 17,
+            "case_id": "seeded-state-machine",
+            "dimension": "basic",
+            "passed": true,
+            "checks_completed": 52,
+            "duration_seconds": 0.523831,
+            "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+            "error": null
+          }
+        ],
+        "evaluation_seconds": 11.685305,
+        "agent_cost_usd": null,
+        "agent_tokens": null
+      }
+    }
+  ],
+  "mutation_score": 1.0,
+  "killed": 8,
+  "total": 8,
+  "passed": true,
+  "interpretation": "Coverage of eight declared behavioral fault models only. This is not a bound on reward hacking or a model benchmark."
+}

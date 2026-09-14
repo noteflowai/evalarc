@@ -1,0 +1,117 @@
+{
+  "review_date": "2026-09-14",
+  "sources": [
+    {
+      "id": "funding",
+      "url": "https://www.mechanize.work/mechanize-raises-9-1m",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "mechanize-press",
+      "url": "https://www.mechanize.work/press-releases/",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "gbaeval",
+      "url": "https://gbaeval.com",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "terminal-challenges",
+      "url": "https://www.tbench.ai/news/terminal-bench-challenges",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "terminal4",
+      "url": "https://www.tbench.ai/news/terminal-bench-4-0",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "terminal-integrity",
+      "url": "https://www.tbench.ai/news/leaderboard-integrity-update",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "harbor-tasks",
+      "url": "https://harborframework.com/docs/task-format",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "metr-update",
+      "url": "https://metr.org/blog/2026-1-29-time-horizon-1-1/",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "swe-smith-repo",
+      "url": "https://raw.githubusercontent.com/SWE-bench/SWE-smith/main/README.md",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "verifiers-docs",
+      "url": "https://raw.githubusercontent.com/PrimeIntellect-ai/verifiers/main/README.md",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "r2e-full",
+      "url": "https://arxiv.org/html/2504.07164v1",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "swesmith-full",
+      "url": "https://arxiv.org/html/2504.21798v2",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "swe-evo-full",
+      "url": "https://arxiv.org/html/2512.18470v6",
+      "accessed_on": "2026-09-14",
+      "kind": "official-source-or-author-paper",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "bi-original",
+      "url": "https://www.businessinsider.com/google-mechanize-deal-talent-tech-ai-coding-2026-8",
+      "accessed_on": "2026-09-14",
+      "kind": "original-media-reporting",
+      "access_status": "retrieved"
+    },
+    {
+      "id": "bi-update",
+      "url": "https://www.businessinsider.com/google-completes-deal-for-ai-agents-startup-mechanize-2026-9",
+      "accessed_on": "2026-09-14",
+      "kind": "original-media-reporting",
+      "access_status": "retrieved"
+    }
+  ],
+  "unresolved_claims": [
+    {
+      "claim": "Final consideration and complete legal terms of the Mechanize talent/technology deal",
+      "status": "not publicly disclosed in the retrieved original reporting",
+      "limits": "Business Insider reported talks on 2026-08-05 and completion of the talent deal on 2026-09-11. The latter explicitly says final terms were not disclosed. Neither article establishes the exact negotiation start date."
+    }
+  ]
+}
