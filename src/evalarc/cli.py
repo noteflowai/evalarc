@@ -10,7 +10,7 @@ from pathlib import Path
 
 from evalarc import __version__
 from evalarc.artifacts import check_output_location, new_json, new_run
-from evalarc.audit import asset, audit
+from evalarc.audit import audit
 from evalarc.compare import compare
 from evalarc.doctor import diagnose
 from evalarc.evaluate import evaluate, write_json
@@ -20,7 +20,8 @@ from evalarc.repetition import repeat
 from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
 from evalarc.runner import EnvironmentFailure, Runtime
 from evalarc.suite import load_suite, run_suite
-from evalarc.tasks import TASKS, get_task
+from evalarc.tasks import TASKS
+from evalarc.templates import LANGUAGES, initialize
 from evalarc.trajectory import summarize
 
 
@@ -36,6 +37,7 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("destination", type=Path)
     init.add_argument("--reference", action="store_true", help="use the known-good control")
     init.add_argument("--task", choices=TASKS, default="durable-kv")
+    init.add_argument("--language", choices=LANGUAGES, default="python")
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
@@ -46,6 +48,13 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("candidate", type=Path)
         if name == "repeat":
             command.add_argument("--attempts", type=int, default=3)
+        if name == "audit":
+            command.add_argument(
+                "--language",
+                choices=LANGUAGES,
+                default="python",
+                help="control language; JavaScript on Docker needs --image node:22-slim",
+            )
         command.add_argument("--task", choices=TASKS, default="durable-kv")
         command.add_argument("--backend", choices=["docker", "local"], default="docker")
         command.add_argument("--trust-local", action="store_true")
@@ -167,15 +176,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 1 if result["has_regressions"] else 0
         if args.command == "init":
-            task = get_task(args.task)
-            if args.destination.exists():
-                raise ValueError("destination already exists; choose a new directory")
-            args.destination.mkdir(parents=True)
-            (args.destination / "main.py").write_text(
-                asset(task.reference_asset if args.reference else task.starter_asset)
-            )
-            (args.destination / "TASK.md").write_text(asset(task.contract_asset))
+            initialize(args.destination, args.task, args.language, reference=args.reference)
             print(f"Created {args.destination}")
+            if args.language == "javascript":
+                print("Requires Node.js 22+. For Docker, select --image node:22-slim.")
             return 0
         if args.command == "trajectory":
             checkpoints = json.loads(args.checkpoints.read_text())
@@ -200,7 +204,9 @@ def main(argv: list[str] | None = None) -> int:
                 EventLog(output / "events.jsonl", stream=args.progress) as events,
             ):
                 runtime.prepare()
-                result = audit(runtime, args.seeds, args.task, on_event=events)
+                result = audit(
+                    runtime, args.seeds, args.task, on_event=events, language=args.language
+                )
                 write_json(output / "audit.json", result)
                 render_audit(result, output / "index.html")
             reference_status = (

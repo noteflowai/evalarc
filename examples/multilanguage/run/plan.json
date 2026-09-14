@@ -1,0 +1,75 @@
+{
+  "schema_version": "evalarc.suite-plan.v1",
+  "name": "Python and JavaScript reference conformance",
+  "manifest_sha256": "ae478f5b926dab4eee42bb1b4eb0c3a87446da0d09f5b27f8ebd273199802478",
+  "jobs": [
+    {
+      "id": "python-coding",
+      "task": "durable-kv",
+      "candidate": "/tmp/evalarc-v06-package-dyys0bqm/installed-demo-2/workspace/kv-python",
+      "seeds": [
+        17
+      ],
+      "attempts": 1,
+      "cases_per_attempt": 15,
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      }
+    },
+    {
+      "id": "javascript-coding",
+      "task": "durable-kv",
+      "candidate": "/tmp/evalarc-v06-package-dyys0bqm/installed-demo-2/workspace/kv-javascript",
+      "seeds": [
+        17
+      ],
+      "attempts": 1,
+      "cases_per_attempt": 15,
+      "runtime": {
+        "backend": "docker",
+        "image": "node:22-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      }
+    },
+    {
+      "id": "javascript-support",
+      "task": "support-routing",
+      "candidate": "/tmp/evalarc-v06-package-dyys0bqm/installed-demo-2/workspace/support-javascript",
+      "seeds": [
+        17
+      ],
+      "attempts": 1,
+      "cases_per_attempt": 4,
+      "runtime": {
+        "backend": "docker",
+        "image": "node:22-slim",
+        "timeout": 10.0,
+        "case_timeout": 60.0,
+        "output_limit": 1048576
+      },
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      }
+    }
+  ],
+  "planned_attempts": 3,
+  "planned_case_executions": 34
+}

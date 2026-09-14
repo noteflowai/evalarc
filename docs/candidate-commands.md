@@ -3,6 +3,10 @@
 The evaluator selects a task with `--task`; the default remains `durable-kv`.
 Candidate configuration cannot choose a task, grader, backend, limits, or image.
 
+`evalarc init workspace/js --language javascript --task support-routing`
+generates a JavaScript starter and command manifest. Both tasks also support
+`--reference`; Python remains the default. See the [multilanguage guide](languages.md).
+
 To replace a task's default Python entrypoint, put `evalarc.toml` in the
 candidate workspace:
 
@@ -45,11 +49,11 @@ Candidates have no network in Docker. Local subprocesses receive a minimal
 environment with the system executable search path; use an absolute executable
 path for a runtime outside that path.
 
-The repository validates Python in both backends and the independent JavaScript
-support policy with local Node.js. Compiled TypeScript can use the JavaScript
-entrypoint, but no TypeScript SDK or compiler integration is provided. Rust
-workers, Rust submissions, and Node-in-Docker execution have not been validated
-in this release.
+The repository validates both tasks with Python and Node.js 22+ in local and
+Docker execution. JavaScript images must be selected explicitly, for example
+`--image node:22-slim`. Compiled TypeScript can use the JavaScript entrypoint,
+but no TypeScript SDK or compiler integration is provided. Rust workers and Rust
+submissions have not been validated in this release.
 
 Command templates are included in report runtime metadata. A command change
 makes checkpoint runs incomparable even if the task and source files match.

@@ -1,0 +1,463 @@
+{
+  "schema_version": "evalarc.evaluation.v2",
+  "created_at": "2026-09-14T04:55:42.533193+00:00",
+  "evalarc_version": "0.6.0",
+  "task": {
+    "id": "durable-kv",
+    "version": "0.1.0",
+    "domain": "coding",
+    "split": "public-development"
+  },
+  "candidate_sha256": "ba49b33370353228d229b1d0738500bdf12f818366051622570e896175bca8b7",
+  "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+  "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+  "runtime": {
+    "backend": "docker",
+    "image": "node:22-slim",
+    "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+    "command": [
+      "node",
+      "main.js",
+      "{state}/store.json"
+    ],
+    "response_timeout_seconds": 10.0,
+    "case_timeout_seconds": 60.0,
+    "session_output_limit_bytes": 1048576,
+    "python": "3.12.3",
+    "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+  },
+  "seeds": [
+    17
+  ],
+  "valid": true,
+  "status": "passed",
+  "score": 1.0,
+  "resolved": true,
+  "dimensions": {
+    "basic": {
+      "passed": 3,
+      "total": 3,
+      "assessed": 3,
+      "weight": 0.25,
+      "score": 1.0
+    },
+    "validation": {
+      "passed": 2,
+      "total": 2,
+      "assessed": 2,
+      "weight": 0.15,
+      "score": 1.0
+    },
+    "transactions": {
+      "passed": 2,
+      "total": 2,
+      "assessed": 2,
+      "weight": 0.2,
+      "score": 1.0
+    },
+    "compare_swap": {
+      "passed": 2,
+      "total": 2,
+      "assessed": 2,
+      "weight": 0.15,
+      "score": 1.0
+    },
+    "persistence": {
+      "passed": 3,
+      "total": 3,
+      "assessed": 3,
+      "weight": 0.15,
+      "score": 1.0
+    },
+    "crash_recovery": {
+      "passed": 3,
+      "total": 3,
+      "assessed": 3,
+      "weight": 0.1,
+      "score": 1.0
+    }
+  },
+  "cases": [
+    {
+      "seed": 17,
+      "case_id": "read-write-delete",
+      "dimension": "basic",
+      "checks": {
+        "basic": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 6,
+      "duration_seconds": 0.500171,
+      "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 171,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "json-types-and-overwrite",
+      "dimension": "basic",
+      "checks": {
+        "basic": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 16,
+      "duration_seconds": 0.563726,
+      "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 4531,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "reject-and-continue",
+      "dimension": "validation",
+      "checks": {
+        "validation": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 10,
+      "duration_seconds": 0.5038,
+      "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 407,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "empty-and-unicode-keys",
+      "dimension": "validation",
+      "checks": {
+        "validation": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 4,
+      "duration_seconds": 0.510414,
+      "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 190,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "commit-batch",
+      "dimension": "transactions",
+      "checks": {
+        "transactions": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 4,
+      "duration_seconds": 0.482119,
+      "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 86,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "rollback-batch",
+      "dimension": "transactions",
+      "checks": {
+        "transactions": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 7,
+      "duration_seconds": 0.456643,
+      "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 321,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "cas-match-and-mismatch",
+      "dimension": "compare_swap",
+      "checks": {
+        "compare_swap": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 7,
+      "duration_seconds": 0.515152,
+      "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 240,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "cas-type-sensitivity",
+      "dimension": "compare_swap",
+      "checks": {
+        "compare_swap": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 5,
+      "duration_seconds": 0.488902,
+      "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 143,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-acknowledged-write",
+      "dimension": "persistence",
+      "checks": {
+        "persistence": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 4,
+      "duration_seconds": 1.38184,
+      "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 95,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 26,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-transaction",
+      "dimension": "persistence",
+      "checks": {
+        "persistence": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 3,
+      "duration_seconds": 0.932079,
+      "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 166,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-acknowledgement",
+      "dimension": "crash_recovery",
+      "checks": {
+        "crash_recovery": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 2,
+      "duration_seconds": 0.926056,
+      "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 137,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 83,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-atomic-batch",
+      "dimension": "crash_recovery",
+      "checks": {
+        "crash_recovery": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 3,
+      "duration_seconds": 0.933188,
+      "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 137,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 166,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "restart-preserves-cas",
+      "dimension": "persistence",
+      "checks": {
+        "persistence": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 3,
+      "duration_seconds": 0.937424,
+      "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 39,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 37,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "sigkill-after-delete",
+      "dimension": "crash_recovery",
+      "checks": {
+        "crash_recovery": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 3,
+      "duration_seconds": 1.418463,
+      "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 137,
+          "output_bytes": 12,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        },
+        {
+          "exit_code": 0,
+          "output_bytes": 26,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "case_id": "seeded-state-machine",
+      "dimension": "basic",
+      "checks": {
+        "basic": true
+      },
+      "passed": true,
+      "status": "passed",
+      "checks_completed": 52,
+      "duration_seconds": 0.704395,
+      "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
+      "error": null,
+      "processes": [
+        {
+          "exit_code": 0,
+          "output_bytes": 1101,
+          "stderr_tail": "",
+          "stderr_tail_limit_bytes": 2048
+        }
+      ]
+    }
+  ],
+  "evaluation_seconds": 11.266005,
+  "agent_cost_usd": null,
+  "agent_tokens": null
+}

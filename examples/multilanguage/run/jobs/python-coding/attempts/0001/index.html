@@ -1,0 +1,387 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>EvalArc · Evaluation</title><style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
+body{max-width:1080px;margin:60px auto;padding:0 24px}
+.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
+h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
+p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
+.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
+.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
+code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
+footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.metadata{overflow-wrap:anywhere;font-size:13px}
+pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
+summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
+.passed{color:#96e8b9}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
+.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
+@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+</style></head><body><div class="eyebrow">EVALARC / EVALUATION</div><h1>durable-kv</h1><p>coding · task v0.1.0 · RESOLVED</p><div class="cards"><div class="card"><div class="number">1</div><div class="label">weighted score</div></div><div class="card"><div class="number">15/15</div><div class="label">cases passed</div></div><div class="card"><div class="number">docker</div><div class="label">execution backend</div></div></div><h2>Dimension results</h2><div class="scroll"><table><thead><tr><th>Dimension</th><th>Score</th><th>Passed / assessed</th><th>Weight</th></tr></thead><tbody><tr><td>basic</td><td>1</td><td>3/3</td><td>25%</td></tr><tr><td>validation</td><td>1</td><td>2/2</td><td>15%</td></tr><tr><td>transactions</td><td>1</td><td>2/2</td><td>20%</td></tr><tr><td>compare_swap</td><td>1</td><td>2/2</td><td>15%</td></tr><tr><td>persistence</td><td>1</td><td>3/3</td><td>15%</td></tr><tr><td>crash_recovery</td><td>1</td><td>3/3</td><td>10%</td></tr></tbody></table></div><h2>Case results</h2><div class="scroll"><table><thead><tr><th>Case</th><th>Seed</th><th>Status</th><th>Failed checks</th><th>Host seconds</th></tr></thead><tbody><tr><td><a href="#case-0">read-write-delete</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.650</td></tr><tr><td><a href="#case-1">json-types-and-overwrite</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.716</td></tr><tr><td><a href="#case-2">reject-and-continue</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.639</td></tr><tr><td><a href="#case-3">empty-and-unicode-keys</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.592</td></tr><tr><td><a href="#case-4">commit-batch</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.616</td></tr><tr><td><a href="#case-5">rollback-batch</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.656</td></tr><tr><td><a href="#case-6">cas-match-and-mismatch</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.664</td></tr><tr><td><a href="#case-7">cas-type-sensitivity</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.690</td></tr><tr><td><a href="#case-8">restart-preserves-acknowledged-write</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.617</td></tr><tr><td><a href="#case-9">restart-preserves-transaction</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.136</td></tr><tr><td><a href="#case-10">sigkill-after-acknowledgement</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.085</td></tr><tr><td><a href="#case-11">sigkill-after-atomic-batch</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.156</td></tr><tr><td><a href="#case-12">restart-preserves-cas</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.109</td></tr><tr><td><a href="#case-13">sigkill-after-delete</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>1.632</td></tr><tr><td><a href="#case-14">seeded-state-machine</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.782</td></tr></tbody></table></div><h2>Case evidence</h2><details id="case-0"><summary>read-write-delete · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;read-write-delete&quot;,
+  &quot;dimension&quot;: &quot;basic&quot;,
+  &quot;checks&quot;: {
+    &quot;basic&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 6,
+  &quot;duration_seconds&quot;: 0.6496,
+  &quot;transcript_sha256&quot;: &quot;c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 200,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-1"><summary>json-types-and-overwrite · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;json-types-and-overwrite&quot;,
+  &quot;dimension&quot;: &quot;basic&quot;,
+  &quot;checks&quot;: {
+    &quot;basic&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 16,
+  &quot;duration_seconds&quot;: 0.71574,
+  &quot;transcript_sha256&quot;: &quot;83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 4594,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-2"><summary>reject-and-continue · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;reject-and-continue&quot;,
+  &quot;dimension&quot;: &quot;validation&quot;,
+  &quot;checks&quot;: {
+    &quot;validation&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 10,
+  &quot;duration_seconds&quot;: 0.639067,
+  &quot;transcript_sha256&quot;: &quot;d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 452,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-3"><summary>empty-and-unicode-keys · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;empty-and-unicode-keys&quot;,
+  &quot;dimension&quot;: &quot;validation&quot;,
+  &quot;checks&quot;: {
+    &quot;validation&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 4,
+  &quot;duration_seconds&quot;: 0.592289,
+  &quot;transcript_sha256&quot;: &quot;e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 232,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-4"><summary>commit-batch · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;commit-batch&quot;,
+  &quot;dimension&quot;: &quot;transactions&quot;,
+  &quot;checks&quot;: {
+    &quot;transactions&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 4,
+  &quot;duration_seconds&quot;: 0.616036,
+  &quot;transcript_sha256&quot;: &quot;ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 96,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-5"><summary>rollback-batch · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;rollback-batch&quot;,
+  &quot;dimension&quot;: &quot;transactions&quot;,
+  &quot;checks&quot;: {
+    &quot;transactions&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 7,
+  &quot;duration_seconds&quot;: 0.656281,
+  &quot;transcript_sha256&quot;: &quot;1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 374,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-6"><summary>cas-match-and-mismatch · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;cas-match-and-mismatch&quot;,
+  &quot;dimension&quot;: &quot;compare_swap&quot;,
+  &quot;checks&quot;: {
+    &quot;compare_swap&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 7,
+  &quot;duration_seconds&quot;: 0.66439,
+  &quot;transcript_sha256&quot;: &quot;ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 278,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-7"><summary>cas-type-sensitivity · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;cas-type-sensitivity&quot;,
+  &quot;dimension&quot;: &quot;compare_swap&quot;,
+  &quot;checks&quot;: {
+    &quot;compare_swap&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 5,
+  &quot;duration_seconds&quot;: 0.689647,
+  &quot;transcript_sha256&quot;: &quot;459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 160,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-8"><summary>restart-preserves-acknowledged-write · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;restart-preserves-acknowledged-write&quot;,
+  &quot;dimension&quot;: &quot;persistence&quot;,
+  &quot;checks&quot;: {
+    &quot;persistence&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 4,
+  &quot;duration_seconds&quot;: 1.617219,
+  &quot;transcript_sha256&quot;: &quot;c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 116,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 29,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-9"><summary>restart-preserves-transaction · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;restart-preserves-transaction&quot;,
+  &quot;dimension&quot;: &quot;persistence&quot;,
+  &quot;checks&quot;: {
+    &quot;persistence&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 3,
+  &quot;duration_seconds&quot;: 1.136055,
+  &quot;transcript_sha256&quot;: &quot;2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 206,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-10"><summary>sigkill-after-acknowledgement · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;sigkill-after-acknowledgement&quot;,
+  &quot;dimension&quot;: &quot;crash_recovery&quot;,
+  &quot;checks&quot;: {
+    &quot;crash_recovery&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 2,
+  &quot;duration_seconds&quot;: 1.085292,
+  &quot;transcript_sha256&quot;: &quot;544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 137,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 103,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-11"><summary>sigkill-after-atomic-batch · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;sigkill-after-atomic-batch&quot;,
+  &quot;dimension&quot;: &quot;crash_recovery&quot;,
+  &quot;checks&quot;: {
+    &quot;crash_recovery&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 3,
+  &quot;duration_seconds&quot;: 1.155548,
+  &quot;transcript_sha256&quot;: &quot;2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 137,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 206,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-12"><summary>restart-preserves-cas · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;restart-preserves-cas&quot;,
+  &quot;dimension&quot;: &quot;persistence&quot;,
+  &quot;checks&quot;: {
+    &quot;persistence&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 3,
+  &quot;duration_seconds&quot;: 1.108908,
+  &quot;transcript_sha256&quot;: &quot;149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 43,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 42,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-13"><summary>sigkill-after-delete · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;sigkill-after-delete&quot;,
+  &quot;dimension&quot;: &quot;crash_recovery&quot;,
+  &quot;checks&quot;: {
+    &quot;crash_recovery&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 3,
+  &quot;duration_seconds&quot;: 1.632093,
+  &quot;transcript_sha256&quot;: &quot;b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 137,
+      &quot;output_bytes&quot;: 13,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 29,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-14"><summary>seeded-state-machine · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;seeded-state-machine&quot;,
+  &quot;dimension&quot;: &quot;basic&quot;,
+  &quot;checks&quot;: {
+    &quot;basic&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;checks_completed&quot;: 52,
+  &quot;duration_seconds&quot;: 0.781928,
+  &quot;transcript_sha256&quot;: &quot;2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8&quot;,
+  &quot;error&quot;: null,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 1250,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><h2>Reproduction record</h2><p class="metadata">Candidate SHA-256: 378209f3f88e8e610eb07203e42dea1890d14e96408ed2e0593468e8f88ec0fe<br>Grader SHA-256: 2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039<br>Cases SHA-256: 842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a<br>Created: 2026-09-14T04:55:31.258719+00:00<br>Seeds: [17]<br>Runtime: {&quot;backend&quot;: &quot;docker&quot;, &quot;image&quot;: &quot;python:3.12-slim&quot;, &quot;image_id&quot;: &quot;sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea&quot;, &quot;command&quot;: [&quot;{python}&quot;, &quot;-I&quot;, &quot;-B&quot;, &quot;main.py&quot;, &quot;{state}/store.db&quot;], &quot;response_timeout_seconds&quot;: 10.0, &quot;case_timeout_seconds&quot;: 60.0, &quot;session_output_limit_bytes&quot;: 1048576, &quot;python&quot;: &quot;3.12.3&quot;, &quot;platform&quot;: &quot;Linux-6.17.0-1020-aws-x86_64-with-glibc2.39&quot;}</p><p><a href="evaluation.json">Complete JSON evidence</a></p><footer>Observed task outcomes only. Full resolution requires every check to pass. Host durations include execution overhead and are not agent completion-time baselines. Unknown model cost and token usage remain null.</footer></body></html>

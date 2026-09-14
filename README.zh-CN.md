@@ -23,12 +23,18 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 
 [![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.5 已实现 coding 和业务工具两个场景。**
+**v0.6 已实现 coding 和业务工具两个场景。**
 
 | 任务 | 交互方式 | 验证内容 |
 | --- | --- | --- |
 | `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 |
 | `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 |
+
+v0.6 为两个任务都提供 **Python 和 JavaScript 工作区模板**：
+`init --language javascript` 生成起步代码，添加 `--reference` 生成脚本对照；
+`audit --language javascript` 使用独立的 Node.js 实现检查相同的 15 类故障。
+JavaScript 需要 Node.js 22+，Docker 模式显式指定 `--image node:22-slim`。
+详见[多语言接入指南](docs/languages.zh-CN.md)。
 
 v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算及验收门槛，
 先预览执行计划，再批量运行并输出 HTML、JSON 和 JUnit。各任务单独评分。
