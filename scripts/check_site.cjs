@@ -34,7 +34,43 @@ async function main() {
       const app = process.env.SITE_HUB === "1" ? page.frameLocator('iframe[src*="hf.space"]') : page;
       await app.locator("#workspace").waitFor({state:"visible"});
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
+      await app.locator("#repeat-workspace").waitFor({state:"visible"});
       await page.waitForLoadState("networkidle");
+      assert.equal(await app.locator("#repeat-resolved").innerText(), "0 / 3");
+      assert.equal(await app.locator("#repeat-score").innerText(), "93.75%");
+      assert.equal(await app.locator("#repeat-invalid").innerText(), "0");
+      assert.equal(await app.locator("#repeat-variable").innerText(), "0");
+      await app.locator("#repeat-provenance").locator("..").locator("summary").click();
+      for (const control of ["faulty", "reference"]) {
+        await app.locator("#repeat-" + control).click();
+        assert.equal(await app.locator("#repeat-resolved").innerText(), control === "reference" ? "3 / 3" : "0 / 3");
+        assert.equal(await app.locator("#repeat-score").innerText(), control === "reference" ? "100%" : "93.75%");
+        assert.equal(await app.locator("#repeat-attempts a").count(), 3);
+        assert.equal(await app.locator("#repeat-cases details").count(), 4);
+        const retry = app.locator("#repeat-cases details").filter({hasText:"retry-after-commit"});
+        await retry.locator("summary").click();
+        assert.match(await retry.innerText(), control === "reference" ? /notes: 3 \/ 3/ : /notes: 0 \/ 3/);
+        await retry.locator("summary").click();
+        const appUrl = await app.locator("body").evaluate(() => location.href);
+        const expected = JSON.parse(await app.locator("#repeat-provenance").innerText());
+        const response = await page.request.get(new URL(`repeat/${control}/repetition.json`, appUrl).href);
+        assert.equal(response.status(), 200);
+        const summary = await response.json();
+        for (let i=0;i<3;i++) {
+          const attempt = `repeat/${control}/attempts/${String(i+1).padStart(4,"0")}/`;
+          const recordResponse = await page.request.get(new URL(attempt + "evaluation.json", appUrl).href);
+          assert.equal(recordResponse.status(), 200);
+          const record = await recordResponse.json();
+          assert.equal(record.candidate_sha256, expected.candidate_sha256);
+          assert.equal(record.grader_sha256, expected.grader_sha256);
+          assert.equal(record.score, summary.attempts[i].score);
+          assert.equal(record.resolved, control === "reference");
+        }
+      }
+      await app.locator("#repeat-provenance").locator("..").locator("summary").click();
+      await app.locator("#repeat-faulty").click();
+      await app.locator("#repeat-attempts a").first().hover();
+      assert.equal(await app.locator("#repeat-attempts .badge").first().evaluate(element => getComputedStyle(element).color), "rgb(239, 173, 139)");
       assert.equal(await app.locator("#before-score").innerText(), "90%");
       assert.equal(await app.locator("#after-score").innerText(), "93.75%");
       assert.equal(await app.locator("#regression-count").innerText(), "1 REGRESSED CHECK");
@@ -91,6 +127,7 @@ async function main() {
         await page.evaluate(() => scrollTo(0,0));
         await page.screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `evalarc-${width}.png`), fullPage:true});
         await app.locator("#regression").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `regression-${width}.png`)});
+        await app.locator("#repeat").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `repeat-${width}.png`)});
       }
       const appUrl = await app.locator("body").evaluate(() => location.href);
       await app.getByRole("link", {name:"Full comparison report", exact:false}).click();
@@ -103,8 +140,15 @@ async function main() {
       assert.match(await app.locator("details").last().innerText(), /retry-after-commit/);
       assert.match(await app.locator("details").last().innerText(), /temporarily_unavailable/);
       assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("repeat/faulty/index.html", url).href; }, appUrl);
+      await app.getByRole("heading", {name:"See every attempt."}).waitFor();
+      const attemptLink = app.locator('a[href="attempts/0001/index.html"]');
+      await attemptLink.click();
+      await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
+      assert.match(await app.locator("body").innerText(), /retry-after-commit/);
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, comparedCases:3, offlineReports:2, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, offlineReports:4, errors});
       await page.close();
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

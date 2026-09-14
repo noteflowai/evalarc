@@ -45,6 +45,46 @@ def verify_comparison() -> None:
         raise ValueError("Individual example differs from the current comparison evidence")
 
 
+def verify_repetitions() -> None:
+    from evalarc.records import read_evaluation
+    from evalarc.repetition import summarize_attempts
+
+    summaries = []
+    for directory, resolved, score in (
+        ("repetition", 3, 1.0),
+        ("repetition-faulty", 0, 0.9375),
+    ):
+        folder = ROOT / "examples" / directory
+        recorded = json.loads((folder / "repetition.json").read_text())
+        attempts = sorted((folder / "attempts").glob("*/evaluation.json"))
+        reports = [read_evaluation(path) for path in attempts]
+        computed = summarize_attempts(reports, recorded["requested_attempts"])
+        for field in ("created_at", "evalarc_version"):
+            computed.pop(field)
+        expected = {
+            key: value
+            for key, value in recorded.items()
+            if key not in ("created_at", "evalarc_version")
+        }
+        if computed != expected:
+            raise ValueError("Recorded repetition disagrees with its attempt evaluations")
+        if (
+            len(attempts) != 3
+            or not recorded["valid"]
+            or recorded["requested_attempts"] != 3
+            or recorded["resolved_attempts"] != resolved
+            or recorded["mean_score"] != score
+            or recorded["variable_checks"] != 0
+            or recorded["runtime"]["backend"] != "docker"
+            or recorded["task"]["id"] != "support-routing"
+        ):
+            raise ValueError("Repetition no longer supports the featured outcomes")
+        summaries.append(recorded)
+    for field in ("task", "grader_sha256", "cases_sha256", "runtime", "seeds"):
+        if summaries[0][field] != summaries[1][field]:
+            raise ValueError("Featured repetition controls use different evaluation conditions")
+
+
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -97,6 +137,7 @@ def build(destination: Path) -> dict:
         if highlighted["score"] != score or highlighted["evaluation"]["resolved"]:
             raise ValueError(f"Spotlight outcome changed: {spotlight}")
     verify_comparison()
+    verify_repetitions()
     destination.mkdir(parents=True)
     for path in (ROOT / "site").iterdir():
         if path.is_file():
@@ -127,6 +168,17 @@ def build(destination: Path) -> dict:
                 )
             else:
                 shutil.copyfile(source, target / filename)
+    for name, directory in (("reference", "repetition"), ("faulty", "repetition-faulty")):
+        source_root = ROOT / "examples" / directory
+        for source in sorted(source_root.rglob("*")):
+            if not source.is_file() or source.suffix not in (".html", ".json", ".jsonl"):
+                continue
+            target = destination / "repeat" / name / source.relative_to(source_root)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if source.suffix == ".html":
+                target.write_bytes(source.read_text().encode("ascii", errors="xmlcharrefreplace"))
+            else:
+                shutil.copyfile(source, target)
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()

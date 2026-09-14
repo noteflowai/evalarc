@@ -34,6 +34,13 @@ v0.4 新增 `evalarc repeat`：固定一份候选快照，在相同场景上重�
 保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度
 和受限进程诊断。详见[重复评测指南](docs/reliability.zh-CN.md)。
 
+[新增在线展示](https://glayguo-evalarc.static.hf.space/#repeat)保留了两种脚本策略各三次
+Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平均分为 93.75%，却 0/3 轮
+完全通过。可以查看每轮原始证据和逐项计数。这些观察中未出现检查结果波动，
+也不能据此估计模型在未见任务上的可靠性。
+
+[![EvalArc v0.4：三轮平均分 93.75%，但没有一轮完全通过](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
+
 现有流程包含环境预检查、单次评测 HTML 报告和逐项回归比较，即使总分上升也能指出
 退步的检查；输出保护会保留之前的运行证据。详见[使用流程](docs/workflow.zh-CN.md)。
 

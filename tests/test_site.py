@@ -48,3 +48,25 @@ def test_featured_comparison_is_recomputed_from_evidence(tmp_path, monkeypatch):
     path.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="disagrees with its input"):
         builder.verify_comparison()
+
+
+def test_featured_repetition_rejects_an_invented_resolution_rate(tmp_path, monkeypatch):
+    for name in ("repetition", "repetition-faulty"):
+        shutil.copytree(builder.ROOT / "examples" / name, tmp_path / "examples" / name)
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    path = tmp_path / "examples/repetition-faulty/repetition.json"
+    data = json.loads(path.read_text())
+    data["resolved_attempts"] = 3
+    data["assessed_resolution_rate"] = 1
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="disagrees with its attempt"):
+        builder.verify_repetitions()
+
+
+def test_featured_repetition_cannot_drop_an_attempt(tmp_path, monkeypatch):
+    for name in ("repetition", "repetition-faulty"):
+        shutil.copytree(builder.ROOT / "examples" / name, tmp_path / "examples" / name)
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    (tmp_path / "examples/repetition-faulty/attempts/0003/evaluation.json").unlink()
+    with pytest.raises(ValueError, match="disagrees with its attempt"):
+        builder.verify_repetitions()
