@@ -84,3 +84,11 @@ case is especially useful.
 
 Maintainer disclosure: this independent project and announcement were developed
 with AI assistance.
+
+### Verify a received report with EvalArc 0.7
+
+`evalarc verify path/to/report --json` checks saved evaluation, repetition and comparison evidence without executing a candidate or contacting Docker. It recomputes recorded aggregates, requires the exact repetition inventory, and fingerprints every checked JSON input. `--require-resolved` separately requires valid, fully resolved results.
+
+[Verification workflow](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md) · [Release 0.7.0](https://github.com/noteflowai/evalarc/releases/tag/v0.7.0)
+
+The exact release wheel was checked outside the source checkout with an empty PATH. This verifies internal record consistency, not a fresh grader run, suite-level gates/JUnit, or the report producer. The Casebook still contains the same historical scripted development controls; no new model result is claimed.

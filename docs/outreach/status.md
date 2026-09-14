@@ -6,14 +6,14 @@ interactive evidence lab, and maintainer announcements are now public.
 | Channel | Status |
 | --- | --- |
 | [GitHub source](https://github.com/noteflowai/evalarc) | Public; source and deployment CI passed |
-| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.6.0 research preview published; wheel, source archive and checksums verified by anonymous download |
+| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.7.0 research preview published; wheel, source archive and checksums verified by anonymous download |
 | [GitHub Pages](https://noteflowai.github.io/evalarc/) | Live; desktop and mobile checks passed |
-| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.6 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
+| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.7 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
 | [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) | Public dataset; all 32 files and every row read back anonymously; actual table checked on desktop and mobile |
-| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.6 and the Casebook; readback matched |
-| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.6 Space note verified |
-| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.6 and the Casebook; open, awaiting editorial review |
-| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.6 and the Casebook; open, awaiting editorial review |
+| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.7 verification and the Casebook; readback matched |
+| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.7 Space note verified |
+| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.7 and the Casebook; open, awaiting editorial review |
+| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.7 and the Casebook; open, awaiting editorial review |
 | [X maintainer launch](https://x.com/glay_oneai/status/2099338382518399269) | Overview and three project replies verified in the published conversation; the EvalArc reply describes the v0.3 comparison |
 
 The weekly README explicitly invites software submissions through issues.
@@ -190,3 +190,31 @@ submissions now describe v0.6 and the Casebook. Exact readbacks matched.
 The editorial issues remain open with no comments; no duplicate issues,
 reminder comments or new X posts were sent. The established X overview and
 three replies remain the launch thread for all three projects.
+
+## v0.7 publication · 2026-09-14
+
+[PR #6](https://github.com/noteflowai/evalarc/pull/6) added the offline
+`evalarc verify` workflow. Main commit
+`5363087d9b46d180d3068cf3d994b3c3eff571b6` passed all ten
+[CI jobs](https://github.com/noteflowai/evalarc/actions/runs/34811075628),
+including Python 3.11–3.13, all four Docker task/language audits, site tests,
+Pages and verified HF publication. The 229 tests include nineteen new
+verification cases. The exact wheel additionally passed the installed check
+outside the checkout with an empty PATH.
+
+The [0.7.0 research preview](https://github.com/noteflowai/evalarc/releases/tag/v0.7.0)
+is public. All three assets were downloaded anonymously and matched:
+
+| Asset | SHA-256 |
+| --- | --- |
+| Wheel | `91038a38ec7df0f70b240184826ce4918843a7090001015109840f21b9c1fe34` |
+| Source archive | `dd963aa7def7c4a57f6e926b52d17bf16e265c8c0f13e9342a6d626afcdcdcf3` |
+| SHA256SUMS | `ace1859a520d21472eac8edbd4e978d39513ba57d3fb865b70f64da4be54981a` |
+
+The existing weekly and HelloGitHub submissions, HF introduction and collection
+note were updated in place and exact readbacks matched. Both editorial
+submissions remain open with no comments. The HF Casebook retains the same
+historical controls; publishing the verifier does not create new model results.
+[Verification scope](../verification.md) explicitly distinguishes consistency,
+resolution, a grader rerun, and suite-level gate checks. No new X post or PyPI
+publication was made.
