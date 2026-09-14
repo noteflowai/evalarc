@@ -6,13 +6,14 @@ interactive evidence lab, and maintainer announcements are now public.
 | Channel | Status |
 | --- | --- |
 | [GitHub source](https://github.com/noteflowai/evalarc) | Public; source and deployment CI passed |
-| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.5.0 research preview published; wheel, source archive and checksums verified by anonymous download |
+| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.6.0 research preview published; wheel, source archive and checksums verified by anonymous download |
 | [GitHub Pages](https://noteflowai.github.io/evalarc/) | Live; desktop and mobile checks passed |
-| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.5 public; actual Hub iframe checked on desktop and mobile |
-| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.5; readback matched |
-| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Entry updated with the five-attempt v0.5 suite; readback matched |
-| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.5; open, awaiting editorial review |
-| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description and screenshot updated for v0.5; open, awaiting editorial review |
+| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.6 public; guarded deployment, anonymous file verification and actual desktop/mobile Hub iframe checks passed |
+| [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) | Public dataset; all 32 files and every row read back anonymously; actual table checked on desktop and mobile |
+| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.6 and the Casebook; readback matched |
+| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Now contains three project Spaces and two evidence datasets; Casebook entry and v0.6 Space note verified |
+| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.6 and the Casebook; open, awaiting editorial review |
+| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description updated for v0.6 and the Casebook; open, awaiting editorial review |
 | [X maintainer launch](https://x.com/glay_oneai/status/2099338382518399269) | Overview and three project replies verified in the published conversation; the EvalArc reply describes the v0.3 comparison |
 
 The weekly README explicitly invites software submissions through issues.
@@ -128,3 +129,64 @@ Space now includes the v0.5 showcase. No extra launch posts were sent.
 
 These are scripted development controls. No hosted CI importer, live model
 performance or reliability on unseen tasks was validated by this publication.
+
+## Casebook publication · 2026-09-14
+
+[PR #4](https://github.com/noteflowai/evalarc/pull/4) added a reproducible
+dataset export and guarded automatic publication. Its merge
+`f33a170500076386833e26224415bfa665da5d40` passed
+[main CI 34807756249](https://github.com/noteflowai/evalarc/actions/runs/34807756249).
+The initial public Hub revision was
+`1539990bde4b2c73d3a10d3c0c86c24b80687b0f`.
+
+The [Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) separates
+167 audit cases, six repeated attempts and three suite jobs into development
+configurations. Their row units differ and must not be added as independent
+trials. Every row retains an exact source-file pointer, hash and code revision.
+The 32-file export includes unchanged evidence, suite configuration and JUnit.
+
+All exported files were downloaded without credentials and verified. The
+public `datasets` reader matched every local row. HF's initial `ResponseNotReady`
+state cleared; its API then listed all three configurations without pending
+or failed entries, and the actual table displayed both support outcomes at
+1440 px and 390 px. The first four columns expose identity, mean score,
+gate acceptance and full resolution. The dataset was added once to the
+existing NoteFlow AI collection and read back.
+
+## v0.6 publication · 2026-09-14
+
+The external functional update
+`204df87` adds JavaScript starters, independent references and audit controls.
+It was preserved and merged with the completed Casebook work in
+[PR #5](https://github.com/noteflowai/evalarc/pull/5), without text conflicts.
+The combined tree passed 210 Python tests, lint, formatting and desktop/mobile
+site checks. A fresh mixed-language Docker suite resolved all three jobs.
+All archived JavaScript audit evaluations were independently validated.
+
+The merge `eed29f4f596cde74b797a2fb1e354a87e5adf2aa` passed all ten jobs in
+[main CI 34808296273](https://github.com/noteflowai/evalarc/actions/runs/34808296273),
+including the four task/language Docker audits, Pages and HF publication.
+The [v0.6.0 research preview](https://github.com/noteflowai/evalarc/releases/tag/v0.6.0)
+uses that source.
+
+The final wheel was installed in a fresh environment outside the checkout.
+Readiness passed; the Docker suite retained 34 case executions, three fully
+resolved jobs and JUnit with three tests, zero failures and zero errors.
+All JavaScript assets and the source archive matched the release tree.
+Wheel, source archive and checksum file were downloaded anonymously and
+matched the built artifacts. The public Pages site passed desktop/mobile checks.
+The actual Hub iframe also passed both widths on retry. The first navigation
+timed out waiting for the outer page to become network-idle; the successful
+retry reported no application errors.
+
+The v0.6 dataset revision
+`f98f4fb011f1b9e3e9b38be23bb58f3e2ff36046` identified the same merge commit;
+all 32 files and all rows were verified again against its source artifact.
+The Casebook retains the earlier recordings and does not relabel them as
+v0.6 language comparisons.
+
+The existing HF introduction, collection Space note and both Chinese
+submissions now describe v0.6 and the Casebook. Exact readbacks matched.
+The editorial issues remain open with no comments; no duplicate issues,
+reminder comments or new X posts were sent. The established X overview and
+three replies remain the launch thread for all three projects.
