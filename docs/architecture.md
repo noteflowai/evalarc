@@ -1,7 +1,7 @@
 # Architecture and domain expansion
 
 EvalArc's direction is open environments and auditable evaluations for
-software agents. This document distinguishes the working v0.5 implementation
+software agents. This document distinguishes the working v0.6 implementation
 from interfaces proposed for subsequent releases.
 
 ## Current implementation
@@ -92,10 +92,15 @@ when an interactive viewer or JavaScript SDK is
 implemented. Introduce a Rust worker only after measured execution or
 distribution requirements justify a separate component.
 
-The `main.py` restriction now applies only to the default command. A separate
-JavaScript support policy validates the protocol with Node. This release has
-no TypeScript SDK or tested Rust submission/worker. See
+The `main.py` restriction applies only to the default command. Both task packs
+now have Python and JavaScript starters, references, and declared fault audits.
+Templates live outside grading source files. Node's durable reference uses
+JSON snapshots, independently of the Python SQLite reference; it preserves
+numeric source text and type-sensitive equality through process restarts.
+The runtime still executes the manifest command without a language-specific
+worker or bridge. See the [multilanguage guide](languages.md) and
 [candidate commands](candidate-commands.md) for image and executable requirements.
+This release has no TypeScript SDK or tested Rust submission/worker.
 
 ## Metrics
 

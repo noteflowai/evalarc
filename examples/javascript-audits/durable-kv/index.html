@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+ content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>EvalArc · Grader audit</title>
+<style>
+
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
+body{max-width:1080px;margin:60px auto;padding:0 24px}
+.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
+h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
+p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
+.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
+.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
+code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
+footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.metadata{overflow-wrap:anywhere;font-size:13px}
+pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
+summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
+.passed{color:#96e8b9}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
+.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
+@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+
+</style>
+<div class="eyebrow">EVALARC / DEVELOPMENT AUDIT</div>
+<h1>Test the grader.<br>Then trust the signal.</h1>
+<p>Behavioral controls for task-specific agent evaluations. Correct and faulty
+submissions are evaluated against the same externally enforced contract.</p>
+<div class="cards"><div class="card"><div class="number">8/8</div><div class="label">declared faults detected</div></div><div class="card"><div class="number">1.000</div><div class="label">reference correctness</div></div><div class="card"><div class="number">docker</div><div class="label">execution backend</div></div></div><h2>Does the grader detect plausible defects?</h2><div class="scroll"><table><thead><tr><th>Negative control</th><th>Target</th><th>Candidate score</th><th>Result</th><th>Evidence</th></tr></thead><tbody><tr><td><code>ack-without-work</code></td><td>basic</td><td>0.000</td><td>Detected</td><td>json-types-and-overwrite, read-write-delete, seeded-state-machine</td></tr><tr><td><code>memory-only</code></td><td>persistence</td><td>0.783</td><td>Detected</td><td>restart-preserves-acknowledged-write, restart-preserves-cas, restart-preserves-transaction</td></tr><tr><td><code>partial-batch</code></td><td>transactions</td><td>0.900</td><td>Detected</td><td>rollback-batch</td></tr><tr><td><code>cas-always-wins</code></td><td>compare_swap</td><td>0.850</td><td>Detected</td><td>cas-match-and-mismatch, cas-type-sensitivity</td></tr><tr><td><code>boolean-equals-one</code></td><td>compare_swap</td><td>0.925</td><td>Detected</td><td>cas-type-sensitivity</td></tr><tr><td><code>delete-noop</code></td><td>basic</td><td>0.650</td><td>Detected</td><td>read-write-delete, seeded-state-machine</td></tr><tr><td><code>accept-nonstring-keys</code></td><td>validation</td><td>0.925</td><td>Detected</td><td>reject-and-continue</td></tr><tr><td><code>commit-on-exit</code></td><td>crash_recovery</td><td>0.900</td><td>Detected</td><td>sigkill-after-acknowledgement, sigkill-after-atomic-batch, sigkill-after-delete</td></tr></tbody></table></div><h2>Positive control</h2><div class="dimension"><span>basic</span><meter min="0" max="1" value="1.0">1.00</meter><span>3/3</span></div><div class="dimension"><span>validation</span><meter min="0" max="1" value="1.0">1.00</meter><span>2/2</span></div><div class="dimension"><span>transactions</span><meter min="0" max="1" value="1.0">1.00</meter><span>2/2</span></div><div class="dimension"><span>compare_swap</span><meter min="0" max="1" value="1.0">1.00</meter><span>2/2</span></div><div class="dimension"><span>persistence</span><meter min="0" max="1" value="1.0">1.00</meter><span>3/3</span></div><div class="dimension"><span>crash_recovery</span><meter min="0" max="1" value="1.0">1.00</meter><span>3/3</span></div><h2>Reproduction record</h2><p class="metadata">Task: durable-kv v0.1.0<br>Seeds: [17]<br>Grader SHA-256: 2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039<br>Cases SHA-256: 842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a<br>Image ID: sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5<br>Created: 2026-09-14T04:53:49.832260+00:00</p><p><a href="audit.json">Complete JSON evidence for all controls</a></p><footer><strong>Scope:</strong> This is a scripted grader audit, not an AI leaderboard. Public seeds are not held-out evaluation data. Detection rates apply only to the listed fault models. No human time horizon, model quality, or RL improvement is inferred.</footer></html>

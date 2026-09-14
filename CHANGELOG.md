@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.6.0 · 2026-09-14 · Research preview
+
+- `init --language python|javascript` supplies starters and references for both
+  tasks. JavaScript workspaces include a portable command manifest, the complete
+  task contract, and runtime guidance; Python remains the default.
+- An independent Node.js durable service preserves numeric source text, integer
+  precision, float/integer distinctions, signed floating zero, nested values,
+  and unordered object equality. A complete snapshot precedes write acknowledgement.
+- `audit --language javascript` exercises the same eight coding and seven
+  simulated-ticket fault models. Local audits resolve Node from the host PATH;
+  Docker image selection remains explicit.
+- Workspace initialization stages complete files before publishing and removes
+  partial output after failures. Existing files and directories remain protected.
+- Protocol tests cover values beyond the public task cases, SIGKILL recovery,
+  invalid batches, special keys, failed persistence, and corrupt snapshots.
+- Docker CI audits now cover both languages and both tasks. The Python package
+  includes all JavaScript templates without adding a Python runtime dependency.
+
+Task contracts, grading/runtime source files, and evidence schemas are unchanged.
+Comparisons still require matching recorded commands, runtime, grader, and cases;
+different-language executions do not become a matched comparison automatically.
+No TypeScript SDK, Rust worker, or model-provider adapter is introduced.
+
 ## 0.5.0 · 2026-09-14 · Research preview
 
 - `evalarc suite` executes versioned TOML plans across multiple candidates and

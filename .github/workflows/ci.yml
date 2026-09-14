@@ -31,18 +31,24 @@ jobs:
     strategy:
       matrix:
         task: ["durable-kv", "support-routing"]
+        language: ["python", "javascript"]
+        include:
+          - language: python
+            image: python:3.12-slim
+          - language: javascript
+            image: node:22-slim
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: python -m pip install .
-      - run: docker pull python:3.12-slim
-      - run: evalarc audit --task ${{ matrix.task }} --seeds 17 --output runs/docker-audit
+      - run: docker pull ${{ matrix.image }}
+      - run: evalarc audit --task ${{ matrix.task }} --language ${{ matrix.language }} --image ${{ matrix.image }} --seeds 17 --output runs/docker-audit
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: grader-audit-${{ matrix.task }}
+          name: grader-audit-${{ matrix.task }}-${{ matrix.language }}
           path: runs/docker-audit/
   site:
     runs-on: ubuntu-latest

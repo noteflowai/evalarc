@@ -1,7 +1,14 @@
 I'm publishing EvalArc as its maintainer: an open toolkit for auditing the
 graders behind AI-agent evaluations.
 
-**Updated for v0.5: same score, different acceptance gate.**
+**Updated for v0.6: Python and JavaScript, with explicit acceptance gates.**
+
+Generate starters or independent scripted references in either language, and
+run the same task contracts through the existing host graders. The Node Docker
+audits detect all 15 declared faults; the recorded mixed-language suite preserves
+three resolved jobs and 34 case executions. Runtime images are explicit, and
+this is conformance evidence rather than a language or model ranking.
+[Language guide](https://github.com/noteflowai/evalarc/blob/main/docs/languages.md).
 
 **New data companion:** the
 [EvalArc Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)

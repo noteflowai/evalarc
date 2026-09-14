@@ -1,0 +1,854 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>EvalArc · Evaluation</title><style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
+body{max-width:1080px;margin:60px auto;padding:0 24px}
+.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
+h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
+p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
+.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
+.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
+code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
+footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.metadata{overflow-wrap:anywhere;font-size:13px}
+pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
+summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
+.passed{color:#96e8b9}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
+.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
+@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+</style></head><body><div class="eyebrow">EVALARC / EVALUATION</div><h1>support-routing</h1><p>business-tools · task v0.1.0 · RESOLVED</p><div class="cards"><div class="card"><div class="number">1</div><div class="label">weighted score</div></div><div class="card"><div class="number">4/4</div><div class="label">cases passed</div></div><div class="card"><div class="number">docker</div><div class="label">execution backend</div></div></div><h2>Dimension results</h2><div class="scroll"><table><thead><tr><th>Dimension</th><th>Score</th><th>Passed / assessed</th><th>Weight</th></tr></thead><tbody><tr><td>routing</td><td>1</td><td>4/4</td><td>30%</td></tr><tr><td>notes</td><td>1</td><td>4/4</td><td>25%</td></tr><tr><td>closure</td><td>1</td><td>4/4</td><td>20%</td></tr><tr><td>scope</td><td>1</td><td>4/4</td><td>15%</td></tr><tr><td>protocol</td><td>1</td><td>4/4</td><td>10%</td></tr></tbody></table></div><h2>Case results</h2><div class="scroll"><table><thead><tr><th>Case</th><th>Seed</th><th>Status</th><th>Failed checks</th><th>Host seconds</th></tr></thead><tbody><tr><td><a href="#case-0">route-open-ticket</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.480</td></tr><tr><td><a href="#case-1">close-resolved-ticket</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.451</td></tr><tr><td><a href="#case-2">retry-before-commit</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.473</td></tr><tr><td><a href="#case-3">retry-after-commit</a></td><td>17</td><td class="passed">passed</td><td>—</td><td>0.463</td></tr></tbody></table></div><h2>Case evidence</h2><details id="case-0"><summary>route-open-ticket · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;route-open-ticket&quot;,
+  &quot;checks&quot;: {
+    &quot;routing&quot;: true,
+    &quot;notes&quot;: true,
+    &quot;closure&quot;: true,
+    &quot;scope&quot;: true,
+    &quot;protocol&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;error&quot;: null,
+  &quot;duration_seconds&quot;: 0.480493,
+  &quot;transcript_sha256&quot;: &quot;7b5b4973e934a60c55b95bda6eedf79fcff62764fbc1b81723c5126608caf4bd&quot;,
+  &quot;initial_state&quot;: {
+    &quot;T-85a0bcc1&quot;: {
+      &quot;category&quot;: &quot;technical&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;
+      ]
+    },
+    &quot;U-6a06e9ab&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;final_state&quot;: {
+    &quot;T-85a0bcc1&quot;: {
+      &quot;category&quot;: &quot;technical&quot;,
+      &quot;queue&quot;: &quot;queue-0-2&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;,
+        &quot;Reviewed request T-85a0bcc1.&quot;
+      ]
+    },
+    &quot;U-6a06e9ab&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;trace&quot;: [
+    {
+      &quot;step&quot;: 0,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;get_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-85a0bcc1&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true,
+        &quot;ticket&quot;: {
+          &quot;category&quot;: &quot;technical&quot;,
+          &quot;queue&quot;: &quot;inbox&quot;,
+          &quot;resolved&quot;: false,
+          &quot;status&quot;: &quot;open&quot;,
+          &quot;notes&quot;: [
+            &quot;Customer contacted support.&quot;
+          ]
+        }
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 1,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;assign_queue&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-85a0bcc1&quot;,
+          &quot;queue&quot;: &quot;queue-0-2&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-85a0bcc1&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;inbox&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-0-2&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 2,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;add_note&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-85a0bcc1&quot;,
+          &quot;body&quot;: &quot;Reviewed request T-85a0bcc1.&quot;,
+          &quot;request_id&quot;: &quot;review&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-85a0bcc1&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-0-2&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-0-2&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-85a0bcc1.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 3,
+      &quot;type&quot;: &quot;finish&quot;,
+      &quot;action&quot;: {
+        &quot;finish&quot;: true
+      }
+    }
+  ],
+  &quot;tool_calls&quot;: 3,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 279,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-1"><summary>close-resolved-ticket · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;close-resolved-ticket&quot;,
+  &quot;checks&quot;: {
+    &quot;routing&quot;: true,
+    &quot;notes&quot;: true,
+    &quot;closure&quot;: true,
+    &quot;scope&quot;: true,
+    &quot;protocol&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;error&quot;: null,
+  &quot;duration_seconds&quot;: 0.450855,
+  &quot;transcript_sha256&quot;: &quot;a260768c11b589ce3f58658cac6aae8a01d36e388a47fc47c7995f8d5c36708e&quot;,
+  &quot;initial_state&quot;: {
+    &quot;T-c41f9dfd&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: true,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;
+      ]
+    },
+    &quot;U-b48438b5&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;final_state&quot;: {
+    &quot;T-c41f9dfd&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;queue-1-0&quot;,
+      &quot;resolved&quot;: true,
+      &quot;status&quot;: &quot;closed&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;,
+        &quot;Reviewed request T-c41f9dfd.&quot;
+      ]
+    },
+    &quot;U-b48438b5&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;trace&quot;: [
+    {
+      &quot;step&quot;: 0,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;get_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-c41f9dfd&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true,
+        &quot;ticket&quot;: {
+          &quot;category&quot;: &quot;billing&quot;,
+          &quot;queue&quot;: &quot;inbox&quot;,
+          &quot;resolved&quot;: true,
+          &quot;status&quot;: &quot;open&quot;,
+          &quot;notes&quot;: [
+            &quot;Customer contacted support.&quot;
+          ]
+        }
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 1,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;assign_queue&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-c41f9dfd&quot;,
+          &quot;queue&quot;: &quot;queue-1-0&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-c41f9dfd&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;inbox&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-1-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 2,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;add_note&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-c41f9dfd&quot;,
+          &quot;body&quot;: &quot;Reviewed request T-c41f9dfd.&quot;,
+          &quot;request_id&quot;: &quot;review&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-c41f9dfd&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-1-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-1-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-c41f9dfd.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 3,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;close_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-c41f9dfd&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-c41f9dfd&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-1-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-c41f9dfd.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-1-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;closed&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-c41f9dfd.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 4,
+      &quot;type&quot;: &quot;finish&quot;,
+      &quot;action&quot;: {
+        &quot;finish&quot;: true
+      }
+    }
+  ],
+  &quot;tool_calls&quot;: 4,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 342,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-2"><summary>retry-before-commit · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;retry-before-commit&quot;,
+  &quot;checks&quot;: {
+    &quot;routing&quot;: true,
+    &quot;notes&quot;: true,
+    &quot;closure&quot;: true,
+    &quot;scope&quot;: true,
+    &quot;protocol&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;error&quot;: null,
+  &quot;duration_seconds&quot;: 0.473071,
+  &quot;transcript_sha256&quot;: &quot;b1d1d91dc01fc4bfb3243aa3739e953a40aa3920caf63a4b2ab73c87ecabda66&quot;,
+  &quot;initial_state&quot;: {
+    &quot;T-3fb81d27&quot;: {
+      &quot;category&quot;: &quot;technical&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;
+      ]
+    },
+    &quot;U-62590992&quot;: {
+      &quot;category&quot;: &quot;account&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;final_state&quot;: {
+    &quot;T-3fb81d27&quot;: {
+      &quot;category&quot;: &quot;technical&quot;,
+      &quot;queue&quot;: &quot;queue-2-1&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;,
+        &quot;Reviewed request T-3fb81d27.&quot;
+      ]
+    },
+    &quot;U-62590992&quot;: {
+      &quot;category&quot;: &quot;account&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;trace&quot;: [
+    {
+      &quot;step&quot;: 0,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;get_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-3fb81d27&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true,
+        &quot;ticket&quot;: {
+          &quot;category&quot;: &quot;technical&quot;,
+          &quot;queue&quot;: &quot;inbox&quot;,
+          &quot;resolved&quot;: false,
+          &quot;status&quot;: &quot;open&quot;,
+          &quot;notes&quot;: [
+            &quot;Customer contacted support.&quot;
+          ]
+        }
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 1,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;assign_queue&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-3fb81d27&quot;,
+          &quot;queue&quot;: &quot;queue-2-1&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: false,
+        &quot;error&quot;: {
+          &quot;code&quot;: &quot;temporarily_unavailable&quot;,
+          &quot;retryable&quot;: true
+        }
+      },
+      &quot;status&quot;: &quot;tool_error&quot;,
+      &quot;error_source&quot;: &quot;injected&quot;,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 2,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;assign_queue&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-3fb81d27&quot;,
+          &quot;queue&quot;: &quot;queue-2-1&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-3fb81d27&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;inbox&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-2-1&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 3,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;add_note&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-3fb81d27&quot;,
+          &quot;body&quot;: &quot;Reviewed request T-3fb81d27.&quot;,
+          &quot;request_id&quot;: &quot;review&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-3fb81d27&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-2-1&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;technical&quot;,
+            &quot;queue&quot;: &quot;queue-2-1&quot;,
+            &quot;resolved&quot;: false,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-3fb81d27.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 4,
+      &quot;type&quot;: &quot;finish&quot;,
+      &quot;action&quot;: {
+        &quot;finish&quot;: true
+      }
+    }
+  ],
+  &quot;tool_calls&quot;: 4,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 362,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><details id="case-3"><summary>retry-after-commit · seed 17 · passed</summary><pre>{
+  &quot;seed&quot;: 17,
+  &quot;case_id&quot;: &quot;retry-after-commit&quot;,
+  &quot;checks&quot;: {
+    &quot;routing&quot;: true,
+    &quot;notes&quot;: true,
+    &quot;closure&quot;: true,
+    &quot;scope&quot;: true,
+    &quot;protocol&quot;: true
+  },
+  &quot;passed&quot;: true,
+  &quot;status&quot;: &quot;passed&quot;,
+  &quot;error&quot;: null,
+  &quot;duration_seconds&quot;: 0.463068,
+  &quot;transcript_sha256&quot;: &quot;c97b016921c8d8fdcdeffd1ebf1f438d5a29be06732c31c86f99fd087bc0b58f&quot;,
+  &quot;initial_state&quot;: {
+    &quot;T-cd68615c&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: true,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;
+      ]
+    },
+    &quot;U-51436d1f&quot;: {
+      &quot;category&quot;: &quot;account&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;final_state&quot;: {
+    &quot;T-cd68615c&quot;: {
+      &quot;category&quot;: &quot;billing&quot;,
+      &quot;queue&quot;: &quot;queue-3-0&quot;,
+      &quot;resolved&quot;: true,
+      &quot;status&quot;: &quot;closed&quot;,
+      &quot;notes&quot;: [
+        &quot;Customer contacted support.&quot;,
+        &quot;Reviewed request T-cd68615c.&quot;
+      ]
+    },
+    &quot;U-51436d1f&quot;: {
+      &quot;category&quot;: &quot;account&quot;,
+      &quot;queue&quot;: &quot;inbox&quot;,
+      &quot;resolved&quot;: false,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;notes&quot;: [
+        &quot;Unrelated request; preserve this ticket.&quot;
+      ]
+    }
+  },
+  &quot;trace&quot;: [
+    {
+      &quot;step&quot;: 0,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;get_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-cd68615c&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true,
+        &quot;ticket&quot;: {
+          &quot;category&quot;: &quot;billing&quot;,
+          &quot;queue&quot;: &quot;inbox&quot;,
+          &quot;resolved&quot;: true,
+          &quot;status&quot;: &quot;open&quot;,
+          &quot;notes&quot;: [
+            &quot;Customer contacted support.&quot;
+          ]
+        }
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 1,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;assign_queue&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-cd68615c&quot;,
+          &quot;queue&quot;: &quot;queue-3-0&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-cd68615c&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;inbox&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-3-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 2,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;add_note&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-cd68615c&quot;,
+          &quot;body&quot;: &quot;Reviewed request T-cd68615c.&quot;,
+          &quot;request_id&quot;: &quot;review&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: false,
+        &quot;error&quot;: {
+          &quot;code&quot;: &quot;temporarily_unavailable&quot;,
+          &quot;retryable&quot;: true
+        }
+      },
+      &quot;status&quot;: &quot;tool_error&quot;,
+      &quot;error_source&quot;: &quot;injected&quot;,
+      &quot;changes&quot;: {
+        &quot;T-cd68615c&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-3-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-3-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-cd68615c.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 3,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;add_note&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-cd68615c&quot;,
+          &quot;body&quot;: &quot;Reviewed request T-cd68615c.&quot;,
+          &quot;request_id&quot;: &quot;review&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true,
+        &quot;replayed&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {}
+    },
+    {
+      &quot;step&quot;: 4,
+      &quot;type&quot;: &quot;tool_call&quot;,
+      &quot;action&quot;: {
+        &quot;tool&quot;: &quot;close_ticket&quot;,
+        &quot;arguments&quot;: {
+          &quot;ticket_id&quot;: &quot;T-cd68615c&quot;
+        }
+      },
+      &quot;result&quot;: {
+        &quot;ok&quot;: true
+      },
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;error_source&quot;: null,
+      &quot;changes&quot;: {
+        &quot;T-cd68615c&quot;: {
+          &quot;before&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-3-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;open&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-cd68615c.&quot;
+            ]
+          },
+          &quot;after&quot;: {
+            &quot;category&quot;: &quot;billing&quot;,
+            &quot;queue&quot;: &quot;queue-3-0&quot;,
+            &quot;resolved&quot;: true,
+            &quot;status&quot;: &quot;closed&quot;,
+            &quot;notes&quot;: [
+              &quot;Customer contacted support.&quot;,
+              &quot;Reviewed request T-cd68615c.&quot;
+            ]
+          }
+        }
+      }
+    },
+    {
+      &quot;step&quot;: 5,
+      &quot;type&quot;: &quot;finish&quot;,
+      &quot;action&quot;: {
+        &quot;finish&quot;: true
+      }
+    }
+  ],
+  &quot;tool_calls&quot;: 5,
+  &quot;processes&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;output_bytes&quot;: 461,
+      &quot;stderr_tail&quot;: &quot;&quot;,
+      &quot;stderr_tail_limit_bytes&quot;: 2048
+    }
+  ]
+}</pre></details><h2>Reproduction record</h2><p class="metadata">Candidate SHA-256: 2ffefac03336d7126393ce0a8311a1990eed4c69d4956d66351f663a0188b143<br>Grader SHA-256: 887aea97efec396118521f720f6d8753be9ae964ab92eaa655d6575185326593<br>Cases SHA-256: b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df<br>Created: 2026-09-14T04:55:44.411869+00:00<br>Seeds: [17]<br>Runtime: {&quot;backend&quot;: &quot;docker&quot;, &quot;image&quot;: &quot;node:22-slim&quot;, &quot;image_id&quot;: &quot;sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5&quot;, &quot;command&quot;: [&quot;node&quot;, &quot;main.js&quot;], &quot;response_timeout_seconds&quot;: 10.0, &quot;case_timeout_seconds&quot;: 60.0, &quot;session_output_limit_bytes&quot;: 1048576, &quot;python&quot;: &quot;3.12.3&quot;, &quot;platform&quot;: &quot;Linux-6.17.0-1020-aws-x86_64-with-glibc2.39&quot;}</p><p><a href="evaluation.json">Complete JSON evidence</a></p><footer>Observed task outcomes only. Full resolution requires every check to pass. Host durations include execution overhead and are not agent completion-time baselines. Unknown model cost and token usage remain null.</footer></body></html>

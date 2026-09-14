@@ -1,5 +1,24 @@
 # Migration notes
 
+## EvalArc v0.5 → v0.6
+
+`init` and `audit` accept `--language python|javascript`; Python remains the
+default. Default Python workspace bytes and audit source controls are unchanged.
+JavaScript templates need Node.js 22+. Choose `--image node:22-slim` explicitly
+for Docker; image selection does not follow the language flag.
+
+JavaScript workspaces contain `main.js`, a command manifest, the task contract,
+and runtime notes. `evaluate`, `repeat`, and `suite` execute that manifest with
+their existing options. Local JavaScript audits resolve Node from the host PATH
+and record the absolute executable path. See the [language guide](languages.md).
+
+Initialization now stages all files before publishing the workspace. Existing
+destinations are still refused; a write failure removes partial output.
+
+No evidence schema, task contract, task case, or grading/runtime source changes.
+Existing matching v0.4/v0.5 records remain comparable. Different-language or
+different-image runs still fail the matched-command/runtime requirements.
+
 ## EvalArc v0.4 → v0.5
 
 `evalarc suite CONFIG.toml` adds declarative, sequential multi-job execution.

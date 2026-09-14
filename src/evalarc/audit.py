@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import shutil
 import tempfile
-from importlib.resources import files
+from dataclasses import replace
 from pathlib import Path
 
 from evalarc.evaluate import evaluate
 from evalarc.events import EventCallback
 from evalarc.runner import Runtime
-from evalarc.tasks import get_task
+from evalarc.templates import asset as asset
+from evalarc.templates import candidate_template
 
 MUTANTS = {
     "ack-without-work": ("ACK_ONLY = False", "ACK_ONLY = True", "basic"),
@@ -35,10 +37,6 @@ SUPPORT_MUTANTS = {
 CONTROL_PACKS = {"durable-kv": MUTANTS, "support-routing": SUPPORT_MUTANTS}
 
 
-def asset(name: str) -> str:
-    return files("evalarc").joinpath("assets", name).read_text()
-
-
 def write_candidate(path: Path, source: str) -> Path:
     path.mkdir(parents=True)
     (path / "main.py").write_text(source)
@@ -57,10 +55,23 @@ def audit(
     task_id: str = "durable-kv",
     *,
     on_event: EventCallback | None = None,
+    language: str = "python",
 ) -> dict:
-    task = get_task(task_id)
-    source = asset(task.reference_asset)
+    template = candidate_template(task_id, language, reference=True)
+    if language == "javascript" and runtime.backend == "local":
+        # Local candidates receive a minimal PATH. Resolve our trusted control's
+        # runtime here so installations managed by setup-node/nvm also work.
+        node = shutil.which("node")
+        if node is None:
+            raise ValueError("JavaScript audit requires Node.js 22 or newer on PATH")
+        template = replace(template, command=(str(Path(node).resolve()), *template.command[1:]))
+    source = template.source
     controls = CONTROL_PACKS[task_id]
+
+    def candidate(path: Path, content: str) -> Path:
+        path.mkdir(parents=True)
+        template.write(path, source=content)
+        return path
 
     def observer(control: str) -> EventCallback | None:
         if on_event is None:
@@ -71,15 +82,18 @@ def audit(
     with tempfile.TemporaryDirectory(prefix="evalarc-audit-") as directory:
         root = Path(directory)
         reference = evaluate(
-            write_candidate(root / "reference", source),
+            candidate(root / "reference", source),
             runtime,
             seeds,
             task_id,
             on_event=observer("reference"),
         )
         for name, (old, new, target) in controls.items():
-            candidate = write_candidate(root / name, mutate(source, old, new))
-            result = evaluate(candidate, runtime, seeds, task_id, on_event=observer(name))
+            if language == "javascript":
+                old = old.replace("True", "true").replace("False", "false")
+                new = new.replace("True", "true").replace("False", "false")
+            workspace = candidate(root / name, mutate(source, old, new))
+            result = evaluate(workspace, runtime, seeds, task_id, on_event=observer(name))
             failures = [c["case_id"] for c in result["cases"] if c["checks"].get(target) is False]
             rows.append(
                 {

@@ -1,0 +1,223 @@
+{
+  "schema_version": "evalarc.suite.v1",
+  "evalarc_version": "0.6.0",
+  "created_at": "2026-09-14T04:55:44.416536+00:00",
+  "name": "Python and JavaScript reference conformance",
+  "manifest_sha256": "ae478f5b926dab4eee42bb1b4eb0c3a87446da0d09f5b27f8ebd273199802478",
+  "valid": true,
+  "accepted": true,
+  "status": "passed",
+  "total_jobs": 3,
+  "accepted_jobs": 3,
+  "invalid_jobs": 0,
+  "fully_resolved_jobs": 3,
+  "duration_seconds": 27.208387,
+  "jobs": [
+    {
+      "id": "python-coding",
+      "task": {
+        "id": "durable-kv",
+        "version": "0.1.0",
+        "domain": "coding",
+        "split": "public-development"
+      },
+      "candidate_sha256": "378209f3f88e8e610eb07203e42dea1890d14e96408ed2e0593468e8f88ec0fe",
+      "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+      "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+      "runtime": {
+        "backend": "docker",
+        "image": "python:3.12-slim",
+        "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "command": [
+          "{python}",
+          "-I",
+          "-B",
+          "main.py",
+          "{state}/store.db"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      },
+      "decision": {
+        "accepted": true,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          }
+        ],
+        "reasons": []
+      },
+      "status": "passed",
+      "fully_resolved": true,
+      "observed": {
+        "requested_attempts": 1,
+        "completed_attempts": 1,
+        "assessed_attempts": 1,
+        "invalid_attempts": 0,
+        "resolved_attempts": 1,
+        "mean_score": 1.0,
+        "assessed_resolution_rate": 1.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 13.759954
+    },
+    {
+      "id": "javascript-coding",
+      "task": {
+        "id": "durable-kv",
+        "version": "0.1.0",
+        "domain": "coding",
+        "split": "public-development"
+      },
+      "candidate_sha256": "ba49b33370353228d229b1d0738500bdf12f818366051622570e896175bca8b7",
+      "grader_sha256": "2283f5c82c24ac536c4467f5833333fc7098adb46839238fdc56eca017ef2039",
+      "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
+      "runtime": {
+        "backend": "docker",
+        "image": "node:22-slim",
+        "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+        "command": [
+          "node",
+          "main.js",
+          "{state}/store.json"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      },
+      "decision": {
+        "accepted": true,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          }
+        ],
+        "reasons": []
+      },
+      "status": "passed",
+      "fully_resolved": true,
+      "observed": {
+        "requested_attempts": 1,
+        "completed_attempts": 1,
+        "assessed_attempts": 1,
+        "invalid_attempts": 0,
+        "resolved_attempts": 1,
+        "mean_score": 1.0,
+        "assessed_resolution_rate": 1.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 11.272241
+    },
+    {
+      "id": "javascript-support",
+      "task": {
+        "id": "support-routing",
+        "version": "0.1.0",
+        "domain": "business-tools",
+        "split": "public-development"
+      },
+      "candidate_sha256": "2ffefac03336d7126393ce0a8311a1990eed4c69d4956d66351f663a0188b143",
+      "grader_sha256": "887aea97efec396118521f720f6d8753be9ae964ab92eaa655d6575185326593",
+      "cases_sha256": "b7cd8663c69da9e1715d5c8e1d707514863dcc333fefc57acc3315053ebc85df",
+      "runtime": {
+        "backend": "docker",
+        "image": "node:22-slim",
+        "image_id": "sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+        "command": [
+          "node",
+          "main.js"
+        ],
+        "response_timeout_seconds": 10.0,
+        "case_timeout_seconds": 60.0,
+        "session_output_limit_bytes": 1048576,
+        "python": "3.12.3",
+        "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39"
+      },
+      "seeds": [
+        17
+      ],
+      "gate": {
+        "min_mean_score": 1.0,
+        "min_resolution_rate": 1.0,
+        "required_dimensions": []
+      },
+      "decision": {
+        "accepted": true,
+        "valid": true,
+        "checks": [
+          {
+            "name": "mean_score",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          },
+          {
+            "name": "resolution_rate",
+            "minimum": 1.0,
+            "observed": 1.0,
+            "passed": true
+          }
+        ],
+        "reasons": []
+      },
+      "status": "passed",
+      "fully_resolved": true,
+      "observed": {
+        "requested_attempts": 1,
+        "completed_attempts": 1,
+        "assessed_attempts": 1,
+        "invalid_attempts": 0,
+        "resolved_attempts": 1,
+        "mean_score": 1.0,
+        "assessed_resolution_rate": 1.0,
+        "variable_cases": 0,
+        "variable_checks": 0
+      },
+      "duration_seconds": 1.878601
+    }
+  ],
+  "interpretation": "Acceptance follows each job's declared gate. No score is averaged across jobs or domains. Gate acceptance does not imply full task resolution. Repeated observations use fixed public cases and are descriptive only."
+}

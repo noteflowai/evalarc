@@ -30,13 +30,20 @@ committed Docker audits without a model API or installation.
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.5 includes two working task packs**, a shared evidence format, and
+**v0.6 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |
 | --- | --- | --- | ---: |
 | `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
 | `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
+
+v0.6 adds **Python and JavaScript workspace templates for both tasks**.
+Use `init --language javascript` for a starter or `--reference` for a scripted
+control, and `audit --language javascript` to check the same 15 fault models
+with independent Node.js implementations. JavaScript requires Node.js 22+;
+Docker runs explicitly select `--image node:22-slim`. See the
+[multilanguage guide](docs/languages.md).
 
 v0.5 adds `evalarc suite`: declare tasks, candidates, repeats, budgets, and
 acceptance gates in TOML. Preview the plan, execute all jobs, and inspect HTML,
