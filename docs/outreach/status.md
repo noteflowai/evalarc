@@ -6,13 +6,13 @@ interactive evidence lab, and maintainer announcements are now public.
 | Channel | Status |
 | --- | --- |
 | [GitHub source](https://github.com/noteflowai/evalarc) | Public; source and deployment CI passed |
-| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.4.0 research preview published; wheel, source archive and checksums verified by anonymous download |
+| [GitHub releases](https://github.com/noteflowai/evalarc/releases) | v0.5.0 research preview published; wheel, source archive and checksums verified by anonymous download |
 | [GitHub Pages](https://noteflowai.github.io/evalarc/) | Live; desktop and mobile checks passed |
-| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.4 public; actual Hub iframe checked on desktop and mobile |
-| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.4; readback matched |
-| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Entry updated with the six-attempt v0.4 example; readback matched |
-| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.4; open, awaiting editorial review |
-| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description and screenshot updated for v0.4; open, awaiting editorial review |
+| [Hugging Face Space](https://huggingface.co/spaces/glayguo/evalarc) | v0.5 public; actual Hub iframe checked on desktop and mobile |
+| [Hugging Face introduction](https://huggingface.co/spaces/glayguo/evalarc/discussions/1) | Existing title and body updated for v0.5; readback matched |
+| [NoteFlow AI collection](https://huggingface.co/collections/glayguo/noteflow-ai-open-source-playgrounds-6aa693c382b0184786eb8856) | Entry updated with the five-attempt v0.5 suite; readback matched |
+| [科技爱好者周刊 #11671](https://github.com/ruanyf/weekly/issues/11671) | Existing submission updated for v0.5; open, awaiting editorial review |
+| [HelloGitHub #3698](https://github.com/521xueweihan/HelloGitHub/issues/3698) | Existing description and screenshot updated for v0.5; open, awaiting editorial review |
 | [X maintainer launch](https://x.com/glay_oneai/status/2099338382518399269) | Overview and three project replies verified in the published conversation; the EvalArc reply describes the v0.3 comparison |
 
 The weekly README explicitly invites software submissions through issues.
@@ -85,3 +85,46 @@ were updated in place and read back. The editorial issues remain open;
 neither acceptance nor external endorsement is claimed. The X launch consists
 of its verified overview and three project replies, including the historical
 v0.3 EvalArc example.
+
+## v0.5 publication · 2026-09-14
+
+The completed local update `fb5d943f58e9f75f107fbf58e793c47c7d190abc`
+adds declarative TOML suites, frozen candidate inputs, explicit per-job
+acceptance gates and JUnit export. It was merged with the v0.4 publication
+work. The new suite explorer shows the same 93.75% score and 0/2 fully
+resolved attempts under two different gates: the deliberately permissive
+rule accepts partial progress; the rule requiring every notes check rejects
+it. Configured acceptance and full task resolution remain separate.
+
+[PR #3](https://github.com/noteflowai/evalarc/pull/3) passed all checks and
+merged as `6cc9a65f4d9f2fd956ff315779e5f8cbadb09af7`.
+[Main CI run 34805035857](https://github.com/noteflowai/evalarc/actions/runs/34805035857)
+passed all eight jobs and deployed the same verified 61-file bundle to
+Pages and Hugging Face. Public manifests identified that source and a clean
+checkout. The actual Pages site and Hub iframe passed at 1440 px and 390 px:
+17 audit implementations, 167 audit cases, three comparison cases, six
+repetition attempts, five suite attempts and seven offline report paths.
+The downloaded JUnit contains three tests, one expected failure and zero errors.
+
+Local validation passed 172 Python tests, lint, formatting and two fresh
+Docker suites with 54 case executions. The acceptance suite exits 0; the
+partial-progress suite exits 1 as intended. The build recomputes gates from
+the original TOML and all attempt records and checks JUnit semantics.
+Tests reject altered gate decisions and failures relabeled as environment errors.
+The standalone suite report remains reachable if interactive data loading fails.
+
+The [v0.5.0 release](https://github.com/noteflowai/evalarc/releases/tag/v0.5.0)
+uses the merge commit. The final wheel was installed in a clean environment
+and exercised outside the checkout: its dry run planned five attempts and
+31 case executions, and its Docker run retained the expected rejected gate
+and JUnit result. The source archive matches the final source. Wheel, source
+archive and checksums were downloaded anonymously and matched the built assets.
+
+The existing HF introduction, collection entry and both Chinese submissions
+were updated for v0.5 and read back successfully. The editorial issues remain
+open with no acceptance recorded. The existing X launch remains published;
+its EvalArc reply describes the historical v0.3 comparison, and the linked
+Space now includes the v0.5 showcase. No extra launch posts were sent.
+
+These are scripted development controls. No hosted CI importer, live model
+performance or reliability on unseen tasks was validated by this publication.
