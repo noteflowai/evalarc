@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evalarc"
-version = "0.8.0"
+version = "0.9.0"
 description = "Auditable task environments and evaluations for coding and tool-using agents."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -35,13 +35,14 @@ dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1,<2"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-evalarc = ["assets/*.py", "assets/*.md", "assets/*.js"]
+evalarc = ["assets/*.py", "assets/*.md", "assets/*.js", "assets/*.json", "assets/*.txt"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.ruff]
+extend-exclude = ["examples/skill-impact", "examples/research"]
 target-version = "py311"
 line-length = 100
 

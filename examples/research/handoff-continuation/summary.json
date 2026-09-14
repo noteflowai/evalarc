@@ -1,0 +1,106 @@
+{
+  "trials": [
+    {
+      "path": "no-memory/01-none-17",
+      "condition": "none",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 48.61665923199325,
+      "completion_tokens": 1109,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory"
+    },
+    {
+      "path": "funes-recall/02-none-17",
+      "condition": "none",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 5.28702928799612,
+      "completion_tokens": 68,
+      "skill_loads": 0,
+      "handoff_condition": "funes-recall"
+    },
+    {
+      "path": "funes-recall/03-none-41",
+      "condition": "none",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 5.341788880992681,
+      "completion_tokens": 68,
+      "skill_loads": 0,
+      "handoff_condition": "funes-recall"
+    },
+    {
+      "path": "no-memory/04-none-41",
+      "condition": "none",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 41.485442762001185,
+      "completion_tokens": 1071,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory"
+    },
+    {
+      "path": "no-memory/05-none-97",
+      "condition": "none",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 77.35345460400276,
+      "completion_tokens": 1628,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory"
+    },
+    {
+      "path": "funes-recall/06-none-97",
+      "condition": "none",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 4.923608348006383,
+      "completion_tokens": 68,
+      "skill_loads": 0,
+      "handoff_condition": "funes-recall"
+    }
+  ]
+}

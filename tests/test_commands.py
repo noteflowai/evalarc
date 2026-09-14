@@ -105,9 +105,8 @@ def test_docker_launch_errors_are_distinct_from_agent_exits(tmp_path):
         docker_command=shlex.join([sys.executable, str(fake_docker)]),
         image_id="sha256:test",
     )
-    with docker.start(candidate, tmp_path) as process:
-        with pytest.raises(EnvironmentFailure, match="Docker exit code"):
-            process.request({})
+    with pytest.raises(EnvironmentFailure, match="Docker.*startup readiness"):
+        docker.start(candidate, tmp_path)
     with Runtime(backend="local", timeout=1).start(candidate, tmp_path) as process:
         with pytest.raises(CandidateError, match="exited"):
             process.request({})

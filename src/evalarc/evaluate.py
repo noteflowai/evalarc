@@ -7,7 +7,7 @@ import json
 import platform
 import tempfile
 import time
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -29,12 +29,13 @@ def evaluate(
     if not seeds or any(type(seed) is not int for seed in seeds) or len(set(seeds)) != len(seeds):
         raise ValueError("provide integer seeds and do not repeat seeds")
     task = get_task(task_id)
+    runtime = replace(runtime, request_limit=task.request_limit_bytes)
     runtime.prepare()
     started = time.monotonic()
     grader_digest = hashlib.sha256()
     for name in ("runner.py", "evaluate.py", "tasks.py", *task.source_files):
         grader_digest.update(name.encode())
-        grader_digest.update(Path(__file__).with_name(name).read_bytes())
+        grader_digest.update((Path(__file__).parent / name).read_bytes())
     results = []
     with tempfile.TemporaryDirectory(prefix="evalarc-") as temporary:
         root = Path(temporary)
@@ -111,8 +112,10 @@ def evaluate(
             "image_id": runtime.image_id,
             "command": list(runtime.command),
             "response_timeout_seconds": runtime.timeout,
+            "startup_timeout_seconds": runtime.startup_timeout,
             "case_timeout_seconds": runtime.case_timeout,
             "session_output_limit_bytes": runtime.output_limit,
+            "request_limit_bytes": runtime.request_limit,
             "python": platform.python_version(),
             "platform": platform.platform(),
         },

@@ -1,0 +1,32 @@
+{
+  "schema": "evalarc.skill-impact-experiment.v1",
+  "harness_files": {
+    "scripts/local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+    "scripts/record_skill_impact.py": "1566342ddc85f6d6af29dd3adfa0822d085be88f54845239ff26d6c75e344c2d",
+    "src/evalarc/agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+    "src/evalarc/robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88"
+  },
+  "conditions": [
+    "none",
+    "direct",
+    "mcp"
+  ],
+  "model_seeds": [
+    17,
+    41,
+    97
+  ],
+  "public_example_seed": 17,
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "max_steps": 12,
+  "max_new_tokens_per_step": 4096,
+  "wall_seconds": 600,
+  "temperature": 0.2,
+  "trial_order": "rotate conditions within each seed",
+  "changes_since_development_pilot": "Accept absolute paths strictly inside /workspace as well as relative workspace paths.",
+  "results_policy": "Retain every scheduled condition and seed, including errors. No held-out or general efficacy claim.",
+  "comparison_design": "Same instruction skill and model-facing tool results in direct and MCP; no-skill has no skill tools."
+}

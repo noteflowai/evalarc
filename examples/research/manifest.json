@@ -1,0 +1,1525 @@
+{
+  "schema": "evalarc.research-records.v1",
+  "files": {
+    "LICENSE": {
+      "sha256": "30620fe428dab60ad3cca87344feccbe0bc1d44ba3639d4fbf64276ae7780288",
+      "bytes": 1077
+    },
+    "ROBOT_DATA_LICENSE.txt": {
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    "ROBOT_DATA_NOTICE.md": {
+      "sha256": "cd9081380cd230008c7e96f4092272195055e3e4500817d3bfe105280359f0a7",
+      "bytes": 917
+    },
+    "funes/README.md": {
+      "sha256": "acad2071072d0ed31ca618a888c5eacdb0f6b329726c6121537ca525ed109e58",
+      "bytes": 346
+    },
+    "funes/prior-session.parquet": {
+      "sha256": "4f38babfcd1c0fb84eac003667d0ac465f2024068c8616cc38a3da44e4f9ca4e",
+      "bytes": 20728
+    },
+    "funes/recall.txt": {
+      "sha256": "dfe15d1e863768c0fd37d8f11fb6d82edb4d36a2060cfcd1f75c57583a36efa9",
+      "bytes": 4902
+    },
+    "handoff-continuation/atif-validation.json": {
+      "sha256": "23e8532735f5e6398980d8047cb7fec7573e8f5d307decf16e454015b10a7897",
+      "bytes": 1039
+    },
+    "handoff-continuation/experiment.json": {
+      "sha256": "c4a2c13a639ec588cb608bb8060607fc8239cf8f33da02072737cbec9dd2fc90",
+      "bytes": 1886
+    },
+    "handoff-continuation/funes-recall/02-none-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/funes-recall/02-none-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/funes-recall/02-none-17/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/funes-recall/02-none-17/evaluation.json": {
+      "sha256": "538b07cbaf0ac04c5d18ac0c560acf3d5c4588a9657427141632088a481d7590",
+      "bytes": 234716
+    },
+    "handoff-continuation/funes-recall/02-none-17/progress.json": {
+      "sha256": "bc6c46b977d7e42abe6bde3d9b2ab311cc5f0138e51def13f02de20a76b34cc3",
+      "bytes": 23411
+    },
+    "handoff-continuation/funes-recall/02-none-17/trajectory.atif.json": {
+      "sha256": "299194fb7acc1b2993633e72c200cb379958777e3fcfadfb609d03bfc4c5338d",
+      "bytes": 18040
+    },
+    "handoff-continuation/funes-recall/02-none-17/trial.json": {
+      "sha256": "310bf3da3e12cf5cd107bff73d3e131b304d3ef2a6eb53f437c66c15599cfccd",
+      "bytes": 25886
+    },
+    "handoff-continuation/funes-recall/03-none-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/funes-recall/03-none-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/funes-recall/03-none-41/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/funes-recall/03-none-41/evaluation.json": {
+      "sha256": "2640fe0ad1de58bacd8129a10bb8463c6099eb0fa87cc064010b5fcec4dc569a",
+      "bytes": 234715
+    },
+    "handoff-continuation/funes-recall/03-none-41/progress.json": {
+      "sha256": "b60e7d957c3430a8ce15515d98258588147b172a01d71db13547e3a2d77677ae",
+      "bytes": 23410
+    },
+    "handoff-continuation/funes-recall/03-none-41/trajectory.atif.json": {
+      "sha256": "09e7183bf07fc35c0f991f77f1acd3ec4b3f95a7a7cbcbf86f6a848d69896368",
+      "bytes": 18039
+    },
+    "handoff-continuation/funes-recall/03-none-41/trial.json": {
+      "sha256": "3aa988145988f94a2d532c90f5d44c997f05c2e518e98b693a174ce6604e70eb",
+      "bytes": 25886
+    },
+    "handoff-continuation/funes-recall/06-none-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/funes-recall/06-none-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/funes-recall/06-none-97/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/funes-recall/06-none-97/evaluation.json": {
+      "sha256": "99b7aca6191b911a70f1744387a7be6520ccaa4410a6853d7cd1224c1608da79",
+      "bytes": 234717
+    },
+    "handoff-continuation/funes-recall/06-none-97/progress.json": {
+      "sha256": "ed1174090a55bd3950d02f7e6efe0a4f3c92a7912c4303d68f30206c0146499c",
+      "bytes": 23410
+    },
+    "handoff-continuation/funes-recall/06-none-97/trajectory.atif.json": {
+      "sha256": "096c08d6095aa7e091e6db09abc45e5583b3ef53dbeae1e015057f930f5d74a8",
+      "bytes": 18039
+    },
+    "handoff-continuation/funes-recall/06-none-97/trial.json": {
+      "sha256": "5f238f85efd7a0be94cf59af56545d00106732f3b4f0885000a531db15a0bafd",
+      "bytes": 25886
+    },
+    "handoff-continuation/harness/agent_sandbox.py": {
+      "sha256": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+      "bytes": 8909
+    },
+    "handoff-continuation/harness/record_handoff.py": {
+      "sha256": "d7415b5d3f0c9fd456390c8a0b89684369266dc9e481989fbb944bdca6fc0be1",
+      "bytes": 6039
+    },
+    "handoff-continuation/harness/record_skill_impact.py": {
+      "sha256": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+      "bytes": 17253
+    },
+    "handoff-continuation/harness/robot_task.py": {
+      "sha256": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88",
+      "bytes": 9491
+    },
+    "handoff-continuation/harness/runner.py": {
+      "sha256": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+      "bytes": 19010
+    },
+    "handoff-continuation/no-memory/01-none-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/no-memory/01-none-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/no-memory/01-none-17/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/no-memory/01-none-17/evaluation.json": {
+      "sha256": "2c6a1bef7a2a372371be4d9dd818c3768a2a617119867decd53a17e9422af9ae",
+      "bytes": 234715
+    },
+    "handoff-continuation/no-memory/01-none-17/progress.json": {
+      "sha256": "d78ceb250034db7efb0ec101c17f8c8ab41da0f790f795443d8691f4b4416c12",
+      "bytes": 12481
+    },
+    "handoff-continuation/no-memory/01-none-17/trajectory.atif.json": {
+      "sha256": "49c746257e1a2a358c3e4c7db95c6b2920b206ec832dde121b8e76e7d474a007",
+      "bytes": 12274
+    },
+    "handoff-continuation/no-memory/01-none-17/trial.json": {
+      "sha256": "c697fdae2f844a52f9451e254ff1755d2e7d907faeb0ddfd0de01ad46536fdf4",
+      "bytes": 14893
+    },
+    "handoff-continuation/no-memory/04-none-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/no-memory/04-none-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/no-memory/04-none-41/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/no-memory/04-none-41/evaluation.json": {
+      "sha256": "80851a606443ad711c11535d3834b90e8b710d50da3b7c608aa3e272fbc14c49",
+      "bytes": 234717
+    },
+    "handoff-continuation/no-memory/04-none-41/progress.json": {
+      "sha256": "362b7fa8bd9ceaa9d43207dc38ee53089e9736b27626481431a164f878a98fe9",
+      "bytes": 12279
+    },
+    "handoff-continuation/no-memory/04-none-41/trajectory.atif.json": {
+      "sha256": "903b9ec52f2db7524caced6dd45d1aa977ca9dd2363dd7b82b19cdc47a631334",
+      "bytes": 12061
+    },
+    "handoff-continuation/no-memory/04-none-41/trial.json": {
+      "sha256": "073b2e59be7e518443ce0452520ee65e2e7ab2c6c071ffe9e56787256d17094d",
+      "bytes": 14692
+    },
+    "handoff-continuation/no-memory/05-none-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "handoff-continuation/no-memory/05-none-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "handoff-continuation/no-memory/05-none-97/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/no-memory/05-none-97/evaluation.json": {
+      "sha256": "348bae4f2ae9e04228f661ab6996ccd73b5366c82390255870f7d3960c841463",
+      "bytes": 234717
+    },
+    "handoff-continuation/no-memory/05-none-97/progress.json": {
+      "sha256": "93ff4058e2eb8f75d7bbc4f863261fbc1f055a77eb7d87383c8a68a2dd38dcd9",
+      "bytes": 19099
+    },
+    "handoff-continuation/no-memory/05-none-97/trajectory.atif.json": {
+      "sha256": "bad4e4ba329469b5d1261e1a8cbf4fe12c6ccc57d4edf569a168081e177cf8d8",
+      "bytes": 12612
+    },
+    "handoff-continuation/no-memory/05-none-97/trial.json": {
+      "sha256": "a2929a2a7f5b9bf59e76b976271811a465cab222b7f99d40b9a5a8b0b4285193",
+      "bytes": 21511
+    },
+    "handoff-continuation/prior-main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "handoff-continuation/recall.txt": {
+      "sha256": "dfe15d1e863768c0fd37d8f11fb6d82edb4d36a2060cfcd1f75c57583a36efa9",
+      "bytes": 4902
+    },
+    "handoff-continuation/summary.json": {
+      "sha256": "60116821aa267861b30c7411dbad2092ac0ae53f26ec61fac80f2b58b6022b5d",
+      "bytes": 2535
+    },
+    "harbor-import-oracle/evaluation.json": {
+      "sha256": "9ae73c05782c39ed4846d060fb6c1b1b175ffd90f1b0a0c557a41036c0af1882",
+      "bytes": 232942
+    },
+    "harbor-import-oracle/harbor-import.json": {
+      "sha256": "9b31a9922bfc163a5d28e28a81de6c923cc84bcc31447d7ed40c7b42a624ccb0",
+      "bytes": 1402
+    },
+    "harbor-import-oracle/source-result.json": {
+      "sha256": "850450b131e1c2930e53a95497208f6a95a1362b7c5a161c4ab7b6d558461d05",
+      "bytes": 3984
+    },
+    "harbor-import-oracle-retry/evaluation.json": {
+      "sha256": "06562d3ead2f51863aca733901ead0e00b96483f647acf3a124c3b8f49169ba2",
+      "bytes": 234665
+    },
+    "harbor-import-oracle-retry/harbor-import.json": {
+      "sha256": "2fc919177cd0396b797b1deb1dec31ba05ade3a02301996b2257df0bf50b74e3",
+      "bytes": 1398
+    },
+    "harbor-import-oracle-retry/source-result.json": {
+      "sha256": "850450b131e1c2930e53a95497208f6a95a1362b7c5a161c4ab7b6d558461d05",
+      "bytes": 3984
+    },
+    "harbor-native/robot-nop/result.json": {
+      "sha256": "77783eea888fe461d108a8922058fad8d95e2e250a415c675b4075628316f61e",
+      "bytes": 546
+    },
+    "harbor-native/robot-nop-retry/harbor-task__ax7VMfq/result.json": {
+      "sha256": "728b59b4acb8f457443bcc00ed0b6720ad0ce5cb3e113555c45b48f29af6387e",
+      "bytes": 3972
+    },
+    "harbor-native/robot-nop-retry/result.json": {
+      "sha256": "060977b2c27078cea7df738d61e6c1f4cdcf6b9af3a5a393f411270778a7f635",
+      "bytes": 1099
+    },
+    "harbor-native/robot-oracle/harbor-task__jNcD4Ci/result.json": {
+      "sha256": "62ffe6b7b4f081b3972087b0efddc7e0241428f7e00c728ccd456858e4e8805a",
+      "bytes": 7353
+    },
+    "harbor-native/robot-oracle/result.json": {
+      "sha256": "17cae37674ecd28a8bd2e6ae04b457ada99e8547fe257b72facd546dfb86edf1",
+      "bytes": 1045
+    },
+    "harbor-native/robot-oracle-fixed/harbor-task__pYo9jgP/result.json": {
+      "sha256": "850450b131e1c2930e53a95497208f6a95a1362b7c5a161c4ab7b6d558461d05",
+      "bytes": 3984
+    },
+    "harbor-native/robot-oracle-fixed/result.json": {
+      "sha256": "2bbc3bb73ff4f1f71993e0f7761384f8aec3f02e610b8a569067c722531feb6a",
+      "bytes": 1102
+    },
+    "index.html": {
+      "sha256": "82b4cf542730fe3b8eb7c32acb9fbbda4abeabfa22a0a68f8008276ebe27a7bf",
+      "bytes": 7420
+    },
+    "research-records.zip": {
+      "sha256": "d7d9084f4b8b69ed7b5faf82b4cb387e5f4c91e68816799f400701fa5aa50fd7",
+      "bytes": 2957370
+    },
+    "robot-audit-javascript/audit.json": {
+      "sha256": "86ff8a9b2991d3ee6a0a87cbe64e8fb9aa2bad533110d3f8ec9e7c72fb7ecf1f",
+      "bytes": 2924982
+    },
+    "robot-audit-python/audit.json": {
+      "sha256": "43f13a031ad5af63c632e61bcfb93f76dd9678aa29904904fa1ade3a6454d9ec",
+      "bytes": 2925423
+    },
+    "skill-composition-pilot/01-none-17/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/01-none-17/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/01-none-17/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/01-none-17/progress.json": {
+      "sha256": "fc15b6de24d394435d0138aab16eeda43e5cba89bde10dd1bbcb3c7a4a3606db",
+      "bytes": 5266
+    },
+    "skill-composition-pilot/01-none-17/trial.json": {
+      "sha256": "27fae47f0faa811079678e5a50faf7505c52bc3afd9812b92535cbd5357e4e4a",
+      "bytes": 6611
+    },
+    "skill-composition-pilot/02-cache-17/candidate/build/cache.json": {
+      "sha256": "443e7d8a2a2cfe5ab6426ad80f311683b64d25171df85bf3a5f23c8a689b3bdc",
+      "bytes": 184
+    },
+    "skill-composition-pilot/02-cache-17/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/02-cache-17/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/02-cache-17/candidate/public/report.json": {
+      "sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "bytes": 39
+    },
+    "skill-composition-pilot/02-cache-17/progress.json": {
+      "sha256": "d45c88066a3ece6965f4ad05af2fd3dc7943616767f87b878d042386574a80a7",
+      "bytes": 8487
+    },
+    "skill-composition-pilot/02-cache-17/trial.json": {
+      "sha256": "601d55fc196554236971c0ff8e73ea3f7afe5854a4d64f598fd07ba4a16e020d",
+      "bytes": 12785
+    },
+    "skill-composition-pilot/03-publish-17/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/03-publish-17/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/03-publish-17/candidate/public/report.json": {
+      "sha256": "94f21d62bfb598ad9b0c95d63e02da3062f7577bed8566abb28314ad7341da10",
+      "bytes": 39
+    },
+    "skill-composition-pilot/03-publish-17/progress.json": {
+      "sha256": "3796e74b5df6205f6b25a91d5ba7934d35f700f9a5e77ab17e7e1372eb360563",
+      "bytes": 6376
+    },
+    "skill-composition-pilot/03-publish-17/trial.json": {
+      "sha256": "57007afdc00ce1f06df39b83587be701f9ffb44ea6745866748514aa7b69c834",
+      "bytes": 10560
+    },
+    "skill-composition-pilot/04-composed-17/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/04-composed-17/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/04-composed-17/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/04-composed-17/progress.json": {
+      "sha256": "19aeab47fa33fba8c2b800cf4aedd009fc273a94b20bb48dac3e827ab4caa0f8",
+      "bytes": 7551
+    },
+    "skill-composition-pilot/04-composed-17/trial.json": {
+      "sha256": "36bb421137ce2c53029381d6a4e2eb86313956bd03296200c78724a3df6b84ac",
+      "bytes": 14692
+    },
+    "skill-composition-pilot/05-cache-41/candidate/build/cache.json": {
+      "sha256": "443e7d8a2a2cfe5ab6426ad80f311683b64d25171df85bf3a5f23c8a689b3bdc",
+      "bytes": 184
+    },
+    "skill-composition-pilot/05-cache-41/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/05-cache-41/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/05-cache-41/candidate/public/report.json": {
+      "sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "bytes": 39
+    },
+    "skill-composition-pilot/05-cache-41/progress.json": {
+      "sha256": "d941cd3ac7a6b1d1ce0bf0d379af9d25aed273e97fda189e209af27c2d275dba",
+      "bytes": 8490
+    },
+    "skill-composition-pilot/05-cache-41/trial.json": {
+      "sha256": "8b032542e5d296b7291953a3487422da6b4a8b33ef26cd91de12f33e870acc36",
+      "bytes": 12787
+    },
+    "skill-composition-pilot/06-publish-41/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/06-publish-41/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/06-publish-41/candidate/public/report.json": {
+      "sha256": "94f21d62bfb598ad9b0c95d63e02da3062f7577bed8566abb28314ad7341da10",
+      "bytes": 39
+    },
+    "skill-composition-pilot/06-publish-41/progress.json": {
+      "sha256": "d25dc1f0acfc47af32117c5fd6723e5b37ccf6af0eb0210e0386fa80558075f2",
+      "bytes": 6375
+    },
+    "skill-composition-pilot/06-publish-41/trial.json": {
+      "sha256": "1895ceebe9e1558c00258bb914c7c17450ebd13b6ba0f018cefe7c0c02d3a44f",
+      "bytes": 10559
+    },
+    "skill-composition-pilot/07-composed-41/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/07-composed-41/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/07-composed-41/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/07-composed-41/progress.json": {
+      "sha256": "5ba3052aa97d3eb310b51b03f9f6469ab30644e7aefe27e7f7446b56b5fb9564",
+      "bytes": 7551
+    },
+    "skill-composition-pilot/07-composed-41/trial.json": {
+      "sha256": "cf74d1814e1942a88923b81afdaa1a5776bc4f82715eaa6052f5a992ceb277a8",
+      "bytes": 14685
+    },
+    "skill-composition-pilot/08-none-41/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/08-none-41/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/08-none-41/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/08-none-41/progress.json": {
+      "sha256": "07ee86c63a5beae8ad890bdfeaf28c7c92b0f20e2fb48fd2c8dbad0fa59c3c17",
+      "bytes": 5265
+    },
+    "skill-composition-pilot/08-none-41/trial.json": {
+      "sha256": "33260fa72a23ddc9bcfa3853a45d58da57eb0aa60f055f1da02a4c00dd8e599f",
+      "bytes": 6610
+    },
+    "skill-composition-pilot/09-publish-97/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/09-publish-97/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/09-publish-97/candidate/public/report.json": {
+      "sha256": "94f21d62bfb598ad9b0c95d63e02da3062f7577bed8566abb28314ad7341da10",
+      "bytes": 39
+    },
+    "skill-composition-pilot/09-publish-97/progress.json": {
+      "sha256": "76e1ee91b03ef1f8226c81342240f6c64010fc515759821f809a2485bf9cd0e9",
+      "bytes": 6374
+    },
+    "skill-composition-pilot/09-publish-97/trial.json": {
+      "sha256": "354581231e3dabec2b194d4d7a6f029a7b22e1878cc8496818bc8dffd8eadb05",
+      "bytes": 10550
+    },
+    "skill-composition-pilot/10-composed-97/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/10-composed-97/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/10-composed-97/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/10-composed-97/progress.json": {
+      "sha256": "330a639941a8ceed03f3214c094eedad302772d71f59bc78b8c425362ab59f27",
+      "bytes": 7551
+    },
+    "skill-composition-pilot/10-composed-97/trial.json": {
+      "sha256": "93e77cac9758d9bdd04b71bf336fc69c14dae1cfaecc3a577cedac4f9306a39c",
+      "bytes": 14693
+    },
+    "skill-composition-pilot/11-none-97/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/11-none-97/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/11-none-97/candidate/public/report.json": {
+      "sha256": "bdb7af5ecfe1a701b000dbe4a284283488f7ee2998038bf3923fbd5c2308db95",
+      "bytes": 39
+    },
+    "skill-composition-pilot/11-none-97/progress.json": {
+      "sha256": "2515b2df43cff3842a84ea9a701d5604119a9285b5fdfe93a50b9491e1023e05",
+      "bytes": 5267
+    },
+    "skill-composition-pilot/11-none-97/trial.json": {
+      "sha256": "ccee42fa9b20b05d8a61353d2df83c844a7fe86c81c17f8e7449b6b59eff71bd",
+      "bytes": 6612
+    },
+    "skill-composition-pilot/12-cache-97/candidate/build/cache.json": {
+      "sha256": "443e7d8a2a2cfe5ab6426ad80f311683b64d25171df85bf3a5f23c8a689b3bdc",
+      "bytes": 184
+    },
+    "skill-composition-pilot/12-cache-97/candidate/input/orders.json": {
+      "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d",
+      "bytes": 119
+    },
+    "skill-composition-pilot/12-cache-97/candidate/private/client.json": {
+      "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107",
+      "bytes": 62
+    },
+    "skill-composition-pilot/12-cache-97/candidate/public/report.json": {
+      "sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "bytes": 39
+    },
+    "skill-composition-pilot/12-cache-97/progress.json": {
+      "sha256": "024adf302bc1d6dd9327fd2d41c681eec820b1bd996369f39dc35561bbf12352",
+      "bytes": 8488
+    },
+    "skill-composition-pilot/12-cache-97/trial.json": {
+      "sha256": "14f432c02af0e5218c2929716614277f828aca242eb313d23182862b711cbfaf",
+      "bytes": 12794
+    },
+    "skill-composition-pilot/controls/boolean-count/public/report.json": {
+      "sha256": "90c283da861280f9f5178d14d67e358c9bea953698d07d50c6ae8871143271c0",
+      "bytes": 39
+    },
+    "skill-composition-pilot/controls/duplicate-key/public/report.json": {
+      "sha256": "212eab09da2faff949a9e4c80a745279e633733b51d344a6192e7c514fd70744",
+      "bytes": 52
+    },
+    "skill-composition-pilot/controls/private-side-effect/public/audit.json": {
+      "sha256": "5d950054036b78e580415dbf3d615ff50c5dd4405e4998bf081d14283e3a1bfd",
+      "bytes": 43
+    },
+    "skill-composition-pilot/controls/private-side-effect/public/report.json": {
+      "sha256": "8b17ad3f7da1250d85403040e191a21d07e48702711add056935cb38edde998e",
+      "bytes": 36
+    },
+    "skill-composition-pilot/controls/self-reported-success/public/report.json": {
+      "sha256": "38b2c094298fae8944c30b50b1fceb80f15551000cadf72dac994a7e961fee5a",
+      "bytes": 51
+    },
+    "skill-composition-pilot/controls/valid/public/report.json": {
+      "sha256": "8b17ad3f7da1250d85403040e191a21d07e48702711add056935cb38edde998e",
+      "bytes": 36
+    },
+    "skill-composition-pilot/controls/valid-reordered/public/report.json": {
+      "sha256": "2c74b1036a13fec2bb009b6d4cb1c15427b66ea5fa8049b4fef91766f9362cef",
+      "bytes": 43
+    },
+    "skill-composition-pilot/controls/wrong-total/public/report.json": {
+      "sha256": "e850ef39b904d48d2dd1e86e7ba4f5a0b1633b1ff898c3c55f73fef67cf55486",
+      "bytes": 36
+    },
+    "skill-composition-pilot/experiment.json": {
+      "sha256": "a40316c9bfc5976caa7f00ef0235486ce749edbf9de45054746d4d2fe6fed92c",
+      "bytes": 1966
+    },
+    "skill-composition-pilot/grader-controls.json": {
+      "sha256": "614cc654f6f3fbb99e19d227c127520a735ca56994cc6edb483d692e42a75021",
+      "bytes": 6723
+    },
+    "skill-composition-pilot/harness/agent_sandbox.py": {
+      "sha256": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+      "bytes": 8909
+    },
+    "skill-composition-pilot/harness/artifact_review.py": {
+      "sha256": "1cdcf61ae7b8e99a3fc4afbfbdea2c2cc281dc0e4380e77055e6f26ed7331878",
+      "bytes": 5648
+    },
+    "skill-composition-pilot/harness/bridge.mjs": {
+      "sha256": "adaa2b517a367c063eeda25a32a47f232642b0a254718692581cc2a816e81960",
+      "bytes": 6957
+    },
+    "skill-composition-pilot/harness/record_skill_composition.py": {
+      "sha256": "f9095333ef0935bff3c9b18952e57bb5c3777ca3f558424e49cc186c69b487c8",
+      "bytes": 10470
+    },
+    "skill-composition-pilot/harness/record_skill_impact.py": {
+      "sha256": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+      "bytes": 17253
+    },
+    "skill-composition-pilot/harness/runner.py": {
+      "sha256": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+      "bytes": 19010
+    },
+    "skill-composition-pilot/summary.json": {
+      "sha256": "9764e32e26744cf7a51a3c35c142699830445c7b992519cc444c5073d59ac763",
+      "bytes": 10898
+    },
+    "skill-impact-catalog-fallback/01-none-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/01-none-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/01-none-17/candidate/main.py": {
+      "sha256": "b6b47822ea6128d83f64618ebac02bf10653342bd7be20ee23c907a2953f0051",
+      "bytes": 4142
+    },
+    "skill-impact-catalog-fallback/01-none-17/evaluation.json": {
+      "sha256": "7f6a0af88792cd23194a59f0f2e5b7b07ace2583974c0d72bcc8134f1c4bcc9e",
+      "bytes": 234708
+    },
+    "skill-impact-catalog-fallback/01-none-17/progress.json": {
+      "sha256": "7209b0e92986227cc341f9be5b050bfd23c25a3a56684a9293abae9b03182f9d",
+      "bytes": 70341
+    },
+    "skill-impact-catalog-fallback/01-none-17/trajectory.atif.json": {
+      "sha256": "4baa80cc4e04d31d9c0d28c95172ebde521605a402ada37be31a3876905b6d85",
+      "bytes": 44958
+    },
+    "skill-impact-catalog-fallback/01-none-17/trial.json": {
+      "sha256": "6e4d50395792fff5030eb14c80985363e2a3078957b3af0719fbe5f31f92a6de",
+      "bytes": 72304
+    },
+    "skill-impact-catalog-fallback/02-direct-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/02-direct-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/02-direct-17/candidate/main.py": {
+      "sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+      "bytes": 5580
+    },
+    "skill-impact-catalog-fallback/02-direct-17/evaluation.json": {
+      "sha256": "f97e50deee112b232f8490a6dc3d2c70a49da2cbeb168ecf75fc3a47dee407de",
+      "bytes": 229965
+    },
+    "skill-impact-catalog-fallback/02-direct-17/progress.json": {
+      "sha256": "c066c25055e6adb6f6c1bd9f04f2ba974de15465b7a70eb58b8d874d155af933",
+      "bytes": 71915
+    },
+    "skill-impact-catalog-fallback/02-direct-17/trajectory.atif.json": {
+      "sha256": "ec8b1ec7d0ef733c324f1a9bde1daee761d2d10320982f916a90a2c38f9e03d7",
+      "bytes": 46377
+    },
+    "skill-impact-catalog-fallback/02-direct-17/trial.json": {
+      "sha256": "f5716d6e09e99528e79161ef920ea8732b2f47caafac13e4921d4b9377fe09d9",
+      "bytes": 74091
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/candidate/main.py": {
+      "sha256": "d1e5596c5d4316a2873ddbf9bcae4d6062a768b30cf956c99e88c3e8aadca3a1",
+      "bytes": 5580
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/evaluation.json": {
+      "sha256": "43863dd9d2ded17118932d43b7ac13bc4f4d2bff35027e9d2276a3f8a7083e6e",
+      "bytes": 229964
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/progress.json": {
+      "sha256": "d50a99d30ef67c88bbbf52b04b069d2b50fe2a328a3efc7031643e6af6ea2c90",
+      "bytes": 74767
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/trajectory.atif.json": {
+      "sha256": "450e293c4f1e8c254e2acceac1ecad49aa8663e8452543a73e61ac0f460be97f",
+      "bytes": 49421
+    },
+    "skill-impact-catalog-fallback/03-mcp-17/trial.json": {
+      "sha256": "b5690d03f9b9d3df02edadbe13d2b34ab6868b7b6f64cf9fc4713b01a42773e1",
+      "bytes": 76941
+    },
+    "skill-impact-catalog-fallback/04-direct-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/04-direct-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/04-direct-41/candidate/main.py": {
+      "sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+      "bytes": 5022
+    },
+    "skill-impact-catalog-fallback/04-direct-41/evaluation.json": {
+      "sha256": "eacb59f7b24c9f0e1a82993874616584d9d2108c4cc49029bcb507e4ee31a038",
+      "bytes": 229965
+    },
+    "skill-impact-catalog-fallback/04-direct-41/progress.json": {
+      "sha256": "91eaa3f26badfbc508f1e743fe9dba5804dd885e9fb8138025949cc8654ac54a",
+      "bytes": 68986
+    },
+    "skill-impact-catalog-fallback/04-direct-41/trajectory.atif.json": {
+      "sha256": "0bd39ce21dd753d7ba43c1eb19ab656eabce94e4e546c3599d0f23e2cce32a2b",
+      "bytes": 44603
+    },
+    "skill-impact-catalog-fallback/04-direct-41/trial.json": {
+      "sha256": "bf9fece99810a8038f1733b8dcd25d1deaa8a39178126649b04b9a50b9643bf3",
+      "bytes": 71163
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/candidate/main.py": {
+      "sha256": "69720c0f74206e9380b47bb655d493e1fb1f4b591bfd6c6d0f33aef0e314ca1d",
+      "bytes": 5022
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/evaluation.json": {
+      "sha256": "682893c911d82702b8ad3d95792ac8dcfe99aaab0d6c0f4806554e5329082748",
+      "bytes": 229963
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/progress.json": {
+      "sha256": "8a30ed40a8205676203c79db22c8611de90b52b3c064faf1ab02e4a602a36ace",
+      "bytes": 71844
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/trajectory.atif.json": {
+      "sha256": "72749e7cefa1dc4d2758efd6b2979c7efb31186de3626cd5e7838a411455dfe3",
+      "bytes": 47653
+    },
+    "skill-impact-catalog-fallback/05-mcp-41/trial.json": {
+      "sha256": "9207c8572e55daba31d460d6453d68d827cae7474e10887e06f8b29c69faeccb",
+      "bytes": 74018
+    },
+    "skill-impact-catalog-fallback/06-none-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/06-none-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/06-none-41/candidate/main.py": {
+      "sha256": "95f522ab806fc4ede505e8cf4566a62f75ef28122ee389ad3820fdaa44123543",
+      "bytes": 4638
+    },
+    "skill-impact-catalog-fallback/06-none-41/evaluation.json": {
+      "sha256": "57391b4cf0f0df22bf1ca57372b89113a6b8b44be0330c67b5747cad55a7bc28",
+      "bytes": 234704
+    },
+    "skill-impact-catalog-fallback/06-none-41/progress.json": {
+      "sha256": "765e4d2be5f7ac70455e789d2fc8da48867885c734310b85ff6c28214dd4c7e5",
+      "bytes": 55166
+    },
+    "skill-impact-catalog-fallback/06-none-41/trajectory.atif.json": {
+      "sha256": "8ecceb6ee1a1cebb91c22e51ebc747977510113262f70bf4660e9a996c0d44b3",
+      "bytes": 34918
+    },
+    "skill-impact-catalog-fallback/06-none-41/trial.json": {
+      "sha256": "aebb9ee28bdfbb137a72431533b5365156d908dc5222f5f1ee66801f7dd284a5",
+      "bytes": 57125
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/candidate/main.py": {
+      "sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+      "bytes": 5315
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/evaluation.json": {
+      "sha256": "1671d82f6cf005c494c57d7801d54dfaa6663fc84e2e7a73e16fed9d2d63a9a8",
+      "bytes": 229962
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/progress.json": {
+      "sha256": "048dee3c1b64f973fda2f38d91649a039185c62210bd2f1945c9c1d0261734a0",
+      "bytes": 82498
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/trajectory.atif.json": {
+      "sha256": "eef73b226c4530986b45b3baa4df9d360472721e661cac57d9071fd9d59261ca",
+      "bytes": 56175
+    },
+    "skill-impact-catalog-fallback/07-mcp-97/trial.json": {
+      "sha256": "cb763fb0195f16f2a039bf2fbf3feac74143a3b7f0bc2ef080d08eb1fbe00a9b",
+      "bytes": 84672
+    },
+    "skill-impact-catalog-fallback/08-none-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/08-none-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/08-none-97/candidate/main.py": {
+      "sha256": "e27879b01795a5eec886da3797e0e1eaa3c865487381d76f1e07ef86784c3367",
+      "bytes": 4634
+    },
+    "skill-impact-catalog-fallback/08-none-97/evaluation.json": {
+      "sha256": "1132cbd4b6c7c32e656aaaac426ad34ceabd497d7df0f2e77e6c669e31b0a838",
+      "bytes": 234702
+    },
+    "skill-impact-catalog-fallback/08-none-97/progress.json": {
+      "sha256": "2d2d94895cfafd79cb00a0c1f7b7c277ea6cb4e149d6ee8d1f85e8b8c2f20bf9",
+      "bytes": 55159
+    },
+    "skill-impact-catalog-fallback/08-none-97/trajectory.atif.json": {
+      "sha256": "515e249dff8fd6d1901faf7a7930ab8683a935c8d65c01580d74bc4486830acf",
+      "bytes": 34912
+    },
+    "skill-impact-catalog-fallback/08-none-97/trial.json": {
+      "sha256": "371af3101c43acef2e45bbf58f60a6472c5e8cdfdd189cf89ce946f5e6108bbf",
+      "bytes": 57117
+    },
+    "skill-impact-catalog-fallback/09-direct-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-catalog-fallback/09-direct-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-catalog-fallback/09-direct-97/candidate/main.py": {
+      "sha256": "9adace8a818c85dc61a507f0d75d57e6f260ad08cb2605fb478e1537ede73601",
+      "bytes": 5315
+    },
+    "skill-impact-catalog-fallback/09-direct-97/evaluation.json": {
+      "sha256": "3b14be886c9c9cb700582ff04131d6094b1312dd69ac480a7ee0d8328df5038f",
+      "bytes": 229965
+    },
+    "skill-impact-catalog-fallback/09-direct-97/progress.json": {
+      "sha256": "f3e68a0eddcfebb6029c572f5788ea853418bbf4a438ead6e71afe5099a99d77",
+      "bytes": 79644
+    },
+    "skill-impact-catalog-fallback/09-direct-97/trajectory.atif.json": {
+      "sha256": "71bae983e9abbd413fb1a2299c9570625a1239bfaeb9591142d3bf3a5a9c0a66",
+      "bytes": 53129
+    },
+    "skill-impact-catalog-fallback/09-direct-97/trial.json": {
+      "sha256": "9d77d8a5b00c89cafbaf98453cf684fae4b3272c473709f8f95d270794585f7c",
+      "bytes": 81822
+    },
+    "skill-impact-catalog-fallback/atif-validation.json": {
+      "sha256": "4a3b89219116ccb1ed4942d1d86b53c4cb68b46bbb12c651eb8b66704d5c2a5a",
+      "bytes": 1426
+    },
+    "skill-impact-catalog-fallback/experiment.json": {
+      "sha256": "0525de8fb77deed6617984d614906dc28a2c61f66f0970739c81809a8b9af16f",
+      "bytes": 2251
+    },
+    "skill-impact-catalog-fallback/harness/agent_sandbox.py": {
+      "sha256": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+      "bytes": 8909
+    },
+    "skill-impact-catalog-fallback/harness/bridge.mjs": {
+      "sha256": "adaa2b517a367c063eeda25a32a47f232642b0a254718692581cc2a816e81960",
+      "bytes": 6957
+    },
+    "skill-impact-catalog-fallback/harness/local_model_server.py": {
+      "sha256": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+      "bytes": 6126
+    },
+    "skill-impact-catalog-fallback/harness/record_skill_impact.py": {
+      "sha256": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+      "bytes": 17253
+    },
+    "skill-impact-catalog-fallback/harness/robot_task.py": {
+      "sha256": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88",
+      "bytes": 9491
+    },
+    "skill-impact-catalog-fallback/harness/runner.py": {
+      "sha256": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+      "bytes": 19010
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/bundle-cli-DuVlt2Sp.js": {
+      "sha256": "a0f6fca6dea92ecc29951a8f54c3599505d88cd8c7f0ebdefe1df87af503e248",
+      "bytes": 2807
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/check-files-CjcQukSA.js": {
+      "sha256": "ce208980f02d382389c99931b05b8c7650d814744d0eae8d042e120a22fad5cf",
+      "bytes": 2151
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/cli.js": {
+      "sha256": "5d66c0b484e9e1f4f39ffa9c719549f7b55fd561b94dce397fab6d257092247d",
+      "bytes": 19706
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/client.js": {
+      "sha256": "57dcc5e93b93cbb61c75a3a3d8e00f618075d63c93200700bf0cc05980827c8f",
+      "bytes": 25271
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/index.js": {
+      "sha256": "452b1245cbe664856ae8d581aea6dfcda53bc83fb00cc7424bf65008d3a52074",
+      "bytes": 5904
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/mcp.js": {
+      "sha256": "75c4e0c01def3977a77c4dd6333a2de73c656eb0e6e56c92e87db546f527ec33",
+      "bytes": 14544
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/provider-D_asoyBt.js": {
+      "sha256": "bab768e469b221cc41795177f953a6288818093421eaf5eaa92d106045379b37",
+      "bytes": 54625
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/search-DUE-pmE0.js": {
+      "sha256": "da08a467e9146c7152d386a5751797db2a8ee9cd04649447c1548c150805cb58",
+      "bytes": 1718
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/skill-bundle-rgNKCmVS.js": {
+      "sha256": "2e3bbc99b67b78db87d4055c6b9ec39747397b40d9917eb4f176e9b30c683a0b",
+      "bytes": 7609
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/skill-check-Da47aHh6.js": {
+      "sha256": "6304cc7dc53422d8013d3742dd3034ced633067a320e2a173958421235afa13e",
+      "bytes": 8933
+    },
+    "skill-impact-catalog-fallback/harness/skill-library/tools.js": {
+      "sha256": "e10f6d9fb8a87622946c870f5409d8f66192d4aaf0ebb05ce22105c20ca872d8",
+      "bytes": 7062
+    },
+    "skill-impact-catalog-fallback/summary.json": {
+      "sha256": "18096e2328588119ddbd4cd4e6c1fe5b5840c5ffc904f5d8d4ed19f868dd3060",
+      "bytes": 3312
+    },
+    "skill-impact-contract-inline/01-none-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/01-none-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/01-none-17/candidate/main.py": {
+      "sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+      "bytes": 4547
+    },
+    "skill-impact-contract-inline/01-none-17/evaluation.json": {
+      "sha256": "63bfbf303ff619d470cefb76eb33d242acde044eca39c11dee6c411887eb9f53",
+      "bytes": 234716
+    },
+    "skill-impact-contract-inline/01-none-17/progress.json": {
+      "sha256": "81cd0a7f787efd02249c610c5f40651b7d7fded7d6dda2a359342e3aa5ef27b5",
+      "bytes": 54785
+    },
+    "skill-impact-contract-inline/01-none-17/trajectory.atif.json": {
+      "sha256": "8211e2b1a26f9fd3fc98cfe52f4a208f20c63ea39d26f2c7cba844d31d4affb5",
+      "bytes": 34634
+    },
+    "skill-impact-contract-inline/01-none-17/trial.json": {
+      "sha256": "2f665fd5734bb89435224913d43b4a69d91d53495c33d5ba9c375d2c59710004",
+      "bytes": 56747
+    },
+    "skill-impact-contract-inline/02-direct-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/02-direct-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/02-direct-17/candidate/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "skill-impact-contract-inline/02-direct-17/evaluation.json": {
+      "sha256": "fe69c643ed00476e5cbe3831c9f654d28aa3e2184b55a14ff974bbec728002ba",
+      "bytes": 234004
+    },
+    "skill-impact-contract-inline/02-direct-17/progress.json": {
+      "sha256": "e44316f8ef0dc645092aaa2aaf04fe70596b28112eea7a23d207386cc69586c2",
+      "bytes": 23093
+    },
+    "skill-impact-contract-inline/02-direct-17/trajectory.atif.json": {
+      "sha256": "8a16f685d12da3a3e6991212c5c2def8f696d4900527cd3ad73bd1fa05936f63",
+      "bytes": 20821
+    },
+    "skill-impact-contract-inline/02-direct-17/trial.json": {
+      "sha256": "532337b4a3ffeca4b6dbc9117eb509884de0422c7c087d9626870c7d8aa67c33",
+      "bytes": 25273
+    },
+    "skill-impact-contract-inline/03-mcp-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/03-mcp-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/03-mcp-17/candidate/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "skill-impact-contract-inline/03-mcp-17/evaluation.json": {
+      "sha256": "0ca296648b9c678b1a9cc1f8edb802dd93ac96f22d3521763eb9b6667d822f57",
+      "bytes": 234004
+    },
+    "skill-impact-contract-inline/03-mcp-17/progress.json": {
+      "sha256": "20b346863db145a09f451cfa84a7a7eb3c8c693bf3e6d32d31f61bb831028442",
+      "bytes": 27852
+    },
+    "skill-impact-contract-inline/03-mcp-17/trajectory.atif.json": {
+      "sha256": "df1a489c72d53e07fd36c6ce6484c639ef44cbcf7006e87d837677ac768acdaa",
+      "bytes": 26729
+    },
+    "skill-impact-contract-inline/03-mcp-17/trial.json": {
+      "sha256": "e40bb0fbe16ea4d8e29d123b2764a399a1bc948c6514a7faf5641e58c0c68596",
+      "bytes": 30029
+    },
+    "skill-impact-contract-inline/04-direct-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/04-direct-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/04-direct-41/candidate/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "skill-impact-contract-inline/04-direct-41/evaluation.json": {
+      "sha256": "4ee503b505bd9067b3b6f13b7719376d0282a928589063bd130c912aeb8dba2c",
+      "bytes": 234004
+    },
+    "skill-impact-contract-inline/04-direct-41/progress.json": {
+      "sha256": "7c0058cfc0573791bafdd70097cc94789e65e9517311a1a35828394c1243c789",
+      "bytes": 23035
+    },
+    "skill-impact-contract-inline/04-direct-41/trajectory.atif.json": {
+      "sha256": "ca09b05ac25bc7d3a2900da24d0dd87a8ae238969d3aca09a1369d806a738e31",
+      "bytes": 20779
+    },
+    "skill-impact-contract-inline/04-direct-41/trial.json": {
+      "sha256": "0e31e29b0445667c16f4dbd6d8aa65086fdc5a0b7ce709af5977bc538a2c6b81",
+      "bytes": 25215
+    },
+    "skill-impact-contract-inline/05-mcp-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/05-mcp-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/05-mcp-41/candidate/main.py": {
+      "sha256": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+      "bytes": 318
+    },
+    "skill-impact-contract-inline/05-mcp-41/evaluation.json": {
+      "sha256": "0afe4a246412056e383c075bf86549e82b51a32f06f5a145ac6d2f2024259b21",
+      "bytes": 234002
+    },
+    "skill-impact-contract-inline/05-mcp-41/progress.json": {
+      "sha256": "8473bb361fc086e5e967d05f5f3477b0f31983a1ac93d5d3b9c55c07e91ec330",
+      "bytes": 27773
+    },
+    "skill-impact-contract-inline/05-mcp-41/trajectory.atif.json": {
+      "sha256": "d5184355dd52faec8425946d5e6001524992078b569df2ae81b03837721587f8",
+      "bytes": 26666
+    },
+    "skill-impact-contract-inline/05-mcp-41/trial.json": {
+      "sha256": "e4d396d2cc86c631c3948d34a903d9c4844ed533904a448b7fc9a999771bc169",
+      "bytes": 29950
+    },
+    "skill-impact-contract-inline/06-none-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/06-none-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/06-none-41/candidate/main.py": {
+      "sha256": "f255aa78d3a6d0f3fb5419b00940ec51ecafc24c558371cf4ad74287333027e6",
+      "bytes": 3908
+    },
+    "skill-impact-contract-inline/06-none-41/evaluation.json": {
+      "sha256": "2d0d4733a42452076544534005a11f4184f675345bce6315999235bd1428dd14",
+      "bytes": 234690
+    },
+    "skill-impact-contract-inline/06-none-41/progress.json": {
+      "sha256": "8152eba5b95b511bbdaccc731d0f86f289638ae5a42f89f1a4301a12f0015a54",
+      "bytes": 52816
+    },
+    "skill-impact-contract-inline/06-none-41/trajectory.atif.json": {
+      "sha256": "c5c13c191814f7cc3d0bf943cfb369f20ba0a722ac4929c50394df2197080fca",
+      "bytes": 33317
+    },
+    "skill-impact-contract-inline/06-none-41/trial.json": {
+      "sha256": "0598a9bda0223d0ba9127822f226968b965b039fb1c1fb975698b36488b24e57",
+      "bytes": 54776
+    },
+    "skill-impact-contract-inline/07-mcp-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/07-mcp-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/07-mcp-97/candidate/main.py": {
+      "sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+      "bytes": 3854
+    },
+    "skill-impact-contract-inline/07-mcp-97/evaluation.json": {
+      "sha256": "c4f329e39f67faceb7aa60be52996695539776a24f6b9797b313d274472885a0",
+      "bytes": 234188
+    },
+    "skill-impact-contract-inline/07-mcp-97/progress.json": {
+      "sha256": "3fdc0c921f47d00b6089164921cbb37c96df6a1fe0b926fc343ee6a02d5ab637",
+      "bytes": 48795
+    },
+    "skill-impact-contract-inline/07-mcp-97/trajectory.atif.json": {
+      "sha256": "bc0a63117b3a74f348bf9ce831dc97930a507f1767a14c1b6e25f4b9443de6f2",
+      "bytes": 40200
+    },
+    "skill-impact-contract-inline/07-mcp-97/trial.json": {
+      "sha256": "361d60c25198554bdc9a7e2bb2f71a9908c4cc71cc0116d4085bce326abec6be",
+      "bytes": 50972
+    },
+    "skill-impact-contract-inline/08-none-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/08-none-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/08-none-97/candidate/main.py": {
+      "sha256": "a2726a8a85aa954e1c2bf858363f11c0226ad446464f4c544b7599dc6973e4a5",
+      "bytes": 4167
+    },
+    "skill-impact-contract-inline/08-none-97/evaluation.json": {
+      "sha256": "338d7ef88cc232dde088a6286be4a40896f57330459be8a42ad24449f5c7e901",
+      "bytes": 234707
+    },
+    "skill-impact-contract-inline/08-none-97/progress.json": {
+      "sha256": "434ee1b13d7d235f85c6c062058ebd65f3a9f4830b6b15c5479e7cd62e256a4f",
+      "bytes": 70422
+    },
+    "skill-impact-contract-inline/08-none-97/trajectory.atif.json": {
+      "sha256": "ca1b79101263668901b9e232c807f293548de97c523a9637c231454cb14e3066",
+      "bytes": 44980
+    },
+    "skill-impact-contract-inline/08-none-97/trial.json": {
+      "sha256": "04e4128524ec24c74bc7039f184b4d5c0683c5fbb726b5f69c6fcf2ba4555ad2",
+      "bytes": 72385
+    },
+    "skill-impact-contract-inline/09-direct-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-contract-inline/09-direct-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-contract-inline/09-direct-97/candidate/main.py": {
+      "sha256": "fe221c664c1e36694d14ffe2e1094e820e2f6a6fbb15c70f16dfec463c0bfc42",
+      "bytes": 3854
+    },
+    "skill-impact-contract-inline/09-direct-97/evaluation.json": {
+      "sha256": "4ba4c486566ae46bdf35e45937a4242741af9462248fef3fe8b7720cdb5d6efb",
+      "bytes": 234190
+    },
+    "skill-impact-contract-inline/09-direct-97/progress.json": {
+      "sha256": "57d0616eb88cfe6ed5907e98c857b5ec9f86d18915898c28487b0f0605c6ae00",
+      "bytes": 43183
+    },
+    "skill-impact-contract-inline/09-direct-97/trajectory.atif.json": {
+      "sha256": "1583e95257009e5fc439d0d5f5e4f53dd1546f445fafe4394b98ad2183275061",
+      "bytes": 33724
+    },
+    "skill-impact-contract-inline/09-direct-97/trial.json": {
+      "sha256": "842639c6152bd0f12e37cbd8209e303e09144e48799f7ae7e444c953b89fd9a0",
+      "bytes": 45362
+    },
+    "skill-impact-contract-inline/atif-validation.json": {
+      "sha256": "a43d99f77e6e1671729e4cc5c050391b0a3798ff8a2fc50723964a29848902f5",
+      "bytes": 1426
+    },
+    "skill-impact-contract-inline/experiment.json": {
+      "sha256": "5cd35db85d425634f1273eda8a331a47298ded2e8b6b4f2be6ba8c64d23f27c6",
+      "bytes": 1008
+    },
+    "skill-impact-contract-inline/summary.json": {
+      "sha256": "7be4bac36506bb190cc4c5a3fe7340964b08350f7fe8389040185b3b26080d56",
+      "bytes": 3334
+    },
+    "skill-impact-matched/01-none-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/01-none-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/01-none-17/candidate/main.py": {
+      "sha256": "3b2387cc01cc2fdfaea13e0578d076e92c11f5171774293c73d02786d0d83a52",
+      "bytes": 4207
+    },
+    "skill-impact-matched/01-none-17/evaluation-readiness.json": {
+      "sha256": "25ed8c80d5111badb81650aa8d9b841dee07baf1f05f4bd3ade69a661f8b7ad4",
+      "bytes": 234537
+    },
+    "skill-impact-matched/01-none-17/evaluation.json": {
+      "sha256": "58d0f32fcd8f8059a21a989534a26d0050c7bc2b54a40e8bf8630f716e36b151",
+      "bytes": 234500
+    },
+    "skill-impact-matched/01-none-17/progress.json": {
+      "sha256": "9b9573faacf9f7fa13aaacd3e126243b44d8ea0325762f4d9cd2b0a7a72ce987",
+      "bytes": 68672
+    },
+    "skill-impact-matched/01-none-17/trajectory.atif.json": {
+      "sha256": "c50c8de6e4b9c673209002c93c3c172a5fdc21538dad790163d13b4f5f3b633c",
+      "bytes": 42973
+    },
+    "skill-impact-matched/01-none-17/trial.json": {
+      "sha256": "ce5211e4d298c3c86effa979d89d87470161afa534d4d451de8d1daadb8b42d1",
+      "bytes": 70606
+    },
+    "skill-impact-matched/02-direct-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/02-direct-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/02-direct-17/candidate/main.py": {
+      "sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+      "bytes": 2217
+    },
+    "skill-impact-matched/02-direct-17/evaluation-readiness.json": {
+      "sha256": "bcaa2ad7466b4d13a3d90562ce3388faafe4e770df2402b17696e5ff3b8cabfb",
+      "bytes": 230874
+    },
+    "skill-impact-matched/02-direct-17/evaluation.json": {
+      "sha256": "660b1a723055a304a6ff1f14196d8d92a2fd2c3ac40ca4a34ffdc2733ad27b12",
+      "bytes": 230839
+    },
+    "skill-impact-matched/02-direct-17/progress.json": {
+      "sha256": "9c0447e879981635b05b59385dc784ebf75ff56295b129a0d51e1b0df7e89bb5",
+      "bytes": 79300
+    },
+    "skill-impact-matched/02-direct-17/trajectory.atif.json": {
+      "sha256": "2a3fd721fc32a807c3c140daae5025d6d95380fa0e8c4b882d92da7304042f11",
+      "bytes": 50537
+    },
+    "skill-impact-matched/02-direct-17/trial.json": {
+      "sha256": "33690bfc16d7a2cc24aa64bafb26fe80143f3a49ed3df1fae9756c4793e9b8e9",
+      "bytes": 81452
+    },
+    "skill-impact-matched/03-mcp-17/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/03-mcp-17/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/03-mcp-17/candidate/main.py": {
+      "sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+      "bytes": 2217
+    },
+    "skill-impact-matched/03-mcp-17/evaluation-readiness.json": {
+      "sha256": "9ced4bee2c35286df5333ab2ef71cd06750a7645a8c7c3307dbe22b312852015",
+      "bytes": 230876
+    },
+    "skill-impact-matched/03-mcp-17/evaluation.json": {
+      "sha256": "ebdd9da72689af515014eff1beb80ea7dbce4f0d5c78edc24675ac1bae32a7ea",
+      "bytes": 230839
+    },
+    "skill-impact-matched/03-mcp-17/progress.json": {
+      "sha256": "f21b42974f90e78f420138712a5af56a2684444098fb5517099d7ffb80a366f6",
+      "bytes": 82150
+    },
+    "skill-impact-matched/03-mcp-17/trajectory.atif.json": {
+      "sha256": "9d2689879aad451ec6e7ef8be87cbfda5076439fe6409f53738c1304d48731a8",
+      "bytes": 53576
+    },
+    "skill-impact-matched/03-mcp-17/trial.json": {
+      "sha256": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+      "bytes": 84300
+    },
+    "skill-impact-matched/04-direct-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/04-direct-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/04-direct-41/candidate/main.py": {
+      "sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+      "bytes": 3207
+    },
+    "skill-impact-matched/04-direct-41/evaluation-readiness.json": {
+      "sha256": "93ff750c9da5b019bd9f8e892174d542298d0cbea994bee876e48db556b19706",
+      "bytes": 230259
+    },
+    "skill-impact-matched/04-direct-41/evaluation.json": {
+      "sha256": "a2b55b99ce755cf1606eb8d321ad721f7fbf2f6c358f809c17c36390297c4145",
+      "bytes": 230222
+    },
+    "skill-impact-matched/04-direct-41/progress.json": {
+      "sha256": "a165f8db4e38b1b968a85feeebc7f58700d77fc30832efe7c57cb248c1a515e8",
+      "bytes": 27624
+    },
+    "skill-impact-matched/04-direct-41/trajectory.atif.json": {
+      "sha256": "cd51e61a525950f650bf31c389508850a8bd04f20c757253c4493f901f3c7939",
+      "bytes": 20825
+    },
+    "skill-impact-matched/04-direct-41/trial.json": {
+      "sha256": "561e739667eacc967e2296c70b0a92f7b732dfca288c39b90756cceccb0da1c7",
+      "bytes": 29771
+    },
+    "skill-impact-matched/05-mcp-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/05-mcp-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/05-mcp-41/candidate/main.py": {
+      "sha256": "dd70bb314e7b9be939bf60d2c8138f1c5d4073fc81bb7dd121b4af4c0a3431f6",
+      "bytes": 3207
+    },
+    "skill-impact-matched/05-mcp-41/evaluation-readiness.json": {
+      "sha256": "33ef411fecbfffc3957e0ca269fb7e942d8cafcce1249354e5c01e86ae048f48",
+      "bytes": 230259
+    },
+    "skill-impact-matched/05-mcp-41/evaluation.json": {
+      "sha256": "a6f370751614b325cc8b696cb311d946ac0c10ca7ae7dacab0baa60fdde09e33",
+      "bytes": 230223
+    },
+    "skill-impact-matched/05-mcp-41/progress.json": {
+      "sha256": "bc5f5c32c81281c26b26175a995c60d4d7b0afe32732d09391aa5465cb0366a5",
+      "bytes": 30474
+    },
+    "skill-impact-matched/05-mcp-41/trajectory.atif.json": {
+      "sha256": "1c83d202d760e8af8978465331188aa71dd7988bd34fd95764d45150a157cab1",
+      "bytes": 23864
+    },
+    "skill-impact-matched/05-mcp-41/trial.json": {
+      "sha256": "46044c8f2f9104dbf7c64ed51e9cabd3e60c6e261d4b93d9fa09906644e06cc5",
+      "bytes": 32618
+    },
+    "skill-impact-matched/06-none-41/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/06-none-41/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/06-none-41/candidate/main.py": {
+      "sha256": "d3b1f914f3060d13974c9817a7b375c95b049452e849c706ceedc027a27ef77c",
+      "bytes": 5250
+    },
+    "skill-impact-matched/06-none-41/evaluation-readiness.json": {
+      "sha256": "5637efe1e531806c2ff4b9912d962847fb472df9fddb92444b4e73f9e624e80d",
+      "bytes": 234536
+    },
+    "skill-impact-matched/06-none-41/evaluation.json": {
+      "sha256": "b8c6398e7c0384cd55469a97a6499822568c7580e194898e90a8da9046f09c80",
+      "bytes": 234500
+    },
+    "skill-impact-matched/06-none-41/progress.json": {
+      "sha256": "ec97332bc9bc76ceba922bd79f52ed60e9e8d2895e57e99c38607608f1c92f78",
+      "bytes": 54541
+    },
+    "skill-impact-matched/06-none-41/trajectory.atif.json": {
+      "sha256": "294d7e1718e859e9dd7e684c47f225b1975cb8f0979d18126e08620bba710ee1",
+      "bytes": 33635
+    },
+    "skill-impact-matched/06-none-41/trial.json": {
+      "sha256": "d3e2dfa51378ef90f00cfb7e2e589ef8f7496b2121c922a98fc25369a73f52a9",
+      "bytes": 56474
+    },
+    "skill-impact-matched/07-mcp-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/07-mcp-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/07-mcp-97/candidate/main.py": {
+      "sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+      "bytes": 4572
+    },
+    "skill-impact-matched/07-mcp-97/evaluation-readiness.json": {
+      "sha256": "7cd1217a3112298f46a3003ba6ecffa07fd3dd68a2333ec399727748b28d38e7",
+      "bytes": 561083
+    },
+    "skill-impact-matched/07-mcp-97/evaluation.json": {
+      "sha256": "af39474e4ad7588040de3f309339d41eab1045a3f728955344a8f9614995165e",
+      "bytes": 561046
+    },
+    "skill-impact-matched/07-mcp-97/progress.json": {
+      "sha256": "d6c45acda9ceddf9c48e80a60d48b36f7d8818dea7d446333ad9c7efe8330338",
+      "bytes": 85718
+    },
+    "skill-impact-matched/07-mcp-97/trajectory.atif.json": {
+      "sha256": "3192c773f9ee1e79684a062deae5414a306168a3443553c5c565afce27ad1089",
+      "bytes": 54017
+    },
+    "skill-impact-matched/07-mcp-97/trial.json": {
+      "sha256": "a207febd9b52ece2596f7d58e7c8e995b04a852bb5d53c6625b10ceb6f588bbf",
+      "bytes": 87862
+    },
+    "skill-impact-matched/08-none-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/08-none-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/08-none-97/candidate/main.py": {
+      "sha256": "0a6781a654bf98702b23173330806e9fa66962f7879ed60c55a612e399b0af8e",
+      "bytes": 4232
+    },
+    "skill-impact-matched/08-none-97/evaluation-readiness.json": {
+      "sha256": "058935d95869c5c165769f7fe9d7ab0a9a572a74d43b46ef19b676f52320a85b",
+      "bytes": 234661
+    },
+    "skill-impact-matched/08-none-97/evaluation.json": {
+      "sha256": "98835b683fdd1d919b49f3b6c82453c2b2ac981f3577306f285f67e88ff13b91",
+      "bytes": 234624
+    },
+    "skill-impact-matched/08-none-97/progress.json": {
+      "sha256": "165b8535bb5fd7af8fd337366c7bfd715d72c77628b1c6d3488e4de21abc15ac",
+      "bytes": 51169
+    },
+    "skill-impact-matched/08-none-97/trajectory.atif.json": {
+      "sha256": "f5d102bf6f23bda6af879ce9581fced446a7da0eb81db3c096aabc486873f483",
+      "bytes": 31336
+    },
+    "skill-impact-matched/08-none-97/trial.json": {
+      "sha256": "a267a5987ddddea7a0ae816ecbf90752e2ac6d31b9c4f2d04d55519c365698be",
+      "bytes": 53101
+    },
+    "skill-impact-matched/09-direct-97/candidate/TASK.md": {
+      "sha256": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+      "bytes": 2580
+    },
+    "skill-impact-matched/09-direct-97/candidate/example.jsonl": {
+      "sha256": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+      "bytes": 9943
+    },
+    "skill-impact-matched/09-direct-97/candidate/main.py": {
+      "sha256": "8d3e71c32ed880ea69b349d6f87007024fcb791747b49e655d75306f868af992",
+      "bytes": 4572
+    },
+    "skill-impact-matched/09-direct-97/evaluation-readiness.json": {
+      "sha256": "f7afc942264cfda00b5ed3fd00795708c7ca1c2e9b656731c1d554e115e8bab1",
+      "bytes": 561082
+    },
+    "skill-impact-matched/09-direct-97/evaluation.json": {
+      "sha256": "8a0a00dad99cb7c2b069b36d7983ac28f5613150e88b28567e8631ef6e7b8045",
+      "bytes": 561045
+    },
+    "skill-impact-matched/09-direct-97/progress.json": {
+      "sha256": "4bd7d1c35b48f5c60986ba34811b4fd7dc476d0e44b0c940d0e50611ec53789a",
+      "bytes": 82869
+    },
+    "skill-impact-matched/09-direct-97/trajectory.atif.json": {
+      "sha256": "24095e183f30163e09b8d0cdc417779c342e2a8c6eb11f35bad2b5d1527051e3",
+      "bytes": 50979
+    },
+    "skill-impact-matched/09-direct-97/trial.json": {
+      "sha256": "adcf116180b38925dbfe97497980cf867a90cc1ec32a392328bcaa84de2bb2f4",
+      "bytes": 85018
+    },
+    "skill-impact-matched/atif-validation.json": {
+      "sha256": "9e43b8a2c234fd8bd147cb227516bb08451b78e8711dc32920fcb5129fa8659a",
+      "bytes": 2150
+    },
+    "skill-impact-matched/experiment.json": {
+      "sha256": "f2b8776c2533ccf4951a902516e06e3db3d521eb25990f7d44adb63696ee47c1",
+      "bytes": 1203
+    },
+    "skill-impact-matched/readiness-regrade.json": {
+      "sha256": "6683a7128e5770859069d7779a89305fcdaba9e55738da4dc74458246467ba28",
+      "bytes": 1135
+    },
+    "skill-impact-matched/summary.json": {
+      "sha256": "fc52cb8a729b162b34bb7827290a209c59f9ccd74679d182d88a2f83af9b09d6",
+      "bytes": 3318
+    }
+  }
+}

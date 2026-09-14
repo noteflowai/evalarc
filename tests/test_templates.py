@@ -108,7 +108,8 @@ def test_javascript_references_and_all_declared_faults(node, task_id):
         on_event=events.append,
     )
     assert result["valid"] and result["passed"]
-    assert result["killed"] == result["total"] == (8 if task_id == "durable-kv" else 7)
+    expected_controls = {"durable-kv": 8, "support-routing": 7, "robot-evidence-review": 6}
+    assert result["killed"] == result["total"] == expected_controls[task_id]
     assert all(row["failing_cases"] for row in result["mutants"])
     assert result["reference"]["runtime"]["command"][0] == node
     assert {event["control"] for event in events} == {

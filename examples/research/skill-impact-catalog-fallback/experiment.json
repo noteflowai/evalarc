@@ -1,0 +1,44 @@
+{
+  "schema": "evalarc.skill-impact-experiment.v1",
+  "conditions": [
+    "none",
+    "direct",
+    "mcp"
+  ],
+  "model_seeds": [
+    17,
+    41,
+    97
+  ],
+  "task_context": "inline",
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "public_example_seed": 17,
+  "max_steps": 12,
+  "max_new_tokens_per_step": 4096,
+  "wall_seconds": 600,
+  "temperature": 0.2,
+  "harness_files": {
+    "agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+    "bridge.mjs": "adaa2b517a367c063eeda25a32a47f232642b0a254718692581cc2a816e81960",
+    "local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59",
+    "record_skill_impact.py": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+    "robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88",
+    "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+    "skill-library/bundle-cli-DuVlt2Sp.js": "a0f6fca6dea92ecc29951a8f54c3599505d88cd8c7f0ebdefe1df87af503e248",
+    "skill-library/check-files-CjcQukSA.js": "ce208980f02d382389c99931b05b8c7650d814744d0eae8d042e120a22fad5cf",
+    "skill-library/cli.js": "5d66c0b484e9e1f4f39ffa9c719549f7b55fd561b94dce397fab6d257092247d",
+    "skill-library/client.js": "57dcc5e93b93cbb61c75a3a3d8e00f618075d63c93200700bf0cc05980827c8f",
+    "skill-library/index.js": "452b1245cbe664856ae8d581aea6dfcda53bc83fb00cc7424bf65008d3a52074",
+    "skill-library/mcp.js": "75c4e0c01def3977a77c4dd6333a2de73c656eb0e6e56c92e87db546f527ec33",
+    "skill-library/provider-D_asoyBt.js": "bab768e469b221cc41795177f953a6288818093421eaf5eaa92d106045379b37",
+    "skill-library/search-DUE-pmE0.js": "da08a467e9146c7152d386a5751797db2a8ee9cd04649447c1548c150805cb58",
+    "skill-library/skill-bundle-rgNKCmVS.js": "2e3bbc99b67b78db87d4055c6b9ec39747397b40d9917eb4f176e9b30c683a0b",
+    "skill-library/skill-check-Da47aHh6.js": "6304cc7dc53422d8013d3742dd3034ced633067a320e2a173958421235afa13e",
+    "skill-library/tools.js": "e10f6d9fb8a87622946c870f5409d8f66192d4aaf0ebb05ce22105c20ca872d8"
+  },
+  "results_policy": "Retain every scheduled trial, including failures and errors.",
+  "scope": "Public development pilot; no held-out or general efficacy claim."
+}

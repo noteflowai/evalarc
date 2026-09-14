@@ -155,10 +155,14 @@ def test_doctor_reports_unavailable_docker_as_check_failure(monkeypatch):
     assert report["checks"][-1]["detail"].startswith("Docker image unavailable")
 
 
-def test_tasks_json_lists_both_packs(capsys):
+def test_tasks_json_lists_all_three_packs(capsys):
     assert main(["tasks", "--json"]) == 0
     tasks = json.loads(capsys.readouterr().out)
-    assert {task["id"] for task in tasks} == {"durable-kv", "support-routing"}
+    assert {task["id"] for task in tasks} == {
+        "durable-kv",
+        "support-routing",
+        "robot-evidence-review",
+    }
 
 
 def test_evaluate_creates_html_and_json_for_real_candidate(tmp_path):

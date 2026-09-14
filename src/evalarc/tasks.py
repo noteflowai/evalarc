@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable
 
-from evalarc import coding, support, task
+from evalarc import coding, robot_task, support, task
 
 
 @dataclass(frozen=True)
@@ -22,6 +22,7 @@ class TaskDefinition:
     reference_asset: str
     starter_asset: str
     contract_asset: str
+    request_limit_bytes: int = 8192
 
 
 TASKS = {
@@ -52,6 +53,21 @@ TASKS = {
         "support_reference.py",
         "support_starter.py",
         "SUPPORT_TASK.md",
+    ),
+    "robot-evidence-review": TaskDefinition(
+        "robot-evidence-review",
+        "0.1.0",
+        "physical-ai-evidence",
+        "Review recorded coordinates, clocks, numerical error and missing samples",
+        robot_task.DIMENSIONS,
+        robot_task.generate_cases,
+        robot_task.run_case,
+        ("task.py", "robot_task.py", "assets/robot_recordings.json"),
+        ("{python}", "-I", "-B", "main.py"),
+        "robot_reference.py",
+        "robot_starter.py",
+        "ROBOT_TASK.md",
+        65_536,
     ),
 }
 

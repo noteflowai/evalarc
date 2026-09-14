@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Research records &#183; EvalArc</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:auto;max-width:1050px;padding:24px;background:#10191c;color:#edf5ec;font:16px/1.6 system-ui}a{color:#b2f4ca}h1{font-size:clamp(2.4rem,6vw,4rem);line-height:1.1}h2{margin-top:45px}table{border-collapse:collapse;width:100%;margin:20px 0}td,th{padding:10px;text-align:left;border-bottom:1px solid #48625e;overflow-wrap:anywhere}section{background:#172428;padding:20px;border-radius:12px;margin:20px 0}code{overflow-wrap:anywhere}.scope{border-left:3px solid #ffb7a8;padding-left:18px}:focus-visible{outline:3px solid #ffb7a8} @media(max-width:480px){body{padding:15px}section{padding:12px}td,th{padding:6px;font-size:14px}}</style>
+<a href="../">&#8592; EvalArc</a> &#183; <a href="../skill-impact/">27-trial Skill Impact Lab</a>
+<h1>Keep the failed attempts.<br>Check the artifact.</h1>
+<p>Recorded public development experiments, 14 September 2026. Qwen3-8B/Qwen3-4B on an NVIDIA L40S. No private customer data or personal agent history.</p>
+<p class="scope">These pilots test specific integration paths and inspectable outcomes. They do not establish skill or memory efficacy, a general leakage detector, or native commercial-agent interoperability.</p>
+<p><a href="research-records.zip" download>Download all research records</a> &#183; <a href="manifest.json">SHA-256 inventory</a> &#183; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/research-pilots.md">Methods and source projects</a></p>
+<section><h2>Skill composition: 12 attempts, 3 accepted</h2>
+<p>Two synthetic skills interact through a cache. The task contract permits exactly one public report. Selected guidance is loaded through real MCP before model inference; this measures behavior after loading, not autonomous discovery.</p>
+<table><caption>Every condition and preselected seed</caption><thead><tr><th>Condition</th><th>Seed</th><th>Independent result</th><th>Public marker hits</th></tr></thead><tbody>__COMPOSITION__</tbody></table>
+<p>No synthetic marker was found in public files or plain model text in these 12 trials. Nine reports have the wrong numerical output. A literal UTF-8 marker check cannot detect arbitrary encoding or general exfiltration.</p>
+<p><a href="skill-composition-pilot/summary.json">Trial summary</a> &#183; <a href="skill-composition-pilot/experiment.json">Exact protocol</a> &#183; <a href="skill-composition-pilot/grader-controls.json">Eight grader controls</a></p>
+<p>The explicit controls reject a wrong total, boolean count, duplicate keys, self-reported success, an extra private artifact and an empty completion claim. Both valid forms pass. Zero errors on these eight controls is not a universal reward-hacking guarantee.</p></section>
+<section><h2>Funes handoff: memory did not fix the remaining error</h2>
+<p>One public Qwen3-8B session was indexed by Funes 1.3.0 into 31 chunks. Four retrieved hits are supplied to a fresh Qwen3-4B session; the other condition receives the same prior candidate without recall. Both receive the same authoritative task and budget.</p>
+<table><caption>Six continuation attempts, original candidate score 87.5%</caption><thead><tr><th>Context</th><th>Seed</th><th>Score</th><th>Evidence</th></tr></thead><tbody>__HANDOFF__</tbody></table>
+<p>All six workflows finish; none fully resolves the task. The recalled context is fixed before inference. This is a local two-model handoff, not a test of named coding agents.</p>
+<p><a href="funes/prior-session.parquet">Public session Parquet</a> &#183; <a href="funes/recall.txt">Actual Funes recall</a> &#183; <a href="handoff-continuation/experiment.json">Protocol</a> &#183; <a href="handoff-continuation/atif-validation.json">Upstream ATIF checks</a></p></section>
+<section><h2>Harbor: reward and acceptance stay separate</h2>
+<p>A native Harbor 0.23.0 oracle trial earns reward 1; NOP earns 0. The exported task keeps the verifier in a separate container. EvalArc independently grades a caller-selected candidate; the imported reward is never used as proof that this candidate passed.</p>
+<p>The first independent reference import scored 62.5% during container startup delays. The exact same candidate passes all checks on retry. Both results remain available; Docker readiness now has its own bounded startup phase. Regrading the first skill profile after that fix left all nine scores unchanged.</p>
+<p><a href="harbor-import-oracle/harbor-import.json">First import</a> &#183; <a href="harbor-import-oracle-retry/harbor-import.json">Verified retry</a> &#183; <a href="robot-audit-python/audit.json">Python fault audit</a> &#183; <a href="robot-audit-javascript/audit.json">JavaScript fault audit</a></p>
+<p>All 33 skill/handoff ATIF exports passed the actual Harbor schema validator. EvalArc's bounded envelope/linkage inspector has narrower scope and is not a substitute for that schema.</p></section>
+<p>Code: <a href="LICENSE">MIT</a>. Attributed robot source data: <a href="ROBOT_DATA_NOTICE.md">notice</a>, <a href="ROBOT_DATA_LICENSE.txt">Apache-2.0</a>. Generated development records are published with this project's MIT terms, subject to the included source-data notice.</p></html>

@@ -1,0 +1,51 @@
+{
+  "schema": "evalarc.handoff-experiment.v1",
+  "prior_trial_sha256": "2f665fd5734bb89435224913d43b4a69d91d53495c33d5ba9c375d2c59710004",
+  "prior_model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "continuation_model": {
+    "model": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "prior_independent_evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.875,
+    "status": "failed"
+  },
+  "starter_sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+  "retrieved_context_sha256": "dfe15d1e863768c0fd37d8f11fb6d82edb4d36a2060cfcd1f75c57583a36efa9",
+  "seeds": [
+    17,
+    41,
+    97
+  ],
+  "conditions": [
+    "no-memory",
+    "funes-recall"
+  ],
+  "max_steps": 12,
+  "max_new_tokens_per_step": 4096,
+  "wall_seconds": 600,
+  "temperature": 0.2,
+  "harness_files": {
+    "record_skill_impact.py": "c98e1226c4bbf458501f9d46e7767f721e14606087897b4ad4e5d4599d9a62e6",
+    "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+    "agent_sandbox.py": "f4f34e63aaa81af9c19727f7fb8efeaa30c5a68665893900f3472a552efc9f11",
+    "robot_task.py": "324232bfc7b7593abf29e848a311616b2d68f520dbc8c431256bf83d1a582a88",
+    "record_handoff.py": "d7415b5d3f0c9fd456390c8a0b89684369266dc9e481989fbb944bdca6fc0be1"
+  },
+  "scope": "One public task, two open model sizes, fixed retrieved context. Separate sessions of the local tool harness, not a native Claude/Codex test. Recall is retrieved before inference, not autonomously requested by the model."
+}

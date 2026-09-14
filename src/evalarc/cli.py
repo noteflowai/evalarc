@@ -15,6 +15,7 @@ from evalarc.compare import compare
 from evalarc.doctor import diagnose
 from evalarc.evaluate import evaluate, write_json
 from evalarc.events import EventLog, emit
+from evalarc.interop import import_harbor, inspect_atif, read_document, trial_to_atif
 from evalarc.records import read_evaluation
 from evalarc.repetition import repeat
 from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
@@ -39,6 +40,21 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--reference", action="store_true", help="use the known-good control")
     init.add_argument("--task", choices=TASKS, default="durable-kv")
     init.add_argument("--language", choices=LANGUAGES, default="python")
+    harbor = commands.add_parser(
+        "import-harbor", help="import Harbor claims and independently evaluate a candidate"
+    )
+    harbor.add_argument("trial_directory", type=Path)
+    harbor.add_argument("--candidate", type=Path, required=True)
+    harbor.add_argument("--task", choices=TASKS, default="robot-evidence-review")
+    harbor.add_argument("--seeds", type=int, nargs="+", default=[41, 97])
+    harbor.add_argument("--minimum-score", type=float, default=1.0)
+    harbor.add_argument("--image", default="python:3.12-slim")
+    harbor.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
+    harbor.add_argument("--output", type=Path, default=Path("runs/harbor-import"))
+    atif = commands.add_parser("atif", help="inspect ATIF linkage or export a recorded model trial")
+    atif.add_argument("input", type=Path)
+    atif.add_argument("--export-trial", action="store_true")
+    atif.add_argument("--output", type=Path, default=Path("runs/trajectory.atif.json"))
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
@@ -62,6 +78,12 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--image", default="python:3.12-slim")
         command.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
         command.add_argument("--timeout", type=float, default=10.0)
+        command.add_argument(
+            "--startup-timeout",
+            type=float,
+            default=30.0,
+            help="Docker readiness seconds before candidate response timing starts",
+        )
         command.add_argument(
             "--case-timeout",
             type=float,
@@ -163,6 +185,30 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Verification failed: {result['error']}", file=sys.stderr)
         return code
     try:
+        if args.command == "atif":
+            document, source_hash, _ = read_document(args.input)
+            if args.export_trial:
+                document = trial_to_atif(document, source_hash)
+                new_json(args.output, document)
+            print(json.dumps(inspect_atif(document), indent=2))
+            return 0
+        if args.command == "import-harbor":
+            check_output_location(args.candidate, args.output)
+            result = import_harbor(
+                args.trial_directory,
+                args.candidate,
+                args.output,
+                Runtime(image=args.image, docker_command=args.docker_command),
+                args.seeds,
+                args.task,
+                args.minimum_score,
+            )
+            print(json.dumps(result, indent=2))
+            return (
+                2
+                if not result["independent"]["valid"]
+                else (0 if result["acceptance"]["accepted"] else 1)
+            )
         if args.command == "suite":
             plan = load_suite(args.config)
             if args.dry_run:
@@ -249,6 +295,7 @@ def main(argv: list[str] | None = None) -> int:
         runtime = Runtime(
             backend=args.backend,
             timeout=args.timeout,
+            startup_timeout=args.startup_timeout,
             case_timeout=args.case_timeout,
             image=args.image,
             docker_command=args.docker_command,

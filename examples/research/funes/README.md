@@ -1,0 +1,1 @@
+Funes 1.3.0 indexed one explicitly selected public Qwen3-8B session into 31 chunks. Recall returned four hits, k=4, neighbors=0, half-life=0. The Parquet contains session_id and a list of serialized messages. Funes imports these as text; dedicated tool-result blocks are not reconstructed. No personal coding-agent history was read or published.

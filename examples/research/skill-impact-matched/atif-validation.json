@@ -1,0 +1,69 @@
+{
+  "validator": "harbor.models.trajectories.trajectory.Trajectory",
+  "harbor_version": "0.23.0",
+  "records": [
+    {
+      "path": "01-none-17/trajectory.atif.json",
+      "sha256": "c50c8de6e4b9c673209002c93c3c172a5fdc21538dad790163d13b4f5f3b633c",
+      "schema_version": "ATIF-v1.8",
+      "steps": 10,
+      "validated": true
+    },
+    {
+      "path": "02-direct-17/trajectory.atif.json",
+      "sha256": "2a3fd721fc32a807c3c140daae5025d6d95380fa0e8c4b882d92da7304042f11",
+      "schema_version": "ATIF-v1.8",
+      "steps": 14,
+      "validated": true
+    },
+    {
+      "path": "03-mcp-17/trajectory.atif.json",
+      "sha256": "9d2689879aad451ec6e7ef8be87cbfda5076439fe6409f53738c1304d48731a8",
+      "schema_version": "ATIF-v1.8",
+      "steps": 14,
+      "validated": true
+    },
+    {
+      "path": "04-direct-41/trajectory.atif.json",
+      "sha256": "cd51e61a525950f650bf31c389508850a8bd04f20c757253c4493f901f3c7939",
+      "schema_version": "ATIF-v1.8",
+      "steps": 8,
+      "validated": true
+    },
+    {
+      "path": "05-mcp-41/trajectory.atif.json",
+      "sha256": "1c83d202d760e8af8978465331188aa71dd7988bd34fd95764d45150a157cab1",
+      "schema_version": "ATIF-v1.8",
+      "steps": 8,
+      "validated": true
+    },
+    {
+      "path": "06-none-41/trajectory.atif.json",
+      "sha256": "294d7e1718e859e9dd7e684c47f225b1975cb8f0979d18126e08620bba710ee1",
+      "schema_version": "ATIF-v1.8",
+      "steps": 8,
+      "validated": true
+    },
+    {
+      "path": "07-mcp-97/trajectory.atif.json",
+      "sha256": "3192c773f9ee1e79684a062deae5414a306168a3443553c5c565afce27ad1089",
+      "schema_version": "ATIF-v1.8",
+      "steps": 9,
+      "validated": true
+    },
+    {
+      "path": "08-none-97/trajectory.atif.json",
+      "sha256": "f5d102bf6f23bda6af879ce9581fced446a7da0eb81db3c096aabc486873f483",
+      "schema_version": "ATIF-v1.8",
+      "steps": 8,
+      "validated": true
+    },
+    {
+      "path": "09-direct-97/trajectory.atif.json",
+      "sha256": "24095e183f30163e09b8d0cdc417779c342e2a8c6eb11f35bad2b5d1527051e3",
+      "schema_version": "ATIF-v1.8",
+      "steps": 9,
+      "validated": true
+    }
+  ]
+}

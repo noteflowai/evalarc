@@ -100,6 +100,11 @@ integrations remain planned. No frontier-model benchmark result is claimed.
 evidence and fingerprints every input. Use `--require-resolved` when your handoff
 also requires all checks to pass. [Verification and limits](docs/verification.md).
 
+## New in 0.9.0: research you can inspect
+
+[Explore all 27 real GPU skill trials](https://noteflowai.github.io/evalarc/skill-impact/) and [the research pilots](docs/research-pilots.md). Robot Reel's [captured-scene editor](https://noteflowai.github.io/robot-reel/scene-lab/) and [official LIBERO-Plus replay](https://noteflowai.github.io/robot-reel/libero-plus/) connect real source records with portable skill delivery and independent grading. Every failed attempt stays visible; no skill efficacy, full-benchmark or real-hardware result is implied.
+
+
 ## Run an audit
 
 Clone the source, then install in an isolated Python environment:

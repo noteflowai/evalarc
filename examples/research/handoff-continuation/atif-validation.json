@@ -1,0 +1,35 @@
+{
+  "validator": "Harbor 0.23.0 Trajectory",
+  "trials": [
+    {
+      "trial": "funes-recall/02-none-17",
+      "atif_sha256": "299194fb7acc1b2993633e72c200cb379958777e3fcfadfb609d03bfc4c5338d",
+      "valid": true
+    },
+    {
+      "trial": "funes-recall/03-none-41",
+      "atif_sha256": "09e7183bf07fc35c0f991f77f1acd3ec4b3f95a7a7cbcbf86f6a848d69896368",
+      "valid": true
+    },
+    {
+      "trial": "funes-recall/06-none-97",
+      "atif_sha256": "096c08d6095aa7e091e6db09abc45e5583b3ef53dbeae1e015057f930f5d74a8",
+      "valid": true
+    },
+    {
+      "trial": "no-memory/01-none-17",
+      "atif_sha256": "49c746257e1a2a358c3e4c7db95c6b2920b206ec832dde121b8e76e7d474a007",
+      "valid": true
+    },
+    {
+      "trial": "no-memory/04-none-41",
+      "atif_sha256": "903b9ec52f2db7524caced6dd45d1aa977ca9dd2363dd7b82b19cdc47a631334",
+      "valid": true
+    },
+    {
+      "trial": "no-memory/05-none-97",
+      "atif_sha256": "bad4e4ba329469b5d1261e1a8cbf4fe12c6ccc57d4edf569a168081e177cf8d8",
+      "valid": true
+    }
+  ]
+}
