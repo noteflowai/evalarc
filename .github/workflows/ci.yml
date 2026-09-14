@@ -26,6 +26,13 @@ jobs:
       - run: ruff format --check .
       - run: pytest -q
       - run: python -m build
+      - name: Verify received evidence from the installed wheel without runtime tools
+        run: |
+          python -m venv "$RUNNER_TEMP/installed"
+          "$RUNNER_TEMP/installed/bin/pip" install --no-deps dist/*.whl
+          cd "$RUNNER_TEMP"
+          PYTHONPATH="" "$RUNNER_TEMP/installed/bin/python" \
+            "$GITHUB_WORKSPACE/scripts/check_installed.py" --source "$GITHUB_WORKSPACE"
   docker-audit:
     runs-on: ubuntu-latest
     strategy:

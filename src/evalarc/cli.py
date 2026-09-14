@@ -23,6 +23,7 @@ from evalarc.suite import load_suite, run_suite
 from evalarc.tasks import TASKS
 from evalarc.templates import LANGUAGES, initialize
 from evalarc.trajectory import summarize
+from evalarc.verify import SCOPE, verify
 
 
 def parser() -> argparse.ArgumentParser:
@@ -100,11 +101,46 @@ def parser() -> argparse.ArgumentParser:
     suite.add_argument("--docker-command", default=os.getenv("EVALARC_DOCKER", "docker"))
     suite.add_argument("--progress", action="store_true")
     suite.add_argument("--output", type=Path, default=Path("runs/suite"))
+    verification = commands.add_parser(
+        "verify", help="check saved evaluation, repetition or comparison evidence without execution"
+    )
+    verification.add_argument("evidence", type=Path, help="report JSON or its containing directory")
+    verification.add_argument("--json", action="store_true")
+    verification.add_argument(
+        "--require-resolved",
+        action="store_true",
+        help="also require valid, fully resolved results (current result for comparisons)",
+    )
     return root
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if args.command == "verify":
+        try:
+            result = verify(args.evidence)
+            code = 0
+            if args.require_resolved:
+                code = 2 if not result["records_valid"] else (0 if result["fully_resolved"] else 1)
+        except (OSError, ValueError, KeyError, TypeError, IndexError, OverflowError) as error:
+            result = {
+                "schema_version": "evalarc.verification.v1",
+                "verified": False,
+                "error": str(error),
+                "scope": SCOPE,
+            }
+            code = 2
+        if args.json:
+            print(json.dumps(result, indent=2))
+        elif result["verified"]:
+            print(
+                f"Verified {result['kind']}: {len(result['files'])} JSON files | "
+                f"Valid records: {result['records_valid']} | "
+                f"Fully resolved: {result['fully_resolved']}\n{SCOPE}"
+            )
+        else:
+            print(f"Verification failed: {result['error']}", file=sys.stderr)
+        return code
     try:
         if args.command == "suite":
             plan = load_suite(args.config)
