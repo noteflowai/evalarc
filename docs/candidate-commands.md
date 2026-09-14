@@ -55,3 +55,9 @@ Command templates are included in report runtime metadata. A command change
 makes checkpoint runs incomparable even if the task and source files match.
 For reproduction, archive runtime binaries/dependencies as well as the command;
 a command string alone does not identify an interpreter version.
+
+`evaluate`, `audit`, and `repeat` accept `--timeout` for each response and
+`--case-timeout` for the complete case (defaults: 10 and 60 seconds). The latter
+is shared across Durable KV restarts. A protocol-budget violation is an assessed
+agent error; a runtime startup or cleanup failure makes the case unassessed.
+See [repeatability and diagnostics](reliability.md) for evidence and exit codes.

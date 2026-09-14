@@ -7,6 +7,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from evalarc.evaluate import evaluate
+from evalarc.events import EventCallback
 from evalarc.runner import Runtime
 from evalarc.tasks import get_task
 
@@ -50,17 +51,35 @@ def mutate(source: str, old: str, new: str) -> str:
     return source.replace(old, new)
 
 
-def audit(runtime: Runtime, seeds: list[int], task_id: str = "durable-kv") -> dict:
+def audit(
+    runtime: Runtime,
+    seeds: list[int],
+    task_id: str = "durable-kv",
+    *,
+    on_event: EventCallback | None = None,
+) -> dict:
     task = get_task(task_id)
     source = asset(task.reference_asset)
     controls = CONTROL_PACKS[task_id]
+
+    def observer(control: str) -> EventCallback | None:
+        if on_event is None:
+            return None
+        return lambda event: on_event({**event, "control": control})
+
     rows = []
     with tempfile.TemporaryDirectory(prefix="evalarc-audit-") as directory:
         root = Path(directory)
-        reference = evaluate(write_candidate(root / "reference", source), runtime, seeds, task_id)
+        reference = evaluate(
+            write_candidate(root / "reference", source),
+            runtime,
+            seeds,
+            task_id,
+            on_event=observer("reference"),
+        )
         for name, (old, new, target) in controls.items():
             candidate = write_candidate(root / name, mutate(source, old, new))
-            result = evaluate(candidate, runtime, seeds, task_id)
+            result = evaluate(candidate, runtime, seeds, task_id, on_event=observer(name))
             failures = [c["case_id"] for c in result["cases"] if c["checks"].get(target) is False]
             rows.append(
                 {

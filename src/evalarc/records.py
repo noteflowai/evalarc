@@ -100,6 +100,11 @@ def validate_evaluation(data: dict) -> None:
     )
     for field in ("response_timeout_seconds", "session_output_limit_bytes"):
         require(numeric(runtime.get(field)) and runtime[field] > 0, f"invalid runtime {field}")
+    if "case_timeout_seconds" in runtime:
+        require(
+            numeric(runtime["case_timeout_seconds"]) and runtime["case_timeout_seconds"] > 0,
+            "invalid case time budget",
+        )
     seeds = data.get("seeds")
     require(
         isinstance(seeds, list) and bool(seeds) and all(type(seed) is int for seed in seeds),

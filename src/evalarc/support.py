@@ -170,6 +170,7 @@ def run_case(case: TicketCase, workspace: Path, state: Path, runtime: Runtime) -
     error = None
     status = "passed"
     finished = False
+    process = None
     try:
         with runtime.start(workspace, state) as process:
             for index in range(MAX_ACTIONS):
@@ -235,4 +236,5 @@ def run_case(case: TicketCase, workspace: Path, state: Path, runtime: Runtime) -
         "final_state": environment.state,
         "trace": trace,
         "tool_calls": sum(event["type"] == "tool_call" for event in trace),
+        "processes": [process.diagnostics()] if process is not None else [],
     }

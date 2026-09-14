@@ -273,3 +273,66 @@ def render_comparison(data: dict, destination: Path) -> None:
         f"<footer>{_esc(data['interpretation'])}</footer>"
     )
     _page("Comparison", "Compare outcomes.", body, destination)
+
+
+def render_repetition(data: dict, destination: Path) -> None:
+    body = (
+        f"<p>{_esc(data['task']['id'])} · {_esc(data['status'].upper())} · "
+        "one frozen candidate, fixed cases, fresh state per attempt</p>"
+        '<div class="cards">'
+        + _card(
+            f"{data['resolved_attempts']}/{data['requested_attempts']}",
+            "requested attempts resolved",
+            alert=not data["all_attempts_resolved"],
+        )
+        + _card(_score(data["mean_score"]), "mean score of assessed attempts")
+        + _card(
+            data["variable_checks"],
+            "checks with varying outcomes",
+            alert=bool(data["variable_checks"]),
+        )
+        + "</div>"
+        f"<p>Requested: {data['requested_attempts']}. Completed: {data['completed_attempts']}. "
+        f"Assessed: {data['assessed_attempts']}. Invalid: {data['invalid_attempts']}. "
+        f"Assessed score range: {_score(data['min_score'])}–{_score(data['max_score'])}.</p>"
+    )
+    if not data["valid"]:
+        body += (
+            "<p><strong>Invalid or incomplete run.</strong> Repetition stops after an invalid "
+            "attempt. Missing attempts are not treated as passes or failures.</p>"
+        )
+    body += "<h2>Outcomes by case</h2>"
+    for row in data["cases"]:
+        body += (
+            '<article class="change-card">'
+            f"<h3>{_esc(row['case_id'])} · seed {row['seed']}</h3>"
+            f"<p>{row['passed']}/{row['assessed']} assessed attempts passed"
+            f" · {row['unassessed']} unassessed"
+            + (" · <strong>variable case outcome</strong>" if row["variable"] else "")
+            + "</p><details><summary>Check pass rates</summary><ul>"
+        )
+        for name, check in row["checks"].items():
+            rate = "unassessed" if check["pass_rate"] is None else f"{check['pass_rate']:.1%}"
+            body += (
+                f"<li>{_esc(name)}: {check['passed']}/{check['assessed']} ({rate})"
+                + (" · <strong>variable</strong>" if check["variable"] else "")
+                + "</li>"
+            )
+        body += "</ul></details></article>"
+    body += "<h2>Every attempt</h2><ul>"
+    for row in data["attempts"]:
+        prefix = f"attempts/{row['attempt']:04d}"
+        body += (
+            f'<li><a href="{prefix}/index.html">Attempt {row["attempt"]}</a> · '
+            f"{_esc(row['status'])} · score {_score(row['score'])} · "
+            f'<a href="{prefix}/evaluation.json">JSON evidence</a></li>'
+        )
+    body += "</ul>" + _metadata(data)
+    body += (
+        '<p><a href="repetition.json">Repetition summary JSON</a> · '
+        '<a href="events.jsonl">Progress events</a></p>'
+        f"<footer>{_esc(data['interpretation'])} Case and check denominators count their "
+        "assessed observations, including those in an otherwise invalid attempt. "
+        "Repeated success on these cases does not establish general agent reliability.</footer>"
+    )
+    _page("Repeatability", "See every attempt.", body, destination)

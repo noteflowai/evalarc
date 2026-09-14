@@ -15,7 +15,7 @@ import sys
 import time
 import tomllib
 import uuid
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 
@@ -36,6 +36,20 @@ class Runtime:
     output_limit: int = 1_048_576
     image_id: str | None = None
     command: tuple[str, ...] = ("{python}", "-I", "-B", "main.py", "{state}/store.db")
+    case_timeout: float = 60.0
+    deadline: float | None = field(default=None, repr=False)
+
+    def for_case(self) -> "Runtime":
+        return replace(self, deadline=time.monotonic() + self.case_timeout)
+
+    def check_deadline(self) -> None:
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            raise CandidateError("case time budget exhausted")
+
+    def response_deadline(self) -> float:
+        self.check_deadline()
+        deadline = time.monotonic() + self.timeout
+        return min(deadline, self.deadline) if self.deadline is not None else deadline
 
     def for_candidate(self, workspace: Path, default_command: tuple[str, ...]) -> "Runtime":
         """Read configuration from the immutable copy, never the live submission."""
@@ -64,8 +78,18 @@ class Runtime:
     def prepare(self) -> None:
         if self.backend not in ("docker", "local"):
             raise ValueError("backend must be docker or local")
-        if not math.isfinite(self.timeout) or self.timeout <= 0 or self.output_limit < 1:
-            raise ValueError("execution limits must be positive")
+        try:
+            valid_times = all(
+                type(value) in (int, float) and math.isfinite(value) and value > 0
+                for value in (self.timeout, self.case_timeout)
+            )
+        except OverflowError:
+            valid_times = False
+        if not valid_times or type(self.output_limit) is not int or self.output_limit < 1:
+            raise ValueError(
+                "execution times must be finite and positive; "
+                "output limit must be a positive integer"
+            )
         if self.backend == "docker" and self.image_id is None:
             if not self.docker:
                 raise ValueError("docker command is empty")
@@ -87,7 +111,9 @@ class Runtime:
                 raise ValueError("Docker did not return an immutable image ID")
 
     def start(self, workspace: Path, state: Path) -> "Process":
-        return Process(self, workspace, state)
+        active = self if self.deadline is not None else self.for_case()
+        active.check_deadline()
+        return Process(active, workspace, state)
 
 
 class Process:
@@ -154,11 +180,14 @@ class Process:
         self.stderr_tail = bytearray()
 
     def _read(self, deadline: float) -> None:
+        self.runtime.check_deadline()
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise CandidateError("response timeout")
         events = self.selector.select(remaining)
+        self.runtime.check_deadline()
         if not events:
+            self.runtime.check_deadline()
             raise CandidateError("response timeout")
         for key, _ in events:
             chunk = os.read(key.fileobj.fileno(), 65536)
@@ -168,14 +197,25 @@ class Process:
                     self._check_container_exit()
                     raise CandidateError("candidate exited without a complete response")
                 continue
-            self.output_bytes += len(chunk)
-            if self.output_bytes > self.runtime.output_limit:
-                raise CandidateError("stdout/stderr output limit exceeded")
-            if key.data == "stdout":
-                self.buffer.extend(chunk)
-            else:
-                self.stderr_tail.extend(chunk)
-                del self.stderr_tail[:-2048]
+            self._capture(key.data, chunk)
+
+    def _capture(self, stream: str, chunk: bytes) -> None:
+        self.output_bytes += len(chunk)
+        if stream == "stdout":
+            self.buffer.extend(chunk)
+        else:
+            self.stderr_tail.extend(chunk)
+            del self.stderr_tail[:-2048]
+        if self.output_bytes > self.runtime.output_limit:
+            raise CandidateError("stdout/stderr output limit exceeded")
+
+    def diagnostics(self) -> dict:
+        return {
+            "exit_code": self.proc.poll(),
+            "output_bytes": self.output_bytes,
+            "stderr_tail": self.stderr_tail.decode("utf-8", errors="replace"),
+            "stderr_tail_limit_bytes": 2048,
+        }
 
     def _check_container_exit(self) -> None:
         if self.runtime.backend != "docker":
@@ -191,12 +231,13 @@ class Process:
         payload = (json.dumps(request, ensure_ascii=True, allow_nan=False) + "\n").encode()
         if len(payload) > 8192:
             raise ValueError("request exceeds the supported 8 KiB protocol limit")
-        deadline = time.monotonic() + self.runtime.timeout
+        deadline = self.runtime.response_deadline()
         try:
             pending = memoryview(payload)
             while pending:
                 remaining = deadline - time.monotonic()
                 if remaining <= 0 or not select.select([], [self.proc.stdin], [], remaining)[1]:
+                    self.runtime.check_deadline()
                     raise CandidateError("stdin write timeout")
                 try:
                     written = os.write(self.proc.stdin.fileno(), pending)
@@ -214,42 +255,45 @@ class Process:
             result = json.loads(line, parse_constant=lambda value: _invalid_json(value))
             # JSON exponents such as 1e999 can overflow without invoking parse_constant.
             json.dumps(result, allow_nan=False)
+            self.runtime.check_deadline()
             return result
         except (ValueError, UnicodeDecodeError, RecursionError) as error:
             raise CandidateError("response is not finite JSON") from error
 
     def finish(self, stop: str) -> None:
+        self.runtime.check_deadline()
         if stop == "kill":
             self.close()
             return
         if stop != "eof":
             raise ValueError(f"unknown stop mode: {stop}")
         self.proc.stdin.close()
-        deadline = time.monotonic() + self.runtime.timeout
+        deadline = self.runtime.response_deadline()
         # Drain pipes as the process exits, preventing output-induced deadlocks.
         while self.selector.get_map():
             if time.monotonic() >= deadline:
+                self.runtime.check_deadline()
                 raise CandidateError("candidate did not exit after EOF")
             events = self.selector.select(max(0, deadline - time.monotonic()))
+            self.runtime.check_deadline()
             if not events:
+                self.runtime.check_deadline()
                 raise CandidateError("candidate did not exit after EOF")
             for key, _ in events:
                 chunk = os.read(key.fileobj.fileno(), 65536)
                 if not chunk:
                     self.selector.unregister(key.fileobj)
                     continue
-                self.output_bytes += len(chunk)
-                if self.output_bytes > self.runtime.output_limit:
-                    raise CandidateError("stdout/stderr output limit exceeded")
-                if key.data == "stdout":
-                    self.buffer.extend(chunk)
+                self._capture(key.data, chunk)
         try:
             code = self.proc.wait(timeout=max(0.01, deadline - time.monotonic()))
         except subprocess.TimeoutExpired as error:
+            self.runtime.check_deadline()
             raise CandidateError("candidate did not exit after EOF") from error
         if code:
             self._check_container_exit()
             raise CandidateError(f"candidate exited with code {code}")
+        self.runtime.check_deadline()
         if self.buffer.strip():
             raise CandidateError("candidate emitted unsolicited stdout")
 
@@ -257,29 +301,49 @@ class Process:
         if self.closed:
             return
         self.closed = True
+        cleanup_errors = []
         if self.runtime.backend == "docker":
             # Killing the CLI alone does not reliably terminate its container.
-            subprocess.run(
-                [*self.runtime.docker, "rm", "-f", self.name],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=20,
-            )
+            try:
+                subprocess.run(
+                    [*self.runtime.docker, "rm", "-f", self.name],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=20,
+                )
+            except (OSError, subprocess.SubprocessError):
+                cleanup_errors.append("Docker cleanup did not complete")
         try:
             os.killpg(self.proc.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
-        self.proc.wait(timeout=5)
-        self.selector.close()
-        for stream in (self.proc.stdin, self.proc.stdout, self.proc.stderr):
-            if stream and not stream.closed:
-                stream.close()
+        except OSError:
+            cleanup_errors.append("could not terminate local process group")
+        try:
+            self.proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            cleanup_errors.append("local process did not terminate")
+        finally:
+            self.selector.close()
+            for stream in (self.proc.stdin, self.proc.stdout, self.proc.stderr):
+                if stream and not stream.closed:
+                    stream.close()
+        if cleanup_errors:
+            raise EnvironmentFailure("; ".join(cleanup_errors))
 
     def __enter__(self) -> "Process":
         return self
 
-    def __exit__(self, *_: object) -> None:
-        self.close()
+    def __exit__(self, exc_type: object, error: BaseException | None, traceback: object) -> None:
+        try:
+            self.close()
+        except EnvironmentFailure as cleanup:
+            if error is not None and not isinstance(error, Exception):
+                error.add_note(str(cleanup))
+                return
+            if error is not None:
+                raise EnvironmentFailure(f"{cleanup}; original error: {error}") from error
+            raise
 
 
 def _invalid_json(value: str) -> None:
