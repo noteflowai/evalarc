@@ -1,4 +1,4 @@
 include LICENSE CITATION.cff CONTRIBUTING.md SECURITY.md README.zh-CN.md
 recursive-include docs *.md *.svg
 recursive-include research *.json *.bib
-recursive-include examples *.md *.json *.html
+recursive-include examples *.md *.json *.html *.js *.toml

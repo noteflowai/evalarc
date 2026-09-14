@@ -1,9 +1,8 @@
 # Research and development roadmap
 
 EvalArc targets auditable evaluations across software agents. The first
-implemented task pack is for coding. The next milestone is a simulated support
-workflow, so a second, different interaction model can validate the proposed
-[shared interfaces](architecture.md).
+implemented task pack is for coding. v0.2 adds a simulated support workflow to
+exercise a second interaction model through the [shared metadata](architecture.md).
 
 The research question is whether independent grader audits improve the
 relationship between evaluation reward and actual task outcomes on unseen
@@ -13,9 +12,12 @@ question needs substantially more evidence.
 | Stage | Deliverable | Acceptance evidence |
 | --- | --- | --- |
 | v0.1, implemented | Coding task, grader, eight controls, provenance, checkpoint statistics | Positive and negative controls, protocol tests, Docker execution |
-| Next | Task definitions and configurable candidate commands | Coding submissions in two languages, same observable contract |
-| Next | Simulated support-ticket workflow and an agent adapter | State-based grading, tool-call traces, correct and faulty scripted policies |
-| Next | Shared task/verifier API and independent defect packs | Both task domains use the same evidence format; reviewer-authored faults |
+| v0.2, implemented | Task definitions and configurable candidate commands | Python and independent JavaScript support policies use the same verifier |
+| v0.2, implemented | Simulated support-ticket workflow and a JSONL policy loop | State-based grading, tool-call traces, correct and seven faulty policies |
+| v0.2, implemented | Shared report metadata with domain-specific checks | Both packs record commands, provenance, validity, outcomes, and evidence |
+| Next | Broader language coverage for coding | A non-Python Durable KV submission passes the same full contract |
+| Next | Independent defect packs and task authors | Reviewer-authored faults and a third independently authored task |
+| Next | Real model-provider adapter | End-to-end run with measured usage, task evidence, repeated attempts |
 | Later | Browser environment adapter | Reproducible initial state, backend outcome checks, isolated sessions |
 | Next | Harbor integration using supported verifier boundaries | Actual upstream task execution, pinned compatibility version |
 | Next | Procedural task variants with separated public and private acceptance | Measured exposure controls; distribution-level split |

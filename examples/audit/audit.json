@@ -1,22 +1,31 @@
 {
-  "schema_version": "evalarc.audit.v1",
+  "schema_version": "evalarc.audit.v2",
+  "valid": true,
   "reference_passed": true,
   "reference": {
-    "schema_version": "evalarc.evaluation.v1",
-    "created_at": "2026-09-14T01:11:24.607851+00:00",
-    "evalarc_version": "0.1.0",
+    "schema_version": "evalarc.evaluation.v2",
+    "created_at": "2026-09-14T01:29:51.125110+00:00",
+    "evalarc_version": "0.2.0",
     "task": {
       "id": "durable-kv",
       "version": "0.1.0",
+      "domain": "coding",
       "split": "public-development"
     },
-    "candidate_sha256": "c6907b887b14c1db09aa928cb91c549168956346d149fb1426c91c6028e8aa66",
-    "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+    "candidate_sha256": "4240da0ab584ebbda01a737b07bb351ee465fe494595b96f67fd3371daf0f3f2",
+    "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
     "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
     "runtime": {
       "backend": "docker",
       "image": "python:3.12-slim",
       "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+      "command": [
+        "{python}",
+        "-I",
+        "-B",
+        "main.py",
+        "{state}/store.db"
+      ],
       "response_timeout_seconds": 10.0,
       "session_output_limit_bytes": 1048576,
       "python": "3.12.3",
@@ -25,42 +34,50 @@
     "seeds": [
       17
     ],
+    "valid": true,
+    "status": "passed",
     "score": 1.0,
     "resolved": true,
     "dimensions": {
       "basic": {
         "passed": 3,
         "total": 3,
+        "assessed": 3,
         "weight": 0.25,
         "score": 1.0
       },
       "validation": {
         "passed": 2,
         "total": 2,
+        "assessed": 2,
         "weight": 0.15,
         "score": 1.0
       },
       "transactions": {
         "passed": 2,
         "total": 2,
+        "assessed": 2,
         "weight": 0.2,
         "score": 1.0
       },
       "compare_swap": {
         "passed": 2,
         "total": 2,
+        "assessed": 2,
         "weight": 0.15,
         "score": 1.0
       },
       "persistence": {
         "passed": 3,
         "total": 3,
+        "assessed": 3,
         "weight": 0.15,
         "score": 1.0
       },
       "crash_recovery": {
         "passed": 3,
         "total": 3,
+        "assessed": 3,
         "weight": 0.1,
         "score": 1.0
       }
@@ -70,9 +87,13 @@
         "seed": 17,
         "case_id": "read-write-delete",
         "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 6,
-        "duration_seconds": 0.556857,
+        "duration_seconds": 0.926471,
         "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
         "error": null
       },
@@ -80,9 +101,13 @@
         "seed": 17,
         "case_id": "json-types-and-overwrite",
         "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 16,
-        "duration_seconds": 0.627593,
+        "duration_seconds": 0.992022,
         "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
         "error": null
       },
@@ -90,9 +115,13 @@
         "seed": 17,
         "case_id": "reject-and-continue",
         "dimension": "validation",
+        "checks": {
+          "validation": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 10,
-        "duration_seconds": 0.600158,
+        "duration_seconds": 0.802672,
         "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
         "error": null
       },
@@ -100,9 +129,13 @@
         "seed": 17,
         "case_id": "empty-and-unicode-keys",
         "dimension": "validation",
+        "checks": {
+          "validation": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 4,
-        "duration_seconds": 0.618073,
+        "duration_seconds": 0.668748,
         "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
         "error": null
       },
@@ -110,9 +143,13 @@
         "seed": 17,
         "case_id": "commit-batch",
         "dimension": "transactions",
+        "checks": {
+          "transactions": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 4,
-        "duration_seconds": 0.594075,
+        "duration_seconds": 0.654542,
         "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
         "error": null
       },
@@ -120,9 +157,13 @@
         "seed": 17,
         "case_id": "rollback-batch",
         "dimension": "transactions",
+        "checks": {
+          "transactions": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 7,
-        "duration_seconds": 0.61849,
+        "duration_seconds": 0.69832,
         "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
         "error": null
       },
@@ -130,9 +171,13 @@
         "seed": 17,
         "case_id": "cas-match-and-mismatch",
         "dimension": "compare_swap",
+        "checks": {
+          "compare_swap": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 7,
-        "duration_seconds": 0.652527,
+        "duration_seconds": 0.662942,
         "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
         "error": null
       },
@@ -140,9 +185,13 @@
         "seed": 17,
         "case_id": "cas-type-sensitivity",
         "dimension": "compare_swap",
+        "checks": {
+          "compare_swap": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 5,
-        "duration_seconds": 0.586843,
+        "duration_seconds": 0.749806,
         "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
         "error": null
       },
@@ -150,9 +199,13 @@
         "seed": 17,
         "case_id": "restart-preserves-acknowledged-write",
         "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 4,
-        "duration_seconds": 1.674949,
+        "duration_seconds": 2.199417,
         "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
         "error": null
       },
@@ -160,9 +213,13 @@
         "seed": 17,
         "case_id": "restart-preserves-transaction",
         "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 3,
-        "duration_seconds": 1.101726,
+        "duration_seconds": 1.166844,
         "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
         "error": null
       },
@@ -170,9 +227,13 @@
         "seed": 17,
         "case_id": "sigkill-after-acknowledgement",
         "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 2,
-        "duration_seconds": 0.958828,
+        "duration_seconds": 1.224396,
         "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
         "error": null
       },
@@ -180,9 +241,13 @@
         "seed": 17,
         "case_id": "sigkill-after-atomic-batch",
         "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 3,
-        "duration_seconds": 0.995231,
+        "duration_seconds": 1.151733,
         "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
         "error": null
       },
@@ -190,9 +255,13 @@
         "seed": 17,
         "case_id": "restart-preserves-cas",
         "dimension": "persistence",
+        "checks": {
+          "persistence": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 3,
-        "duration_seconds": 0.984424,
+        "duration_seconds": 1.160644,
         "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
         "error": null
       },
@@ -200,9 +269,13 @@
         "seed": 17,
         "case_id": "sigkill-after-delete",
         "dimension": "crash_recovery",
+        "checks": {
+          "crash_recovery": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 3,
-        "duration_seconds": 1.489583,
+        "duration_seconds": 1.718475,
         "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
         "error": null
       },
@@ -210,14 +283,18 @@
         "seed": 17,
         "case_id": "seeded-state-machine",
         "dimension": "basic",
+        "checks": {
+          "basic": true
+        },
         "passed": true,
+        "status": "passed",
         "checks_completed": 52,
-        "duration_seconds": 0.673342,
+        "duration_seconds": 0.815656,
         "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
         "error": null
       }
     ],
-    "evaluation_seconds": 12.742838,
+    "evaluation_seconds": 15.605099,
     "agent_cost_usd": null,
     "agent_tokens": null
   },
@@ -226,29 +303,38 @@
       "name": "ack-without-work",
       "target_dimension": "basic",
       "killed": true,
+      "valid": true,
       "score": 0.0,
       "failing_cases": [
         "json-types-and-overwrite",
         "read-write-delete",
         "seeded-state-machine"
       ],
-      "candidate_sha256": "7d0d19a54735f8534e00b650689cd1a669c8c71ee27a208d6e3621af3ef1a0a2",
+      "candidate_sha256": "e80e9d07c1b2a54e4e68a717c3ede2e71dbc871f7bc9c0174cffd9d0ef466f39",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:11:34.851852+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:30:02.514728+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "7d0d19a54735f8534e00b650689cd1a669c8c71ee27a208d6e3621af3ef1a0a2",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "e80e9d07c1b2a54e4e68a717c3ede2e71dbc871f7bc9c0174cffd9d0ef466f39",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -257,42 +343,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.0,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 0,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 0.0
           },
           "validation": {
             "passed": 0,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 0.0
           },
           "transactions": {
             "passed": 0,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 0.0
           },
           "compare_swap": {
             "passed": 0,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 0.0
           },
           "persistence": {
             "passed": 0,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 0.0
           },
           "crash_recovery": {
             "passed": 0,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 0.0
           }
@@ -302,9 +396,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 0,
-            "duration_seconds": 0.484289,
+            "duration_seconds": 0.608378,
             "transcript_sha256": "e9d1c1a4ce952f925f5a3d00a84348bf482007670ba13602f73d0129cc422a60",
             "error": "response mismatch at request 1; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
           },
@@ -312,9 +410,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.492859,
+            "duration_seconds": 0.563549,
             "transcript_sha256": "ad684a2e4e62254b35236e279cda7ec03bfe6bf6a01e3c0b24a1810e6c8088d2",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": null}, got {\"ok\": true}"
           },
@@ -322,9 +424,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.499618,
+            "duration_seconds": 0.596346,
             "transcript_sha256": "932f3ec3f66ee636feddf02978271d1af20d352d113d51580182f4956132fcbc",
             "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
           },
@@ -332,9 +438,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.493039,
+            "duration_seconds": 0.576032,
             "transcript_sha256": "dd5c4b23bf9661f05363e4be2791dffa554d3bb7a6226d1be64e58adc97e7907",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
           },
@@ -342,9 +452,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.488575,
+            "duration_seconds": 0.635267,
             "transcript_sha256": "660d89f2f1ccd8d228c1871197f23f08289d1c1fe244918053aa9aca3a9ce576",
             "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
           },
@@ -352,9 +466,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.505931,
+            "duration_seconds": 0.5925,
             "transcript_sha256": "8d05dbc72469fa9ab22e4943d0e9ed13a8733f443dc95a84a306daa02b2031b4",
             "error": "response mismatch at request 2; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
           },
@@ -362,9 +480,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.499838,
+            "duration_seconds": 0.558764,
             "transcript_sha256": "92c53f111ed9d1c600b448aaf9e5a529f32d2f085433ad700cd369bd71c55185",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}"
           },
@@ -372,9 +494,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.490077,
+            "duration_seconds": 0.689461,
             "transcript_sha256": "88cbf896bd041b5c3a80f99fc01f19d0b473a1a39cdb4f59d621a8abbcaa35e4",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true}"
           },
@@ -382,9 +508,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.917718,
+            "duration_seconds": 1.031052,
             "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
           },
@@ -392,9 +522,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.977562,
+            "duration_seconds": 1.008206,
             "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
           },
@@ -402,9 +536,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.98282,
+            "duration_seconds": 1.008229,
             "transcript_sha256": "d01e5e8ceee977002ba418a5bf134418cd85c9b36813ea2fadfa7908c141b718",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
           },
@@ -412,9 +550,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.972036,
+            "duration_seconds": 1.010499,
             "transcript_sha256": "5c70c6333e7c60969ecad930a4b839122a1582a89cdf257e323ffa6fbbf3036f",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"ok\": true}"
           },
@@ -422,9 +564,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.483722,
+            "duration_seconds": 0.506207,
             "transcript_sha256": "7ef0ed9705196a8514631dacec2c92eeb5e34cd9811d281f9816e348c50d1a17",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": true}, got {\"ok\": true}"
           },
@@ -432,9 +578,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 1.458095,
+            "duration_seconds": 1.497816,
             "transcript_sha256": "165fee513b6ad33052636d17d8a1f492e3226d1b5f19b246f01f1c20289f5525",
             "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
           },
@@ -442,14 +592,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 0.48732,
+            "duration_seconds": 0.497166,
             "transcript_sha256": "ce6e264c70b36102aabe44145d2a7558766913a2725261b8f120efea98fa8659",
             "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"ok\": true}"
           }
         ],
-        "evaluation_seconds": 10.240968,
+        "evaluation_seconds": 11.386876,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -458,29 +612,38 @@
       "name": "memory-only",
       "target_dimension": "persistence",
       "killed": true,
+      "valid": true,
       "score": 0.78333333,
       "failing_cases": [
         "restart-preserves-acknowledged-write",
         "restart-preserves-cas",
         "restart-preserves-transaction"
       ],
-      "candidate_sha256": "6c442b5afde9b592ea84c83531f458005280af426a50d16898ca21f51f5c8462",
+      "candidate_sha256": "478fc026e785f7dcad2dd83744abbba6c482dc1f903e6ece8b0803dd335389e1",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:11:46.771020+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:30:13.553761+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "6c442b5afde9b592ea84c83531f458005280af426a50d16898ca21f51f5c8462",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "478fc026e785f7dcad2dd83744abbba6c482dc1f903e6ece8b0803dd335389e1",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -489,42 +652,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.78333333,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 1.0
           },
           "compare_swap": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "persistence": {
             "passed": 0,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 0.0
           },
           "crash_recovery": {
             "passed": 1,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 0.3333333333333333
           }
@@ -534,9 +705,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.547725,
+            "duration_seconds": 0.510333,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -544,9 +719,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.543348,
+            "duration_seconds": 0.512203,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -554,9 +733,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.562714,
+            "duration_seconds": 0.5002,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -564,9 +747,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.534555,
+            "duration_seconds": 0.499981,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -574,9 +761,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.569904,
+            "duration_seconds": 0.487121,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -584,9 +775,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.535019,
+            "duration_seconds": 0.492795,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -594,9 +789,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.563061,
+            "duration_seconds": 0.491807,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -604,9 +803,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 5,
-            "duration_seconds": 0.549109,
+            "duration_seconds": 0.494448,
             "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
             "error": null
           },
@@ -614,9 +817,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 1.034731,
+            "duration_seconds": 0.976095,
             "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -624,9 +831,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 1.075491,
+            "duration_seconds": 0.996261,
             "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -634,9 +845,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 1.03005,
+            "duration_seconds": 1.054678,
             "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -644,9 +859,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 1.097839,
+            "duration_seconds": 1.013921,
             "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -654,9 +873,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 1.036593,
+            "duration_seconds": 0.997537,
             "transcript_sha256": "497082839111501c6aa4912312fe30686befcab05beb84ebbcb99be0d1e8aef1",
             "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": 321}, got {\"found\": false, \"ok\": true}"
           },
@@ -664,9 +887,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.66329,
+            "duration_seconds": 1.494879,
             "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
             "error": null
           },
@@ -674,14 +901,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.569394,
+            "duration_seconds": 0.509886,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 11.918893,
+        "evaluation_seconds": 11.038733,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -690,27 +921,36 @@
       "name": "partial-batch",
       "target_dimension": "transactions",
       "killed": true,
+      "valid": true,
       "score": 0.9,
       "failing_cases": [
         "rollback-batch"
       ],
-      "candidate_sha256": "9740eecf0ee4fcbd04cf9d508469d97f2b3bf425815da9cd2a6999e69f9452be",
+      "candidate_sha256": "833f852d0c053ed18f935d9daf03bb36a174f517c54fe75675f874b05036140a",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:11:59.333842+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:30:25.787520+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "9740eecf0ee4fcbd04cf9d508469d97f2b3bf425815da9cd2a6999e69f9452be",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "833f852d0c053ed18f935d9daf03bb36a174f517c54fe75675f874b05036140a",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -719,42 +959,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.9,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 1,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 0.5
           },
           "compare_swap": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "persistence": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 1.0
           },
           "crash_recovery": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 1.0
           }
@@ -764,9 +1012,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.56385,
+            "duration_seconds": 0.531285,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -774,9 +1026,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.607617,
+            "duration_seconds": 0.542066,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -784,9 +1040,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.547496,
+            "duration_seconds": 0.514736,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -794,9 +1054,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.53441,
+            "duration_seconds": 0.511955,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -804,9 +1068,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.536704,
+            "duration_seconds": 0.506471,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -814,9 +1082,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 0.561772,
+            "duration_seconds": 0.497347,
             "transcript_sha256": "f6015865dce884224cf6ccccc9fbdd367baad17842dde00fbee476f06b1aab0d",
             "error": "response mismatch at request 3; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": true, \"ok\": true, \"value\": \"must roll back\"}"
           },
@@ -824,9 +1096,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.541869,
+            "duration_seconds": 0.533444,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -834,9 +1110,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 5,
-            "duration_seconds": 0.559751,
+            "duration_seconds": 0.498659,
             "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
             "error": null
           },
@@ -844,9 +1124,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 1.577447,
+            "duration_seconds": 1.499686,
             "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
             "error": null
           },
@@ -854,9 +1138,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.02304,
+            "duration_seconds": 0.997884,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -864,9 +1152,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 2,
-            "duration_seconds": 1.030127,
+            "duration_seconds": 0.99713,
             "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
             "error": null
           },
@@ -874,9 +1166,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.064522,
+            "duration_seconds": 1.008529,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -884,9 +1180,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.092104,
+            "duration_seconds": 1.060491,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -894,9 +1194,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.560068,
+            "duration_seconds": 1.694327,
             "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
             "error": null
           },
@@ -904,14 +1208,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.753779,
+            "duration_seconds": 0.830685,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 12.562599,
+        "evaluation_seconds": 12.23358,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -920,28 +1228,37 @@
       "name": "cas-always-wins",
       "target_dimension": "compare_swap",
       "killed": true,
+      "valid": true,
       "score": 0.85,
       "failing_cases": [
         "cas-match-and-mismatch",
         "cas-type-sensitivity"
       ],
-      "candidate_sha256": "beaf403e4bd5ae429cebb876baebf37c01b5cf1e74707e8fa1a7a92a08759046",
+      "candidate_sha256": "eb503c0ba87888db36fea991fc389223855c3e5d4c75ad9979a92e6109846b80",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:12:11.636405+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:30:39.354373+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "beaf403e4bd5ae429cebb876baebf37c01b5cf1e74707e8fa1a7a92a08759046",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "eb503c0ba87888db36fea991fc389223855c3e5d4c75ad9979a92e6109846b80",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -950,42 +1267,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.85,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 1.0
           },
           "compare_swap": {
             "passed": 0,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 0.0
           },
           "persistence": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 1.0
           },
           "crash_recovery": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 1.0
           }
@@ -995,9 +1320,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.547543,
+            "duration_seconds": 0.601743,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -1005,9 +1334,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.588884,
+            "duration_seconds": 0.666199,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -1015,9 +1348,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.537959,
+            "duration_seconds": 0.582939,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -1025,9 +1362,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.543961,
+            "duration_seconds": 0.591822,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -1035,9 +1376,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.537601,
+            "duration_seconds": 0.550826,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -1045,9 +1390,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.539061,
+            "duration_seconds": 0.558259,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -1055,9 +1404,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.593397,
+            "duration_seconds": 0.557099,
             "transcript_sha256": "71199e89272547e9c1a1961a85a650b93c30e2f848912b6be28ea262907eda56",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
           },
@@ -1065,9 +1418,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.540019,
+            "duration_seconds": 0.565552,
             "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
           },
@@ -1075,9 +1432,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 1.57808,
+            "duration_seconds": 1.660789,
             "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
             "error": null
           },
@@ -1085,9 +1446,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.093781,
+            "duration_seconds": 1.16438,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1095,9 +1460,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 2,
-            "duration_seconds": 1.050727,
+            "duration_seconds": 1.396278,
             "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
             "error": null
           },
@@ -1105,9 +1474,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.0717,
+            "duration_seconds": 1.131043,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1115,9 +1488,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.017129,
+            "duration_seconds": 1.129017,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -1125,9 +1502,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.406972,
+            "duration_seconds": 1.646182,
             "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
             "error": null
           },
@@ -1135,14 +1516,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.646954,
+            "duration_seconds": 0.753312,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 12.302354,
+        "evaluation_seconds": 13.566574,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -1151,27 +1536,36 @@
       "name": "boolean-equals-one",
       "target_dimension": "compare_swap",
       "killed": true,
+      "valid": true,
       "score": 0.925,
       "failing_cases": [
         "cas-type-sensitivity"
       ],
-      "candidate_sha256": "8d94d45a2ff8d19c76475920a1289c4279cd827ba9f10da79b85fa7194bc7ed0",
+      "candidate_sha256": "8b3b2b2e4d41f2b0cec36bdc4aef42dad3969f9d81b9a0a0d6cde665d538aac3",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:12:23.030445+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:30:52.200917+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "8d94d45a2ff8d19c76475920a1289c4279cd827ba9f10da79b85fa7194bc7ed0",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "8b3b2b2e4d41f2b0cec36bdc4aef42dad3969f9d81b9a0a0d6cde665d538aac3",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -1180,42 +1574,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.925,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 1.0
           },
           "compare_swap": {
             "passed": 1,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 0.5
           },
           "persistence": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 1.0
           },
           "crash_recovery": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 1.0
           }
@@ -1225,9 +1627,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.504704,
+            "duration_seconds": 0.556055,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -1235,9 +1641,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.529614,
+            "duration_seconds": 0.602162,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -1245,9 +1655,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.495123,
+            "duration_seconds": 0.538341,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -1255,9 +1669,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.513016,
+            "duration_seconds": 0.550951,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -1265,9 +1683,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.488368,
+            "duration_seconds": 0.551653,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -1275,9 +1697,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.496952,
+            "duration_seconds": 0.559257,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -1285,9 +1711,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.496458,
+            "duration_seconds": 0.552929,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -1295,9 +1725,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.508804,
+            "duration_seconds": 0.57604,
             "transcript_sha256": "70231a539612a6973a06489411646982ea651ca401223316f7f670e6560a18bf",
             "error": "response mismatch at request 2; expected {\"ok\": true, \"swapped\": false}, got {\"ok\": true, \"swapped\": true}"
           },
@@ -1305,9 +1739,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 1.439538,
+            "duration_seconds": 1.639025,
             "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
             "error": null
           },
@@ -1315,9 +1753,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.924381,
+            "duration_seconds": 1.062938,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1325,9 +1767,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 2,
-            "duration_seconds": 0.92531,
+            "duration_seconds": 1.049137,
             "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
             "error": null
           },
@@ -1335,9 +1781,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.960504,
+            "duration_seconds": 1.085374,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1345,9 +1795,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.994223,
+            "duration_seconds": 1.08237,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -1355,9 +1809,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.451819,
+            "duration_seconds": 1.6509,
             "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
             "error": null
           },
@@ -1365,14 +1823,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.657944,
+            "duration_seconds": 0.780467,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 11.393671,
+        "evaluation_seconds": 12.84625,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -1381,28 +1843,37 @@
       "name": "delete-noop",
       "target_dimension": "basic",
       "killed": true,
+      "valid": true,
       "score": 0.65,
       "failing_cases": [
         "read-write-delete",
         "seeded-state-machine"
       ],
-      "candidate_sha256": "c9305a417a0fd1ec008dc2fdd2f8958cab4cc569b506d184a10446b45c942938",
+      "candidate_sha256": "2c81d23c574991d7a80b45df1b79ada77309e930e73b8a41a8d0a1e4440625f8",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:12:34.147681+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:31:04.674524+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "c9305a417a0fd1ec008dc2fdd2f8958cab4cc569b506d184a10446b45c942938",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "2c81d23c574991d7a80b45df1b79ada77309e930e73b8a41a8d0a1e4440625f8",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -1411,42 +1882,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.65,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 1,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 0.3333333333333333
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 1,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 0.5
           },
           "compare_swap": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "persistence": {
             "passed": 2,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 0.6666666666666666
           },
           "crash_recovery": {
             "passed": 2,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 0.6666666666666666
           }
@@ -1456,9 +1935,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 4,
-            "duration_seconds": 0.507467,
+            "duration_seconds": 0.557506,
             "transcript_sha256": "4122b55bc205e4703a3a9f62a5397de448a833f424e54edc914bbbf5465c70d1",
             "error": "response mismatch at request 5; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           },
@@ -1466,9 +1949,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.534131,
+            "duration_seconds": 0.623245,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -1476,9 +1963,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.509748,
+            "duration_seconds": 0.55319,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -1486,9 +1977,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.486258,
+            "duration_seconds": 0.527258,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -1496,9 +1991,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.492994,
+            "duration_seconds": 0.533816,
             "transcript_sha256": "da7df3388998e4f6fd4743177baa1ddcd8625d54fded8d5c6cfbdf813d50cdba",
             "error": "response mismatch at request 2; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           },
@@ -1506,9 +2005,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.471679,
+            "duration_seconds": 0.571187,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -1516,9 +2019,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.482185,
+            "duration_seconds": 0.53584,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -1526,9 +2033,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 5,
-            "duration_seconds": 0.488241,
+            "duration_seconds": 0.568142,
             "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
             "error": null
           },
@@ -1536,9 +2047,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 3,
-            "duration_seconds": 1.396759,
+            "duration_seconds": 1.643947,
             "transcript_sha256": "0ae3e20082ef3346a8027b09f61e373e1c733234603e3e12d5e61853d6df9c8f",
             "error": "response mismatch at request 4; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           },
@@ -1546,9 +2061,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.955079,
+            "duration_seconds": 1.090287,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1556,9 +2075,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 2,
-            "duration_seconds": 0.950022,
+            "duration_seconds": 1.113412,
             "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
             "error": null
           },
@@ -1566,9 +2089,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.944408,
+            "duration_seconds": 1.077148,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1576,9 +2103,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.94233,
+            "duration_seconds": 1.085685,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -1586,9 +2117,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 1.421329,
+            "duration_seconds": 1.429231,
             "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
             "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           },
@@ -1596,14 +2131,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 8,
-            "duration_seconds": 0.527399,
+            "duration_seconds": 0.556806,
             "transcript_sha256": "0132892f9b4bac6264eb6ef2dae9da8b7bac7a6a158b56357f1319c853615de7",
             "error": "response mismatch at request 9; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           }
         ],
-        "evaluation_seconds": 11.117077,
+        "evaluation_seconds": 12.473283,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -1612,27 +2151,36 @@
       "name": "accept-nonstring-keys",
       "target_dimension": "validation",
       "killed": true,
+      "valid": true,
       "score": 0.925,
       "failing_cases": [
         "reject-and-continue"
       ],
-      "candidate_sha256": "a91ee188a0d906fad8939fc8fa7bfae9235244eca3078f276fbb10911319c69e",
+      "candidate_sha256": "1c3846e123f39e86cf3302b5548674c429e4c740e178563ad9f9457ab784f5a4",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:12:45.427278+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:31:16.266965+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "a91ee188a0d906fad8939fc8fa7bfae9235244eca3078f276fbb10911319c69e",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "1c3846e123f39e86cf3302b5548674c429e4c740e178563ad9f9457ab784f5a4",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -1641,42 +2189,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.925,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 1,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 0.5
           },
           "transactions": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 1.0
           },
           "compare_swap": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "persistence": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 1.0
           },
           "crash_recovery": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 1.0
           }
@@ -1686,9 +2242,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.479737,
+            "duration_seconds": 0.487851,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -1696,9 +2256,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.552231,
+            "duration_seconds": 0.54511,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -1706,9 +2270,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 4,
-            "duration_seconds": 0.509766,
+            "duration_seconds": 0.519073,
             "transcript_sha256": "dc07c86f871afd6b2f208e9751bdd459e52368d54d008ca0622a8edd61a7008b",
             "error": "response mismatch at request 5; expected {\"error\": \"invalid_request\", \"ok\": false}, got {\"ok\": true}"
           },
@@ -1716,9 +2284,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.50291,
+            "duration_seconds": 0.485221,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -1726,9 +2298,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.46098,
+            "duration_seconds": 0.509709,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -1736,9 +2312,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.484276,
+            "duration_seconds": 0.509348,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -1746,9 +2326,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.464314,
+            "duration_seconds": 0.515143,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -1756,9 +2340,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 5,
-            "duration_seconds": 0.490411,
+            "duration_seconds": 0.501223,
             "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
             "error": null
           },
@@ -1766,9 +2354,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 1.447814,
+            "duration_seconds": 1.484043,
             "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
             "error": null
           },
@@ -1776,9 +2368,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.924527,
+            "duration_seconds": 0.98699,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1786,9 +2382,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 2,
-            "duration_seconds": 0.979033,
+            "duration_seconds": 0.981747,
             "transcript_sha256": "544c6be916371ed5a0e901394c5e293733ca84e0ad20079a952f9c4b2821a728",
             "error": null
           },
@@ -1796,9 +2396,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.97695,
+            "duration_seconds": 0.987597,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -1806,9 +2410,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.949192,
+            "duration_seconds": 0.981076,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -1816,9 +2424,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 1.392471,
+            "duration_seconds": 1.437775,
             "transcript_sha256": "b3dba7f28e6629bb22f49b0439e0f74580ca3263dd98e16061ac9a8f680b5df7",
             "error": null
           },
@@ -1826,14 +2438,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.657817,
+            "duration_seconds": 0.653102,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 11.279206,
+        "evaluation_seconds": 11.592179,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -1842,29 +2458,38 @@
       "name": "commit-on-exit",
       "target_dimension": "crash_recovery",
       "killed": true,
+      "valid": true,
       "score": 0.9,
       "failing_cases": [
         "sigkill-after-acknowledgement",
         "sigkill-after-atomic-batch",
         "sigkill-after-delete"
       ],
-      "candidate_sha256": "8bc0d797dbad11fad4237553f68d4fb3c6d4bf704488493401c6a94254354c2a",
+      "candidate_sha256": "fce3eb722763136ecc184b4cc5fd02f80623615ed44a438caf69f561e4cc438f",
       "evaluation": {
-        "schema_version": "evalarc.evaluation.v1",
-        "created_at": "2026-09-14T01:12:56.472572+00:00",
-        "evalarc_version": "0.1.0",
+        "schema_version": "evalarc.evaluation.v2",
+        "created_at": "2026-09-14T01:31:27.622867+00:00",
+        "evalarc_version": "0.2.0",
         "task": {
           "id": "durable-kv",
           "version": "0.1.0",
+          "domain": "coding",
           "split": "public-development"
         },
-        "candidate_sha256": "8bc0d797dbad11fad4237553f68d4fb3c6d4bf704488493401c6a94254354c2a",
-        "grader_sha256": "0df4121148191aa931187fbe7b17021a3a748929d301e8eccf5dd06f699951b6",
+        "candidate_sha256": "fce3eb722763136ecc184b4cc5fd02f80623615ed44a438caf69f561e4cc438f",
+        "grader_sha256": "52caa3136434569f96097860bc9bf85eb7ada5f7f9890c0540db81afb441871d",
         "cases_sha256": "842a16a1e65700cde92ee5f5aaaa10d494a9fc9d71bd2d99fb68147b19aad63a",
         "runtime": {
           "backend": "docker",
           "image": "python:3.12-slim",
           "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+          "command": [
+            "{python}",
+            "-I",
+            "-B",
+            "main.py",
+            "{state}/store.db"
+          ],
           "response_timeout_seconds": 10.0,
           "session_output_limit_bytes": 1048576,
           "python": "3.12.3",
@@ -1873,42 +2498,50 @@
         "seeds": [
           17
         ],
+        "valid": true,
+        "status": "failed",
         "score": 0.9,
         "resolved": false,
         "dimensions": {
           "basic": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.25,
             "score": 1.0
           },
           "validation": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "transactions": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.2,
             "score": 1.0
           },
           "compare_swap": {
             "passed": 2,
             "total": 2,
+            "assessed": 2,
             "weight": 0.15,
             "score": 1.0
           },
           "persistence": {
             "passed": 3,
             "total": 3,
+            "assessed": 3,
             "weight": 0.15,
             "score": 1.0
           },
           "crash_recovery": {
             "passed": 0,
             "total": 3,
+            "assessed": 3,
             "weight": 0.1,
             "score": 0.0
           }
@@ -1918,9 +2551,13 @@
             "seed": 17,
             "case_id": "read-write-delete",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 6,
-            "duration_seconds": 0.487144,
+            "duration_seconds": 0.498981,
             "transcript_sha256": "c809eed26dc56583f9385d7d4adca2d981d06a672dc1ccbc0ffc52aa228b86f7",
             "error": null
           },
@@ -1928,9 +2565,13 @@
             "seed": 17,
             "case_id": "json-types-and-overwrite",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 16,
-            "duration_seconds": 0.46552,
+            "duration_seconds": 0.510524,
             "transcript_sha256": "83f6377f4b57ac659e8162136107ca644158ee089c944892aa9817085e74bd60",
             "error": null
           },
@@ -1938,9 +2579,13 @@
             "seed": 17,
             "case_id": "reject-and-continue",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 10,
-            "duration_seconds": 0.493593,
+            "duration_seconds": 0.488127,
             "transcript_sha256": "d4e0c26837f54e0af94d4909e3cab21d86dedca8c8842d0daae9e7471198c2a0",
             "error": null
           },
@@ -1948,9 +2593,13 @@
             "seed": 17,
             "case_id": "empty-and-unicode-keys",
             "dimension": "validation",
+            "checks": {
+              "validation": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.493086,
+            "duration_seconds": 0.489482,
             "transcript_sha256": "e8abe374fc308ce0744e96d2920495b96bda3b026cec9b86fa055023e1e4e620",
             "error": null
           },
@@ -1958,9 +2607,13 @@
             "seed": 17,
             "case_id": "commit-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 0.489241,
+            "duration_seconds": 0.499994,
             "transcript_sha256": "ac21f2f6bcc47e3c807fa4ed72300af0f5ef39809ba17f93423e37a0e177e718",
             "error": null
           },
@@ -1968,9 +2621,13 @@
             "seed": 17,
             "case_id": "rollback-batch",
             "dimension": "transactions",
+            "checks": {
+              "transactions": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.456003,
+            "duration_seconds": 0.533228,
             "transcript_sha256": "1786c093ba29dcad562531a44cdbe5fddbed9d3f4632c1c6ddfe736baa240f35",
             "error": null
           },
@@ -1978,9 +2635,13 @@
             "seed": 17,
             "case_id": "cas-match-and-mismatch",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 7,
-            "duration_seconds": 0.442273,
+            "duration_seconds": 0.502809,
             "transcript_sha256": "ecd6148f6f387b4ef5351b877afd4cf27ea2a04c4253a34220fd78de5442d89f",
             "error": null
           },
@@ -1988,9 +2649,13 @@
             "seed": 17,
             "case_id": "cas-type-sensitivity",
             "dimension": "compare_swap",
+            "checks": {
+              "compare_swap": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 5,
-            "duration_seconds": 0.458808,
+            "duration_seconds": 0.496033,
             "transcript_sha256": "459a5b74588217d8abcf8e138eb559364a1d01d1f23e8c43ca0127ba28240258",
             "error": null
           },
@@ -1998,9 +2663,13 @@
             "seed": 17,
             "case_id": "restart-preserves-acknowledged-write",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 4,
-            "duration_seconds": 1.415875,
+            "duration_seconds": 1.433264,
             "transcript_sha256": "c97b82c67f26a1aa2fdc8ac57f50690dbbe13554d094059ffe6690a592df3a55",
             "error": null
           },
@@ -2008,9 +2677,13 @@
             "seed": 17,
             "case_id": "restart-preserves-transaction",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.971939,
+            "duration_seconds": 0.995327,
             "transcript_sha256": "2d1f704df309d49f8e6e89e674581af2cf81aa22fdde633058e2f2d7b8c8a430",
             "error": null
           },
@@ -2018,9 +2691,13 @@
             "seed": 17,
             "case_id": "sigkill-after-acknowledgement",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.971324,
+            "duration_seconds": 0.998141,
             "transcript_sha256": "f62cc3fb4db094e24ad23141f7cc50908d24647156c4d2ba2386a2487c078e80",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -2028,9 +2705,13 @@
             "seed": 17,
             "case_id": "sigkill-after-atomic-batch",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 1,
-            "duration_seconds": 0.965301,
+            "duration_seconds": 0.978949,
             "transcript_sha256": "43cf3772fd4bd95486b1824b1d73c4e99859fb85088a7f62192d8325b4581b29",
             "error": "response mismatch at request 2; expected {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}, got {\"found\": false, \"ok\": true}"
           },
@@ -2038,9 +2719,13 @@
             "seed": 17,
             "case_id": "restart-preserves-cas",
             "dimension": "persistence",
+            "checks": {
+              "persistence": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 3,
-            "duration_seconds": 0.969617,
+            "duration_seconds": 0.939053,
             "transcript_sha256": "149c04fd1366e77603e631349740ae38bdff40aa69f6eb4c738979eb13bf3f49",
             "error": null
           },
@@ -2048,9 +2733,13 @@
             "seed": 17,
             "case_id": "sigkill-after-delete",
             "dimension": "crash_recovery",
+            "checks": {
+              "crash_recovery": false
+            },
             "passed": false,
+            "status": "failed",
             "checks_completed": 2,
-            "duration_seconds": 1.446218,
+            "duration_seconds": 1.47289,
             "transcript_sha256": "679e7ab1f7f833fb12551b29af4fdc1ad8e1051810e594a4da85fdc3420b8c42",
             "error": "response mismatch at request 3; expected {\"found\": false, \"ok\": true}, got {\"found\": true, \"ok\": true, \"value\": {\"items\": [true, null, \"\\u03bb\\n\\u4e16\\u754c\"], \"version\": 5991}}"
           },
@@ -2058,14 +2747,18 @@
             "seed": 17,
             "case_id": "seeded-state-machine",
             "dimension": "basic",
+            "checks": {
+              "basic": true
+            },
             "passed": true,
+            "status": "passed",
             "checks_completed": 52,
-            "duration_seconds": 0.512496,
+            "duration_seconds": 0.511465,
             "transcript_sha256": "2a7e5ad4bedce67faf4d53f289c3a1a7304345a0167b287418fdf7dd411030f8",
             "error": null
           }
         ],
-        "evaluation_seconds": 11.045102,
+        "evaluation_seconds": 11.355773,
         "agent_cost_usd": null,
         "agent_tokens": null
       }
@@ -2075,5 +2768,5 @@
   "killed": 8,
   "total": 8,
   "passed": true,
-  "interpretation": "Coverage of eight declared behavioral fault models only. This is not a bound on reward hacking or a model benchmark."
+  "interpretation": "Coverage of 8 declared behavioral fault models only. This is not a bound on reward hacking or a model benchmark."
 }

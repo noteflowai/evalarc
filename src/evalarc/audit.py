@@ -8,6 +8,7 @@ from pathlib import Path
 
 from evalarc.evaluate import evaluate
 from evalarc.runner import Runtime
+from evalarc.tasks import get_task
 
 MUTANTS = {
     "ack-without-work": ("ACK_ONLY = False", "ACK_ONLY = True", "basic"),
@@ -19,6 +20,18 @@ MUTANTS = {
     "accept-nonstring-keys": ("VALIDATE_KEYS = True", "VALIDATE_KEYS = False", "validation"),
     "commit-on-exit": ("COMMIT_BEFORE_ACK = True", "COMMIT_BEFORE_ACK = False", "crash_recovery"),
 }
+
+SUPPORT_MUTANTS = {
+    "claim-without-actions": ("ACK_ONLY = False", "ACK_ONLY = True", "routing"),
+    "wrong-ticket": ("WRONG_TICKET = False", "WRONG_TICKET = True", "scope"),
+    "wrong-queue": ("WRONG_QUEUE = False", "WRONG_QUEUE = True", "routing"),
+    "duplicate-note": ("DUPLICATE_NOTE = False", "DUPLICATE_NOTE = True", "notes"),
+    "close-unresolved": ("CLOSE_OPEN = False", "CLOSE_OPEN = True", "closure"),
+    "skip-retry": ("SKIP_RETRY = False", "SKIP_RETRY = True", "notes"),
+    "new-key-on-retry": ("NEW_RETRY_KEY = False", "NEW_RETRY_KEY = True", "notes"),
+}
+
+CONTROL_PACKS = {"durable-kv": MUTANTS, "support-routing": SUPPORT_MUTANTS}
 
 
 def asset(name: str) -> str:
@@ -37,25 +50,24 @@ def mutate(source: str, old: str, new: str) -> str:
     return source.replace(old, new)
 
 
-def audit(runtime: Runtime, seeds: list[int]) -> dict:
-    source = asset("reference.py")
+def audit(runtime: Runtime, seeds: list[int], task_id: str = "durable-kv") -> dict:
+    task = get_task(task_id)
+    source = asset(task.reference_asset)
+    controls = CONTROL_PACKS[task_id]
     rows = []
     with tempfile.TemporaryDirectory(prefix="evalarc-audit-") as directory:
         root = Path(directory)
-        reference = evaluate(write_candidate(root / "reference", source), runtime, seeds)
-        for name, (old, new, target) in MUTANTS.items():
+        reference = evaluate(write_candidate(root / "reference", source), runtime, seeds, task_id)
+        for name, (old, new, target) in controls.items():
             candidate = write_candidate(root / name, mutate(source, old, new))
-            result = evaluate(candidate, runtime, seeds)
-            failures = [
-                c["case_id"]
-                for c in result["cases"]
-                if not c["passed"] and c["dimension"] == target
-            ]
+            result = evaluate(candidate, runtime, seeds, task_id)
+            failures = [c["case_id"] for c in result["cases"] if c["checks"].get(target) is False]
             rows.append(
                 {
                     "name": name,
                     "target_dimension": target,
-                    "killed": bool(failures),
+                    "killed": result["valid"] and bool(failures),
+                    "valid": result["valid"],
                     "score": result["score"],
                     "failing_cases": sorted(set(failures)),
                     "candidate_sha256": result["candidate_sha256"],
@@ -63,17 +75,19 @@ def audit(runtime: Runtime, seeds: list[int]) -> dict:
                 }
             )
     killed = sum(row["killed"] for row in rows)
+    valid = reference["valid"] and all(row["valid"] for row in rows)
     return {
-        "schema_version": "evalarc.audit.v1",
+        "schema_version": "evalarc.audit.v2",
+        "valid": valid,
         "reference_passed": reference["resolved"],
         "reference": reference,
         "mutants": rows,
-        "mutation_score": killed / len(rows),
+        "mutation_score": killed / len(rows) if valid else None,
         "killed": killed,
         "total": len(rows),
-        "passed": reference["resolved"] and killed == len(rows),
+        "passed": valid and reference["resolved"] and killed == len(rows),
         "interpretation": (
-            "Coverage of eight declared behavioral fault models only. "
+            f"Coverage of {len(rows)} declared behavioral fault models only. "
             "This is not a bound on reward hacking or a model benchmark."
         ),
     }

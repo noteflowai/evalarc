@@ -1,7 +1,9 @@
 # Durable KV · task v0.1.0
 
-Build a single-process persistent key-value service in `main.py`, using Python's
-standard library. It is started with `python3 -I -B main.py /state/store.db`.
+Build a single-process persistent key-value service. The default Python
+entrypoint is `python3 -I -B main.py /state/store.db`. Another entrypoint may be
+specified in an `evalarc.toml` command array; `{state}` expands to the writable
+state directory. The observable contract below is independent of that command.
 Read one JSON request per stdin line; flush exactly one JSON response per request
 to stdout. Diagnostic output belongs on stderr. Input lines contain valid JSON.
 Keys are arbitrary strings, including empty and Unicode strings. Values are

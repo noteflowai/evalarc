@@ -21,6 +21,7 @@ def test_positive_and_behavioral_negative_controls():
     "source,message",
     [
         ("import sys\nfor line in sys.stdin: print('NaN', flush=True)\n", "finite JSON"),
+        ("import sys\nfor line in sys.stdin: print('1e999', flush=True)\n", "finite JSON"),
         ("import time\ntime.sleep(10)\n", "timeout"),
         ("print('x' * 65536, flush=True)\n", "output limit"),
         ("print('not JSON', flush=True)\n", "finite JSON"),

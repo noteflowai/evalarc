@@ -7,6 +7,16 @@ the expected responses and final scores. It limits stdout/stderr and enforces a
 deadline on each protocol exchange. Each case receives a fresh writable state
 directory; only restarts within that case share state.
 
+The support-routing service and its authoritative ticket state live in the host
+process. Only observations and tool results cross the JSONL boundary. Tool
+arguments never invoke a host shell, filesystem operation, or real helpdesk API.
+Each episode has an explicit action budget. Final messages are untrusted claims.
+
+Candidate commands come from the snapshotted `evalarc.toml` argument array.
+They execute inside the same backend boundary as the original Python entrypoint.
+The manifest cannot select the task, verifier, image, or backend. Executable
+permission is preserved for candidate binaries and included in their fingerprint.
+
 Docker shares the host kernel. These controls are not a hardened multi-tenant
 isolation guarantee. Run hostile submissions on disposable isolated workers
 with an appropriate VM boundary. The writable state mount currently has no

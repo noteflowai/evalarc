@@ -13,6 +13,7 @@ from evalarc.audit import asset, audit
 from evalarc.evaluate import evaluate, write_json
 from evalarc.report import render_audit
 from evalarc.runner import Runtime
+from evalarc.tasks import TASKS, get_task
 from evalarc.trajectory import summarize
 
 
@@ -21,16 +22,19 @@ def parser() -> argparse.ArgumentParser:
         prog="evalarc", description="Auditable evaluations for AI agents."
     )
     commands = root.add_subparsers(dest="command", required=True)
+    commands.add_parser("tasks", help="list built-in task packs")
     init = commands.add_parser("init", help="create a candidate workspace")
     init.add_argument("destination", type=Path)
     init.add_argument("--reference", action="store_true", help="use the known-good control")
+    init.add_argument("--task", choices=TASKS, default="durable-kv")
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
-        ("audit", "evaluate the reference and eight behavioral negative controls"),
+        ("audit", "evaluate a task's reference and behavioral negative controls"),
     ):
         command = commands.add_parser(name, help=help_text)
         if name == "evaluate":
             command.add_argument("candidate", type=Path)
+        command.add_argument("--task", choices=TASKS, default="durable-kv")
         command.add_argument("--backend", choices=["docker", "local"], default="docker")
         command.add_argument("--trust-local", action="store_true")
         command.add_argument("--image", default="python:3.12-slim")
@@ -48,14 +52,19 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "tasks":
+            for task in TASKS.values():
+                print(f"{task.id} · {task.domain} · v{task.version} · {task.description}")
+            return 0
         if args.command == "init":
+            task = get_task(args.task)
             if args.destination.exists():
                 raise ValueError("destination already exists; choose a new directory")
             args.destination.mkdir(parents=True)
             (args.destination / "main.py").write_text(
-                asset("reference.py" if args.reference else "starter.py")
+                asset(task.reference_asset if args.reference else task.starter_asset)
             )
-            (args.destination / "TASK.md").write_text(asset("TASK.md"))
+            (args.destination / "TASK.md").write_text(asset(task.contract_asset))
             print(f"Created {args.destination}")
             return 0
         if args.command == "trajectory":
@@ -76,22 +85,31 @@ def main(argv: list[str] | None = None) -> int:
         )
         runtime.prepare()
         if args.command == "audit":
-            result = audit(runtime, args.seeds)
+            result = audit(runtime, args.seeds, args.task)
             write_json(args.output / "audit.json", result)
             render_audit(result, args.output / "index.html")
+            reference_status = (
+                "UNASSESSED"
+                if not result["reference"]["valid"]
+                else ("PASS" if result["reference_passed"] else "FAIL")
+            )
+            audit_status = (
+                "INVALID" if not result["valid"] else ("PASS" if result["passed"] else "FAIL")
+            )
             print(
-                f"Reference: {'PASS' if result['reference_passed'] else 'FAIL'} | "
+                f"Audit: {audit_status} | Reference: {reference_status} | "
                 f"Negative controls detected: {result['killed']}/{result['total']}\n"
                 f"Report: {args.output / 'index.html'}"
             )
-            return 0 if result["passed"] else 1
-        result = evaluate(args.candidate, runtime, args.seeds)
+            return 2 if not result["valid"] else (0 if result["passed"] else 1)
+        result = evaluate(args.candidate, runtime, args.seeds, args.task)
         write_json(args.output / "evaluation.json", result)
+        score = "unavailable" if result["score"] is None else f"{result['score']:.3f}"
         print(
-            f"Score: {result['score']:.3f} | Resolved: {result['resolved']}\n"
+            f"Score: {score} | Status: {result['status']} | Resolved: {result['resolved']}\n"
             f"Report: {args.output / 'evaluation.json'}"
         )
-        return 0 if result["resolved"] else 1
+        return 2 if not result["valid"] else (0 if result["resolved"] else 1)
     except (ValueError, OSError, KeyError, TypeError) as error:
         print(f"evalarc: {error}", file=sys.stderr)
         return 2

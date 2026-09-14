@@ -18,15 +18,18 @@ checking whether a grader can distinguish correct work from plausible defects:
 run known-good and deliberately flawed submissions, inspect the evidence, and
 record exactly what was evaluated.
 
-The first release implements one coding task pack, **Durable KV**, with
-executable grader audits and checkpoint analysis. The broader design covers
-coding, browser, and business-tool agents through task-specific environments
-and verifiers. Browser environments, interactive agent execution, and business
-task packs are planned; they are not implemented in v0.1.
+**v0.2 includes two working task packs**, a shared evidence format, and
+configurable candidate commands:
 
-See the [architecture](docs/architecture.md) for current boundaries and the
-next cross-domain milestone. No frontier-model benchmark or RL training result
-is claimed.
+| Task | Interaction | Host verification | Declared faults |
+| --- | --- | --- | ---: |
+| `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
+| `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
+
+The support pack records tool calls and state changes, including retries after
+ambiguous write outcomes. Python and JavaScript scripted policies use the same
+host verifier. Browser environments, LLM-provider adapters, and RL training
+integrations remain planned. No frontier-model benchmark result is claimed.
 
 ## Run an audit
 
@@ -44,12 +47,14 @@ The command evaluates the reference and eight negative controls, writes
 `runs/audit/audit.json`, and creates a standalone `runs/audit/index.html` report.
 Exit code `0` means the reference passed and every declared defect was detected
 in its intended dimension. Exit code `1` means an audit or candidate failed;
-`2` indicates a usage or configuration error.
+`2` indicates a usage/configuration error or an invalid run caused by an
+environment failure.
 
 For the bundled, trusted controls, a faster CPU-only demo is:
 
 ```bash
 evalarc audit --backend local --trust-local --output runs/local-audit
+evalarc audit --task support-routing --backend local --trust-local --output runs/support-audit
 ```
 
 Local execution has the host user's privileges. Use Docker for candidate
@@ -57,7 +62,7 @@ isolation and read the [execution boundaries](SECURITY.md).
 If your Docker setup requires a wrapper, set `EVALARC_DOCKER` to that command
 or pass `--docker-command`.
 
-## What is tested?
+## Coding task
 
 | Dimension | Weight | Representative evidence |
 | --- | ---: | --- |
@@ -92,10 +97,41 @@ evalarc init workspace/durable-kv
 evalarc evaluate workspace/durable-kv --seeds 17 41 97 --output runs/candidate
 ```
 
-The CLI evaluates completed artifacts. It does not start an LLM, provision API
-keys, or record its tool calls. Any coding workflow that produces the documented
-`main.py` protocol can submit a directory. Use `evalarc init --reference
-workspace/reference` to create the positive control.
+For the coding pack, the CLI evaluates completed artifacts; it does not record
+the process that produced them. Use `evalarc init --reference workspace/reference`
+to create the positive control. Custom entrypoints are described in the
+[candidate command guide](docs/candidate-commands.md).
+
+## Tool-using agents
+
+```bash
+evalarc tasks
+evalarc init workspace/support --task support-routing --reference
+evalarc evaluate workspace/support --task support-routing --output runs/support
+```
+
+Replace the scripted reference with a policy that speaks the
+[support JSONL protocol](src/evalarc/assets/SUPPORT_TASK.md). The evaluator sends
+observations; the candidate requests tool operations or finishes. Only the
+host's resulting ticket state determines business scores. Claimed success has
+no scoring authority. A case is resolved only when every check passes.
+
+In the [recorded support audit](examples/support-audit/index.html), retrying a
+committed note with a new idempotency key earns **0.9375** but fails acceptance
+because it duplicates the note. The trace shows the error, retry, and state changes.
+
+An [independent JavaScript policy](examples/support-node/README.md) demonstrates
+a non-Python entrypoint:
+
+```bash
+evalarc evaluate examples/support-node --task support-routing \
+  --backend local --trust-local --output runs/support-node
+```
+
+This command requires Node.js. The Python core has no third-party runtime
+dependencies. EvalArc does not call an LLM or provision model credentials.
+
+## Checkpoint analysis
 
 For progress over time, save checkpoint evaluation JSON together with elapsed
 seconds measured by your experiment harness:
@@ -131,11 +167,12 @@ The [naming review](docs/naming.zh-CN.md) preserves the original search snapshot
 
 ## Scope and evidence
 
-The task, reference, fault controls, and seeds are all public development material.
-Different seeds do not establish uncontaminated evaluation. Eight detected
+The tasks, references, fault controls, and seeds are all public development material.
+Different seeds do not establish uncontaminated evaluation. Detected
 defects do not prove resistance to arbitrary reward hacking. There are no
 frontier-model results, human time baselines, RL gains, or claimed SOTA results.
-See the [sample audit](examples/audit/index.html) and its
+See the [coding audit](examples/audit/index.html),
+[support audit](examples/support-audit/index.html), and
 [validation record](docs/validation.md) for the checks actually run.
 
 Task difficulty, diversity, independent faults, and transfer to real model
@@ -152,5 +189,6 @@ python -m build
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
-[LICENSE](LICENSE). CI includes Python unit/integration checks and an actual
-Docker grader audit.
+[LICENSE](LICENSE). The [task-author guide](docs/task-authoring.md) explains
+the current built-in extension points. CI includes Python checks, the Node
+policy, and Docker audits for both packs.

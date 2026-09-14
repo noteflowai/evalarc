@@ -13,13 +13,18 @@ import signal
 import subprocess
 import sys
 import time
+import tomllib
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 
 class CandidateError(Exception):
     """A candidate violated the protocol or exceeded its execution limits."""
+
+
+class EnvironmentFailure(Exception):
+    """The execution infrastructure or simulated service could not operate."""
 
 
 @dataclass
@@ -30,6 +35,27 @@ class Runtime:
     docker_command: str = "docker"
     output_limit: int = 1_048_576
     image_id: str | None = None
+    command: tuple[str, ...] = ("{python}", "-I", "-B", "main.py", "{state}/store.db")
+
+    def for_candidate(self, workspace: Path, default_command: tuple[str, ...]) -> "Runtime":
+        """Read configuration from the immutable copy, never the live submission."""
+        manifest = workspace / "evalarc.toml"
+        command = default_command
+        if manifest.exists():
+            config = tomllib.loads(manifest.read_text())
+            if set(config) != {"command"}:
+                raise ValueError("evalarc.toml must contain only a command array")
+            command = config["command"]
+        elif not (workspace / "main.py").is_file():
+            raise ValueError("candidate needs main.py or an evalarc.toml command")
+        if (
+            not isinstance(command, (tuple, list))
+            or not 1 <= len(command) <= 64
+            or any(not isinstance(arg, str) or not arg or "\0" in arg for arg in command)
+            or sum(len(arg) for arg in command) > 8192
+        ):
+            raise ValueError("command must be a nonempty array of bounded string arguments")
+        return replace(self, command=tuple(command))
 
     @property
     def docker(self) -> list[str]:
@@ -71,6 +97,14 @@ class Process:
         self.buffer = bytearray()
         self.output_bytes = 0
         self.closed = False
+        substitutions = {
+            "{python}": "python3" if runtime.backend == "docker" else sys.executable,
+            "{workspace}": "/candidate" if runtime.backend == "docker" else str(workspace),
+            "{state}": "/state" if runtime.backend == "docker" else str(state),
+        }
+        candidate_command = list(runtime.command)
+        for token, value in substitutions.items():
+            candidate_command = [arg.replace(token, value) for arg in candidate_command]
         if runtime.backend == "docker":
             command = [
                 *runtime.docker,
@@ -94,32 +128,25 @@ class Process:
                 f"type=bind,src={state},dst=/state",
                 "--workdir=/candidate",
                 runtime.image_id or runtime.image,
-                "python3",
-                "-I",
-                "-B",
-                "main.py",
-                "/state/store.db",
+                *candidate_command,
             ]
         else:
-            command = [
-                sys.executable,
-                "-I",
-                "-B",
-                str(workspace / "main.py"),
-                str(state / "store.db"),
-            ]
+            command = candidate_command
         # Host secrets are not forwarded to the local candidate environment.
         # Local mode still has the current user's filesystem/network privileges.
         environment = {"PATH": os.defpath, "LANG": "C.UTF-8"}
-        self.proc = subprocess.Popen(
-            command,
-            cwd=workspace,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            start_new_session=True,
-            env=environment if runtime.backend == "local" else None,
-        )
+        try:
+            self.proc = subprocess.Popen(
+                command,
+                cwd=workspace,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                start_new_session=True,
+                env=environment if runtime.backend == "local" else None,
+            )
+        except OSError as error:
+            raise EnvironmentFailure(f"could not start candidate runtime: {error}") from error
         os.set_blocking(self.proc.stdin.fileno(), False)
         self.selector = selectors.DefaultSelector()
         self.selector.register(self.proc.stdout, selectors.EVENT_READ, "stdout")
@@ -138,6 +165,7 @@ class Process:
             if not chunk:
                 self.selector.unregister(key.fileobj)
                 if key.data == "stdout" and b"\n" not in self.buffer:
+                    self._check_container_exit()
                     raise CandidateError("candidate exited without a complete response")
                 continue
             self.output_bytes += len(chunk)
@@ -148,6 +176,16 @@ class Process:
             else:
                 self.stderr_tail.extend(chunk)
                 del self.stderr_tail[:-2048]
+
+    def _check_container_exit(self) -> None:
+        if self.runtime.backend != "docker":
+            return
+        try:
+            code = self.proc.wait(timeout=0.1)
+        except subprocess.TimeoutExpired:
+            return
+        if code in (125, 126, 127):
+            raise EnvironmentFailure(f"container launch failed with Docker exit code {code}")
 
     def request(self, request: object) -> object:
         payload = (json.dumps(request, ensure_ascii=True, allow_nan=False) + "\n").encode()
@@ -166,13 +204,17 @@ class Process:
                 except BlockingIOError:
                     continue
         except (BrokenPipeError, OSError) as error:
+            self._check_container_exit()
             raise CandidateError("candidate closed stdin") from error
         while b"\n" not in self.buffer:
             self._read(deadline)
         line, _, rest = self.buffer.partition(b"\n")
         self.buffer = bytearray(rest)
         try:
-            return json.loads(line, parse_constant=lambda value: _invalid_json(value))
+            result = json.loads(line, parse_constant=lambda value: _invalid_json(value))
+            # JSON exponents such as 1e999 can overflow without invoking parse_constant.
+            json.dumps(result, allow_nan=False)
+            return result
         except (ValueError, UnicodeDecodeError, RecursionError) as error:
             raise CandidateError("response is not finite JSON") from error
 
@@ -206,6 +248,7 @@ class Process:
         except subprocess.TimeoutExpired as error:
             raise CandidateError("candidate did not exit after EOF") from error
         if code:
+            self._check_container_exit()
             raise CandidateError(f"candidate exited with code {code}")
         if self.buffer.strip():
             raise CandidateError("candidate emitted unsolicited stdout")
@@ -248,8 +291,8 @@ def snapshot(source: Path, destination: Path) -> str:
     import hashlib
 
     source = source.resolve()
-    if not source.is_dir() or not (source / "main.py").is_file():
-        raise ValueError("candidate must be a directory containing main.py")
+    if not source.is_dir():
+        raise ValueError("candidate must be a directory")
     destination.mkdir(parents=True)
     destination.chmod(0o755)
     digest = hashlib.sha256()
@@ -273,9 +316,13 @@ def snapshot(source: Path, destination: Path) -> str:
             raise ValueError("candidate exceeds 10 MiB / 1000 file limit")
         target = destination / relative
         shutil.copyfile(path, target)
-        target.chmod(0o644)
+        mode = 0o755 if path.stat().st_mode & 0o111 else 0o644
+        target.chmod(mode)
         data = target.read_bytes()
         name = relative.as_posix().encode()
         digest.update(len(name).to_bytes(8, "big") + name)
+        digest.update(mode.to_bytes(2, "big"))
         digest.update(len(data).to_bytes(8, "big") + data)
+    if not count:
+        raise ValueError("candidate directory is empty")
     return digest.hexdigest()

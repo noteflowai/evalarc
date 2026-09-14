@@ -1,32 +1,40 @@
 # Architecture and domain expansion
 
 EvalArc's direction is open environments and auditable evaluations for
-software agents. This document distinguishes the working v0.1 implementation
+software agents. This document distinguishes the working v0.2 implementation
 from interfaces proposed for subsequent releases.
 
 ## Current implementation
 
-The CLI snapshots a completed candidate workspace and evaluates its `main.py`
-against the Durable KV contract. A host-side oracle checks JSONL responses.
-Candidate sessions share database state only within the same case. The audit
-runs the same checks against one reference and eight declared faulty variants.
-Reports carry task and runtime settings, source fingerprints, and case evidence.
+The CLI selects a built-in `TaskDefinition`, snapshots the candidate workspace,
+and reads its optional `evalarc.toml` command. Each task defines generation,
+execution, dimensions, source fingerprints, and candidate assets.
 
-This is artifact evaluation. The current CLI does not invoke a model, expose a
-browser, or drive a tool-calling agent loop. The Python entrypoint and task
-implementation remain specific to the first pack.
+Durable KV evaluates a completed service with a host-side oracle; sessions share
+database state only within the same case. Support routing drives a candidate
+policy through a JSONL loop. Its in-memory ticket service and independent final
+state verifier live in the host process, outside the candidate container.
 
-## Proposed shared interfaces
+Both packs emit `evalarc.evaluation.v2` reports through the same aggregator and
+use `evalarc.audit.v2` for declared controls. Metadata includes domain, task
+version, command, fingerprints, runtime limits, outcomes, and validity. Checks
+and evidence remain domain-specific.
+
+The current CLI does not invoke a model or expose a browser. The tool policy is
+an external program; Python and JavaScript examples are scripted controls.
+
+## Interface responsibilities
 
 | Interface | Responsibility | Domain-specific examples |
 | --- | --- | --- |
-| Task | Goal, initial state, allowed actions, constraints, budget, version | Implement a service; route a support ticket; update an order |
-| Environment | Reset, observe, execute actions, expose trusted state | Container; simulated business API; browser with a test backend |
-| AgentAdapter | Convert observations/actions for a chosen agent workflow | External code submission; scripted policy; model tool calls |
-| Verifier | Check outcomes and constraints, produce evidence-backed results | Executable tests; database assertions; calibrated human/model rubric |
-| Evidence | Record events, artifacts, grader decisions, provenance and usage | Requests/responses; state changes; screenshots; cited passages |
+| TaskDefinition | Pack version, cases, execution, dimensions, assets | Durable KV; support routing |
+| Environment | Reset, execute actions, expose trusted state | Process runtime; host ticket service |
+| Agent adapter | Convert observations/actions for an agent workflow | Current JSONL process; future model-provider adapters |
+| Verifier | Check outcomes and constraints | Coding oracle; independent ticket-state checks |
+| Evidence | Record decisions, provenance, and usage | Response hashes; tool results and state changes; unknown model usage |
 
-These names describe a design proposal, not importable APIs in v0.1.
+`TaskDefinition` is an internal dataclass. The other rows describe responsibilities,
+not generic public classes or a stable SDK. See the [task-author guide](task-authoring.md).
 
 ```mermaid
 flowchart LR
@@ -45,38 +53,42 @@ self-reported outcome. Domains share evidence metadata; each retains its own
 scoring semantics. A browser action and a database update are not interchangeable
 just because both can be serialized to JSON.
 
-## Next milestone: a support-ticket simulation
+## Implemented support-ticket simulation
 
-After introducing task definitions and configurable candidate commands, add a
-small simulated service with operations such as looking up a ticket, assigning
-its queue, adding a note, and closing it. The task supplies the customer request
-and routing rules; the agent must perform the appropriate service operations.
+A small simulated service exposes ticket lookup, queue assignment, idempotent
+note addition, and closure. Four case families test ordinary routing, resolved
+ticket closure, a transient failure before assignment, and a transient failure
+after a note commits. The agent has at most 12 action responses including finish.
 
-Acceptance evidence should include:
+The implementation provides:
 
 1. Final ticket state is checked outside the agent process.
 2. The trace distinguishes attempted calls, successful calls, and state changes.
 3. A correct scripted policy passes without a model API.
-4. Policies that update the wrong ticket, claim success without an update, or
-   repeat a non-idempotent action are rejected by the intended checks.
-5. Tool or environment failures are reported separately from agent task failure.
+4. Seven declared faulty policies, including wrong-ticket updates, false success,
+   repeated notes, and retries with a new idempotency key.
+5. Tool errors and state changes in the trace. Explicit environment failures
+   invalidate a run and leave its aggregate score unassessed.
 6. Both the coding and workflow packs emit the same common report metadata
    without sharing a task-specific scalar score definition.
 
-Only after both domains work should the shared interface be treated as stable.
-A browser adapter can follow using the same evidence contract with its own
-reset and state-verification logic.
+The interface remains experimental. Next steps are independent task authoring
+and an actual agent-provider adapter, followed by a browser environment with its
+own reset and state-verification logic. Scripted policies do not establish LLM
+performance, task difficulty, or generalization.
 
 ## Language boundaries
 
-Keep task generation, scoring, and research integration in Python. Make the
-candidate command and environment declarative so submissions can use other
-languages. Add TypeScript when an interactive viewer or JavaScript SDK is
+Task generation, scoring, and research integration remain in Python. Candidate
+commands are declarative so submissions can use other languages. Add TypeScript
+when an interactive viewer or JavaScript SDK is
 implemented. Introduce a Rust worker only after measured execution or
 distribution requirements justify a separate component.
 
-The existing `main.py` restriction remains until the task/command interface is
-implemented. This release does not claim TypeScript or Rust candidate support.
+The `main.py` restriction now applies only to the default command. A separate
+JavaScript support policy validates the protocol with Node. This release has
+no TypeScript SDK or tested Rust submission/worker. See
+[candidate commands](candidate-commands.md) for image and executable requirements.
 
 ## Metrics
 

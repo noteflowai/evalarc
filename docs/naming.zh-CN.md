@@ -31,8 +31,8 @@ EvalArc 这个名字可能引发相关联想。这是命名上的潜在歧义；
 >
 > Run agents. Measure outcomes.
 
-该品牌表达项目方向；v0.1 实现的是 coding 场景的评分器审计。
-其他场景的当前状态见[架构设计](architecture.md)。
+该品牌表达项目方向；v0.1 实现 coding 场景，v0.2 加入工单模拟评测。
+具体实现范围见[架构设计](architecture.md)。原始名称查询快照不随版本更新重写。
 
 ## 查询快照
 
