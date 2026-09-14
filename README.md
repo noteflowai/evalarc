@@ -29,13 +29,17 @@ committed Docker audits without a model API or installation.
 
 [![EvalArc evidence lab: a 93.75% score still fails acceptance](docs/assets/evidence-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
-**v0.2 includes two working task packs**, a shared evidence format, and
+**v0.3 includes two working task packs**, a shared evidence format, and
 configurable candidate commands:
 
 | Task | Interaction | Host verification | Declared faults |
 | --- | --- | --- | ---: |
 | `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 |
 | `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 |
+
+v0.3 adds `evalarc doctor`, individual HTML reports, and `evalarc compare` for
+check regressions that a higher average score can hide. Every run preserves
+earlier outputs. See the [run-and-compare guide](docs/workflow.md).
 
 The support pack records tool calls and state changes, including retries after
 ambiguous write outcomes. Python and JavaScript scripted policies use the same

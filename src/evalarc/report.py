@@ -6,6 +6,31 @@ import html
 import json
 from pathlib import Path
 
+STYLE = """
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
+body{max-width:1080px;margin:60px auto;padding:0 24px}
+.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
+h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
+p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
+.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
+.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
+code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
+footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.metadata{overflow-wrap:anywhere;font-size:13px}
+pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
+summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
+.passed{color:#96e8b9}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
+.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
+@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+"""
+
 
 def render_audit(data: dict, destination: Path) -> None:
     esc = lambda value: html.escape(str(value), quote=True)  # noqa: E731
@@ -41,28 +66,13 @@ def render_audit(data: dict, destination: Path) -> None:
  content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
 <title>EvalArc · Grader audit</title>
 <style>
-:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
-body{max-width:1080px;margin:60px auto;padding:0 24px}
-.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
-h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
-p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
-.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:180px}
-.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
-.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
-td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
-code{font-family:ui-monospace,monospace}h2{margin-top:42px}
-.dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
-.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
-footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
-.metadata{overflow-wrap:anywhere;font-size:13px}
-pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
-summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+__STYLE__
 </style>
 <div class="eyebrow">EVALARC / DEVELOPMENT AUDIT</div>
 <h1>Test the grader.<br>Then trust the signal.</h1>
 <p>Behavioral controls for task-specific agent evaluations. Correct and faulty
 submissions are evaluated against the same externally enforced contract.</p>
-"""
+""".replace("__STYLE__", STYLE)
     if data.get("valid") is False:
         document += (
             "<p><strong>Invalid audit: environment failure.</strong> "
@@ -108,3 +118,158 @@ submissions are evaluated against the same externally enforced contract.</p>
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(document)
+
+
+def _esc(value: object) -> str:
+    return html.escape(str(value), quote=True)
+
+
+def _score(value: float | None) -> str:
+    return "unassessed" if value is None else f"{value:.4f}".rstrip("0").rstrip(".")
+
+
+def _card(value: object, label: str, *, alert: bool = False) -> str:
+    tone = " failed" if alert else ""
+    return (
+        f'<div class="card"><div class="number{tone}">{_esc(value)}</div>'
+        f'<div class="label">{_esc(label)}</div></div>'
+    )
+
+
+def _page(kind: str, title: str, body: str, destination: Path) -> None:
+    document = (
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; '
+        "style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'\">"
+        f"<title>EvalArc · {_esc(kind)}</title><style>{STYLE}</style></head><body>"
+        f'<div class="eyebrow">EVALARC / {_esc(kind.upper())}</div>'
+        f"<h1>{_esc(title)}</h1>{body}</body></html>"
+    )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(document, encoding="utf-8")
+
+
+def _metadata(data: dict) -> str:
+    labels = (
+        ("candidate_sha256", "Candidate SHA-256"),
+        ("grader_sha256", "Grader SHA-256"),
+        ("cases_sha256", "Cases SHA-256"),
+        ("created_at", "Created"),
+    )
+    parts = [f"{label}: {_esc(data[key])}" for key, label in labels if key in data]
+    parts.append(f"Seeds: {_esc(data['seeds'])}")
+    parts.append(f"Runtime: {_esc(json.dumps(data['runtime'], ensure_ascii=False))}")
+    return '<h2>Reproduction record</h2><p class="metadata">' + "<br>".join(parts) + "</p>"
+
+
+def render_evaluation(data: dict, destination: Path) -> None:
+    task = data["task"]
+    cases = data["cases"]
+    passed = sum(case["passed"] for case in cases)
+    status = (
+        "UNASSESSED" if not data["valid"] else ("RESOLVED" if data["resolved"] else "INCOMPLETE")
+    )
+    body = (
+        f"<p>{_esc(task['domain'])} · task v{_esc(task['version'])} · {_esc(status)}</p>"
+        '<div class="cards">'
+        + _card(_score(data["score"]), "weighted score")
+        + _card(f"{passed}/{len(cases)}", "cases passed", alert=not data["resolved"])
+        + _card(data["runtime"]["backend"], "execution backend")
+        + "</div>"
+    )
+    if not data["valid"]:
+        body += "<p>Environment failure: this evaluation has no assessed aggregate score.</p>"
+    body += (
+        '<h2>Dimension results</h2><div class="scroll"><table><thead><tr>'
+        "<th>Dimension</th><th>Score</th><th>Passed / assessed</th><th>Weight</th>"
+        "</tr></thead><tbody>"
+    )
+    for name, group in data["dimensions"].items():
+        body += (
+            f"<tr><td>{_esc(name)}</td><td>{_score(group['score'])}</td>"
+            f"<td>{group['passed']}/{group['assessed']}</td><td>{group['weight']:.0%}</td></tr>"
+        )
+    body += (
+        '</tbody></table></div><h2>Case results</h2><div class="scroll"><table><thead><tr>'
+        "<th>Case</th><th>Seed</th><th>Status</th><th>Failed checks</th><th>Host seconds</th>"
+        "</tr></thead><tbody>"
+    )
+    for index, case in enumerate(cases):
+        failed = [name for name, value in case["checks"].items() if value is False]
+        body += (
+            f'<tr><td><a href="#case-{index}">{_esc(case["case_id"])}</a></td>'
+            f'<td>{case["seed"]}</td><td class="{_esc(case["status"])}">'
+            f"{_esc(case['status'])}</td>"
+            f"<td>{_esc(', '.join(failed) or '—')}</td>"
+            f"<td>{case['duration_seconds']:.3f}</td></tr>"
+        )
+    body += "</tbody></table></div><h2>Case evidence</h2>"
+    for index, case in enumerate(cases):
+        body += (
+            f'<details id="case-{index}"><summary>{_esc(case["case_id"])} · '
+            f"seed {case['seed']} · {_esc(case['status'])}</summary>"
+            f"<pre>{_esc(json.dumps(case, ensure_ascii=False, indent=2))}</pre></details>"
+        )
+    body += _metadata(data)
+    body += (
+        '<p><a href="evaluation.json">Complete JSON evidence</a></p>'
+        "<footer>Observed task outcomes only. Full resolution requires every check to pass. "
+        "Host durations include execution overhead and are not agent completion-time baselines. "
+        "Unknown model cost and token usage remain null.</footer>"
+    )
+    _page("Evaluation", task["id"], body, destination)
+
+
+def render_comparison(data: dict, destination: Path) -> None:
+    body = (
+        f"<p>{_esc(data['task']['id'])} · matched task, grader, cases, and runtime</p>"
+        '<div class="cards">'
+        + _card(_score(data["baseline"]["score"]), "baseline score")
+        + _card(_score(data["current"]["score"]), "current score")
+        + _card(f"{data['score_delta']:+.4f}", "score change", alert=data["score_delta"] < 0)
+        + _card(len(data["regressions"]), "regressed checks", alert=bool(data["regressions"]))
+        + "</div>"
+        f"<p>{len(data['improvements'])} improved checks. "
+        f"{data['current_failed_cases']} current cases still fail. "
+        "No regression is not the same as full resolution.</p>"
+    )
+    if data["case_transitions"]:
+        body += (
+            '<h2>Changed outcomes</h2><div class="scroll change-table"><table><thead><tr>'
+            "<th>Case</th><th>Seed</th><th>Before → after</th>"
+            "<th>Regressed checks</th><th>Improved checks</th></tr></thead><tbody>"
+        )
+        for row in data["case_transitions"]:
+            body += (
+                f"<tr><td>{_esc(row['case_id'])}</td><td>{row['seed']}</td>"
+                f"<td>{_esc(row['before'])} → {_esc(row['after'])}</td>"
+                f"<td>{_esc(', '.join(row['regressed_checks']) or '—')}</td>"
+                f"<td>{_esc(', '.join(row['improved_checks']) or '—')}</td></tr>"
+            )
+        body += "</tbody></table></div>"
+        body += '<div class="change-cards">'
+        for row in data["case_transitions"]:
+            body += (
+                f'<article class="change-card"><h3>{_esc(row["case_id"])}</h3>'
+                f"<p>Seed {row['seed']} · {_esc(row['before'])} → {_esc(row['after'])}</p>"
+                f'<p class="failed">Regressed: '
+                f"{_esc(', '.join(row['regressed_checks']) or 'none')}</p>"
+                f"<p>Improved: {_esc(', '.join(row['improved_checks']) or 'none')}</p></article>"
+            )
+        body += "</div>"
+    else:
+        body += "<p>All observed check outcomes are unchanged.</p>"
+    body += _metadata(data)
+    for key in ("baseline", "current"):
+        body += (
+            f'<p class="metadata">{key.title()} candidate: '
+            f"{_esc(data[key]['candidate_sha256'])}</p>"
+        )
+    body += (
+        '<p><a href="comparison.json">Comparison JSON</a> · '
+        '<a href="baseline.json">Baseline evidence</a> · '
+        '<a href="current.json">Current evidence</a></p>'
+        f"<footer>{_esc(data['interpretation'])}</footer>"
+    )
+    _page("Comparison", "Compare outcomes.", body, destination)
