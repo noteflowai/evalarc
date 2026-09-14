@@ -4,15 +4,36 @@ import importlib.util
 import json
 import shutil
 import tomllib
+import zipfile
 from pathlib import Path
 
 import pytest
+
+from evalarc.verify import verify as verify_evidence
 
 spec = importlib.util.spec_from_file_location(
     "build_site", Path(__file__).resolve().parents[1] / "scripts" / "build_site.py"
 )
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+
+
+def test_downloaded_suite_preserves_bytes_and_verifies_offline(tmp_path):
+    first, second = tmp_path / "first.zip", tmp_path / "second.zip"
+    builder.write_suite_bundle(first)
+    builder.write_suite_bundle(second)
+    assert first.read_bytes() == second.read_bytes()
+    with zipfile.ZipFile(first) as archive:
+        assert len(archive.namelist()) == 12
+        archive.extractall(tmp_path / "received")
+    received = tmp_path / "received" / "suite-evidence"
+    result = verify_evidence(received)
+    assert result["verified"] and not result["accepted"]
+    assert result["accepted_jobs"] == 2
+    assert result["fully_resolved_jobs"] == 1
+    original = builder.ROOT / "examples" / "suite"
+    for name in result["files"]:
+        assert (received / name).read_bytes() == (original / name).read_bytes()
 
 
 def test_bundle_rejects_changed_evidence_and_extra_files(tmp_path):

@@ -102,7 +102,7 @@ def parser() -> argparse.ArgumentParser:
     suite.add_argument("--progress", action="store_true")
     suite.add_argument("--output", type=Path, default=Path("runs/suite"))
     verification = commands.add_parser(
-        "verify", help="check saved evaluation, repetition or comparison evidence without execution"
+        "verify", help="check saved evaluation, repetition, comparison or suite evidence"
     )
     verification.add_argument("evidence", type=Path, help="report JSON or its containing directory")
     verification.add_argument("--json", action="store_true")
@@ -110,6 +110,11 @@ def parser() -> argparse.ArgumentParser:
         "--require-resolved",
         action="store_true",
         help="also require valid, fully resolved results (current result for comparisons)",
+    )
+    verification.add_argument(
+        "--require-accepted",
+        action="store_true",
+        help="also require a valid suite whose configured acceptance gates all passed",
     )
     return root
 
@@ -122,7 +127,21 @@ def main(argv: list[str] | None = None) -> int:
             code = 0
             if args.require_resolved:
                 code = 2 if not result["records_valid"] else (0 if result["fully_resolved"] else 1)
-        except (OSError, ValueError, KeyError, TypeError, IndexError, OverflowError) as error:
+            if args.require_accepted:
+                if result["kind"] != "suite":
+                    raise ValueError("--require-accepted requires suite evidence")
+                code = max(
+                    code, 2 if not result["records_valid"] else (0 if result["accepted"] else 1)
+                )
+        except (
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            IndexError,
+            OverflowError,
+            RecursionError,
+        ) as error:
             result = {
                 "schema_version": "evalarc.verification.v1",
                 "verified": False,
@@ -134,10 +153,12 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(result, indent=2))
         elif result["verified"]:
             print(
-                f"Verified {result['kind']}: {len(result['files'])} JSON files | "
+                f"Verified {result['kind']}: {len(result['files'])} evidence files | "
                 f"Valid records: {result['records_valid']} | "
-                f"Fully resolved: {result['fully_resolved']}\n{SCOPE}"
+                f"Fully resolved: {result['fully_resolved']}\n{result['scope']}"
             )
+            if result["kind"] == "suite":
+                print(f"Accepted gates: {result['accepted_jobs']}/{result['total_jobs']}")
         else:
             print(f"Verification failed: {result['error']}", file=sys.stderr)
         return code

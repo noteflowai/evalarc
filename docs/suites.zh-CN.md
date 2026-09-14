@@ -107,3 +107,10 @@ JUnit 中一个 testcase 对应一个 **job 验收门槛**：
 把外部日志放在候选及输出目录之外。
 
 完整字段与 CI 示例见[英文指南](suites.md)，本轮实测范围见[验证记录](validation-v0.5.md)。
+
+## 不执行候选程序，复核收到的套件
+
+EvalArc 0.8 起，保留原始 TOML、计划、套件 JSON、JUnit 和各作业全部尝试，
+运行 `evalarc verify received/suite --json --require-accepted`，即可离线复算验收规则。
+`--require-resolved` 另行要求任务完全完成。原始候选路径作为元数据保留，
+移动证据时不要改写。[完整交付指南](verification.md)。

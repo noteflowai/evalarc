@@ -1,58 +1,90 @@
 # Verify received evaluation evidence
 
-EvalArc 0.7 adds a read-only handoff check. A customer or CI job can recompute a
-report's claims without installing Node, contacting Docker, locating the
-original candidate or executing its command.
+EvalArc provides a read-only handoff check. Recompute recorded claims without
+Node, Docker, the original candidate directory or candidate execution.
+Version 0.8 also checks complete suite configuration, acceptance gates and JUnit.
 
 ```bash
 evalarc verify received/evaluation.json --json
 evalarc verify received/repetition --json
 evalarc verify received/comparison --json
+evalarc verify received/suite --json
 ```
 
-An evaluation can have any filename. For a repetition, keep `repetition.json`
-with `attempts/0001/evaluation.json`, `0002/evaluation.json`, and so on. For a
-comparison, keep `comparison.json`, `baseline.json` and `current.json` together.
-Pass either the summary file or its directory. A directory must contain exactly
-one supported report type.
+Pass a summary file or its directory. A directory must contain exactly one
+supported report type. An individual evaluation may have any filename.
+Keep a repetition with `attempts/0001/evaluation.json`, `0002/evaluation.json`,
+and so on. A comparison needs `baseline.json` and `current.json` alongside it.
 
-The result includes a SHA-256 and byte length for every JSON file actually
-checked. These hashes identify the handoff bytes, including historical package
-versions. It does not rewrite reports or execute commands embedded in metadata.
+A suite handoff contains `suite.json`, the original `suite.toml`, `plan.json`,
+`junit.xml` and every `jobs/<id>/repetition.json` with its attempt evaluations.
+Do not edit the TOML to relocate candidate paths: they describe the original
+machine and the verifier never resolves or reads them. The TOML byte hash must
+match both the saved plan and the suite summary.
 
 | Evidence | Recomputed checks |
 | --- | --- |
 | Evaluation v2 | Case/check counts, dimensions, weighted score, validity and resolution |
-| Repetition v1 | Exact attempt inventory, input identities, all aggregate counts, scores and variance |
-| Comparison v1 | Matching task/runtime/grader/cases, score delta, individual regressions and improvements |
+| Repetition v1 | Exact attempt inventory, input identities, aggregate counts, scores and variance |
+| Comparison v1 | Matching task/runtime/grader/cases, score delta, regressions and improvements |
+| Suite v1 | Original configuration/hash, job order and inventory, plan/budgets, task/runtime/seeds, attempts, custom gates, totals and JUnit |
 
-Malformed or contradictory evidence exits **2**, with `verified: false` in JSON
-mode. Default exit **0** means the records are internally consistent, even if
-the recorded candidate failed or had an environment error.
+The result includes SHA-256 and byte length for every input checked, including
+TOML and XML. Historical package versions remain readable; verification does
+not rewrite reports. JUnit counts, testcase identities, failure versus error,
+gate payloads and recorded observations must match the recomputed suite.
+XML indentation and attribute order may differ.
 
-To require full resolution as well:
+## Consistency, acceptance and resolution
+
+Default exit **0** means records are internally consistent, even if a gate
+rejects the candidate or the run records an environment error. Contradictory,
+malformed or incomplete evidence exits **2** with `verified: false` in JSON.
 
 ```bash
-evalarc verify received/repetition --json --require-resolved
+# Require the suite's configured gates:
+evalarc verify received/suite --json --require-accepted
+# Require full resolution for any supported report:
+evalarc verify received/suite --json --require-resolved
 ```
 
-This exits **0** for valid, fully resolved records, **1** for valid but unresolved
-records, and **2** for invalid records or a verification error. For a comparison,
-full resolution refers to its current evaluation; `has_regressions` is also
-reported separately. This flag is not a replacement for a suite's custom gates.
+`--require-accepted` applies only to suites. Exit **0** requires valid records
+and every gate accepting; **1** means valid records with rejected gates;
+**2** means invalid records or a verification error. `--require-resolved` uses
+the same exit convention for full resolution. In a comparison it refers to the
+current evaluation. Using both flags requires both conditions. A permissive
+gate can accept a partially resolved result.
 
-Suite manifests, custom gate decisions, JUnit, audit summaries and trajectories
-are not currently standalone supported inputs. For a suite, verify each
-`jobs/<id>` repetition directory; this checks its attempts but does not verify
-the suite-level gate decision. The published site additionally checks the
-featured suite against its original configuration and JUnit.
+## Try the published handoff
 
-Input files must be regular files without symlinks in the evidence path.
-Reads are limited to 64 MiB per JSON and 256 MiB per handoff. Repetitions contain
-at most 100 attempts. Duplicate JSON keys and non-finite values are rejected.
-Original HTML, logs and source programs are outside the verified inventory.
+Download **suite-evidence.zip** from the
+[evidence lab](https://huggingface.co/spaces/glayguo/evalarc), unzip it, and run:
 
-This is record consistency, not an independent rerun of the business-state
-grader or authentication of the report's producer. A coordinated fabrication
-can be internally consistent. Re-run trusted grading on the candidate when
-execution evidence is required.
+```bash
+evalarc verify suite-evidence --json
+# Expected: verified=true; accepted=false; accepted_jobs=2;
+# fully_resolved_jobs=1; total_jobs=3; 12 input files; exit 0.
+evalarc verify suite-evidence --json --require-accepted
+# Expected exit 1: the strict notes gate rejects the recorded faulty policy.
+```
+
+The ZIP retains the original bytes of all 12 verified files from the three-job,
+five-attempt Docker suite. Its stable ZIP metadata makes repeated builds
+reproducible. HTML and logs remain available separately in the lab.
+
+## Bounds and trust scope
+
+Inputs must be regular files without symlinks in the evidence path. Limits are
+64 MiB per JSON, 1 MiB for TOML, 4 MiB for JUnit, and 256 MiB per handoff. Suites
+have at most 100 jobs, 1,000 planned attempts and 100,000 planned case executions;
+each repetition has at most 100 attempts. Duplicate JSON keys, non-finite
+numbers, XML DTDs and entities are rejected.
+
+Candidate path strings and durations remain reported metadata. They are
+bounded and checked for internal consistency where applicable, but cannot be
+reconstructed from the handoff. Original HTML, logs, audit summaries,
+trajectories and source programs are outside the verified inventory.
+
+This checks record consistency, not independent business-state grading or
+producer authentication. A coordinated fabrication can be internally
+consistent. Re-run trusted grading when execution evidence is required.

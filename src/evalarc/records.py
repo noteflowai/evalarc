@@ -32,18 +32,25 @@ def _object(pairs: list[tuple[str, object]]) -> dict:
     return result
 
 
-def read_json(path: Path, *, limit: int = MAX_REPORT_BYTES) -> tuple[dict, bytes]:
-    """Read finite, unambiguous JSON from a bounded regular file."""
+def read_bytes(path: Path, *, limit: int = MAX_REPORT_BYTES) -> bytes:
+    """Bound reads of a regular evidence file, including files replaced during a read."""
+    oversized = f"evidence exceeds the read limit ({limit} bytes; {limit / 1048576:g} MiB)"
     fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_NOFOLLOW", 0))
     with os.fdopen(fd, "rb") as source:
         info = os.fstat(source.fileno())
         if not stat.S_ISREG(info.st_mode):
             raise ValueError("report must be a regular file")
         if info.st_size > limit:
-            raise ValueError("evaluation report exceeds the 64 MiB read limit")
+            raise ValueError(oversized)
         content = source.read(limit + 1)
     if len(content) > limit:
-        raise ValueError("evaluation report exceeds the 64 MiB read limit")
+        raise ValueError(oversized)
+    return content
+
+
+def read_json(path: Path, *, limit: int = MAX_REPORT_BYTES) -> tuple[dict, bytes]:
+    """Read finite, unambiguous JSON from a bounded regular file."""
+    content = read_bytes(path, limit=limit)
     try:
         data = json.loads(content, object_pairs_hook=_object)
         json.dumps(data, allow_nan=False)

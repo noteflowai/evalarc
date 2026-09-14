@@ -81,7 +81,7 @@ dependencies; the bundled trusted controls can run on a CPU.
 
 ## Scope
 
-Research preview 0.7.1. These are scripted controls and public development
+Research preview 0.8.0. These are scripted controls and public development
 tasks, not held-out frontier-model results. Detection applies only to the
 declared faults. No arbitrary reward-hack resistance, human time horizon,
 hardware-agent validation or RL improvement is established. Repeated fixed
@@ -93,7 +93,11 @@ maintainer and does not imply endorsement by Hugging Face.
 
 ### Verify a handoff offline
 
-With EvalArc 0.7+, run `evalarc verify path/to/report --json` on an evaluation,
-repetition or comparison report. It checks the recorded inputs without executing
-a candidate; `--require-resolved` separately requires fully resolved results.
+With EvalArc 0.8+, download **suite-evidence.zip** from the lab and unzip it.
+Run `evalarc verify suite-evidence --json` to check the original configuration,
+plan, all five attempts, custom gates and JUnit without executing a candidate.
+The 12 original input files are unchanged: two of three jobs are accepted, one
+is fully resolved. Default verification exits 0 for consistency;
+`--require-accepted` exits 1 because the strict notes gate rejects the result.
+`--require-resolved` separately requires full resolution.
 [Workflow and limits](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md).

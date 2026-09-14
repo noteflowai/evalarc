@@ -10,7 +10,7 @@ async function main() {
   let server;
   let base = process.env.SITE_URL;
   if (!base) {
-    const mime = {".html":"text/html", ".js":"text/javascript", ".json":"application/json", ".css":"text/css", ".svg":"image/svg+xml"};
+    const mime = {".html":"text/html", ".js":"text/javascript", ".json":"application/json", ".css":"text/css", ".svg":"image/svg+xml", ".zip":"application/zip"};
     server = http.createServer((req, res) => {
       const route = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
       const filename = path.resolve(root, "." + (route.endsWith("/") ? route + "index.html" : route));
@@ -54,6 +54,16 @@ async function main() {
       assert.equal(suiteProvenance.protected_gate.reasons.length, 1);
       await app.locator("#suite-provenance").locator("..").locator("summary").click();
       const suiteBase = await app.locator("body").evaluate(() => location.href);
+      const downloadLink = app.getByRole("link", {name:"Download suite evidence (ZIP)"});
+      assert.equal(await downloadLink.getAttribute("href"), "suite-evidence.zip");
+      const received = page.waitForEvent("download");
+      await downloadLink.click();
+      const download = await received;
+      assert.equal(await download.failure(), null);
+      assert.equal(download.suggestedFilename(), "suite-evidence.zip");
+      const downloaded = fs.readFileSync(await download.path());
+      const manifest = await (await page.request.get(new URL("manifest.json", suiteBase).href)).json();
+      assert.equal(require("node:crypto").createHash("sha256").update(downloaded).digest("hex"), manifest.files["suite-evidence.zip"]);
       const junitResponse = await page.request.get(new URL("suite/junit.xml", suiteBase).href);
       assert.equal(junitResponse.status(), 200);
       const junit = await page.evaluate(xml => {
@@ -213,7 +223,7 @@ async function main() {
         assert.match(await app.locator("body").innerText(), /retry-after-commit/);
       }
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, sharedTraceRestored:true, keyboardCaseReturn:true, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, repeatedControls:2, attempts:6, suiteJobs:3, suiteAttempts:5, junitFailures:1, offlineReports:7, suiteDownloadVerified:true, sharedTraceRestored:true, keyboardCaseReturn:true, errors});
       await page.close();
     }
     if (!process.env.SITE_URL) {

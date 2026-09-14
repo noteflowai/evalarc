@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.0 · 2026-09-14 · Research preview
+
+- Verify whole suite handoffs from the original TOML, plan, every repetition and
+  attempt, recomputed custom gates and JUnit failure/error records.
+- Add `--require-accepted` for configured suite gates, distinct from record
+  consistency and full task resolution. Original candidate paths and timings
+  remain reported metadata; no candidate or grader is executed.
+- Download the featured suite as a deterministic ZIP from the evidence lab.
+  Preserve all 12 original input files and verify the extracted archive offline.
+- Check received suites from the installed wheel outside the checkout with an
+  empty PATH, including rejection of a modified JUnit record.
+
+Task contracts, scoring rules and historical evidence bytes are unchanged.
+
+
 ## 0.7.1 · 2026-09-14 · Research preview
 
 - Share and restore a specific task pack, control, seed, case and trace step in

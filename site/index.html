@@ -158,12 +158,13 @@
       <noscript><p>This explorer requires JavaScript. Read the standalone <a href="support/index.html">support report</a> or <a href="coding/index.html">coding report</a> without it.</p></noscript>
     </section>
     <section class="reproduce" aria-label="Verify a received report">
-      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Received a report?<br>Check its claims.</h2><p>Recompute recorded scores, repeated outcomes and regressions without executing the candidate.</p><a href="https://github.com/noteflowai/evalarc/blob/main/docs/verification.md">Offline verification guide &#8599;</a></div>
-      <div class="terminal"><div>EVALARC 0.7+ / READ-ONLY</div><pre><code>evalarc verify received/repetition --json
+      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Download the evidence.<br>Check every gate.</h2><p>Recompute the original suite configuration, plan, five attempts, acceptance decisions and JUnit without executing a candidate.</p><p><a href="suite-evidence.zip" download>Download suite evidence (ZIP)</a> &middot; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/verification.md">Offline verification guide &#8599;</a></p></div>
+      <div class="terminal"><div>EVALARC 0.8+ / READ-ONLY</div><pre><code># Unzip the downloaded archive first.
+evalarc verify suite-evidence --json
 
-# Also require valid, fully resolved results:
-evalarc verify received/repetition \
-  --json --require-resolved</code></pre><p>Consistency is distinct from task success. No grader rerun or producer authentication is implied.</p></div>
+# Require all configured gates to accept:
+evalarc verify suite-evidence \
+  --json --require-accepted</code></pre><p>This example is consistent (exit 0), but one gate rejects it (exit 1 with --require-accepted). Two jobs are accepted; one is fully resolved. No grader rerun or producer authentication is implied.</p></div>
     </section>
     <section class="reproduce">
       <div><p class="eyebrow">FROM THE BROWSER TO YOUR TERMINAL</p><h2>Make the grader<br>earn your trust.</h2><p>Run the known-good reference and the declared faulty controls. Keep the outcomes, seeds, runtime limits and fingerprints together.</p><a href="https://github.com/noteflowai/evalarc#run-an-audit">Installation &amp; execution guide &#8599;</a></div>

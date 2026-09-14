@@ -161,3 +161,11 @@ cancellation; keep that file outside candidates and the output directory.
 The suite stream adds job IDs to the existing `evalarc.event.v1` events.
 
 See the [validation record](validation-v0.5.md) for the checks actually run.
+
+## Verify a received suite without executing it
+
+With EvalArc 0.8+, keep the original TOML, plan, suite JSON, JUnit and all job
+attempts together. Run `evalarc verify received/suite --json --require-accepted`
+to recompute configured gates offline. Full resolution is a separate condition,
+available through `--require-resolved`. Original candidate paths are metadata;
+do not rewrite them when moving the evidence. [Handoff guide](verification.md).
