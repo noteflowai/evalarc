@@ -325,14 +325,11 @@ def main(argv: list[str] | None = None) -> int:
             single = detection.get("single_case_detections") or []
             # Printed beside the count because "all detected" and "robustly
             # detected" are different claims, and only the first is obvious.
-            margin_line = (
-                f"Weakest detection margin: {detection.get('weakest_margin')} case(s)"
-                + (
-                    f" | Detected by a single case: {len(single)}/{result['total']}"
-                    f" ({', '.join(single)})"
-                    if single
-                    else ""
-                )
+            margin_line = f"Weakest detection margin: {detection.get('weakest_margin')} case(s)" + (
+                f" | Detected by a single case: {len(single)}/{result['total']}"
+                f" ({', '.join(single)})"
+                if single
+                else ""
             )
             print(
                 f"Audit: {audit_status} | Reference: {reference_status} | "

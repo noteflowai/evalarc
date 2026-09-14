@@ -35,6 +35,7 @@ a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
 def render_audit(data: dict, destination: Path) -> None:
     esc = lambda value: html.escape(str(value), quote=True)  # noqa: E731
     score_text = lambda value: "unassessed" if value is None else f"{value:.3f}"  # noqa: E731
+    margin_text = lambda value: "—" if value is None else str(value)  # noqa: E731
     rows = []
     for row in data["mutants"]:
         state = (
@@ -46,7 +47,7 @@ def render_audit(data: dict, destination: Path) -> None:
             f"<tr><td><code>{esc(row['name'])}</code></td>"
             f"<td>{esc(row['target_dimension'])}</td>"
             f"<td>{score_text(row['score'])}</td><td>{state}</td>"
-            f"<td>{esc('—' if row.get('detection_margin') is None else row['detection_margin'])}</td>"
+            f"<td>{esc(margin_text(row.get('detection_margin')))}</td>"
             f"<td>{esc(', '.join(row['failing_cases']))}</td></tr>"
         )
     reference = data["reference"]
@@ -90,11 +91,9 @@ submissions are evaluated against the same externally enforced contract.</p>
         '<h2>Does the grader detect plausible defects?</h2><div class="scroll">'
         "<table><thead><tr><th>Negative control</th><th>Target</th>"
         "<th>Candidate score</th><th>Result</th>"
-        "<th title=\"Cases that caught this fault independently. One means the suite "
-        "loses this fault if that case changes.\">Margin</th>"
-        "<th>Evidence</th></tr></thead><tbody>"
-        + "".join(rows)
-        + "</tbody></table></div>"
+        '<th title="Cases that caught this fault independently. One means the suite '
+        'loses this fault if that case changes.">Margin</th>'
+        "<th>Evidence</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>"
         "<h2>Positive control</h2>" + bars
     )
     traces = [case for case in reference.get("cases", []) if "trace" in case]
