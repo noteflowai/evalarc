@@ -2,12 +2,14 @@
 
 Validation ran locally on Linux with Python 3.12.3 and Node.js v22.23.2.
 The wheel was installed into a separate fresh virtual environment and executed
-outside the checkout. The configured GitHub Actions jobs have not been executed
-on a remote repository.
+outside the checkout. The public
+[GitHub Actions run](https://github.com/noteflowai/evalarc/actions/runs/34797722807)
+also passed Python 3.11–3.13 tests, both Docker audits, browser checks and
+deployment to GitHub Pages and Hugging Face.
 
 | Check | Observed result |
 | --- | --- |
-| `pytest -q` | 41 passed, including the independent Node policy |
+| `pytest -q` | 43 passed, including the independent Node policy and site artifact checks |
 | `ruff check .` | Passed |
 | `ruff format --check .` | Passed |
 | Editable installation and task registry | Package/module version 0.2.0; CLI lists both built-in packs |
@@ -18,6 +20,9 @@ on a remote repository.
 | Installed wheel, independent JavaScript policy | Default seeds 17, 41, 97; all 12 support episodes passed |
 | Wheel and source distribution build | Completed successfully |
 | JSON, SVG syntax and local documentation links | Parsed and checked for missing targets |
+| Evidence explorer in Chromium | All 17 implementations and 167 cases checked at 1440 px and 390 px |
+| Public GitHub Pages and actual Hugging Face iframe | Same browser checks passed, with no page errors or horizontal overflow |
+| Hugging Face publication | All 12 bundle files read back anonymously and matched to the tested artifact |
 
 The automated tests cover positive/negative behavioral controls; malformed or
 non-finite responses; timeout and output limits; stderr flooding; unsolicited
@@ -63,8 +68,17 @@ Wheel audits used three seeds and explicitly trusted local execution. Runtime
 JSON's `python` and `platform` describe the host grader; image IDs identify the
 candidate container. Node was checked in local mode, not in Docker.
 
-Python 3.11 and 3.13 are included in the CI matrix but were not installed and
-tested in this local session. No real agent API, RL trainer, Harbor adapter,
+Python 3.11 and 3.13 passed on GitHub-hosted runners; the local session used
+Python 3.12. The Node policy test copies the example and uses the absolute
+runtime path installed by CI, because local candidate processes deliberately
+receive the system search path rather than the grader's full environment.
+The earlier assumption that CI's Node would be on that system path was corrected.
+
+The independently installed release wheel also passed the support audit and
+JavaScript policy on seeds 17, 41 and 97 outside the checkout. Site publication
+does not alter either task's grading code or the recorded audit JSON.
+
+No real agent API, RL trainer, Harbor adapter,
 Windows host, GPU workload, human baseline, or hardened multi-tenant deployment
 was tested. Docker disk quotas and power-loss/concurrent-writer behavior are
 outside this implementation's tested contract. No TypeScript SDK or Rust worker
