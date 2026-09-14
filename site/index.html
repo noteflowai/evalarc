@@ -19,11 +19,11 @@
   <main>
     <section class="hero">
       <div>
-        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.2</p>
+        <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW 0.3</p>
         <h1>Look past<br>the <em>score.</em></h1>
         <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
         <p class="muted">EvalArc tests whether an agent's grader catches the difference between plausible progress and a completed task.</p>
-        <a class="primary" href="#explorer">Inspect the failed retry <span>&#8600;</span></a>
+        <a class="primary" href="#regression">See the hidden regression <span>&#8600;</span></a>
       </div>
       <a class="hero-proof" href="#explorer" aria-label="Inspect why a 93.75 percent score fails acceptance">
         <div class="proof-top"><span>RECORDED CONTROL / 01</span><span class="badge fail">NOT RESOLVED</span></div>
@@ -40,6 +40,31 @@
       <div><strong>JSON</strong><span>downloadable evidence</span></div>
       <div><strong>CPU</strong><span>reproduce without a model API</span></div>
     </div>
+    <section id="regression" class="regression">
+      <div class="section-top"><div><p class="eyebrow">NEW IN 0.3 / COMPARE TWO REVISIONS</p><h2>Better score. New failure.</h2></div><p>Two closure checks improve.<br>A previously passing note check fails.</p></div>
+      <p class="muted">These recorded policies use the same task, seeds, grader and runtime. Select a changed case to compare the observed outcomes.</p>
+      <p id="comparison-status" role="status">Loading the recorded comparison&hellip;</p>
+      <div id="comparison-workspace" hidden>
+        <div class="comparison-summary">
+          <div><span class="eyebrow">BASELINE / CLOSE-UNRESOLVED</span><strong id="before-score"></strong></div>
+          <div class="comparison-arrow" aria-hidden="true">&#8594;</div>
+          <div><span class="eyebrow">CURRENT / NEW-KEY-ON-RETRY</span><strong id="after-score"></strong></div>
+          <div class="comparison-verdict"><span id="regression-count" class="badge fail"></span><p id="compare-delta"></p></div>
+        </div>
+        <div id="changed-cases" class="changed-cases" role="group" aria-label="Changed checks"></div>
+        <p id="comparison-result" class="story" aria-live="polite"></p>
+        <div class="comparison-states">
+          <article><h3>Before <span id="before-verdict" class="badge"></span></h3><div id="before-checks" class="check-list"></div><h4>Final ticket state</h4><pre id="before-state"></pre></article>
+          <article><h3>After <span id="after-verdict" class="badge"></span></h3><div id="after-checks" class="check-list"></div><h4>Final ticket state</h4><pre id="after-state"></pre></article>
+        </div>
+        <div class="comparison-links"><a href="comparison/index.html">Full comparison report &#8599;</a><a href="evaluation/index.html">Individual evaluation &#8599;</a><a href="comparison/comparison.json" download>Comparison JSON &#8595;</a><a href="comparison/baseline.json" download>Baseline JSON &#8595;</a><a href="comparison/current.json" download>Current JSON &#8595;</a></div>
+        <details><summary>Reproduce this comparison without running candidates</summary><pre><code>evalarc compare examples/comparison/baseline.json \
+  examples/comparison/current.json \
+  --output runs/comparison-001
+# Exit 1: a check regressed, despite the higher score.</code></pre><p class="caption">Use a fresh output directory. The CLI validates report consistency and matching execution conditions before comparison. It does not authenticate the producer of the reports.</p></details>
+      </div>
+      <noscript><p>Open the <a href="comparison/index.html">offline comparison report</a> and <a href="evaluation/index.html">individual evaluation</a> without JavaScript.</p></noscript>
+    </section>
     <section id="explorer" class="explorer">
       <div class="section-top"><div><p class="eyebrow">FOLLOW THE EVIDENCE</p><h2>One score never tells the whole story.</h2></div><p>Switch the control. Inspect the checks.<br>Follow each recorded state change.</p></div>
       <div class="task-switch" role="group" aria-label="Task pack">

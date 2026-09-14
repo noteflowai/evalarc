@@ -10,6 +10,7 @@ const stories = {
   reference: "The known-good control satisfies every recorded check. Compare its behavior with a deliberately faulty implementation to audit the grader.",
 };
 let audits = {}, pack = "support", evaluation, selectedCase;
+let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
 function badge(element, passed, text) {
@@ -101,6 +102,53 @@ function showStep() {
   $("previous-step").disabled = index === 0;
   $("next-step").disabled = index === selectedCase.trace.length - 1;
 }
+function chooseTransition(index) {
+  const transition = comparison.case_transitions[index];
+  [...$("changed-cases").children].forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
+  $("comparison-result").textContent = transition.regressed_checks.length
+    ? `${transition.case_id}: ${transition.regressed_checks.join(", ")} changed from passing to failing. The current policy leaves a duplicate note.`
+    : `${transition.case_id}: ${transition.improved_checks.join(", ")} changed from failing to passing. The current policy preserves the open status of this unresolved ticket.`;
+  for (const [side, report] of [["before", baseline], ["after", current]]) {
+    const row = report.cases.find((item) => item.seed === transition.seed && item.case_id === transition.case_id);
+    badge($(side + "-verdict"), row.passed, row.status.toUpperCase());
+    $(side + "-checks").replaceChildren();
+    for (const [name, passed] of Object.entries(row.checks)) {
+      const check = document.createElement("span");
+      check.className = passed ? "pass" : "fail";
+      check.textContent = `${name}: ${passed ? "pass" : "fail"}`;
+      $(side + "-checks").append(check);
+    }
+    const ticketId = row.trace.find((step) => step.action?.tool === "get_ticket").action.arguments.ticket_id;
+    $(side + "-state").textContent = pretty({ticket_id: ticketId, ...row.final_state[ticketId]});
+  }
+}
+async function loadComparison() {
+  [comparison, baseline, current] = await Promise.all(["comparison", "baseline", "current"].map(async (name) => {
+    const response = await fetch(`comparison/${name}.json`);
+    if (!response.ok) throw new Error("Comparison evidence unavailable");
+    return response.json();
+  }));
+  $("before-score").textContent = percent(comparison.baseline.score);
+  $("after-score").textContent = percent(comparison.current.score);
+  $("regression-count").textContent = `${comparison.regressions.length} REGRESSED CHECK`;
+  $("compare-delta").textContent = `+${Number((comparison.score_delta * 100).toFixed(4))} percentage points`;
+  comparison.case_transitions.forEach((transition, index) => {
+    const button = document.createElement("button"); button.type = "button";
+    const tag = document.createElement("span"); tag.className = transition.regressed_checks.length ? "fail" : "pass";
+    tag.textContent = transition.regressed_checks.length ? "REGRESSED" : "IMPROVED";
+    button.append(tag, document.createTextNode(transition.case_id));
+    button.addEventListener("click", () => chooseTransition(index));
+    $("changed-cases").append(button);
+  });
+  chooseTransition(0);
+  $("comparison-status").hidden = true;
+  $("comparison-workspace").hidden = false;
+}
+loadComparison().catch(() => {
+  $("comparison-status").textContent = "Comparison evidence could not be loaded. Reload the page or open the standalone report.";
+  const link = document.createElement("a"); link.href = "comparison/index.html"; link.textContent = "Open comparison report";
+  $("comparison-status").append(document.createTextNode(" "), link);
+});
 $("control").addEventListener("change", chooseControl);
 $("trace-step").addEventListener("input", showStep);
 $("previous-step").addEventListener("click", () => { $("trace-step").stepDown(); showStep(); });

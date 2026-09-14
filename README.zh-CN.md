@@ -16,12 +16,12 @@ EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据
 通过正确实现和刻意带有缺陷的实现进行对照，
 检查它能发现哪些问题，并保存可复查的报告。
 
-**如果智能体重复写入了一条备注，你会接受 93.75% 的分数吗？**
+**分数从 90% 升到 93.75%，原本通过的检查却失败了。**
 [交互证据实验室](https://huggingface.co/spaces/glayguo/evalarc)
-可以切换正确策略与缺陷策略，逐步查看工具调用、失败检查和状态变化。
+可以并排比较两个版本，查看一处退步、两处改进，再逐步检查工具调用和状态变化。
 页面读取仓库保存的 Docker 审计记录，无需安装，也不调用模型。
 
-[![EvalArc 交互证据实验室：93.75% 的分数仍未通过验收](docs/assets/evidence-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
+[![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
 
 **v0.3 已实现 coding 和业务工具两个场景。**
 

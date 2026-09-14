@@ -1,6 +1,15 @@
 I'm publishing EvalArc as its maintainer: an open toolkit for auditing the
 graders behind AI-agent evaluations.
 
+**Updated for v0.3: a better score can introduce a new failure.**
+
+The new side-by-side comparison starts at 90% and rises to 93.75%. Two closure
+checks improve, but a previously passing note check now fails. Select each
+changed case to inspect the ticket state before and after the revision.
+The new CLI comparison returns exit code 1 for that regression despite the
+higher score. Standalone evaluation and comparison reports include the input
+JSON so the result can be reproduced without executing a candidate.
+
 Start with the support-tools example in this Space. A scripted policy earns
 **93.75%**, yet fails acceptance because a retry duplicates an already committed
 note. Step through the failed response and retry, then select the reference to
@@ -21,6 +30,9 @@ It replays recorded Docker audits. No model is called in the Space.
 This is an MIT-licensed research preview with public development tasks and
 scripted controls. It does not establish frontier-model performance, arbitrary
 reward-hack resistance or RL gains.
+
+Version 0.3 also adds `evalarc doctor` for readiness checks without executing
+candidate code, and protects earlier run outputs by requiring a fresh directory.
 
 Feedback is welcome on plausible defects the current controls miss, clearer
 task contracts, and independent reference implementations. A small reproducible

@@ -33,7 +33,24 @@ async function main() {
       await page.goto(base, {waitUntil:"networkidle", timeout:60000});
       const app = process.env.SITE_HUB === "1" ? page.frameLocator('iframe[src*="hf.space"]') : page;
       await app.locator("#workspace").waitFor({state:"visible"});
+      await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await page.waitForLoadState("networkidle");
+      assert.equal(await app.locator("#before-score").innerText(), "90%");
+      assert.equal(await app.locator("#after-score").innerText(), "93.75%");
+      assert.equal(await app.locator("#regression-count").innerText(), "1 REGRESSED CHECK");
+      assert.equal(await app.locator("#compare-delta").innerText(), "+3.75 percentage points");
+      assert.equal(await app.locator("#before-verdict").innerText(), "PASSED");
+      assert.equal(await app.locator("#after-verdict").innerText(), "FAILED");
+      assert.equal(JSON.parse(await app.locator("#before-state").innerText()).notes.length, 2);
+      assert.equal(JSON.parse(await app.locator("#after-state").innerText()).notes.length, 3);
+      for (let i=1;i<3;i++) {
+        await app.locator("#changed-cases button").nth(i).click();
+        assert.equal(await app.locator("#before-verdict").innerText(), "FAILED");
+        assert.equal(await app.locator("#after-verdict").innerText(), "PASSED");
+        assert.equal(JSON.parse(await app.locator("#before-state").innerText()).status, "closed");
+        assert.equal(JSON.parse(await app.locator("#after-state").innerText()).status, "open");
+      }
+      await app.locator("#changed-cases button").first().click();
       assert.equal(await app.locator("#score").innerText(), "93.75%");
       assert.equal(await app.locator("#verdict").innerText(), "NOT RESOLVED");
       assert.match(await app.locator("#case-title").innerText(), /retry-after-commit/);
@@ -73,9 +90,21 @@ async function main() {
         fs.mkdirSync(process.env.SITE_SCREENSHOTS, {recursive:true});
         await page.evaluate(() => scrollTo(0,0));
         await page.screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `evalarc-${width}.png`), fullPage:true});
+        await app.locator("#regression").screenshot({path:path.join(process.env.SITE_SCREENSHOTS, `regression-${width}.png`)});
       }
+      const appUrl = await app.locator("body").evaluate(() => location.href);
+      await app.getByRole("link", {name:"Full comparison report", exact:false}).click();
+      await app.getByRole("heading", {name:"Compare outcomes."}).waitFor();
+      assert.match(await app.locator("body").innerText(), /\+0\.0375/);
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("evaluation/index.html", url).href; }, appUrl);
+      await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
+      await app.locator("details").last().locator("summary").click();
+      assert.match(await app.locator("details").last().innerText(), /retry-after-commit/);
+      assert.match(await app.locator("details").last().innerText(), /temporarily_unavailable/);
+      assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
-      results.push({width, controls:17, cases:167, errors});
+      results.push({width, controls:17, cases:167, comparedCases:3, offlineReports:2, errors});
       await page.close();
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

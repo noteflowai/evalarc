@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 · 2026-09-14 · Research preview
+
+- `evalarc doctor` checks runtime readiness and candidate configuration without
+  executing a candidate.
+- Every evaluation now includes a standalone HTML report and its complete JSON.
+- `evalarc compare` validates matching records and reports each regressed check,
+  including when improvements elsewhere raise the aggregate score.
+- CLI outputs use fresh directories and staged publication to preserve earlier
+  evidence.
+- The evidence lab adds a comparison from 90% to 93.75% with one regressed note
+  check and two improved closure checks, plus the downloadable input records.
+
+The task contracts and grading fingerprints are unchanged. Comparisons check
+recorded consistency and matched conditions; they do not authenticate the
+producer, establish statistical significance, or imply full task resolution.
+
 ## 0.2.0 · 2026-09-14 · Research preview
 
 First public EvalArc release.

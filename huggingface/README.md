@@ -7,7 +7,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: Look past the score. Inspect agent grader failures.
+short_description: Score up, new failure. Compare agent evaluation evidence.
 tags:
   - agent-evaluation
   - tool-use
@@ -18,7 +18,12 @@ tags:
 
 # EvalArc — Look past the score.
 
-**A 93.75% score. A duplicated write. Would your grader catch it?**
+**The score rose from 90% to 93.75%. A previously passing check now fails.**
+
+New in **v0.3**: compare two recorded support policies side by side. Two closure
+checks improve, while a retry introduces a duplicate note. Inspect all three
+changed cases, then open the standalone comparison and individual reports.
+`evalarc compare` returns exit code 1 for the regression despite the higher score.
 
 Explore saved evidence from two executable task packs for AI-agent evaluation.
 Switch between known-good references and 15 declared faulty implementations,
@@ -32,7 +37,7 @@ inspect failed checks, and step through tool calls and state changes.
 - **Reproduction:** full JSON, grader/candidate/case fingerprints, seeds and
   container image IDs accompany the reports.
 
-The browser replays the committed Docker audits. It does not execute arbitrary
+The browser replays the committed Docker audits and evaluation records. It does not execute arbitrary
 submissions or call a model. The Python CLI has no third-party runtime
 dependencies; the bundled trusted controls can run on a CPU.
 
@@ -43,7 +48,7 @@ dependencies; the bundled trusted controls can run on a CPU.
 
 ## Scope
 
-Research preview 0.2.0. These are scripted controls and public development
+Research preview 0.3.0. These are scripted controls and public development
 tasks, not held-out frontier-model results. Detection applies only to the
 declared faults. No arbitrary reward-hack resistance, human time horizon,
 hardware-agent validation or RL improvement is established.

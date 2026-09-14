@@ -1,8 +1,8 @@
 # Validation record · v0.3.0 · 2026-09-14
 
 Validation ran locally on Linux with Python 3.12.3 and Node.js v22.23.2.
-This record covers the new evaluation workflow; the previous
-[v0.2 audit record](validation.md) remains unchanged apart from its navigation.
+This record covers the new evaluation workflow. The
+[v0.2 audit record](validation.md) retains the original scripted-control evidence.
 
 | Check | Observed result |
 | --- | --- |
@@ -23,8 +23,8 @@ cards on narrow screens so that changed checks remain readable. The evaluation
 tables scroll within their containers; the entire page does not overflow.
 Screenshots were inspected locally.
 
-The package was built from an isolated Git tree containing the functional update.
-Concurrent, uncommitted promotion files were excluded from that build.
+The functional checks used an isolated Git tree. Publication integration
+subsequently combined that workflow with the existing verified site tooling.
 
 The [individual report](../examples/evaluation/index.html) and
 [comparison](../examples/comparison/index.html) contain fresh v0.3 execution
@@ -39,8 +39,21 @@ keys/cases, nonfinite numbers, invalid-run handling, runtime mismatches, HTML
 escaping, output collision prevention, publication after complete generation,
 cleanup after exceptions, and non-executing candidate inspection.
 
-Existing CI jobs were not executed remotely by this functional update. The
-readiness command does not run candidate code or verify arbitrary executables
+The readiness command does not run candidate code or verify arbitrary executables
 inside a Docker image. Comparison establishes consistency of recorded outcomes,
 not report authenticity, statistical significance, or cross-domain ranking.
 Abrupt worker termination may leave unpublished temporary files.
+
+## Integrated publication checks
+
+- 80 tests passed after combining the functional update with site artifact
+  checks; lint and formatting passed across the complete repository.
+- The site builder recomputed the saved comparison from validated baseline and
+  current JSON. A test confirms that an inconsistent comparison is rejected.
+- Chromium checks at 1440 px and 390 px covered the existing 17 implementations
+  and 167 cases, all three changed comparison cases, and both standalone reports.
+  The duplicate note, closure improvements, evidence expansion and absence of
+  document overflow were checked.
+- The public workflow runs the Python 3.11–3.13 matrix, both Docker audits,
+  package builds and browser checks before deploying the tested artifact.
+  Publication receipts are kept in [the outreach log](outreach/status.md).

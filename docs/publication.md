@@ -24,11 +24,15 @@ The builder checks the evidence supporting the headline outcomes, copies the
 original audit JSON without modification, and writes `manifest.json` with the
 source commit, dirty status and SHA-256 for every file. HTML is encoded as ASCII
 with character references for compatibility with static Space hosting.
+The v0.3 comparison is recomputed from its baseline and current JSON before
+building. The builder rejects inconsistent summaries or changed headline claims.
 
 The browser check visits all 17 implementations and 167 cases at desktop and
 mobile widths. It checks the ambiguous write and duplicate note, the reference's
 idempotent retry, the coding mismatch, and horizontal overflow. These are saved
 scripted controls, not model runs.
+It also checks all three changed cases in the v0.3 comparison, follows the
+standalone comparison report, and expands the individual evaluation evidence.
 
 ## Automatic deployment
 
