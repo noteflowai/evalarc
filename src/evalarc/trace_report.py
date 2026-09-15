@@ -34,13 +34,21 @@ article{margin:18px 0;scroll-margin-top:12px}article[hidden]{display:none}
 caption{text-align:left;font-weight:600;margin:18px 0 8px}
 td,th{text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #46534b}
 th{color:#b5c0b7}td:first-child{min-width:180px}pre,code{font-size:.88rem}
+.comparison td{min-width:130px}.comparison td:last-child{min-width:220px}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#101618;padding:14px;border-radius:8px}
 summary{cursor:pointer;padding:12px 0;min-height:44px}small{display:block;color:#b5c0b7}
 .links{display:flex;flex-wrap:wrap;gap:18px;margin:20px 0}
 .scope{border-left:3px solid #c4efaa;padding-left:18px}
 .skip{position:absolute;left:8px;top:-80px}.skip:focus{top:8px;background:#101618;padding:12px}
 @media(max-width:480px){main,header,footer{padding:16px}article{padding:14px}.stats{gap:6px}
-.stats div{padding:10px}.stats span{font-size:.82rem}.stats strong{font-size:1.6rem}}
+.stats div{padding:10px}.stats span{font-size:.82rem}.stats strong{font-size:1.6rem}
+.scores thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.scores,.scores tbody{display:block}.scores tr{display:grid;grid-template-columns:1fr 1fr;
+border-bottom:1px solid #708275;margin-bottom:16px}
+.scores td{display:block;min-width:0;border:0;overflow-wrap:anywhere}
+.scores td:first-child,.scores td:last-child{grid-column:1 / -1}
+.scores td[data-label]::before{content:attr(data-label);display:block;color:#b5c0b7;
+font-size:.8rem;margin-bottom:4px}.scores caption{display:block}}
 """
 
 SCRIPT = """
@@ -97,8 +105,9 @@ def render(record: dict, target: Path) -> None:
             rows.append(
                 f"<tr><td>{escape(row['evaluator'])}<small>{escape(row['revision'])}</small>"
                 f"<small>{escape(row['span_id'] or row['trace_id'] or 'Session')}</small></td>"
-                f"<td>{display}</td><td>{badge(verdict)}</td>"
-                f"<td>{escape(row['explanation'])}"
+                f'<td data-label="Value">{display}</td>'
+                f'<td data-label="Configured gate">{badge(verdict)}</td>'
+                f'<td data-label="Explanation">{escape(row["explanation"])}'
                 f"<small>{escape(row['error'] or '')}</small></td></tr>"
             )
         skills = (
@@ -124,7 +133,7 @@ def render(record: dict, target: Path) -> None:
             f"Skill observation declared {coverage}"
             f"</p><h3>Expected skills</h3><ul>{skills}</ul>"
             f'<div class="table-scroll" tabindex="0" role="region" aria-label="Evaluator results">'
-            f"<table><caption>Imported evaluator results</caption>"
+            f'<table class="scores"><caption>Imported evaluator results</caption>'
             f'<thead><tr><th scope="col">Evaluator / target</th><th scope="col">Value</th>'
             f'<th scope="col">Configured gate</th><th scope="col">Explanation</th></tr></thead>'
             f"<tbody>{''.join(rows)}</tbody></table></div>"
@@ -144,7 +153,8 @@ def render(record: dict, target: Path) -> None:
         comparison = (
             '<section aria-label="Paired comparison"><h2>What changed between runs?</h2>'
             '<div class="table-scroll" tabindex="0" role="region" aria-label="Case comparison">'
-            "<table><caption>Same golden set and evaluator rules</caption><thead><tr>"
+            '<table class="comparison"><caption>Same golden set and evaluator rules</caption>'
+            "<thead><tr>"
             '<th scope="col">Case</th><th scope="col">Baseline</th><th scope="col">Current</th>'
             f'<th scope="col">Change</th></tr></thead><tbody>{transitions}</tbody></table></div>'
             "<details><summary>Changed model, prompt, tool and skill configuration</summary>"
