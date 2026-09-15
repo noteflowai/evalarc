@@ -1,6 +1,6 @@
 {
   "name": "evalarc-evidence-site",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "private": true,
   "description": "Browser checks for the static EvalArc evidence explorer",
   "scripts": {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.2 — 2026-09-15
+
+- Bind evidence explorer links to SHA-256 of the actual loaded audit bytes. A changed recording with the same case coordinates no longer reports the original evidence as restored. Display the loaded fingerprint and distinguish content identity from authorship.
+- Keep legacy links readable with an explicit missing-identity notice; reject duplicate parameters and preserve report/download access when browser hashing is unavailable. Test changed bytes under an unchanged manifest, fresh links, retry, mobile layouts and clipboard fallback.
+- Task contracts, metric calculations and historical audit records are unchanged.
+
 ## 0.10.1 — 2026-09-15
 
 - Add a reduced-suite regression that removes `cas-type-sensitivity` from `durable-kv` at seed 17: `boolean-equals-one` survives, the recomputed audit reports 7 of 8 at 0.875, and the weakest margin is 0. The published 0.10.0 wheel already produces these values and includes surviving valid controls in the weakest margin. This release adds the regression and clarifies the explanation; it does not change the metric calculation.

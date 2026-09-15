@@ -28,7 +28,10 @@ lets you compare revisions side by side, switch between correct and faulty
 implementations, and step through the tool call that changed the state. It replays the
 committed Docker audits without a model API or installation.
 Share the exact case and trace step with **Copy evidence link**, return from
-details to the case list, and retry failed sections independently.
+details to the case list, and retry failed sections independently. New links include
+SHA-256 of the loaded audit bytes: changed evidence is flagged before restoring a
+view, while legacy links disclose that the original audit identity is unknown.
+The fingerprint identifies content, not its author.
 [Explorer guide](docs/explorer.md).
 
 [![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)

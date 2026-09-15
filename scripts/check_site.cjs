@@ -141,6 +141,8 @@ async function main() {
       await app.locator("#share-case").click();
       const shared = await app.locator("#share-url").inputValue();
       const sharedParams = new URLSearchParams(new URL(shared).hash.slice(1));
+      assert.equal(sharedParams.get("v"), "2");
+      assert.equal(sharedParams.get("audit"), manifest.files["support/audit.json"]);
       assert.equal(sharedParams.get("case"), "retry-after-commit");
       assert.equal(sharedParams.get("step"), "3");
       assert.equal(await app.locator("body").evaluate(() => document.activeElement.id), "share-url");
@@ -292,7 +294,7 @@ async function main() {
       assert.equal(await page.locator("#changed-cases button").count(), 3);
       assert.equal(await page.locator("#repeat-attempts a").count(), 3);
       assert.equal(await page.locator("#cases button").count(), 15);
-      assert.match(await page.locator("#share-status").innerText(), /Shared evidence restored/);
+      assert.match(await page.locator("#share-status").innerText(), /Legacy link.*original audit identity was not recorded/);
       assert.equal(await page.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
       failures.add("skill-impact/lab.json");
@@ -304,6 +306,54 @@ async function main() {
       assert.equal(await page.locator(".trial").count(),9);
       results.push({independentSectionRetry:true, partialTaskPack:true, pendingLinkRestored:true, researchRetry:true, errors});
       await page.close();
+      const identityPage = await browser.newPage({viewport:{width:390,height:1000}});
+      try {
+        const auditBytes = fs.readFileSync(path.join(root, "support/audit.json"));
+        const digest = require("node:crypto").createHash("sha256").update(auditBytes).digest("hex");
+        const link = base + `#v=2&audit=${digest}&pack=support&control=new-key-on-retry&case=retry-after-commit&seed=17&step=3`;
+        await identityPage.goto(link);
+        await identityPage.locator("#share-status").filter({hasText:"Shared evidence restored"}).waitFor();
+        assert.equal(await identityPage.locator("#trace-step").inputValue(), "3");
+        const changed = JSON.parse(auditBytes);
+        changed.reference.created_at = "2026-09-15T00:00:00+00:00";
+        const changedBytes = Buffer.from(JSON.stringify(changed) + "\n");
+        const changedDigest = require("node:crypto").createHash("sha256").update(changedBytes).digest("hex");
+        assert.notEqual(changedDigest, digest);
+        // Same task, controls, cases and step coordinates, but different saved
+        // audit bytes. The manifest deliberately stays old, as in a mixed deploy.
+        await identityPage.route("**/support/audit.json", route =>
+          route.fulfill({status:200, contentType:"application/json", body:changedBytes}));
+        await identityPage.reload();
+        await identityPage.locator("#share-status").filter({hasText:"Evidence changed"}).waitFor();
+        assert.equal(await identityPage.locator("#trace-step").inputValue(), "0");
+        assert.match(await identityPage.locator("#share-status").innerText(), /linked view was not restored/);
+        assert.equal(JSON.parse(await identityPage.locator("#provenance").textContent()).audit_sha256, changedDigest);
+        await identityPage.locator("#next-step").click();
+        const fresh = identityPage.url();
+        assert.equal(new URLSearchParams(new URL(fresh).hash.slice(1)).get("audit"), changedDigest);
+        await identityPage.reload();
+        await identityPage.locator("#share-status").filter({hasText:"Shared evidence restored"}).waitFor();
+        assert.equal(await identityPage.locator("#trace-step").inputValue(), "1");
+        await identityPage.evaluate(hash => { location.hash = hash; },
+          new URL(fresh).hash + "&audit=" + digest);
+        await identityPage.locator("#share-status").filter({hasText:"not supported"}).waitFor();
+        assert.equal(await identityPage.locator("#trace-step").inputValue(), "1");
+        await identityPage.goto(base + "#v=1&pack=support&control=new-key-on-retry&case=retry-after-commit&seed=17&step=3");
+        await identityPage.locator("#share-status").filter({hasText:"Legacy link"}).waitFor();
+        assert.equal(await identityPage.locator("#trace-step").inputValue(), "3");
+        await identityPage.addInitScript(() => {
+          Object.defineProperty(crypto, "subtle", {value:undefined, configurable:true});
+        });
+        await identityPage.goto(link);
+        await identityPage.reload();
+        await identityPage.locator("#workspace").waitFor({state:"visible"});
+        assert(await identityPage.locator("#share-case").isDisabled());
+        assert.match(await identityPage.locator("#audit-identity").innerText(), /fingerprint unavailable/);
+        assert.match(await identityPage.locator("#share-status").innerText(), /linked view was not restored/);
+        assert(await identityPage.locator("#suite-workspace").isVisible());
+        results.push({auditByteIdentity:true, changedAuditRejected:true, freshLinkRestored:true,
+          duplicateHashRejected:true, legacyLinkDisclosed:true, missingCryptoRecovery:true});
+      } finally { await identityPage.close(); }
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));
   } finally {
