@@ -10,17 +10,24 @@ const stories = {
   reference: "The known-good control satisfies every recorded check. Compare its behavior with a deliberately faulty implementation to audit the grader.",
 };
 let audits = {}, pack = "support", evaluation, selectedCase;
+const auditDigests = {};
 let comparison, baseline, current;
 const pretty = (data) => JSON.stringify(data, null, 2);
 const percent = (value) => value === null ? "Unassessed" : `${Number((value * 100).toFixed(4))}%`;
 const repetitions = {};
-async function fetchRecord(path) {
+async function fetchRecord(path, withIdentity = false) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
   try {
     const response = await fetch(path, {signal: controller.signal});
     if (!response.ok) throw new Error(`Evidence request failed (${response.status})`);
-    return await response.json();
+    if (!withIdentity) return await response.json();
+    const bytes = await response.arrayBuffer();
+    const record = JSON.parse(new TextDecoder("utf-8", {fatal: true}).decode(bytes));
+    const digest = globalThis.crypto?.subtle
+      ? await crypto.subtle.digest("SHA-256", bytes) : null;
+    return {record, sha256: digest
+      ? Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("") : null};
   } finally {
     clearTimeout(timer);
   }
@@ -150,6 +157,10 @@ function choosePack(nextPack, view) {
   if (view?.control && [...select.options].some(option => option.value === view.control)) select.value = view.control;
   $("report-link").href = `${packs[pack].path}/index.html`;
   $("download-link").href = `${packs[pack].path}/audit.json`;
+  $("share-case").disabled = !auditDigests[pack];
+  $("audit-identity").textContent = auditDigests[pack]
+    ? `Loaded audit SHA-256: ${auditDigests[pack].slice(0, 16)}… Full fingerprint in the reproduction record.`
+    : "Audit fingerprint unavailable. Open this page over HTTPS to share an evidence-bound link; the report and downloads still work.";
   chooseControl(view);
 }
 function chooseControl(view) {
@@ -182,6 +193,7 @@ function chooseControl(view) {
     $("cases").append(button);
   });
   $("provenance").textContent = pretty({
+    audit_sha256: auditDigests[pack],
     task: evaluation.task, created_at: evaluation.created_at, seeds: evaluation.seeds,
     evalarc_version: evaluation.evalarc_version, candidate_sha256: evaluation.candidate_sha256,
     grader_sha256: evaluation.grader_sha256, cases_sha256: evaluation.cases_sha256,
@@ -229,25 +241,39 @@ function showStep() {
 }
 function viewFragment() {
   return "#" + new URLSearchParams({
-    v: "1", pack, control: $("control").value, case: selectedCase.case_id,
+    v: "2", audit: auditDigests[pack], pack, control: $("control").value, case: selectedCase.case_id,
     seed: String(selectedCase.seed), step: $("trace-panel").hidden ? "0" : $("trace-step").value,
   });
 }
 function rememberView() {
   $("share-url").hidden = true;
   $("share-status").textContent = "";
-  try { history.replaceState(null, "", viewFragment()); } catch { /* Restricted embeds can still copy links. */ }
+  if (auditDigests[pack]) {
+    try { history.replaceState(null, "", viewFragment()); } catch { /* Restricted embeds can still copy links. */ }
+  }
 }
 function restoreView(focus = true) {
   if (!location.hash.includes("=")) return false;
   const params = new URLSearchParams(location.hash.slice(1));
-  if (location.hash.length > 2048 || params.get("v") !== "1" || !Object.hasOwn(packs, params.get("pack"))) {
+  const version = params.get("v");
+  const keys = new Set(["v", "audit", "pack", "control", "case", "seed", "step"]);
+  if (location.hash.length > 2048 || !["1", "2"].includes(version) || !Object.hasOwn(packs, params.get("pack")) ||
+      [...params.keys()].some(key => !keys.has(key) || params.getAll(key).length !== 1) ||
+      (version === "2" && !/^[a-f0-9]{64}$/.test(params.get("audit") || "")) ||
+      (version === "1" && params.has("audit"))) {
     $("share-status").textContent = "This evidence link is not supported. Choose a task, control and case below.";
     return false;
   }
   const requestedPack = params.get("pack");
   if (!audits[requestedPack]) {
     $("share-status").textContent = `The linked ${requestedPack} evidence is unavailable. Retry the missing task pack to open this view.`;
+    return false;
+  }
+  if (version === "2" && params.get("audit") !== auditDigests[requestedPack]) {
+    $("share-url").hidden = true;
+    $("share-status").textContent = auditDigests[requestedPack]
+      ? `Evidence changed: this link expects audit ${params.get("audit").slice(0, 16)}…, but the loaded audit is ${auditDigests[requestedPack].slice(0, 16)}…. The linked view was not restored. Choose a case to review the current recording or open the original saved audit.`
+      : "This link's audit identity could not be checked. The linked view was not restored. Open this page over HTTPS or use the original saved audit.";
     return false;
   }
   const step = Number(params.get("step"));
@@ -259,7 +285,9 @@ function restoreView(focus = true) {
     (selectedCase.trace?.length ? Number($("trace-step").value) === view.step : view.step === 0);
   $("share-url").hidden = true;
   $("share-status").textContent = exact
-    ? "Shared evidence restored. The link selects a recorded case and trace step."
+    ? version === "2"
+      ? "Shared evidence restored. The loaded audit bytes match the link's SHA-256; this checks content identity, not authorship."
+      : "Legacy link: showing the selected case in the current recording. The original audit identity was not recorded in this link."
     : "Some link values were outside this recording. Showing the nearest available view; check the selected case and step.";
   if (focus) $("case-title").focus();
   return true;
@@ -270,7 +298,7 @@ $("share-case").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(url.href);
     $("share-url").hidden = true;
-    $("share-status").textContent = "Evidence link copied: task, control, seed, case and trace step.";
+    $("share-status").textContent = "Evidence link copied with the loaded audit's SHA-256, task, control, seed, case and trace step.";
   } catch {
     $("share-url").hidden = false;
     $("share-url").value = url.href;
@@ -327,10 +355,11 @@ for (const name of Object.keys(packs)) $(name + "-task").addEventListener("click
 });
 async function loadAudits() {
   await Promise.allSettled(Object.entries(packs).filter(([name]) => !audits[name]).map(async ([name, config]) => {
-    const record = await fetchRecord(`${config.path}/audit.json`);
+    const {record, sha256} = await fetchRecord(`${config.path}/audit.json`, true);
     if (!Array.isArray(record.reference?.cases) || !Array.isArray(record.mutants) ||
         record.mutants.some(row => !Array.isArray(row.evaluation?.cases))) throw new Error("Incomplete audit evidence");
     audits[name] = record;
+    auditDigests[name] = sha256;
     $(name + "-task").disabled = false;
   }));
   const available = Object.keys(audits), missing = Object.keys(packs).filter(name => !audits[name]);

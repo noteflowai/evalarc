@@ -23,3 +23,9 @@ The browser checks exercise desktop and mobile layouts, clipboard denial,
 reload/history restoration, keyboard focus, partial loading and retries.
 They do not constitute a full accessibility certification or a browser support
 matrix. The original casebook and audit bytes retain their recorded provenance.
+
+## Evidence identity in shared links
+
+Version 2 links include SHA-256 of the exact audit response bytes, together with the task, control, case, seed and trace step. The explorer hashes the fetched audit itself rather than trusting a potentially stale site manifest. If it differs, the linked view is not restored; choose a current case or open the saved original audit. Version 1 links show an explicit legacy notice because they cannot identify the original audit. Duplicate parameters and unsupported versions are rejected.
+
+This is content identity, not an author signature or a substitute for offline evidence verification. HTTPS (or localhost) provides browser hashing. If it is unavailable, reports and downloads remain accessible while evidence-bound sharing is disabled.
