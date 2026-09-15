@@ -71,11 +71,11 @@ model is being ranked.
 
 A mutation score of 1.0 says every declared fault was caught. It does not say
 how narrowly. Each mutant therefore reports `detection_margin`, the number of
-cases that independently failed on it, and the audit reports the weakest margin
+distinct cases that failed on its target dimension, and the audit reports the weakest margin
 across the pack, the faults caught by exactly one case, and the cases that are
 the sole detector of some fault.
 
-The measured margins for the two shipped packs, from real runs:
+The measured margins for the three shipped packs, from real runs:
 
 | Pack | Declared faults | Detected | Weakest margin | Caught by a single case |
 | --- | ---: | ---: | ---: | --- |
@@ -86,15 +86,24 @@ The measured margins for the two shipped packs, from real runs:
 All three packs score 1.0. Six of the twenty-one declared faults rest on a
 single case each, and their sole detectors are `cas-type-sensitivity`,
 `reject-and-continue`, `rollback-batch`, `retry-after-commit`,
-`retry-before-commit` and `incomplete-recording`. Weaken or drop any one of
-those six cases and the corresponding fault becomes invisible while the mutation
-score still reads 1.0. That is the number worth publishing next to a perfect
-score, and it is a statement about this suite's own coverage, not about any
-candidate.
+`retry-before-commit` and `incomplete-recording`. Removing a sole detector loses
+that fault's recorded coverage. A weakening loses coverage only if it stops
+detecting the fault. Re-running the same declared controls against such a changed,
+valid suite lowers its mutation score; only an old, unrecomputed report would
+still say 1.0. Margins expose this dependency before the change, while the current
+score is still perfect.
+
+For example, removing `cas-type-sensitivity` from `durable-kv` and re-running
+the controls with seed 17 leaves `boolean-equals-one` undetected: the score
+changes from 8/8 to 7/8 (0.875), and the weakest margin becomes zero. The
+regression in `tests/test_grading.py` executes this reduced suite. This is a
+check of the declared fault models, not a model or reward-hacking result.
 
 A margin counts distinct cases, not case runs. The same case failing under two
 seeds is one detector; counting runs would double every margin per added seed
 and make a suite look more robust for changing nothing.
+Distinct case IDs do not establish statistical independence or different
+underlying failure mechanisms.
 
 The margins above are identical under the Python and the JavaScript reference
 implementations, for all three packs. That is what should happen if a margin

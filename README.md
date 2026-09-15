@@ -50,9 +50,9 @@ configurable candidate commands:
 | `robot-evidence-review` | Report on attributed recording data | Coordinate and clock transforms, missing observations, source attribution | 6 | 1 |
 
 Every pack detects every declared fault: 21 faults, 21 detected. Six of the 21 are detected by a single case each, so the
-suite would lose them if that one case were weakened — which a mutation score of
-1.0 does not tell you. Every audit now reports these detection margins beside
-the score.
+suite would lose coverage if that case were removed or stopped detecting its
+fault. A fresh audit would then lower the mutation score. Detection margins
+identify these dependencies before a change, alongside the current score.
 [How this relates to hack-verifiable environments](docs/methodology.md#relation-to-hack-verifiable-environments).
 
 v0.6 adds **Python and JavaScript workspace templates for both tasks**.
