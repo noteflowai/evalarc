@@ -45,6 +45,24 @@ def test_bundle_rejects_changed_evidence_and_extra_files(tmp_path):
     assert "__AUDIT_COVERAGE__" not in (folder / "index.html").read_text()
     assert (folder / "index.html").read_text().count("single-case dependencies") == 3
     assert (folder / "robot/index.html").is_file()
+    from scripts.verify_research import verify_lab, verify_records
+
+    for name, verifier in (("skill-impact", verify_lab), ("research", verify_records)):
+        verifier(folder / name)
+        original = builder.ROOT / "examples" / name
+        for source in original.rglob("*"):
+            if source.is_file() and source.relative_to(original).as_posix() not in (
+                "index.html",
+                "manifest.json",
+            ):
+                assert (folder / name / source.relative_to(original)).read_bytes() == (
+                    source.read_bytes()
+                )
+        page = (folder / name / "index.html").read_text()
+        assert 'href="../index.html"' in page
+        assert 'href="../"' not in page
+    for name in ("skill-impact", "research", "trace-workbench", "trace-mcp"):
+        assert f'href="{name}/index.html"' in (folder / "index.html").read_text()
     assert "single-case dependency" in (folder / "robot/index.html").read_text()
     audit = folder / "support" / "audit.json"
     original = audit.read_bytes()

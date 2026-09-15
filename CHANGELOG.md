@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.1 — 2026-09-15
+
+- Use explicit HTML filenames for published lab navigation. Hugging Face redirects bare directory paths to Hub routes rather than serving each directory index. Cover homepage entries and research/skill-lab return links.
+- Reseal only the published lab presentation files; recorded trials, raw JSON and original research archives stay byte-identical. Test navigation with a static server that rejects implicit directory indexes.
+
 ## 0.11.0 — 2026-09-15
 
 - Add offline AgentCore Evaluate import, golden-case/rubric comparison and recomputable trace review with responsive standalone reports.

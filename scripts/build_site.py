@@ -225,6 +225,30 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def explicit_lab_navigation(folder: Path, commit: str) -> None:
+    """Update copied presentation links, preserving every original experiment byte."""
+    page = folder / "index.html"
+    original = page.read_bytes()
+    updated = original.replace(b'href="../"', b'href="../index.html"').replace(
+        b'href="../skill-impact/"', b'href="../skill-impact/index.html"'
+    )
+    if updated == original:
+        return
+    page.write_bytes(updated)
+    manifest_path = folder / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["presentation"] = {
+        "source_commit": commit,
+        "original_index_sha256": hashlib.sha256(original).hexdigest(),
+        "change": "Explicit index.html navigation for static hosting",
+    }
+    manifest["files"]["index.html"] = {
+        "sha256": hashlib.sha256(updated).hexdigest(),
+        "bytes": len(updated),
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+
+
 def verify(folder: Path) -> dict:
     record = json.loads((folder / MANIFEST).read_text())
     if record["source_repository"] != SOURCE or not re.fullmatch(
@@ -394,6 +418,10 @@ def build(destination: Path) -> dict:
     verify_records(ROOT / "examples/research")
     shutil.copytree(ROOT / "examples/skill-impact", destination / "skill-impact")
     shutil.copytree(ROOT / "examples/research", destination / "research")
+    for lab in ("skill-impact", "research"):
+        explicit_lab_navigation(destination / lab, commit)
+    verify_lab(destination / "skill-impact")
+    verify_records(destination / "research")
     from evalarc.trace_review import import_trace
 
     trace_examples = ROOT / "examples/trace-workbench"

@@ -13,7 +13,12 @@ async function main() {
     const mime = {".html":"text/html", ".js":"text/javascript", ".json":"application/json", ".css":"text/css", ".svg":"image/svg+xml", ".zip":"application/zip"};
     server = http.createServer((req, res) => {
       const route = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
-      const filename = path.resolve(root, "." + (route.endsWith("/") ? route + "index.html" : route));
+      // HF static hosting does not resolve subdirectory indexes. Keep that
+      // production constraint in the local browser fixture.
+      if (route !== "/" && route.endsWith("/")) {
+        res.writeHead(404).end(); return;
+      }
+      const filename = path.resolve(root, "." + (route === "/" ? "/index.html" : route));
       if (!filename.startsWith(root + path.sep) || !fs.existsSync(filename) || !fs.statSync(filename).isFile()) {
         res.writeHead(404).end(); return;
       }
@@ -226,7 +231,7 @@ async function main() {
         await app.getByRole("heading", {name:"support-routing", exact:true}).waitFor();
         assert.match(await app.locator("body").innerText(), /retry-after-commit/);
       }
-      await app.locator("body").evaluate((element, url) => { location.href = new URL("skill-impact/", url).href; }, appUrl);
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("skill-impact/index.html", url).href; }, appUrl);
       await app.locator("#workspace").waitFor({state:"visible"});
       assert.equal(await app.locator(".trial").count(), 9);
       assert.match(await app.locator("#profile-totals").innerText(), /2\/9 fully resolved/);
@@ -248,10 +253,14 @@ async function main() {
         fs.mkdirSync(process.env.RESEARCH_SCREENSHOTS,{recursive:true});
         await page.screenshot({path:path.join(process.env.RESEARCH_SCREENSHOTS,"skill-impact.png"),fullPage:true});
       }
-      await app.locator("body").evaluate((element, url) => { location.href = new URL("research/", url).href; }, appUrl);
+      await app.locator("body").evaluate((element, url) => { location.href = new URL("research/index.html", url).href; }, appUrl);
       await app.getByRole("heading",{name:"Skill composition: 12 attempts, 3 accepted"}).waitFor();
       assert.equal(await app.locator("tbody tr").count(),18);
       assert.equal(await app.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await app.getByRole("link",{name:"27-trial Skill Impact Lab"}).click();
+      await app.locator("#profile").waitFor();
+      await app.getByRole("link",{name:"Playground"}).click();
+      await app.locator("#workspace").waitFor({state:"visible"});
       const coveragePage = await browser.newPage({viewport:{width,height:1000}});
       try {
         await coveragePage.goto(new URL("robot/index.html#fault-3", suiteBase).href);
@@ -298,7 +307,7 @@ async function main() {
       assert.equal(await page.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.deepEqual(errors, []);
       failures.add("skill-impact/lab.json");
-      await page.goto(new URL("skill-impact/",base).href);
+      await page.goto(new URL("skill-impact/index.html",base).href);
       await page.locator("#retry").waitFor({state:"visible"});
       failures.clear();
       await page.locator("#retry").click();
@@ -361,7 +370,8 @@ async function main() {
         const errors = [];
         page.on("pageerror", error => errors.push(error.message));
         try {
-          await page.goto(new URL("trace-workbench/",base).href);
+          await page.goto(base);
+          await page.getByRole("link",{name:"Explore five authored review controls"}).click();
           await page.locator("#filter-status").filter({hasText:"5 cases shown"}).waitFor();
           assert.equal(await page.locator("article[data-gate=accepted]").count(),1);
           assert.equal(await page.locator("article[data-gate=rejected]").count(),2);
@@ -387,7 +397,8 @@ async function main() {
           assert.equal(await download.failure(),null);
           const original = fs.readFileSync(path.join(root,"trace-workbench/input.json"));
           assert.deepEqual(fs.readFileSync(await download.path()),original);
-          await page.goto(new URL("trace-mcp/",base).href);
+          await page.goto(base);
+          await page.getByRole("link",{name:"Inspect an actual MCP delivery"}).click();
           await page.locator("#filter-status").filter({hasText:"1 cases shown"}).waitFor();
           assert.match(await page.locator("body").innerText(),/Actual local stdio MCP/);
           assert.match(await page.locator("article").innerText(),/MATCHED/);
