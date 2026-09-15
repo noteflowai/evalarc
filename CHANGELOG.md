@@ -2,9 +2,8 @@
 
 ## 0.10.1 — 2026-09-15
 
-- Report the weakest detection margin over every valid control rather than only the detected ones. In 0.10.0 a surviving fault was excluded from the margin set, so an audit could report a weakest margin of 1 while a declared fault sat undetected. Measured: with `cas-type-sensitivity` removed from `durable-kv` at seed 17, `boolean-equals-one` survives and the audit reports 7 of 8 at 0.875; the weakest margin is now 0, where 0.10.0 would have said 1.
+- Add a reduced-suite regression that removes `cas-type-sensitivity` from `durable-kv` at seed 17: `boolean-equals-one` survives, the recomputed audit reports 7 of 8 at 0.875, and the weakest margin is 0. The published 0.10.0 wheel already produces these values and includes surviving valid controls in the weakest margin. This release adds the regression and clarifies the explanation; it does not change the metric calculation.
 - Correct the explanation of what a margin means, in the code comments, the methodology, both READMEs and the outreach record. Removing a sole detector does not preserve a mutation score of 1.0: a recomputed audit exposes the regression, and only a stale report would still say 1.0. What a perfect score hides is the fragility before a change, not the regression after one.
-- Add a reduced-suite regression test that removes a sole detector and asserts the recomputed 0.875, so the corrected claim is executable rather than described.
 
 ## 0.10.0 — 2026-09-14
 
