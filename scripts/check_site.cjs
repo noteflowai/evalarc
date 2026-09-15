@@ -355,6 +355,50 @@ async function main() {
           duplicateHashRejected:true, legacyLinkDisclosed:true, missingCryptoRecovery:true});
       } finally { await identityPage.close(); }
     }
+    if (process.env.SITE_HUB !== "1") {
+      for (const width of [1440, 390, 320]) {
+        const page = await browser.newPage({viewport:{width,height:1000}});
+        const errors = [];
+        page.on("pageerror", error => errors.push(error.message));
+        try {
+          await page.goto(new URL("trace-workbench/",base).href);
+          await page.locator("#filter-status").filter({hasText:"5 cases shown"}).waitFor();
+          assert.equal(await page.locator("article[data-gate=accepted]").count(),1);
+          assert.equal(await page.locator("article[data-gate=rejected]").count(),2);
+          assert.equal(await page.locator("article[data-gate=incomplete]").count(),2);
+          assert.equal(await page.locator("#case-1 tbody tr").first().locator("td").nth(1).innerText(),"0");
+          assert.match(await page.locator("#case-2").innerText(),/SKIPPED/);
+          assert.match(await page.locator("#case-3").innerText(),/MISSING/);
+          assert.match(await page.locator("#case-4").innerText(),/NOT CALLED/);
+          await page.getByRole("button",{name:"Incomplete",exact:true}).click();
+          assert.equal(await page.locator("article:visible").count(),2);
+          await page.locator("#search").fill("unavailable context");
+          assert.equal(await page.locator("article:visible").count(),1);
+          await page.locator("#search").fill("nothing matches this phrase");
+          assert.equal(await page.locator("#filter-status").innerText(),"0 cases shown");
+          await page.locator("#search").fill("");
+          await page.getByRole("button",{name:"All",exact:true}).click();
+          assert.equal(await page.locator("article:visible").count(),5);
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+            `Trace review must fit viewport ${width}`);
+          const pending = page.waitForEvent("download");
+          await page.getByRole("link",{name:"Download original input",exact:true}).click();
+          const download = await pending;
+          assert.equal(await download.failure(),null);
+          const original = fs.readFileSync(path.join(root,"trace-workbench/input.json"));
+          assert.deepEqual(fs.readFileSync(await download.path()),original);
+          await page.goto(new URL("trace-mcp/",base).href);
+          await page.locator("#filter-status").filter({hasText:"1 cases shown"}).waitFor();
+          assert.match(await page.locator("body").innerText(),/Actual local stdio MCP/);
+          assert.match(await page.locator("article").innerText(),/MATCHED/);
+          assert.equal(await page.locator("article[data-gate=incomplete]").count(),1);
+          assert.equal(await page.locator("article .badge").filter({hasText:"MISSING"}).count(),2);
+          assert.deepEqual(errors,[]);
+          results.push({traceWorkbench:true,width,zeroSkippedMissingDistinct:true,
+            filtersAndEmptyState:true,originalBytesDownload:true,actualMcpUnassessed:true});
+        } finally { await page.close(); }
+      }
+    }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));
   } finally {
     await browser.close();

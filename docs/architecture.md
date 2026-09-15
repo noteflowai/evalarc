@@ -1,8 +1,10 @@
 # Architecture and domain expansion
 
 EvalArc's direction is open environments and auditable evaluations for
-software agents. This document distinguishes the working v0.6 implementation
-from interfaces proposed for subsequent releases.
+software agents. This document distinguishes current implementation from proposed interfaces.
+The foundational coding/support architecture below is supplemented by the
+robot evidence task, Harbor/ATIF research adapters and the offline
+[Trace Workbench](trace-workbench.md) in v0.11.0.
 
 ## Current implementation
 
@@ -20,8 +22,11 @@ use `evalarc.audit.v2` for declared controls. Metadata includes domain, task
 version, command, fingerprints, runtime limits, outcomes, and validity. Checks
 and evidence remain domain-specific.
 
-The current CLI does not invoke a model or expose a browser. The tool policy is
-an external program; Python and JavaScript examples are scripted controls.
+The core task CLI executes external candidate programs. Separate research
+scripts include recorded local-model pilots and native Harbor execution.
+`trace-import` reviews supplied AgentCore Evaluate responses offline; it does not
+invoke a cloud model. A general model-provider or browser-task adapter is not
+implemented. See [research scope](research-pilots.md).
 
 `repeat` executes fresh attempts from a frozen candidate and summarizes
 case/check variability. `suite` coordinates repetitions across declared jobs:
