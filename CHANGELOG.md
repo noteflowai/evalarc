@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0 — 2026-09-15
+
+- Add offline AgentCore Evaluate import, golden-case/rubric comparison and recomputable trace review with responsive standalone reports.
+- Keep valid zero, skipped/error, missing results, missed skills and changed bundle identities distinct.
+- Publish five synthetic controls and one actual local stdio MCP delivery with no evaluator scores. Imported judgments and caller-declared coverage are separate from independent task verification.
+- Update stale Harbor/architecture descriptions and derive homepage task/fault counts from the saved audits.
+
 ## 0.10.2 — 2026-09-15
 
 - Bind evidence explorer links to SHA-256 of the actual loaded audit bytes. A changed recording with the same case coordinates no longer reports the original evidence as restored. Display the loaded fingerprint and distinguish content identity from authorship.
