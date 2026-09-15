@@ -6,23 +6,21 @@ Submitted [issue #4](https://github.com/MajoRoth/hack-verifiable-environments/is
 maintainer's explicit instruction, and included EvalArc in a finding-led thread from
 [@glay_oneai](https://x.com/glay_oneai/status/2099745359224578381).
 
-The note states the correspondence and where it stops. HVE plants a hack in the environment and
-measures whether the agent exploits it; an audit here plants a fault in the submission and measures
-whether the checks catch it. It says twice that EvalArc is not an HVE implementation and does not
-measure reward hacking.
+The existing issue was corrected after review. A fresh audit does not keep a
+mutation score of 1.0 after its sole detector is removed: the reduced durable-kv
+suite at seed 17 detects 7/8 faults (0.875), with weakest margin zero. A real
+regression test executes that case, and the methodology states the scope.
 
-The substance is the assumption their measurement rests on. An exploitation rate is meaningful
-because a planted hack is detectable by construction, and the grader-side measurement puts a number
-on that: 21 of 21 declared faults detected at a mutation score of 1.0, with six of the twenty-one
-caught by exactly one case each. It asks a question back, whether a planted hack's own detection
-margin is worth reporting beside the hacking rate, and volunteers the implementation error that
-produced a wrong number first, namely counting case runs instead of distinct cases.
+The current question acknowledges the onset tests already merged in upstream #2
+and asks about checking those tests with deliberate instrumentation mutations.
+EvalArc's 21 declared faults and six single-case dependencies motivate the
+question; they are not evidence about HVE's detector. No HVE model experiment,
+detector-performance result or author agreement is claimed.
 
-Numbers were re-verified against the current main before submission rather than copied from an
-earlier session: 8/8, 7/7 and 6/6, three plus two plus one single-case detections, weakest margin
-one in every pack. No link, citation or mention was requested; the issue offers to move to a
-discussion thread or email rather than duplicate itself. Nothing is claimed about the authors'
-agreement.
+The [reviewed note](hve-correspondence.md) preserves the distinction between
+scripted grader audits and reward-hacking measurements. The X thread above is
+an external publication; this correction edits the GitHub issue and repository
+record, and does not claim that X posts were edited.
 
 
 ## 0.8.0 suite handoff publication · 2026-09-14

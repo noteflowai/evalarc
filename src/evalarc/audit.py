@@ -113,9 +113,9 @@ def audit(
                     "name": name,
                     "target_dimension": target,
                     "killed": result["valid"] and bool(failures),
-                    # How many cases caught this fault independently. A detected
-                    # fault with a margin of one is a deleted case away from
-                    # undetected, while the mutation score still reads 1.0.
+                    # Distinct cases detecting the target fault. Removing its
+                    # sole detector lowers a recomputed mutation score; the
+                    # margin identifies that dependency before the change.
                     "detection_margin": len(set(failures)) if result["valid"] else None,
                     "valid": result["valid"],
                     "score": result["score"],
@@ -127,8 +127,7 @@ def audit(
     killed = sum(row["killed"] for row in rows)
     valid = reference["valid"] and all(row["valid"] for row in rows)
     margins = {row["name"]: row["detection_margin"] for row in rows if row["valid"]}
-    # A case that is the only detector of some fault cannot be removed or
-    # loosened without losing coverage the mutation score still claims.
+    # Identify cases whose removal would lose coverage of a declared fault.
     sole_detectors = sorted(
         {row["failing_cases"][0] for row in rows if row["killed"] and row["detection_margin"] == 1}
     )

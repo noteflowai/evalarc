@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -6,6 +7,7 @@ from evalarc.audit import asset, audit, write_candidate
 from evalarc.cli import main
 from evalarc.evaluate import evaluate
 from evalarc.runner import CandidateError, Runtime, snapshot
+from evalarc.tasks import TASKS
 
 
 def test_positive_and_behavioral_negative_controls():
@@ -21,7 +23,7 @@ def test_a_perfect_mutation_score_still_reports_how_narrowly_it_was_earned():
     result = audit(Runtime(backend="local", timeout=2), [17])
     assert result["mutation_score"] == 1.0
     detection = result["detection"]
-    # Every mutant reports how many cases caught it independently.
+    # Every mutant reports the count of distinct detecting cases.
     for mutant in result["mutants"]:
         assert mutant["detection_margin"] == len(set(mutant["failing_cases"])), mutant["name"]
     assert detection["weakest_margin"] == min(m["detection_margin"] for m in result["mutants"])
@@ -32,13 +34,36 @@ def test_a_perfect_mutation_score_still_reports_how_narrowly_it_was_earned():
         "partial-batch",
     ]
     # Naming the sole detectors is what makes the fragility actionable: remove
-    # one of these cases and its fault goes undetected at an unchanged score.
+    # one of these cases and a fresh audit must report the lost coverage.
     assert detection["sole_detector_cases"] == [
         "cas-type-sensitivity",
         "reject-and-continue",
         "rollback-batch",
     ]
     assert set(detection["sole_detector_cases"]).isdisjoint(detection["single_case_detections"])
+
+
+def test_removing_sole_detector_lowers_the_recomputed_mutation_score(monkeypatch):
+    original = TASKS["durable-kv"]
+    reduced = replace(
+        original,
+        generate_cases=lambda seed: [
+            case for case in original.generate_cases(seed) if case.id != "cas-type-sensitivity"
+        ],
+    )
+    monkeypatch.setitem(TASKS, "durable-kv", reduced)
+    result = audit(Runtime(backend="local", timeout=4), [17])
+    assert result["valid"] and result["reference_passed"]
+    assert not result["passed"]
+    assert result["total"] == 8 and result["killed"] == 7
+    assert result["mutation_score"] == 0.875
+    assert result["detection"]["weakest_margin"] == 0
+    survivor = next(m for m in result["mutants"] if m["name"] == "boolean-equals-one")
+    assert not survivor["killed"] and survivor["detection_margin"] == 0
+    assert survivor["failing_cases"] == []
+    assert all(
+        case["case_id"] != "cas-type-sensitivity" for case in survivor["evaluation"]["cases"]
+    )
 
 
 def test_margins_count_distinct_cases_so_adding_seeds_cannot_inflate_them():
