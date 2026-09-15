@@ -21,10 +21,12 @@ The [reviewed note](hve-correspondence.md) preserves the distinction between
 scripted grader audits and reward-hacking measurements.
 
 The X thread carried the same false claim, since the post was published before the
-correction. It now carries a correction reply in the same thread rather than a
-deleted post, so the original claim and its retraction stay together where anyone
-who read the first can see the second. No X post was edited; X does not offer that
-for published posts, and a reply is the honest instrument in any case.
+correction. The [correction reply](https://x.com/glay_oneai/status/2099750009822671041)
+was read back in the same thread. It states that a fresh audit drops from 8/8 to
+7/8, with weakest margin zero; only a stale report retains 1.0. The original
+claim remains visible alongside its correction. No edit of the original post
+is claimed; this receipt does not infer platform-wide editing capabilities
+from the actions available to this account.
 
 The reduced-suite result was re-measured here before that reply was written:
 removing `cas-type-sensitivity` from `durable-kv` at seed 17 leaves
