@@ -1,7 +1,10 @@
 # Research note: sensitivity checks for deterministic hack labels
 
-Reviewed text prepared for the HVE authors. This document alone is not a
-submission receipt or evidence of author agreement.
+**Submitted:** [HVE issue #4](https://github.com/MajoRoth/hack-verifiable-environments/issues/4).
+The existing issue was corrected after review, including the mutation-score
+explanation and acknowledgement of upstream onset tests. The text below records
+the reviewed question; no author agreement or endorsement is claimed.
+[Publication log](status.md).
 
 Target: [Hack-Verifiable Environments](https://github.com/MajoRoth/hack-verifiable-environments).
 Background: [HVE, arXiv:2605.20744v1](https://arxiv.org/abs/2605.20744v1) and

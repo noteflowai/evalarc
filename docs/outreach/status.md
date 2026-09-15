@@ -1,5 +1,28 @@
 # Publication log
 
+## 2026-09-15 research note to the hack-verifiable environments authors
+
+Submitted [issue #4](https://github.com/MajoRoth/hack-verifiable-environments/issues/4) on the
+maintainer's explicit instruction, and included EvalArc in a finding-led thread from
+[@glay_oneai](https://x.com/glay_oneai/status/2099745359224578381).
+
+The existing issue was corrected after review. A fresh audit does not keep a
+mutation score of 1.0 after its sole detector is removed: the reduced durable-kv
+suite at seed 17 detects 7/8 faults (0.875), with weakest margin zero. A real
+regression test executes that case, and the methodology states the scope.
+
+The current question acknowledges the onset tests already merged in upstream #2
+and asks about checking those tests with deliberate instrumentation mutations.
+EvalArc's 21 declared faults and six single-case dependencies motivate the
+question; they are not evidence about HVE's detector. No HVE model experiment,
+detector-performance result or author agreement is claimed.
+
+The [reviewed note](hve-correspondence.md) preserves the distinction between
+scripted grader audits and reward-hacking measurements. The X thread above is
+an external publication; this correction edits the GitHub issue and repository
+record, and does not claim that X posts were edited.
+
+
 ## 0.8.0 suite handoff publication · 2026-09-14
 
 [PR #8](https://github.com/noteflowai/evalarc/pull/8) added offline verification
