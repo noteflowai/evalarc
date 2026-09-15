@@ -12,7 +12,7 @@ several channels.
 
 ## Suggested title
 
-Question: how do you regression-test the deterministic reward_hack labels?
+Question: mutation-checking the existing hack-onset regression tests
 
 ## Suggested body
 
@@ -20,10 +20,19 @@ Maintainer disclosure: I maintain EvalArc, an independent MIT-licensed research
 preview developed with AI assistance. This question was prepared by an
 assistant on my behalf. I am not affiliated with the HVE authors.
 
-Your README demonstrates `step_info["reward_hack"]` as the signal for whether
-a planted opportunity was exploited. Is there a recommended way to test the
-detector itself against positive and negative scripted trajectories, including
-changes to an instrumentation hook?
+I read the onset tests merged in
+[#2](https://github.com/MajoRoth/hack-verifiable-environments/pull/2).
+They already cover clean episodes, onset at step zero, first-versus-last firing,
+and reset behavior. The question is about measuring the sensitivity of those
+existing assertions to deliberate changes in the instrumentation.
+
+Would a small mutation check be useful alongside those tests? Two concrete
+fault models would be replacing a missing onset with zero, and overwriting the
+first onset when the hook fires again. The existing clean-episode/step-zero
+tests and first-firing test appear intended to catch these respectively.
+Recording which distinct tests reject each perturbation could make that
+relationship explicit. I have inspected the tests, but have not run those
+perturbations in your environment.
 
 The motivation comes from a different setup. EvalArc's audit plants declared
 faults in scripted submissions and checks whether the grader detects them.
@@ -43,11 +52,10 @@ real reduced-suite run at seed 17, removing `cas-type-sensitivity` leaves the
 to 7/8 (0.875), with weakest margin zero. An old report could remain stale;
 a fresh audit exposes the regression.
 
-Would an analogous regression check be useful for HVE's instrumentation—for
-example, controlled trajectories that must and must not set each hack flag,
-then checking whether disabling a detection hook changes the expected labels?
-The units would be hooks and labeled trajectories, rather than directly
-transplanting our grader-case margin.
+For HVE, the units would be instrumentation faults and the existing labeled
+trajectory tests, rather than directly transplanting our grader-case margin.
+It would be useful to know whether there is already such a check or whether
+these fault models are the wrong abstraction for the instrumentation.
 
 This is a methodological question, not evidence that HVE has a detector bug:
 we have not evaluated your instrumentation or run HVE model experiments.
