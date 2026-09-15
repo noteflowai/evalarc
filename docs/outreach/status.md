@@ -18,9 +18,23 @@ question; they are not evidence about HVE's detector. No HVE model experiment,
 detector-performance result or author agreement is claimed.
 
 The [reviewed note](hve-correspondence.md) preserves the distinction between
-scripted grader audits and reward-hacking measurements. The X thread above is
-an external publication; this correction edits the GitHub issue and repository
-record, and does not claim that X posts were edited.
+scripted grader audits and reward-hacking measurements.
+
+The X thread carried the same false claim, since the post was published before the
+correction. It now carries a correction reply in the same thread rather than a
+deleted post, so the original claim and its retraction stay together where anyone
+who read the first can see the second. No X post was edited; X does not offer that
+for published posts, and a reply is the honest instrument in any case.
+
+The reduced-suite result was re-measured here before that reply was written:
+removing `cas-type-sensitivity` from `durable-kv` at seed 17 leaves
+`boolean-equals-one` undetected, giving 7 of 8, a score of 0.875, a weakest margin
+of zero, and a failing audit.
+
+The lesson worth keeping is about phrasing. "A green score hides a broken suite"
+read like the point and survived several rounds because of it. The dramatic version
+of a finding is the one to distrust: what a perfect score actually hides is the
+fragility before a change, not the regression after one.
 
 
 ## 0.8.0 suite handoff publication · 2026-09-14
