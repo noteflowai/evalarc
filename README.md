@@ -117,11 +117,11 @@ also requires all checks to pass. [Verification and limits](docs/verification.md
 
 ## Trace Workbench — 0.11.0
 
-Import saved AgentCore Evaluate responses, versioned golden cases and Skills Anywhere delivery receipts. Inspect zero scores, skipped judges, missing results and missed skills separately. Compare matching datasets/rubrics and verify preserved input bytes offline. [Try the authored controls](https://noteflowai.github.io/evalarc/trace-workbench/) · [Actual local MCP delivery](https://noteflowai.github.io/evalarc/trace-mcp/) · [Input contract](docs/trace-workbench.md). No live AWS evaluation is claimed.
+Import saved AgentCore Evaluate responses, versioned golden cases and Skills Anywhere delivery receipts. Inspect zero scores, skipped judges, missing results and missed skills separately. Compare matching datasets/rubrics and verify preserved input bytes offline. [Try the authored controls](https://noteflowai.github.io/evalarc/trace-workbench/index.html) · [Actual local MCP delivery](https://noteflowai.github.io/evalarc/trace-mcp/index.html) · [Input contract](docs/trace-workbench.md). No live AWS evaluation is claimed.
 
 ## New in 0.9.0: research you can inspect
 
-[Explore all 27 real GPU skill trials](https://noteflowai.github.io/evalarc/skill-impact/) and [the research pilots](docs/research-pilots.md). Robot Reel's [captured-scene editor](https://noteflowai.github.io/robot-reel/scene-lab/) and [official LIBERO-Plus replay](https://noteflowai.github.io/robot-reel/libero-plus/) connect real source records with portable skill delivery and independent grading. Every failed attempt stays visible; no skill efficacy, full-benchmark or real-hardware result is implied.
+[Explore all 27 real GPU skill trials](https://noteflowai.github.io/evalarc/skill-impact/index.html) and [the research pilots](docs/research-pilots.md). Robot Reel's [captured-scene editor](https://noteflowai.github.io/robot-reel/scene-lab/) and [official LIBERO-Plus replay](https://noteflowai.github.io/robot-reel/libero-plus/) connect real source records with portable skill delivery and independent grading. Every failed attempt stays visible; no skill efficacy, full-benchmark or real-hardware result is implied.
 
 
 ## Run an audit
