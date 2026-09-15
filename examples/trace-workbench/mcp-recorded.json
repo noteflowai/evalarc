@@ -1,0 +1,103 @@
+{
+  "schema_version": "evalarc.trace-input.v1",
+  "run_id": "mcp-delivery-bbc3c08e-7dc7-434a-9c65-8d745bcc8547",
+  "provenance": {
+    "kind": "recorded",
+    "description": "Actual local stdio MCP instruction delivery, collected by scripts/record-load.mjs using an authored skill. No model or AWS evaluation; evaluator results intentionally absent."
+  },
+  "dataset": {
+    "id": "mcp-delivery-control",
+    "version": "1",
+    "cases": [
+      {
+        "id": "load-evidence-review",
+        "goal": "Load the authored evidence-review skill through MCP.",
+        "expected_skills": [
+          "evidence-review"
+        ]
+      }
+    ]
+  },
+  "configuration": {
+    "model": "none: local MCP client",
+    "model_parameters": {},
+    "prompt_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools_sha256": "2c52bc1da3c4285bb25979f13097557ea48d74d978902a278c9d869ab5ff7aa9",
+    "skills": {
+      "evidence-review": "f93102cb0592a462afb43cc6cf78b09096208aa1772bcaa341e75a20c1deffd0"
+    }
+  },
+  "evaluators": [
+    {
+      "id": "goal-review",
+      "revision": "not-run",
+      "level": "session",
+      "rating": {
+        "kind": "numeric",
+        "min": 0,
+        "max": 1,
+        "pass_at_least": 1
+      }
+    },
+    {
+      "id": "Builtin.SkillInstructionFollowing",
+      "revision": "not-run",
+      "level": "skill",
+      "rating": {
+        "kind": "numeric",
+        "min": 0,
+        "max": 1,
+        "pass_at_least": 1
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "load-evidence-review",
+      "session_id": "bbc3c08e-7dc7-434a-9c65-8d745bcc8547",
+      "trace_ids": [
+        "7419e7e182a245919fc3c49b1c02b7a7"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "7419e7e182a245919fc3c49b1c02b7a7",
+          "spanId": "481d88f854ae4e7c",
+          "name": "open_skill",
+          "startTimeUnixNano": "1789490688827000000",
+          "endTimeUnixNano": "1789490688898000000",
+          "attributes": {
+            "session.id": "bbc3c08e-7dc7-434a-9c65-8d745bcc8547",
+            "gen_ai.tool.name": "open_skill",
+            "mcp.protocol.version": "2026-07-28"
+          }
+        }
+      ],
+      "skill_calls": [
+        {
+          "name": "evidence-review",
+          "trace_id": "7419e7e182a245919fc3c49b1c02b7a7",
+          "span_id": "481d88f854ae4e7c",
+          "receipt": {
+            "schema": "skills-anywhere-load-1",
+            "load_id": "dff92916-a748-4b3b-aca9-293d0043c6c1",
+            "loaded_at": "2026-09-15T16:44:48.892Z",
+            "provider": "dsh-skills-anywhere",
+            "provider_version": "0.12.0",
+            "name": "evidence-review",
+            "skill_sha256": "8e08d5d07d0b7f9683145ef435653e4cfe1d8a312d1255ed79a6d0241e5c7542",
+            "content_sha256": "473876db0cd9579138f1cd7905f6037855bea94c4c3740eb2c7f698aef2ddc0b",
+            "bundle_sha256": "f93102cb0592a462afb43cc6cf78b09096208aa1772bcaa341e75a20c1deffd0",
+            "declared_tools": [
+              "Read"
+            ],
+            "permissions_enforced": false
+          }
+        }
+      ],
+      "evaluation_response": {
+        "evaluationResults": []
+      }
+    }
+  ]
+}

@@ -59,6 +59,34 @@ def check(source: Path) -> dict:
             if not result["verified"] or hashes() != before:
                 raise ValueError("verification failed or changed evidence")
             results[name] = result
+        trace = folder / "trace-review"
+        process = subprocess.run(
+            [
+                entry,
+                "trace-import",
+                str(source / "examples/trace-workbench/current.json"),
+                "--output",
+                str(trace),
+            ],
+            cwd=folder,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if process.returncode != 0:
+            raise ValueError(f"installed trace import failed: {process.stderr}")
+        process = subprocess.run(
+            [entry, "trace-verify", str(trace)],
+            cwd=folder,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if process.returncode != 0 or not json.loads(process.stdout)["verified"]:
+            raise ValueError("installed trace verifier failed")
+        results["trace"] = json.loads(process.stdout)
         for language in ("python", "javascript"):
             target = folder / f"robot-{language}"
             subprocess.run(

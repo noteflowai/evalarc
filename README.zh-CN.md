@@ -98,6 +98,10 @@ Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平�
 
 **在信任满分前，先检查覆盖薄弱点。** 网页现展示全部三个任务包，可从仅靠一个用例检出的缺陷直接定位到原始检查与种子记录。离线审计报告也提供相同的证据展开入口，不依赖脚本或远程资源；新增界面沿用原始数据，不冒充新模型运行。
 
+## 0.11.0：运行记录评估工作台
+
+导入已保存的 AgentCore Evaluate 结果、版本化黄金案例和 Skills Anywhere 加载回执，分别查看有效零分、评估跳过、缺少结果及漏调用技能。支持相同测试集与评分规则下的对比，以及原始输入的离线复核。[交互示例](https://noteflowai.github.io/evalarc/trace-workbench/) · [真实本地 MCP 加载](https://noteflowai.github.io/evalarc/trace-mcp/) · [数据契约](docs/trace-workbench.md)。示例明确区分合成评分与真实加载记录，未运行云端评估。
+
 ## 0.9.0：有原始证据的研究场景
 
 [查看 27 次真实 GPU 技能评测](https://noteflowai.github.io/evalarc/skill-impact/)，并阅读[完整方法与限制](docs/research-pilots.md)。新增[实景 Blender 编辑](https://noteflowai.github.io/robot-reel/scene-lab/)与[官方 LIBERO-Plus 子集回放](https://noteflowai.github.io/robot-reel/libero-plus/)，把原始记录、技能交付与独立验收连接起来。失败尝试全部保留；不宣称技能提分、完整基准成绩或真机效果。

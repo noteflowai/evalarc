@@ -331,6 +331,8 @@ def build(destination: Path) -> dict:
                     path.read_text()
                     .replace("__EVALARC_VERSION__", version)
                     .replace("__AUDIT_COVERAGE__", coverage_cards(audits))
+                    .replace("__TASK_PACK_COUNT__", str(len(audits)))
+                    .replace("__FAULT_COUNT__", str(sum(a["total"] for a in audits.values())))
                 )
             else:
                 shutil.copyfile(path, destination / path.name)
@@ -392,6 +394,15 @@ def build(destination: Path) -> dict:
     verify_records(ROOT / "examples/research")
     shutil.copytree(ROOT / "examples/skill-impact", destination / "skill-impact")
     shutil.copytree(ROOT / "examples/research", destination / "research")
+    from evalarc.trace_review import import_trace
+
+    trace_examples = ROOT / "examples/trace-workbench"
+    import_trace(
+        trace_examples / "current.json",
+        destination / "trace-workbench",
+        trace_examples / "baseline.json",
+    )
+    import_trace(trace_examples / "mcp-recorded.json", destination / "trace-mcp")
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()

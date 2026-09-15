@@ -23,6 +23,7 @@ from evalarc.runner import EnvironmentFailure, Runtime
 from evalarc.suite import load_suite, run_suite
 from evalarc.tasks import TASKS
 from evalarc.templates import LANGUAGES, initialize
+from evalarc.trace_review import import_trace, verify_trace
 from evalarc.trajectory import summarize
 from evalarc.verify import SCOPE, verify
 
@@ -55,6 +56,19 @@ def parser() -> argparse.ArgumentParser:
     atif.add_argument("input", type=Path)
     atif.add_argument("--export-trial", action="store_true")
     atif.add_argument("--output", type=Path, default=Path("runs/trajectory.atif.json"))
+    trace = commands.add_parser(
+        "trace-import", help="review a bounded AgentCore export and skill receipts offline"
+    )
+    trace.add_argument("input", type=Path)
+    trace.add_argument("--baseline", type=Path, help="compare the same golden set and rubrics")
+    trace.add_argument("--output", type=Path, required=True)
+    trace.add_argument(
+        "--require-accepted", action="store_true", help="apply declared review gates"
+    )
+    trace_verify = commands.add_parser(
+        "trace-verify", help="recompute a trace review from its preserved input bytes"
+    )
+    trace_verify.add_argument("directory", type=Path)
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
@@ -185,6 +199,29 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Verification failed: {result['error']}", file=sys.stderr)
         return code
     try:
+        if args.command == "trace-verify":
+            print(json.dumps(verify_trace(args.directory), indent=2))
+            return 0
+        if args.command == "trace-import":
+            result = import_trace(args.input, args.output, args.baseline)
+            print(
+                json.dumps(
+                    {
+                        "summary": result["summary"],
+                        "source_sha256": result["source_sha256"],
+                        "report": str(args.output / "index.html"),
+                        "scope": result["scope"],
+                    },
+                    indent=2,
+                )
+            )
+            if args.require_accepted:
+                return (
+                    2
+                    if result["summary"]["incomplete"]
+                    else (1 if result["summary"]["rejected"] else 0)
+                )
+            return 0
         if args.command == "atif":
             document, source_hash, _ = read_document(args.input)
             if args.export_trial:

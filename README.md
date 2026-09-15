@@ -115,6 +115,10 @@ also requires all checks to pass. [Verification and limits](docs/verification.md
 
 **Inspect coverage before trusting a perfect score.** The website now lists all three task packs and links each single-case dependency directly to its recorded checks and seeds. Offline audit reports provide the same disclosures without scripts or remote assets. These are new views of the original records, not new model runs.
 
+## Trace Workbench — 0.11.0
+
+Import saved AgentCore Evaluate responses, versioned golden cases and Skills Anywhere delivery receipts. Inspect zero scores, skipped judges, missing results and missed skills separately. Compare matching datasets/rubrics and verify preserved input bytes offline. [Try the authored controls](https://noteflowai.github.io/evalarc/trace-workbench/) · [Actual local MCP delivery](https://noteflowai.github.io/evalarc/trace-mcp/) · [Input contract](docs/trace-workbench.md). No live AWS evaluation is claimed.
+
 ## New in 0.9.0: research you can inspect
 
 [Explore all 27 real GPU skill trials](https://noteflowai.github.io/evalarc/skill-impact/) and [the research pilots](docs/research-pilots.md). Robot Reel's [captured-scene editor](https://noteflowai.github.io/robot-reel/scene-lab/) and [official LIBERO-Plus replay](https://noteflowai.github.io/robot-reel/libero-plus/) connect real source records with portable skill delivery and independent grading. Every failed attempt stays visible; no skill efficacy, full-benchmark or real-hardware result is implied.
@@ -247,7 +251,7 @@ publication status.
 EvalArc's intended place is an **audit layer alongside existing environment
 and training frameworks**. Harbor already supports multi-step tasks and separate
 verifier environments; neither is claimed as an invention here.
-Harbor and Prime Intellect adapters are roadmap items, not current integrations.
+Native Harbor task export, oracle/NOP execution and ATIF 1.8 records are available as [bounded research integrations](docs/research-pilots.md). A general production adapter and Prime Intellect integration remain future work.
 
 ## Project name
 

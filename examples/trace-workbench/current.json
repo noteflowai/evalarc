@@ -1,0 +1,309 @@
+{
+  "schema_version": "evalarc.trace-input.v1",
+  "run_id": "synthetic-current",
+  "provenance": {
+    "kind": "synthetic",
+    "description": "Five authored controls for import and review behavior. Placeholder hashes, simulated spans and judgments; no AWS or model run."
+  },
+  "dataset": {
+    "id": "trace-review-controls",
+    "version": "1",
+    "cases": [
+      {
+        "id": "accepted-control",
+        "goal": "Inspect the accepted-control review condition.",
+        "expected_skills": [
+          "evidence-review"
+        ]
+      },
+      {
+        "id": "assessed-zero",
+        "goal": "Inspect the assessed-zero review condition.",
+        "expected_skills": [
+          "evidence-review"
+        ]
+      },
+      {
+        "id": "skipped-judge",
+        "goal": "Inspect the skipped-judge review condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "missing-result",
+        "goal": "Inspect the missing-result review condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "missed-skill",
+        "goal": "Inspect the missed-skill review condition.",
+        "expected_skills": [
+          "evidence-review"
+        ]
+      }
+    ]
+  },
+  "configuration": {
+    "model": "synthetic-control",
+    "model_parameters": {},
+    "prompt_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "tools_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "skills": {
+      "evidence-review": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "evaluators": [
+    {
+      "id": "goal-control",
+      "revision": "authored-1",
+      "level": "session",
+      "rating": {
+        "kind": "numeric",
+        "min": 0,
+        "max": 1,
+        "pass_at_least": 1
+      }
+    },
+    {
+      "id": "Builtin.SkillInstructionFollowing",
+      "revision": "synthetic-scale-1",
+      "level": "skill",
+      "rating": {
+        "kind": "numeric",
+        "min": 0,
+        "max": 1,
+        "pass_at_least": 1
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "accepted-control",
+      "session_id": "session-0",
+      "trace_ids": [
+        "00000000000000000000000000000001"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000001",
+          "spanId": "0000000000000001",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-0"
+          }
+        }
+      ],
+      "skill_calls": [
+        {
+          "name": "evidence-review",
+          "trace_id": "00000000000000000000000000000001",
+          "span_id": "0000000000000001",
+          "receipt": {
+            "schema": "skills-anywhere-load-1",
+            "load_id": "synthetic-0",
+            "loaded_at": "2026-09-15T00:00:00Z",
+            "provider": "dsh-skills-anywhere",
+            "provider_version": "0.12.0",
+            "name": "evidence-review",
+            "skill_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "content_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "bundle_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "declared_tools": null,
+            "permissions_enforced": false
+          }
+        }
+      ],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "goal-control",
+            "evaluatorName": "goal-control",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-0"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored passing control."
+          },
+          {
+            "evaluatorId": "Builtin.SkillInstructionFollowing",
+            "evaluatorName": "Builtin.SkillInstructionFollowing",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-0",
+                "traceId": "00000000000000000000000000000001",
+                "spanId": "0000000000000001"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored passing control."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "assessed-zero",
+      "session_id": "session-1",
+      "trace_ids": [
+        "00000000000000000000000000000002"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000002",
+          "spanId": "0000000000000002",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-1"
+          }
+        }
+      ],
+      "skill_calls": [
+        {
+          "name": "evidence-review",
+          "trace_id": "00000000000000000000000000000002",
+          "span_id": "0000000000000002",
+          "receipt": {
+            "schema": "skills-anywhere-load-1",
+            "load_id": "synthetic-1",
+            "loaded_at": "2026-09-15T00:00:00Z",
+            "provider": "dsh-skills-anywhere",
+            "provider_version": "0.12.0",
+            "name": "evidence-review",
+            "skill_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "content_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "bundle_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "declared_tools": null,
+            "permissions_enforced": false
+          }
+        }
+      ],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "goal-control",
+            "evaluatorName": "goal-control",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-1"
+              }
+            },
+            "value": 0,
+            "explanation": "Valid zero: the authored output lacks evidence."
+          },
+          {
+            "evaluatorId": "Builtin.SkillInstructionFollowing",
+            "evaluatorName": "Builtin.SkillInstructionFollowing",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-1",
+                "traceId": "00000000000000000000000000000002",
+                "spanId": "0000000000000002"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored passing control."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "skipped-judge",
+      "session_id": "session-2",
+      "trace_ids": [
+        "00000000000000000000000000000003"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000003",
+          "spanId": "0000000000000003",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-2"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "goal-control",
+            "evaluatorName": "goal-control",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-2"
+              }
+            },
+            "explanation": "Authored passing control.",
+            "errorCode": "Skipped",
+            "errorMessage": "Authored example of unavailable context."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "missing-result",
+      "session_id": "session-3",
+      "trace_ids": [
+        "00000000000000000000000000000004"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000004",
+          "spanId": "0000000000000004",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-3"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": []
+      }
+    },
+    {
+      "case_id": "missed-skill",
+      "session_id": "session-4",
+      "trace_ids": [
+        "00000000000000000000000000000005"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000005",
+          "spanId": "0000000000000005",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-4"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "goal-control",
+            "evaluatorName": "goal-control",
+            "evaluatorArn": "synthetic-control",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-4"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored passing control."
+          }
+        ]
+      }
+    }
+  ]
+}
