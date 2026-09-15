@@ -1,5 +1,30 @@
 # Publication log
 
+## 2026-09-15 research note to the hack-verifiable environments authors
+
+Submitted [issue #4](https://github.com/MajoRoth/hack-verifiable-environments/issues/4) on the
+maintainer's explicit instruction, and included EvalArc in a finding-led thread from
+[@glay_oneai](https://x.com/glay_oneai/status/2099745359224578381).
+
+The note states the correspondence and where it stops. HVE plants a hack in the environment and
+measures whether the agent exploits it; an audit here plants a fault in the submission and measures
+whether the checks catch it. It says twice that EvalArc is not an HVE implementation and does not
+measure reward hacking.
+
+The substance is the assumption their measurement rests on. An exploitation rate is meaningful
+because a planted hack is detectable by construction, and the grader-side measurement puts a number
+on that: 21 of 21 declared faults detected at a mutation score of 1.0, with six of the twenty-one
+caught by exactly one case each. It asks a question back, whether a planted hack's own detection
+margin is worth reporting beside the hacking rate, and volunteers the implementation error that
+produced a wrong number first, namely counting case runs instead of distinct cases.
+
+Numbers were re-verified against the current main before submission rather than copied from an
+earlier session: 8/8, 7/7 and 6/6, three plus two plus one single-case detections, weakest margin
+one in every pack. No link, citation or mention was requested; the issue offers to move to a
+discussion thread or email rather than duplicate itself. Nothing is claimed about the authors'
+agreement.
+
+
 ## 0.8.0 suite handoff publication · 2026-09-14
 
 [PR #8](https://github.com/noteflowai/evalarc/pull/8) added offline verification

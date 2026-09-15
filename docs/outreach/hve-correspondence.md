@@ -1,6 +1,6 @@
 # Draft note to the hack-verifiable environments authors
 
-**Status: not submitted.** Prepared for the maintainer to review and send. This is a research
+**Status: submitted 2026-09-15** as [issue #4](https://github.com/MajoRoth/hack-verifiable-environments/issues/4), on the maintainer's instruction. This is a research
 note about a correspondence between two lines of work, not a request for a link or a mention.
 Nothing here claims review, agreement or endorsement by the HVE authors.
 
