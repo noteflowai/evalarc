@@ -62,7 +62,7 @@ async function main() {
       await app.locator("#suite-provenance").locator("..").locator("summary").click();
       const suiteBase = await app.locator("body").evaluate(() => location.href);
       const downloadLink = app.getByRole("link", {name:"Download suite evidence (ZIP)"});
-      assert.equal(await downloadLink.getAttribute("href"), "suite-evidence.zip");
+      assert.equal(await downloadLink.getAttribute("href"), "suite-evidence.zip?download=true");
       const received = page.waitForEvent("download");
       await downloadLink.click();
       const download = await received;

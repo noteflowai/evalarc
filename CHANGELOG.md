@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.1 — 2026-09-16
+
+- Request attachment disposition for judge, suite and research ZIP links with `download=true`. Hugging Face's inline CDN redirects prevented the new ZIP link from triggering a download inside the Hub iframe; the attachment query was verified in the live browser.
+- Apply the research-link change only to published presentation HTML and its manifest. Original archives, judgments and metric calculations remain unchanged.
+- Add a deployment check in the actual Hub iframe on desktop and mobile: compare the published source commit, download all three archives and an original judgment, verify their bytes and exercise the report filters.
+
 ## 0.12.0 — 2026-09-16
 
 - Add offline `trace-stability` and `trace-stability-verify` for repeated saved judgments of one fixed recording. Reject changed execution/configuration/rubrics and duplicate repetition IDs.

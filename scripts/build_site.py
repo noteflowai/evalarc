@@ -229,8 +229,10 @@ def explicit_lab_navigation(folder: Path, commit: str) -> None:
     """Update copied presentation links, preserving every original experiment byte."""
     page = folder / "index.html"
     original = page.read_bytes()
-    updated = original.replace(b'href="../"', b'href="../index.html"').replace(
-        b'href="../skill-impact/"', b'href="../skill-impact/index.html"'
+    updated = (
+        original.replace(b'href="../"', b'href="../index.html"')
+        .replace(b'href="../skill-impact/"', b'href="../skill-impact/index.html"')
+        .replace(b'href="research-records.zip"', b'href="research-records.zip?download=true"')
     )
     if updated == original:
         return
@@ -240,7 +242,7 @@ def explicit_lab_navigation(folder: Path, commit: str) -> None:
     manifest["presentation"] = {
         "source_commit": commit,
         "original_index_sha256": hashlib.sha256(original).hexdigest(),
-        "change": "Explicit index.html navigation for static hosting",
+        "change": "Explicit HTML navigation and attachment downloads for static hosting",
     }
     manifest["files"]["index.html"] = {
         "sha256": hashlib.sha256(updated).hexdigest(),
