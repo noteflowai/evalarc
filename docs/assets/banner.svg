@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-labelledby="title desc">
   <title id="title">EvalArc</title>
-  <desc id="desc">Run agents. Measure outcomes. Open environments and evaluations for AI agents. Research preview.</desc>
-  <rect width="1200" height="380" rx="24" fill="#101618"/>
+  <desc id="desc">Higher score. New failure. Review agent regressions with reproducible evidence. Research preview.</desc>
+  <rect width="1200" height="280" rx="24" fill="#101618"/>
   <g fill="none" stroke="#24382d" stroke-width="1">
     <path d="M800 0v380M880 0v380M960 0v380M1040 0v380M1120 0v380M760 80h440M760 160h440M760 240h440M760 320h440"/>
   </g>
-  <text x="64" y="70" fill="#86dbaf" font-family="monospace" font-size="14" letter-spacing="3">EXECUTABLE EVALUATION / RESEARCH PREVIEW</text>
-  <text x="60" y="175" fill="#eff8f2" font-family="system-ui,sans-serif" font-size="86" font-weight="750" letter-spacing="-5">EvalArc</text>
-  <text x="64" y="236" fill="#d0e3d7" font-family="system-ui,sans-serif" font-size="28">Run agents. Measure outcomes.</text>
-  <text x="64" y="316" fill="#91aa9c" font-family="monospace" font-size="16">STATEFUL TASKS   /   NEGATIVE CONTROLS   /   REPRODUCIBLE EVIDENCE</text>
+  <text x="64" y="46" fill="#86dbaf" font-family="monospace" font-size="14" letter-spacing="3">AGENT REGRESSION REVIEW / RESEARCH PREVIEW</text>
+  <text x="60" y="144" fill="#eff8f2" font-family="system-ui,sans-serif" font-size="86" font-weight="750" letter-spacing="-5">EvalArc</text>
+  <text x="64" y="204" fill="#d0e3d7" font-family="system-ui,sans-serif" font-size="28">Higher score. New failure.</text>
+  <text x="64" y="252" fill="#91aa9c" font-family="monospace" font-size="15">COMPARE CHECKS / FOLLOW ACTIONS / VERIFY EVIDENCE</text>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <path d="M825 267h80v-48h70v-54h70v-62h80" stroke="#86dbaf" stroke-width="7"/>
     <path d="M825 267h80v-48h70v32h70v-24h80" stroke="#edb68d" stroke-width="4" stroke-dasharray="8 10"/>

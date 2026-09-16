@@ -1,0 +1,47 @@
+{
+  "kind": "annotated screenshots of actual UI states",
+  "duration_seconds": 30,
+  "evidence": {
+    "comparison/baseline.json": "4ec043dd1de0b0d852737cf6e8f2ebe04d517d0c945335e686773e00a8f970b5",
+    "comparison/current.json": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+    "support/audit.json": "596393f262a4b0d411ffd776bb83b80ef37b36663ee9bd29b447cf472ae20c95",
+    "suite/suite.json": "532788bc3655814616f1ae89c527d8eb3c39c61e299cb47fd1910b5fd4f80a50"
+  },
+  "frames": [
+    {
+      "title": "A higher score. A new regression.",
+      "detail": "90% → 93.75% · Two closure checks improve; the notes check regresses."
+    },
+    {
+      "title": "The tool returned an error. The note was written.",
+      "detail": "Recorded step 3 · The state changed before the transient error returned."
+    },
+    {
+      "title": "A new key. A duplicate note.",
+      "detail": "Recorded step 4 · Retrying the write with a different key adds the note again."
+    },
+    {
+      "title": "Keep the score. Check the acceptance rule.",
+      "detail": "Same 93.75% policy · The strict notes gate rejects what the permissive gate accepts."
+    }
+  ],
+  "files": {
+    "first-review.png": {
+      "bytes": 156318,
+      "sha256": "2d5e6f83fb4d9ed5b430e9ec965c41e09c385838e21718cc200d44aea62c4dc9"
+    },
+    "first-review.gif": {
+      "bytes": 242960,
+      "sha256": "57d7abb3f1233475113319b5e7bf92928d6fd004a45357150ec8ac597cc5f5af"
+    },
+    "first-review.mp4": {
+      "bytes": 195851,
+      "sha256": "257a3fcf0ffc1515d79efebff52461bab279eea7729fcba2da367f10dae61909"
+    },
+    "first-review.vtt": {
+      "bytes": 600,
+      "sha256": "7c6508c00c0802484f907e7bdfd3d018a39442938dc98ef582c20eb1b5f63b71"
+    }
+  },
+  "scope": "Saved scripted Docker controls. No new agent execution or customer evidence."
+}

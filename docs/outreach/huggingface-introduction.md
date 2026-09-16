@@ -1,9 +1,29 @@
-**Download the evidence. Check every gate.** EvalArc 0.8.0 verifies a whole suite from its original TOML, plan, every repetition and attempt, custom acceptance rules and JUnit. It runs offline without a candidate process, Docker, Node or the original candidate directory.
+**The score went up. A previously passing check failed.**
 
-Download **suite-evidence.zip** from the lab and unzip it. `evalarc verify suite-evidence --json` checks all 12 original input files and exits 0 for consistency. Adding `--require-accepted` exits 1: the strict notes gate rejects the faulty policy. Two of three jobs are accepted; only one is fully resolved. Those are separate outcomes.
+In EvalArc's recorded support example, two checks improve and the score rises
+from 90% to 93.75%. A retry also duplicates a note. The changed check remains
+visible instead of being hidden by the average.
 
-[Open the evidence lab](https://huggingface.co/spaces/glayguo/evalarc) · [Release 0.8.0](https://github.com/noteflowai/evalarc/releases/tag/v0.8.0) · [Verification workflow and limits](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md)
+[**Inspect the regression →**](https://glayguo-evalarc.static.hf.space/#regression)
 
-The public Casebook still provides 167 audit cases, six repeated attempts and three suite jobs. Historical source bytes and scoring rules are unchanged. These are scripted development controls; offline record consistency does not authenticate the producer or independently rerun the grader. Original candidate paths and durations remain reported metadata. EvalArc remains a research preview.
+Follow the recorded action, compare the acceptance rules, then
+[recompute the report on your machine](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md).
+The walkthrough uses the published 0.12.1 wheel and downloadable records;
+no source checkout, Docker, GPU or model key is needed for that review.
+Verification exits 0 for consistent evidence; comparison exits 1 for the
+regressed check.
 
-Maintainer update to the existing introduction, developed with AI assistance. Independent community project; no upstream or Hugging Face endorsement is implied.
+Have your own records? Compare matching EvalArc evaluations, or use the
+[bounded AgentCore export walkthrough](https://github.com/noteflowai/evalarc/blob/main/docs/agentcore-first-review.md).
+[First-use feedback](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml)
+about a failed setup or useful finding is welcome. Please use a minimal
+redacted example, not a production trace dump.
+
+The featured case is a scripted Docker control, not a customer incident or
+model benchmark. The scored trace-import controls are synthetic; the separate
+MCP example records actual local delivery without evaluator scores. No live
+AgentCore evaluation or independent adoption is claimed.
+
+Maintainer update to this existing introduction, developed with AI assistance.
+EvalArc is an independent MIT research preview. Offline consistency does not
+authenticate the producer or rerun the candidate.

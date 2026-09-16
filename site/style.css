@@ -43,3 +43,16 @@ button:disabled{opacity:.5;cursor:default}
 .judge-preview caption{text-align:left;color:var(--muted,#a8b5ab);margin-bottom:14px}
 .judge-preview th,.judge-preview td{text-align:left;padding:12px;border-bottom:1px solid #46534b}
 .judge-preview .unknown{color:#f0d48b;border-color:#f0d48b}
+
+/* Clear first-use choices, with readable targets in the embedded mobile view. */
+.start-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 30px}
+.start-path>a,.feedback-card{min-width:0;padding:24px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.start-path>a{display:flex;flex-direction:column;gap:14px;text-decoration:none}
+.start-path>a:hover{border-color:var(--green)}
+.start-path strong{font-size:18px;color:var(--ink)}
+.start-path>a>span:last-child{font-size:14px;line-height:1.6;color:var(--muted)}
+.feedback-card a{display:inline-flex;min-height:44px;align-items:center;color:var(--green)}
+.tour{border:1px solid var(--line);border-radius:8px;padding:0 20px;margin:0 0 30px}
+.tour summary{min-height:44px;color:var(--green)}
+.tour video{display:block;width:100%;height:auto;max-height:80vh;margin:10px 0}
+@media(max-width:750px){.start-path{grid-template-columns:minmax(0,1fr)}.start-path>a{padding:20px}}

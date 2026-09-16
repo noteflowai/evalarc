@@ -1,172 +1,114 @@
-<p align="center"><img src="docs/assets/banner.svg" alt="EvalArc — Run agents. Measure outcomes." width="960"></p>
+<p align="center"><img src="docs/assets/banner.svg" alt="EvalArc — Higher score. New failure." width="960"></p>
+
+<p align="center"><strong>Find the agent regression behind a better score.</strong><br>
+Review changed checks, follow the recorded actions, and hand off evidence someone else can verify.</p>
 
 <p align="center">
-  <strong>Open environments and evaluations for AI agents.</strong><br>
-  Python 3.11+ · Linux host · No runtime dependencies · MIT · Research preview
+  <a href="https://noteflowai.github.io/evalarc/#regression"><strong>Try the recorded failure →</strong></a> ·
+  <a href="docs/first-review.md">First local review</a> ·
+  <a href="https://huggingface.co/spaces/glayguo/evalarc">Hugging Face</a> ·
+  <a href="README.zh-CN.md">简体中文</a>
 </p>
 
-<p align="center">
-  <a href="https://huggingface.co/spaces/glayguo/evalarc">Interactive evidence lab</a> ·
-  <a href="https://noteflowai.github.io/evalarc/">Web demo</a> ·
-  <a href="https://huggingface.co/datasets/glayguo/evalarc-casebook">Filterable casebook</a> ·
-  <a href="https://github.com/noteflowai/evalarc/releases">Releases</a> ·
-  <a href="README.zh-CN.md">简体中文</a> ·
-  <a href="docs/research.zh-CN.md">Research & papers</a> ·
-  <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/methodology.md">Methodology</a> ·
-  <a href="docs/roadmap.md">Roadmap</a>
-</p>
+**90% → 93.75%. Two checks improve. One previously passing check fails.**
+A tool commits a note but returns an error. Retrying with a new key writes the
+note again. EvalArc exposes that regression instead of letting the higher
+average score settle the review.
 
-EvalArc is a research preview for **auditable agent evaluations**. It starts by
-checking whether a grader can distinguish correct work from plausible defects:
-run known-good and deliberately flawed submissions, inspect the evidence, and
-record exactly what was evaluated.
+<a href="https://noteflowai.github.io/evalarc/#regression"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/first-review.png">
+  <img src="docs/assets/first-review.gif" alt="Recorded walkthrough: the score rises, a retry duplicates a note, and the strict acceptance gate rejects the policy." width="960">
+</picture></a>
 
-**The score rose from 90% to 93.75%. A previously passing check now fails.**
-The [interactive evidence lab](https://huggingface.co/spaces/glayguo/evalarc)
-lets you compare revisions side by side, switch between correct and faulty
-implementations, and step through the tool call that changed the state. It replays the
-committed Docker audits without a model API or installation.
-Share the exact case and trace step with **Copy evidence link**, return from
-details to the case list, and retry failed sections independently. New links include
-SHA-256 of the loaded audit bytes: changed evidence is flagged before restoring a
-view, while legacy links disclose that the original audit identity is unknown.
-The fingerprint identifies content, not its author.
-[Explorer guide](docs/explorer.md).
+The demonstration replays saved Docker runs of scripted controls. No installation,
+account or model key is needed to explore it. **Research preview** · MIT ·
+Python 3.11+ · Linux for local workflows · no third-party Python runtime dependencies.
 
-[![EvalArc v0.3: score rises from 90% to 93.75% while a check regresses](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
+## Start with one review
 
-**v0.8: verify the whole handoff.** Download the suite evidence ZIP from the
-lab, then run `evalarc verify suite-evidence --json` to recompute its original
-TOML, plan, five attempts, custom gates and JUnit. Add `--require-accepted`
-for CI acceptance. Consistency, configured acceptance and full resolution are
-reported separately. No candidate execution is required.
-[Offline verification and limits](docs/verification.md).
+1. **See the regression.** [Compare the two revisions](https://noteflowai.github.io/evalarc/#regression),
+   then inspect `retry-after-commit` in the [case explorer](https://noteflowai.github.io/evalarc/#explorer).
+2. **Check the decision.** [Compare the acceptance gates](https://noteflowai.github.io/evalarc/#suite):
+   the same 93.75% score passes a permissive rule and fails the strict notes rule.
+3. **Recompute it locally.** The [first-review walkthrough](docs/first-review.md)
+   installs the published wheel, downloads the records and rebuilds the comparison.
+   Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-**Three working task packs** share an evidence format and
-configurable candidate commands:
+Install the released reviewer in a fresh virtual environment:
 
-| Task | Interaction | Host verification | Declared faults | Caught by one case |
-| --- | --- | --- | ---: | ---: |
-| `durable-kv` | Run a coding agent's completed service | Responses, transactions, restart durability | 8 | 3 |
-| `support-routing` | Drive a policy through simulated ticket tools | Routing, exact notes, closure, unrelated state, protocol | 7 | 2 |
-| `robot-evidence-review` | Report on attributed recording data | Coordinate and clock transforms, missing observations, source attribution | 6 | 1 |
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-0.12.1-py3-none-any.whl#sha256=115f3d8d452dee2b5d3aed12f736880aca69aaf3ea42937ef4f8f222c0b2291b"
+evalarc --version
+```
 
-Every pack detects every declared fault: 21 faults, 21 detected. Six of the 21 are detected by a single case each, so the
-suite would lose coverage if that case were removed or stopped detecting its
-fault. A fresh audit would then lower the mutation score. Detection margins
-identify these dependencies before a change, alongside the current score.
-[How this relates to hack-verifiable environments](docs/methodology.md#relation-to-hack-verifiable-environments).
+The offline review needs no Docker, Node, GPU or model API. Follow the
+[download and comparison commands](docs/first-review.md#3-recompute-the-recorded-regression)
+to produce your first HTML report without cloning the source.
 
-v0.6 adds **Python and JavaScript workspace templates for both tasks**.
-Use `init --language javascript` for a starter or `--reference` for a scripted
-control, and `audit --language javascript` to check the same 15 fault models
-with independent Node.js implementations. JavaScript requires Node.js 22+;
-Docker runs explicitly select `--image node:22-slim`. See the
-[multilanguage guide](docs/languages.md).
+## Bring your own work
 
-v0.5 adds `evalarc suite`: declare tasks, candidates, repeats, budgets, and
-acceptance gates in TOML. Preview the plan, execute all jobs, and inspect HTML,
-JSON, and JUnit results. Scores remain task-specific. See the
-[suite and CI guide](docs/suites.md).
-The [new acceptance-gate showcase](https://glayguo-evalarc.static.hf.space/#suite)
-uses one frozen faulty policy in two jobs: both score 93.75% with no resolved
-attempts. A permissive rule accepts the partial result; requiring every notes
-check rejects it. The full three-job Docker suite, five attempts, TOML and JUnit
-remain inspectable. Configured acceptance is separate from task resolution.
+| What you need to review | Use EvalArc to | Start here |
+| --- | --- | --- |
+| A changed agent implementation | Compare matching evaluations and inspect regressed checks | [Run and compare](docs/workflow.md) |
+| Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
+| Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
+| A report received from another developer | Recompute summaries, configured gates and JUnit from original inputs | [Offline verification](docs/verification.md) |
+| A grader or candidate you want to execute | Run a reference and deliberate faults against a task contract | [Run an audit](#run-an-audit) |
 
-[![EvalArc v0.5: the same score meets one gate and fails another](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
+Trace import accepts a [bounded export format](docs/trace-workbench.md), not arbitrary
+cloud exports. Its scored controls are synthetic; the separate MCP example records
+actual local delivery with no evaluator scores. No live AgentCore evaluation is claimed.
 
-Prefer tables or Python? The [Hugging Face casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-separates 251 audit cases, six repeated attempts and three suite jobs into
-filterable configurations, with unchanged source JSON and provenance.
-Start with `suite_jobs` to compare `gate_accepted` and `fully_resolved`.
-These are scripted public-development records, not a held-out model benchmark.
-[Data guide and reproduction](docs/casebook.md).
+Trying your own records? [Tell us where the first review helped or got stuck](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml).
+A minimal redacted example is enough; a failed setup is useful feedback too.
 
-`evalarc repeat` freezes one candidate, runs fresh attempts on fixed
-cases, and reports every outcome with per-check pass rates. Runs now record
-JSONL progress, enforce a total case budget, and save bounded process diagnostics.
-See the [repeatability guide](docs/reliability.md).
-The [repeatability showcase](https://glayguo-evalarc.static.hf.space/#repeat)
-preserves three Docker attempts of each scripted control: the reference resolves
-3/3, while the duplicate-write policy resolves 0/3 despite its 93.75% mean score.
-Open every attempt's full evidence and per-check counts. No variation was observed;
-this is not a model reliability estimate.
+## What the recorded evidence covers
 
-[![EvalArc v0.4: three 93.75% attempts, zero fully resolved runs](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
+| Task | Interaction | Declared faults | Detected by only one case |
+| --- | --- | ---: | ---: |
+| `durable-kv` | Coding artifact: responses, transactions and restart durability | 8 | 3 |
+| `support-routing` | Simulated ticket tools: routing, exact notes, closure and unrelated state | 7 | 2 |
+| `robot-evidence-review` | Attributed recordings: coordinates, clocks and missing observations | 6 | 1 |
 
-The workflow includes `evalarc doctor`, individual HTML reports, and `evalarc compare` for
-check regressions that a higher average score can hide. Every run preserves
-earlier outputs. See the [run-and-compare guide](docs/workflow.md).
+The saved audits detect **21/21 declared faults across three task packs**. Six
+faults depend on one detecting case each. Removing a sole detector lowers a fresh
+audit's mutation score; these margins expose that dependency before the change.
+They do not establish coverage of unseen faults.
+[Inspect coverage](https://noteflowai.github.io/evalarc/#coverage) ·
+[Methodology](docs/methodology.md) · [251 audit case records](docs/casebook.md).
 
-The support pack records tool calls and state changes, including retries after
-ambiguous write outcomes. Python and JavaScript scripted policies use the same
-host verifier. Browser environments, LLM-provider adapters, and RL training
-integrations remain planned. No frontier-model benchmark result is claimed.
-
-**Received a report? Verify it without running the candidate.**
-`evalarc verify path/to/report --json` checks evaluation, repetition or comparison
-evidence and fingerprints every input. Use `--require-resolved` when your handoff
-also requires all checks to pass. [Verification and limits](docs/verification.md).
-
-
-[![Three task packs with direct evidence links for six single-case dependencies.](docs/coverage-review.png)](https://noteflowai.github.io/evalarc/#coverage)
-
-**Inspect coverage before trusting a perfect score.** The website now lists all three task packs and links each single-case dependency directly to its recorded checks and seeds. Offline audit reports provide the same disclosures without scripts or remote assets. These are new views of the original records, not new model runs.
-
-## Judge Stability — 0.12.0
-
-**Same trace. Same verdict?** Compare repeated saved judgments on one fixed
-recording. Keep score variation, pass/reject disagreement and incomplete
-assessments separate; inspect every value and verify preserved inputs offline.
-All-reject agreement remains rejection. [Interactive controls](https://noteflowai.github.io/evalarc/judge-stability/index.html)
-· [Local import guide](docs/judge-stability.md). The five controls are synthetic;
-this diagnostic does not rerun an agent or judge or establish calibration.
-
-[![Five synthetic controls separate score changes, gate flips and unavailable judgments](docs/assets/judge-stability.png)](https://noteflowai.github.io/evalarc/judge-stability/index.html)
-
-## Trace Workbench — 0.11.0
-
-Import saved AgentCore Evaluate responses, versioned golden cases and Skills Anywhere delivery receipts. Inspect zero scores, skipped judges, missing results and missed skills separately. Compare matching datasets/rubrics and verify preserved input bytes offline. [Try the authored controls](https://noteflowai.github.io/evalarc/trace-workbench/index.html) · [Actual local MCP delivery](https://noteflowai.github.io/evalarc/trace-mcp/index.html) · [Input contract](docs/trace-workbench.md). No live AWS evaluation is claimed.
-
-## New in 0.9.0: research you can inspect
-
-[Explore all 27 real GPU skill trials](https://noteflowai.github.io/evalarc/skill-impact/index.html) and [the research pilots](docs/research-pilots.md). Robot Reel's [captured-scene editor](https://noteflowai.github.io/robot-reel/scene-lab/) and [official LIBERO-Plus replay](https://noteflowai.github.io/robot-reel/libero-plus/) connect real source records with portable skill delivery and independent grading. Every failed attempt stays visible; no skill efficacy, full-benchmark or real-hardware result is implied.
-
+For deeper exploration: [repeated attempts](docs/reliability.md),
+[TOML suites and CI](docs/suites.md), [Python/JavaScript candidates](docs/languages.md),
+[recorded GPU research pilots](docs/research-pilots.md),
+[architecture](docs/architecture.md) and [papers](docs/research.zh-CN.md).
+Feature history lives in the [changelog](CHANGELOG.md).
 
 ## Run an audit
 
-Clone the source, then install in an isolated Python environment:
+To execute the built-in Python reference and eight deliberate coding faults,
+install the wheel above, then use Docker:
 
 ```bash
-git clone https://github.com/noteflowai/evalarc.git
-cd evalarc
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e .
 docker pull python:3.12-slim
 evalarc audit --seeds 17 41 97 --output runs/audit
 ```
 
-The command evaluates the reference and eight negative controls, writes
-`runs/audit/audit.json`, and creates a standalone `runs/audit/index.html` report.
-Exit code `0` means the reference passed and every declared defect was detected
-in its intended dimension. Exit code `1` means an audit or candidate failed;
-`2` indicates a usage/configuration error or an invalid run caused by an
-environment failure.
+Open `runs/audit/index.html`. Exit 0 means the reference passed and all declared
+faults were detected in their intended dimensions; 1 means an audit/candidate
+failed, and 2 means invalid input or an environment failure.
 
-For the bundled, trusted controls, a faster CPU-only demo is:
+For the bundled trusted controls, this shorter CPU-only run uses the host:
 
 ```bash
-evalarc audit --backend local --trust-local --output runs/local-audit
 evalarc audit --task support-routing --backend local --trust-local --output runs/support-audit
 ```
 
-Local execution has the host user's privileges. Use Docker for candidate
-isolation and read the [execution boundaries](SECURITY.md).
-If your Docker setup requires a wrapper, set `EVALARC_DOCKER` to that command
-or pass `--docker-command`.
+Local execution has your user privileges. Use Docker for candidate isolation;
+see [execution boundaries](SECURITY.md) and [readiness checks](docs/workflow.md).
+Use a fresh output path for another run. To develop EvalArc itself, see
+[Development](#development).
 
 ## Coding task
 
@@ -286,7 +228,13 @@ failures must be established before this becomes a research benchmark.
 
 ## Development
 
+Clone the source for development and for the `examples/` commands in this README:
+
 ```bash
+git clone https://github.com/noteflowai/evalarc.git
+cd evalarc
+python3 -m venv .venv
+. .venv/bin/activate
 python -m pip install -e ".[dev]"
 pytest -q
 ruff check .
@@ -297,4 +245,4 @@ python -m build
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
 [LICENSE](LICENSE). The [task-author guide](docs/task-authoring.md) explains
 the current built-in extension points. CI includes Python checks, the Node
-policy, and Docker audits for both packs.
+policies, and Docker audits for all three task packs.

@@ -1,0 +1,53 @@
+name: First-use feedback
+description: Tell us what you tried, where you got stuck, and whether the review helped.
+title: "[First use] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Setup failures and unsupported export formats are useful feedback.
+        Share only a minimal redacted example. Please omit credentials,
+        private prompts, customer data and full production traces.
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Which workflow did you try?
+      options:
+        - Browser demonstration
+        - Released wheel and recorded comparison
+        - My own EvalArc evaluations
+        - AgentCore or another trace export
+        - Repeated judgments
+        - Candidate execution
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What decision were you trying to make?
+      placeholder: Describe the task or change you wanted to review.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: What happened?
+      description: Include the first confusing step or failure, and the result you expected.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version and environment
+      placeholder: EvalArc version, OS/Python or browser; export format if relevant.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction or redacted diagnostic
+      description: Commands or a small example are enough. Leave blank if you cannot share it.
+  - type: textarea
+    id: value
+    attributes:
+      label: Did the review help?
+      description: Did it reveal a problem, change a decision, or leave you unsure? Would you use it on another record?
