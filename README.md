@@ -52,6 +52,7 @@ to produce your first HTML report without cloning the source.
 | What you need to review | Use EvalArc to | Start here |
 | --- | --- | --- |
 | A changed agent implementation | Compare matching evaluations and inspect regressed checks | [Run and compare](docs/workflow.md) |
+| A Strands Evals task with observed state | Recheck notes and closure using native SDK reports and case/rule identities | [Runnable companion example](examples/strands-state-review/README.md) |
 | Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
 | Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
 | A report received from another developer | Recompute summaries, configured gates and JUnit from original inputs | [Offline verification](docs/verification.md) |

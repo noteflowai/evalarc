@@ -71,6 +71,7 @@ evalarc verify evalarc-evidence-explorer/suite --json --require-accepted
 | 已有材料 | 下一步 |
 | --- | --- |
 | 两份 EvalArc 评测 | 替换 `compare` 的输入 JSON；任务、评分器、案例与运行条件必须匹配。[操作指南](workflow.md) |
+| Strands Evals 案例与观测状态 | 用原生 SDK 的状态规则和逐项通过结果检查回归。[运行示例](../examples/strands-state-review/README.zh-CN.md) |
 | AgentCore Evaluate 结果与运行 spans | 按受限输入约定整理后离线导入，区分拒绝、零分与缺少评判。[导出到审阅](agentcore-first-review.md) |
 | 待执行的代码或工具策略 | 使用 Docker 后端执行任务审计或候选评测。[运行审计](../README.md#run-an-audit) |
 | 同一记录上的多次评判 | 分别检查分数变化与结论翻转。[中文指南](judge-stability.zh-CN.md) |

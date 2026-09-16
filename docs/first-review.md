@@ -77,6 +77,7 @@ of the producer.
 | What you have | Next step |
 | --- | --- |
 | Two EvalArc evaluations of a candidate | Replace the two JSON inputs to `evalarc compare`; keep matching tasks, graders, cases and runtime conditions. [Workflow](workflow.md) |
+| Strands Evals cases and observed state | Follow the optional native SDK example, with explicit state rules and per-row verdict comparison. [State-review recipe](../examples/strands-state-review/README.md) |
 | Saved AgentCore Evaluate results and spans | Prepare the bounded input wrapper, import locally, and inspect missing judgments as well as rejected gates. [Export-to-review walkthrough](agentcore-first-review.md) |
 | A coding or tool-using candidate to execute | Run a task audit or evaluate its workspace with the Docker backend. [Run an audit](../README.md#run-an-audit) |
 | Repeated judgments on one fixed trace | Check score variation and verdict disagreement separately. [Judge Stability](judge-stability.md) |

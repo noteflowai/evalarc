@@ -1,5 +1,11 @@
 # Changelog
 
+## Strands Evals companion example — 2026-09-16
+
+- Recheck notes and closure in four saved Docker cases using Strands Evals 1.3.0 and native environment-state/report APIs. Preserve case/evaluator identities and expose the notes regression despite an improved two-rule mean.
+- Keep the optional dependency environment and native reports separate from EvalArc's core and original five-dimension scoring. Add English/Chinese instructions and CI that rejects network attempts, verifies saved results and checks report inventories.
+- This example does not execute an agent, run a model or import arbitrary cloud reports. The Python release remains 0.12.1.
+
 ## Website and first-use documentation — 2026-09-16
 
 - Lead the English/Chinese README and evidence lab with the recorded regression, with a 30-second annotated UI walkthrough and a direct path to local review.
