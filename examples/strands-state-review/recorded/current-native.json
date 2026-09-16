@@ -1,0 +1,491 @@
+{
+  "overall_score": 0.875,
+  "scores": [
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "cases": [
+    {
+      "input": "route-open-ticket@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "route-open-ticket@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "route-open-ticket",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "technical",
+            "queue": "queue-0-2",
+            "resolved": false,
+            "status": "open",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-85a0bcc1."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-85a0bcc1."
+            ],
+            "status": "open"
+          }
+        }
+      ],
+      "evaluator": "ticket.notes",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "close-resolved-ticket@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "close-resolved-ticket@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "close-resolved-ticket",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "billing",
+            "queue": "queue-1-0",
+            "resolved": true,
+            "status": "closed",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-c41f9dfd."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-c41f9dfd."
+            ],
+            "status": "closed"
+          }
+        }
+      ],
+      "evaluator": "ticket.notes",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "retry-before-commit@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "retry-before-commit@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "retry-before-commit",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "technical",
+            "queue": "queue-2-1",
+            "resolved": false,
+            "status": "open",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-3fb81d27."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-3fb81d27."
+            ],
+            "status": "open"
+          }
+        }
+      ],
+      "evaluator": "ticket.notes",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "retry-after-commit@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "retry-after-commit@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "retry-after-commit",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "billing",
+            "queue": "queue-3-0",
+            "resolved": true,
+            "status": "closed",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-cd68615c.",
+              "Reviewed request T-cd68615c."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-cd68615c."
+            ],
+            "status": "closed"
+          }
+        }
+      ],
+      "evaluator": "ticket.notes",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "route-open-ticket@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "route-open-ticket@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "route-open-ticket",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "technical",
+            "queue": "queue-0-2",
+            "resolved": false,
+            "status": "open",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-85a0bcc1."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-85a0bcc1."
+            ],
+            "status": "open"
+          }
+        }
+      ],
+      "evaluator": "ticket.status",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "close-resolved-ticket@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "close-resolved-ticket@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "close-resolved-ticket",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "billing",
+            "queue": "queue-1-0",
+            "resolved": true,
+            "status": "closed",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-c41f9dfd."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-c41f9dfd."
+            ],
+            "status": "closed"
+          }
+        }
+      ],
+      "evaluator": "ticket.status",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "retry-before-commit@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "retry-before-commit@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "retry-before-commit",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "technical",
+            "queue": "queue-2-1",
+            "resolved": false,
+            "status": "open",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-3fb81d27."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-3fb81d27."
+            ],
+            "status": "open"
+          }
+        }
+      ],
+      "evaluator": "ticket.status",
+      "evaluator_type": "TicketStateRule"
+    },
+    {
+      "input": "retry-after-commit@17",
+      "actual_output": "Saved ticket state, not a new agent response.",
+      "name": "retry-after-commit@17",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "source_case_id": "retry-after-commit",
+        "source_seed": 17,
+        "source_sha256": "40d0726cd8378b237c514d69b4fda9e4f00550dc3012f4c276a360f4deed25ad",
+        "kind": "recheck of saved scripted Docker state; no agent execution"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "category": "billing",
+            "queue": "queue-3-0",
+            "resolved": true,
+            "status": "closed",
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-cd68615c.",
+              "Reviewed request T-cd68615c."
+            ]
+          }
+        }
+      ],
+      "expected_environment_state": [
+        {
+          "name": "ticket",
+          "state": {
+            "notes": [
+              "Customer contacted support.",
+              "Reviewed request T-cd68615c."
+            ],
+            "status": "closed"
+          }
+        }
+      ],
+      "evaluator": "ticket.status",
+      "evaluator_type": "TicketStateRule"
+    }
+  ],
+  "test_passes": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "reasons": [
+    "ticket.notes: matches expected",
+    "ticket.notes: matches expected",
+    "ticket.notes: matches expected",
+    "ticket.notes: differs from expected",
+    "ticket.status: matches expected",
+    "ticket.status: matches expected",
+    "ticket.status: matches expected",
+    "ticket.status: matches expected"
+  ],
+  "detailed_results": [
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.notes: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.notes: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.notes: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 0.0,
+        "test_pass": false,
+        "reason": "ticket.notes: differs from expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.status: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.status: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.status: matches expected",
+        "label": null
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "ticket.status: matches expected",
+        "label": null
+      }
+    ]
+  ],
+  "diagnoses": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "recommendations": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

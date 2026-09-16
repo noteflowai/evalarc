@@ -1,0 +1,3 @@
+# Optional recipe environment; EvalArc's core has no new dependencies.
+strands-agents-evals==1.3.0
+strands-agents==1.56.0
