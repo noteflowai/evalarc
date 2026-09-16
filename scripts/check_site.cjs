@@ -404,9 +404,49 @@ async function main() {
           assert.match(await page.locator("article").innerText(),/MATCHED/);
           assert.equal(await page.locator("article[data-gate=incomplete]").count(),1);
           assert.equal(await page.locator("article .badge").filter({hasText:"MISSING"}).count(),2);
+          await page.goto(base);
+          await page.getByRole("link",{name:"Inspect repeated judge decisions"}).click();
+          await page.locator("#filter-status").filter({hasText:"5 targets shown"}).waitFor();
+          assert.match(await page.locator("#target-1").innerText(), /0 pass · 3 reject/);
+          assert.match(await page.locator("#target-2").innerText(), /Both pass and reject observed/);
+          assert.match(await page.locator("#target-3").innerText(), /Score variation: yes/);
+          assert.match(await page.locator("#target-3").innerText(), /Same observed gate/);
+          assert.match(await page.locator("#target-4").innerText(), /1\/3 expected judgments assessed/);
+          assert.match(await page.locator("#target-4").innerText(), /SKIPPED/);
+          assert.match(await page.locator("#target-4").innerText(), /MISSING/);
+          await page.getByRole("button",{name:"Gate disagreement",exact:true}).click();
+          assert.equal(await page.locator("article:visible").count(),1);
+          assert(await page.locator("#target-2").isVisible());
+          await page.getByRole("button",{name:"Incomplete",exact:true}).click();
+          assert(await page.locator("#target-4").isVisible());
+          await page.locator("#search").fill("no matching judge target");
+          assert.equal(await page.locator("#filter-status").innerText(),"0 targets shown");
+          await page.locator("#search").fill("");
+          await page.getByRole("button",{name:"All",exact:true}).click();
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+            `Judge stability must fit viewport ${width}`);
+          const judgePending = page.waitForEvent("download");
+          await page.locator("#target-0 a").first().click();
+          const judgeDownload = await judgePending;
+          assert.equal(await judgeDownload.failure(),null);
+          assert.deepEqual(fs.readFileSync(await judgeDownload.path()),
+            fs.readFileSync(path.join(root,"judge-stability/inputs/0001.json")));
           assert.deepEqual(errors,[]);
           results.push({traceWorkbench:true,width,zeroSkippedMissingDistinct:true,
-            filtersAndEmptyState:true,originalBytesDownload:true,actualMcpUnassessed:true});
+            filtersAndEmptyState:true,originalBytesDownload:true,actualMcpUnassessed:true,
+            judgeStability:true,scoreAndGateVariationDistinct:true,judgeOriginalDownload:true});
+        } finally { await page.close(); }
+      }
+      if (!process.env.SITE_URL) {
+        const page = await browser.newPage({viewport:{width:390,height:1000}});
+        try {
+          await page.route("http**/*", route => route.abort());
+          await page.goto(require("node:url").pathToFileURL(
+            path.join(root,"judge-stability/index.html")).href);
+          await page.getByRole("button",{name:"Same gate",exact:true}).click();
+          assert.equal(await page.locator("article:visible").count(),3);
+          assert.match(await page.locator("#target-1").innerText(), /0 pass · 3 reject/);
+          results.push({offlineJudgeReport:true,allRejectAgreementDisclosed:true});
         } finally { await page.close(); }
       }
     }

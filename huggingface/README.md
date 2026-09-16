@@ -18,13 +18,20 @@ tags:
 
 # EvalArc — Look past the score.
 
+**New in v0.12: same trace, same verdict?** Inspect three saved judgments for
+each of five synthetic controls. Separate changing scores, flipped acceptance
+decisions and unavailable results; download the complete evidence for offline
+verification. All-reject agreement remains rejection. No model or AWS evaluation
+was run for these controls. [Judge Stability](https://glayguo-evalarc.static.hf.space/judge-stability/index.html)
+· [Import guide](https://github.com/noteflowai/evalarc/blob/main/docs/judge-stability.md).
+
 **Share the exact evidence.** Select a case and trace step, then **Copy evidence
 link**. Recipients reopen the same recorded observation. Keyboard users can
 inspect a case and return to its list; failed sections can be retried separately.
 If one task pack fails to load, the other remains inspectable.
 
 **Python and JavaScript candidates.** Generate starters or independent
-references for both task packs, audit the declared faults, and combine runtimes
+references for all three task packs, audit the declared faults, and combine runtimes
 in one suite. The task contracts and graders are unchanged. See the
 [language guide](https://github.com/noteflowai/evalarc/blob/main/docs/languages.md)
 and recorded mixed-language Docker suite; this does not establish a language ranking.
@@ -41,7 +48,7 @@ A hosted CI importer was not exercised.
 
 **Explore the data as tables:** the
 [EvalArc Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-offers three separate configurations for 167 audit cases, six repeated attempts
+offers three separate configurations for 251 audit cases, six repeated attempts
 and three suite jobs. Filter the results or load the JSONL in Python; original
 source records and fingerprints accompany every row.
 

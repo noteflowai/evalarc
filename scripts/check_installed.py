@@ -87,6 +87,35 @@ def check(source: Path) -> dict:
         if process.returncode != 0 or not json.loads(process.stdout)["verified"]:
             raise ValueError("installed trace verifier failed")
         results["trace"] = json.loads(process.stdout)
+        judge = folder / "judge-stability"
+        process = subprocess.run(
+            [
+                entry,
+                "trace-stability",
+                *[str(source / f"examples/judge-stability/judge-{i}.json") for i in (1, 2, 3)],
+                "--output",
+                str(judge),
+                "--require-consistent-gates",
+            ],
+            cwd=folder,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if process.returncode != 2:
+            raise ValueError("installed judge review lost its incomplete assessment gate")
+        process = subprocess.run(
+            [entry, "trace-stability-verify", str(judge)],
+            cwd=folder,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if process.returncode != 0 or not json.loads(process.stdout)["verified"]:
+            raise ValueError("installed judge verifier failed")
+        results["judge_stability"] = json.loads(process.stdout)
         for language in ("python", "javascript"):
             target = folder / f"robot-{language}"
             subprocess.run(

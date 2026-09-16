@@ -20,7 +20,8 @@ question needs substantially more evidence.
 | v0.5, implemented | Declarative suites, per-job acceptance gates, HTML/JSON and JUnit export | All-candidate preflight, workload preview, protected dimensions, distinct invalid outcomes, no cross-domain score average |
 | v0.6, implemented | Python/JavaScript templates and independent controls for both tasks | The same 15 declared faults, Node Docker execution, lossless numeric handling, process-crash recovery, atomic workspace initialization |
 | v0.11, implemented | Offline AgentCore trace review and skill receipt linkage | Preserved bytes, versioned golden cases/rubrics, separate missing/skipped/zero results and synthetic vs recorded provenance |
-| Next | Judge calibration and broader trace collection adapters | Live upstream runs, frozen judge repetitions and independent calibration cases |
+| v0.12, implemented | Offline fixed-record judge repetition diagnosis | Exact recording/rubric checks, per-target denominators, separate score/gate disagreement, preserved-input recomputation |
+| Next | Judge calibration and broader trace collection adapters | Live upstream runs and independent calibration cases; descriptive agreement alone is not accuracy |
 | Next | Broader language coverage for coding | A non-Python Durable KV submission passes the same full contract |
 | Next | Independent defect packs and task authors | Reviewer-authored faults and a third independently authored task |
 | Next | Real model-provider adapter | End-to-end run with measured usage, task evidence, repeated attempts |

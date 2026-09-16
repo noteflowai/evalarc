@@ -431,6 +431,39 @@ def build(destination: Path) -> dict:
         trace_examples / "baseline.json",
     )
     import_trace(trace_examples / "mcp-recorded.json", destination / "trace-mcp")
+    from evalarc.judge_stability import import_judgments, verify_judgments
+
+    judge_folder = destination / "judge-stability"
+    judge = import_judgments(
+        [ROOT / f"examples/judge-stability/judge-{index}.json" for index in (1, 2, 3)],
+        judge_folder,
+    )
+    verify_judgments(judge_folder)
+    with zipfile.ZipFile(
+        destination / "judge-stability-evidence.zip", "x", compression=zipfile.ZIP_DEFLATED
+    ) as archive:
+        for source in sorted(judge_folder.rglob("*")):
+            if source.is_file():
+                name = "judge-stability/" + source.relative_to(judge_folder).as_posix()
+                member = zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0))
+                member.compress_type = zipfile.ZIP_DEFLATED
+                member.create_system = 3
+                member.external_attr = 0o100644 << 16
+                archive.writestr(member, source.read_bytes())
+    preview = []
+    for case in judge["cases"]:
+        row = case["targets"][0]
+        cells = []
+        for observation in row["observations"]:
+            assessed = observation["status"] == "assessed"
+            state = ("pass" if observation["accepted"] else "fail") if assessed else "unknown"
+            value = observation["value"] if assessed else observation["status"]
+            cells.append(f'<td><span class="badge {state}">{html.escape(str(value))}</span></td>')
+        preview.append(
+            f'<tr><th scope="row">{html.escape(case["case_id"])}</th>{"".join(cells)}</tr>'
+        )
+    page = destination / "index.html"
+    page.write_text(page.read_text().replace("__JUDGE_PREVIEW__", "".join(preview)))
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "huggingface" / "README.md", destination / "README.md")
     (destination / ".nojekyll").touch()
