@@ -193,39 +193,47 @@ The [checkpoint format and scoring rules](docs/methodology.md#checkpoint-analysi
 include regression handling and comparability checks. Missing agent tokens and
 costs remain `null`. Caller-reported elapsed time is not a METR time horizon.
 
-## Why this project?
+## Project scope
 
-The research direction comes from executable SWE environments, verifier quality,
-and long-horizon evaluation. The [research report](docs/research.zh-CN.md)
-connects the design to SWE-bench, SWE-Gym, SWE-smith, R2E-Gym, SWE-rebench,
-METR, RE-Bench, SWE-EVO, and current Terminal-Bench/Harbor work.
-The [paper catalog](research/papers.json) records primary sources and verified
-publication status.
+**EvalArc audits graders and reviews evaluation evidence for coding and
+tool-using agents.** Executable tasks, outcome checks outside the candidate,
+revision comparisons and portable reports help developers assess whether
+results meet acceptance requirements and grading rules detect declared defects.
 
-EvalArc's intended place is an **audit layer alongside existing environment
-and training frameworks**. Harbor already supports multi-step tasks and separate
-verifier environments; neither is claimed as an invention here.
-Native Harbor task export, oracle/NOP execution and ATIF 1.8 records are available as [bounded research integrations](docs/research-pilots.md). A general production adapter and Prime Intellect integration remain future work.
+The project serves as an audit layer within existing evaluation environments
+and experiment workflows. It focuses on three questions: does the result meet
+the task contract, did a change introduce a regression, and can the conclusion
+be checked against the original records? See the
+[architecture](docs/architecture.md) and [methodology](docs/methodology.md)
+for task contracts, scoring rules and integration scope.
 
-## Project name
+Native Harbor task export, oracle/NOP execution and ATIF 1.8 records are
+available as [bounded research integrations](docs/research-pilots.md).
+A general production adapter, Prime Intellect integration and calibrated
+long-horizon task sets remain future work.
 
-The initial local prototype was called GradeRail. EvalArc is the selected
-project name; the package, Python imports, command, and new report schemas use
-`evalarc`. See [migration notes](docs/migration.md) for the identifier changes.
-The [naming review](docs/naming.zh-CN.md) preserves the original search snapshot.
+## Research basis
+
+Software-engineering agent evaluation, executable training environments and
+verifier reliability inform the design. The [research report](docs/research.zh-CN.md)
+explains the technical motivation and engineering references; the
+[paper catalog](research/papers.json) records paper sources, versions and
+publication status as of the documented search.
 
 ## Scope and evidence
 
-The tasks, references, fault controls, and seeds are all public development material.
-Different seeds do not establish uncontaminated evaluation. Detected
-defects do not prove resistance to arbitrary reward hacking. There are no
-frontier-model results, human time baselines, RL gains, or claimed SOTA results.
-See the [coding audit](examples/audit/index.html),
-[support audit](examples/support-audit/index.html), and
-[validation record](docs/validation.md) for the checks actually run.
+The public records validate graders and the review workflow. Tasks, reference
+implementations, fault controls and random seeds are public. Detection results
+apply to the declared defects, selected cases and recorded execution conditions.
+Changing seeds alone does not create an independent held-out evaluation or
+establish that the data was excluded from training.
 
-Task difficulty, diversity, independent faults, and transfer to real model
-failures must be established before this becomes a research benchmark.
+The [coding audit](examples/audit/index.html),
+[support audit](examples/support-audit/index.html) and
+[validation record](docs/validation.md) provide inspectable implementation evidence.
+Coverage of unknown defects, resistance to reward hacking, model capability
+rankings and training transfer require separate evaluation with independent
+data and an appropriate experimental design.
 
 ## Development
 
@@ -243,7 +251,8 @@ ruff format --check .
 python -m build
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
-[LICENSE](LICENSE). The [task-author guide](docs/task-authoring.md) explains
+See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md),
+[migration notes](docs/migration.md), and [LICENSE](LICENSE).
+The [task-author guide](docs/task-authoring.md) explains
 the current built-in extension points. CI includes Python checks, the Node
 policies, and Docker audits for all three task packs.

@@ -121,8 +121,10 @@ evalarc init workspace/durable-kv
 evalarc evaluate workspace/durable-kv --output runs/candidate
 ```
 
-Coding 场景负责评分交付物，不负责调用模型。Harbor、Prime Intellect 的原生适配，
-以及真正困难的多小时任务集，都在路线图中。
+Coding 场景评测已完成的代码交付物，模型调用与代码生成由外部工作流负责。
+Harbor 任务导出、oracle/NOP 执行和 ATIF 1.8 记录已有
+[限定范围的研究示例](docs/research-pilots.md)；通用生产适配、Prime Intellect
+集成与经过难度标定的长程任务集仍在规划中。
 
 ## 工具型智能体与 JavaScript
 
@@ -146,24 +148,33 @@ Python 继续用于任务、评分和研究集成；候选程序通过 JSONL 与
 TypeScript 可编译为 JavaScript 使用这一接口，但当前没有 TypeScript SDK，
 也没有已验证的 Rust 实现。详见[命令配置](docs/candidate-commands.md)。
 
-## 项目名称
+## 项目定位
 
-项目已由本地原型名 GradeRail 更名为 **EvalArc**。仓库、Python 包、
-导入路径、CLI、新报告 schema 与环境变量均使用新名称。
-具体变化见[迁移说明](docs/migration.md)，原始名称检索记录保留在
-[命名复评](docs/naming.zh-CN.md)中。
+**EvalArc 为代码型与工具型智能体提供评分器审计和评测证据复核。**
+通过可执行任务、候选程序之外的结果检查、版本对照与可离线交付的报告，
+帮助开发者判断任务结果是否满足验收要求，以及评分规则能否检出已声明的行为缺陷。
 
-## 调研结论
+项目作为现有评测环境与实验流程中的审计层，关注三个问题：
+结果是否满足任务约定、变更是否引入回归、结论能否依据原始记录复核。
+任务契约、评分方法与集成范围见[架构说明](docs/architecture.md)和
+[方法说明](docs/methodology.md)。
 
-我更看好“高质量工程环境的评分器审计”这个切口：有清晰的工程产物，
-可与已有平台协作，也能进一步研究评分漏洞和训练迁移效果。
-这是一项基于文献与现有项目的方向判断，不是对热度、增长或商业结果的保证。
+## 研究依据
 
-调研区分已确认顶会论文、近期预印本和官方工程公告。Mechanize 融资公告已核实；
-另查到 Business Insider 2026 年 9 月 11 日报道人才交易已完成，最终条款未披露。
-“融资后 103 天”对应到最初报道日期，不代表谈判当天才启动。
-原始来源和区别见[调研报告](docs/research.zh-CN.md)。
+项目设计参考软件工程智能体评测、可执行训练环境与验证器可靠性研究。
+技术依据与工程参考见[研究报告](docs/research.zh-CN.md)；
+[文献目录](research/papers.json)记录论文来源、版本及检索时的发表状态。
 
-公开 seed 不是隐藏测试；对照全被识别也不代表能防住所有 reward hacking。
-[Coding 报告](examples/audit/index.html)和[工单报告](examples/support-audit/index.html)
-展示的是评分器审计结果，不能作为模型能力榜单。
+## 评测范围与边界
+
+当前公开记录用于验证评分器和复核流程，任务、参考实现、缺陷对照与随机种子均公开。
+缺陷检出结果仅适用于已声明缺陷、既定用例和记录的运行条件；更换随机种子本身
+不构成独立留出测试，也不能据此确认数据未被用于训练。
+
+[代码审计报告](examples/audit/index.html)、[工单审计报告](examples/support-audit/index.html)
+和[验证记录](docs/validation.md)提供可检查的实现证据。
+未知缺陷覆盖、抗评分投机（reward hacking）能力、模型能力排名及训练迁移收益，
+需要通过独立数据与相应实验设计另行评估。
+
+开发与维护：[贡献指南](CONTRIBUTING.md) · [安全边界](SECURITY.md) ·
+[版本迁移](docs/migration.md) · [许可证](LICENSE)。
