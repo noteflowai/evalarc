@@ -141,3 +141,14 @@ jobs:
           test "$(gh api repos/$GITHUB_REPOSITORY/git/ref/heads/main --jq .object.sha)" = "$GITHUB_SHA"
           python scripts/publish_space.py --bundle dist/site
           python scripts/publish_dataset.py --bundle dist/casebook
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check actual Hub downloads and judgment review
+        env:
+          SITE_URL: https://huggingface.co/spaces/glayguo/evalarc
+          SITE_DIR: dist/site
+        run: node scripts/check_hosted_downloads.cjs

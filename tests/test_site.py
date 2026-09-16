@@ -64,6 +64,11 @@ def test_bundle_rejects_changed_evidence_and_extra_files(tmp_path):
     for name in ("skill-impact", "research", "trace-workbench", "trace-mcp", "judge-stability"):
         assert f'href="{name}/index.html"' in (folder / "index.html").read_text()
     assert "__JUDGE_PREVIEW__" not in (folder / "index.html").read_text()
+    for archive in ("judge-stability-evidence.zip", "suite-evidence.zip"):
+        assert f'href="{archive}?download=true"' in (folder / "index.html").read_text()
+    assert (
+        'href="research-records.zip?download=true"' in (folder / "research/index.html").read_text()
+    )
     from evalarc.judge_stability import verify_judgments
 
     with zipfile.ZipFile(folder / "judge-stability-evidence.zip") as archive:
