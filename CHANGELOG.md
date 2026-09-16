@@ -1,5 +1,11 @@
 # Changelog
 
+## Website and first-use documentation — 2026-09-16
+
+- Lead the English/Chinese README and evidence lab with the recorded regression, with a 30-second annotated UI walkthrough and a direct path to local review.
+- Document a source-free install from the released 0.12.1 wheel, recomputation of the comparison and suite acceptance checks, and the bounded AgentCore export workflow.
+- Add a first-use feedback form and replace historical version stacks in the HF card and outreach descriptions. This is a presentation and onboarding update; the Python version and released evidence remain unchanged.
+
 ## 0.12.1 — 2026-09-16
 
 - Request attachment disposition for judge, suite and research ZIP links with `download=true`. Hugging Face's inline CDN redirects prevented the new ZIP link from triggering a download inside the Hub iframe; the attachment query was verified in the live browser.

@@ -1,0 +1,17 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.500
+A higher score. A new regression.
+90% → 93.75% · Two closure checks improve; the notes check regresses.
+
+00:00:07.500 --> 00:00:15.000
+The tool returned an error. The note was written.
+Recorded step 3 · The state changed before the transient error returned.
+
+00:00:15.000 --> 00:00:22.500
+A new key. A duplicate note.
+Recorded step 4 · Retrying the write with a different key adds the note again.
+
+00:00:22.500 --> 00:00:30.000
+Keep the score. Check the acceptance rule.
+Same 93.75% policy · The strict notes gate rejects what the permissive gate accepts.

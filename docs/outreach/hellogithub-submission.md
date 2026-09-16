@@ -8,35 +8,36 @@ https://github.com/noteflowai/evalarc
 
 ### 项目标题
 
-分享具体失败证据，检查智能体评分器的盲点
+找出更高评分背后的 Agent 回归
 
 ### 项目描述
 
-EvalArc 是面向 AI 智能体的开源评测与验收工具。支持 Python／JavaScript 候选、TOML 套件、JUnit 和离线报告复核，保留每轮原始记录。交互实验室展示高分仍违反关键业务约束的案例；0.8.0 可下载完整套件证据，并离线复算原始配置、执行计划、验收规则和 JUnit；浏览器可分享到具体调用步骤。提供可筛选 HF Casebook 和中英文文档，现有演示为脚本对照。
+EvalArc 是开源的 Agent 评测复核工具。交互案例展示分数从 90% 升到 93.75%，重试却多写了一条备注。可对照失败检查、定位工具动作，并下载证据在本机复算。适合检查 Agent 变更和验收规则；演示免安装，本地复核无需 Docker、GPU 或模型密钥。当前为研究预览，示例来自脚本对照。
 
 ### 亮点
 
-- **把讨论定位到同一步**： Copy evidence link 保存任务、对照实现、种子、案例与 trace 步骤。接收者打开同一观察点，键盘可从详情返回案例列表；受限剪贴板有手动复制入口。
-- **失败可恢复**：suite、重复尝试、前后比较和任务包可以分别重试；一个任务包不可用时仍可检查另一个。页面经过 320／390／1440 像素与键盘路径验证。
-- **高分不代表完成**：工单策略得 93.75% 却重复写备注；代码实现得 92.5% 却混淆 JSON true 与 1。可检查全部 15 种声明缺陷，以及三项 suite 作业、六条重复尝试和 167 条审计用例的数据表。
-- **可复核交付**：`evalarc verify` 不执行候选代码，重算单次、重复、对照和完整套件报告，包括 TOML、plan、五次尝试与 JUnit；`--require-accepted` 检查配置的验收规则，`--require-resolved` 另行要求任务完整通过。Python／JavaScript 参考实现共享任务约定。
+- 用一个具体失败解释分数、验收与任务完成的区别。
+- 发布 wheel 与原始记录，可按中英文指南复算结果。
+- 可以比较自己的 EvalArc 评测，或按受限格式导入保存的运行记录。
 
-本账号为维护者，项目与 AI 结对开发，采用 MIT 许可，处于研究预览阶段。现有展示来自已保存的公开开发任务和脚本 Docker 对照，不提供真实大模型排名或 RL 收益结论。离线一致性校验不等于重新运行评分器，也不认证报告作者；原始候选路径与计时仍是报告元数据。
+### 首次体验
 
-### 示例代码
+[查看失败案例](https://noteflowai.github.io/evalarc/#regression) ·
+[首次本地复核](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.zh-CN.md) ·
+[Hugging Face](https://huggingface.co/spaces/glayguo/evalarc)
 
-安装发布的 Python wheel，从首页下载 suite-evidence.zip 并解压后，无需 Docker 或 Node 即可核验；默认退出 0 表示证据一致，添加 --require-accepted 退出 1 表示严格备注规则拒绝该结果：
+按指南安装并解压记录后：
 
 ```sh
-evalarc verify suite-evidence --json
-
-# Require every configured suite gate:
-evalarc verify suite-evidence --json --require-accepted
+evalarc verify evalarc-evidence-explorer/comparison --json
+# 退出 0：记录一致。
+evalarc compare evalarc-evidence-explorer/comparison/baseline.json \
+  evalarc-evidence-explorer/comparison/current.json --output comparison-review
+# 退出 1：一项检查退步，即使总分提高。
 ```
 
 ### 截图或演示视频
 
-在线体验：https://huggingface.co/spaces/glayguo/evalarc
-版本：https://github.com/noteflowai/evalarc/releases/tag/v0.8.0
+![分数提高，记录中的检查却退步](https://raw.githubusercontent.com/noteflowai/evalarc/main/docs/assets/first-review.gif)
 
-![分享具体失败证据，检查智能体评分器的盲点](https://github.com/noteflowai/evalarc/raw/main/docs/assets/suite-lab.png)
+本账号为维护者，项目与 AI 结对开发，MIT 许可。此案例是脚本 Docker 对照，不是客户效果或模型排名；离线复核不认证生产者或重新执行评分器。云端导入样例采用合成评分，未完成实时 AgentCore 评测。

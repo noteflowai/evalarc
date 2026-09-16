@@ -10,7 +10,7 @@ async function main() {
   let server;
   let base = process.env.SITE_URL;
   if (!base) {
-    const mime = {".html":"text/html", ".js":"text/javascript", ".json":"application/json", ".css":"text/css", ".svg":"image/svg+xml", ".zip":"application/zip"};
+    const mime = {".html":"text/html", ".js":"text/javascript", ".json":"application/json", ".css":"text/css", ".svg":"image/svg+xml", ".zip":"application/zip", ".png":"image/png", ".gif":"image/gif", ".mp4":"video/mp4", ".vtt":"text/vtt"};
     server = http.createServer((req, res) => {
       const route = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
       // HF static hosting does not resolve subdirectory indexes. Keep that
@@ -45,6 +45,29 @@ async function main() {
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await app.locator("#repeat-workspace").waitFor({state:"visible"});
       await app.locator("#suite-workspace").waitFor({state:"visible"});
+      await app.getByRole("link", {name:"Find the regression", exact:false}).click();
+      assert.equal(await app.locator("body").evaluate(() => location.hash), "#regression");
+      const comparisonHeading = await app.locator("#regression h2").boundingBox();
+      assert(comparisonHeading && comparisonHeading.y >= 0 && comparisonHeading.y < 1000,
+        "The primary action must expose the recorded regression");
+      if (width === 1440) {
+        await app.locator(".tour summary").click();
+        const video = app.getByLabel("Recorded regression walkthrough");
+        assert.equal(await video.getAttribute("autoplay"), null);
+        assert.equal(await video.getAttribute("preload"), "none");
+        const playback = await video.evaluate(async element => {
+          await element.play();
+          await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("Walkthrough playback stalled")), 15000);
+            element.addEventListener("timeupdate", () => {clearTimeout(timer);resolve()}, {once:true});
+          });
+          element.pause();
+          return {duration:element.duration,time:element.currentTime,width:element.videoWidth};
+        });
+        assert(Math.abs(playback.duration - 30) < 0.2 && playback.time > 0 && playback.width > 0,
+          "The walkthrough must decode and play, not just show its poster");
+        await app.locator(".tour summary").click();
+      }
       assert.equal(await app.locator(".coverage-card").count(),3);
       assert.equal(await app.locator(".coverage-card li").count(),6);
       await page.waitForLoadState("networkidle");

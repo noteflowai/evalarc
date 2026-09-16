@@ -362,6 +362,12 @@ def build(destination: Path) -> dict:
                 )
             else:
                 shutil.copyfile(path, destination / path.name)
+    for suffix in ("png", "gif", "mp4", "vtt"):
+        name = f"first-review.{suffix}"
+        shutil.copyfile(ROOT / "docs" / "assets" / name, destination / name)
+    shutil.copyfile(
+        ROOT / "docs/assets/first-review-media.json", destination / "first-review-media.json"
+    )
     for name, directory, *_ in specifications:
         target = destination / name
         target.mkdir()

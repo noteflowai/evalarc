@@ -1,146 +1,101 @@
-<p align="center"><img src="docs/assets/banner.svg" alt="EvalArc — Run agents. Measure outcomes." width="960"></p>
+<p align="center"><img src="docs/assets/banner.svg" alt="EvalArc — 分数提高，检查却退步了。" width="960"></p>
 
 # EvalArc
 
-**面向 AI 智能体的开放任务环境与可审计评测。**
+**找出更高评分背后的 Agent 回归。**
 
-Python 3.11+，Linux 主机，零运行时第三方依赖，MIT 许可证。
+查看退步的检查，定位已记录的工具动作，交付他人可以复核的证据。
 
-[在线交互演示](https://huggingface.co/spaces/glayguo/evalarc) ·
-[网页镜像](https://noteflowai.github.io/evalarc/) ·
-[可筛选证据数据集](https://huggingface.co/datasets/glayguo/evalarc-casebook) ·
-[版本下载](https://github.com/noteflowai/evalarc/releases) ·
-[English](README.md) · [中文调研与论文分析](docs/research.zh-CN.md) ·
-[架构设计](docs/architecture.md) · [方法说明](docs/methodology.md) · [开发路线](docs/roadmap.md)
+[**立即查看失败案例 →**](https://noteflowai.github.io/evalarc/#regression) ·
+[首次本地复核](docs/first-review.zh-CN.md) ·
+[Hugging Face 演示](https://huggingface.co/spaces/glayguo/evalarc) · [English](README.md)
 
-EvalArc 关注智能体实际完成的结果，以及支撑评分结论的证据。
-通过正确实现和刻意带有缺陷的实现进行对照，
-检查它能发现哪些问题，并保存可复查的报告。
+**90% → 93.75%。两项检查改善，一项原本通过的检查却失败了。**
+工具已写入备注，却返回错误；策略更换幂等键后重试，多写了一次。
+EvalArc 把这次退步展开给你看，帮助判断分数提高是否满足发布要求。
 
-**分数从 90% 升到 93.75%，原本通过的检查却失败了。**
-[交互证据实验室](https://huggingface.co/spaces/glayguo/evalarc)
-可以并排比较两个版本，查看一处退步、两处改进，再逐步检查工具调用和状态变化。
-页面读取仓库保存的 Docker 审计记录，无需安装，也不调用模型。
-使用 **Copy evidence link** 分享具体案例和步骤；打开详情后可返回原案例，
-某一分区加载失败时可单独重试。新链接携带实际加载审计文件的 SHA-256，
-记录变化时会先提示并停止恢复；旧链接明确说明未保存原始审计身份。
-指纹标识内容，不认证作者。[交互使用说明](docs/explorer.md)。
+<a href="https://noteflowai.github.io/evalarc/#regression"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/first-review.png">
+  <img src="docs/assets/first-review.gif" alt="已记录案例的操作演示：分数提高，重试导致重复备注，严格验收规则拒绝结果。" width="960">
+</picture></a>
 
-[![EvalArc v0.3：分数上升，一项检查却退步](docs/assets/regression-lab.png)](https://huggingface.co/spaces/glayguo/evalarc)
+演示回放的是脚本对照在 Docker 中运行后保存的记录，无需安装、账号或模型密钥。
+研究预览 · MIT · Python 3.11+ · 本地流程使用 Linux · Python 包无第三方运行时依赖。
 
-**v0.8：完整验收证据可离线复核。** 从首页下载套件 ZIP，解压后运行
-`evalarc verify suite-evidence --json`，复核原始 TOML、执行计划、五次尝试、
-验收规则与 JUnit。使用 `--require-accepted` 接入 CI 验收；证据一致、规则接受、
-任务完全完成分别报告。整个检查不执行候选程序。
-[离线验证流程与边界](docs/verification.md)。
+## 从一次复核开始
 
-**已实现 coding、业务工具与记录复核三个场景。**
+1. **看退步。** [对照两个版本](https://noteflowai.github.io/evalarc/#regression)，
+   再在[案例浏览器](https://noteflowai.github.io/evalarc/#explorer)查看 `retry-after-commit`。
+2. **看验收。** [比较两条规则](https://noteflowai.github.io/evalarc/#suite)：
+   相同的 93.75% 分数，宽松规则接受，严格备注规则拒绝。
+3. **本地复算。** [首次复核指南](docs/first-review.zh-CN.md)使用发布的 wheel 和原始记录重建报告；
+   复核退出 0 表示一致，对照退出 1 表示发现退步。
 
-| 任务 | 交互方式 | 验证内容 | 声明缺陷 | 仅单个用例检出 |
-| --- | --- | --- | ---: | ---: |
-| `durable-kv` | 执行代码智能体交付的服务 | 读写、事务、CAS、持久化与异常恢复 | 8 | 3 |
-| `support-routing` | 策略通过工具操作模拟工单 | 路由、精确备注、条件关闭、无关数据保护与协议完成 | 7 | 2 |
-| `robot-evidence-review` | 基于有出处的记录数据出报告 | 坐标与时钟换算、缺失观测、来源归属 | 6 | 1 |
-
-三个任务包都检出了全部声明缺陷：21 个缺陷，21 个检出。其中六个各自只靠一个用例检出；删除该用例，或使其无法再检出对应缺陷，就会失去这部分覆盖，重新审计的变异分数也会下降。检出余量在改动之前就能指出这些依赖，与当前分数一起报告。[与 hack-verifiable environments 的关系](docs/methodology.md#relation-to-hack-verifiable-environments)。
-
-v0.6 为两个任务都提供 **Python 和 JavaScript 工作区模板**：
-`init --language javascript` 生成起步代码，添加 `--reference` 生成脚本对照；
-`audit --language javascript` 使用独立的 Node.js 实现检查相同的 21 类故障，实测检出余量与 Python 完全一致。
-JavaScript 需要 Node.js 22+，Docker 模式显式指定 `--image node:22-slim`。
-详见[多语言接入指南](docs/languages.zh-CN.md)。
-
-v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算及验收门槛，
-先预览执行计划，再批量运行并输出 HTML、JSON 和 JUnit。各任务单独评分。
-详见[套件与 CI 指南](docs/suites.zh-CN.md)。
-
-[新增验收规则展示](https://glayguo-evalarc.static.hf.space/#suite)让同一份缺陷策略分别按两套规则验收：
-都是 93.75%、0/2 轮完全通过，宽松规则允许部分进展，要求备注检查全部通过的规则则拒绝。
-完整三项评测作业的 Docker 记录、五轮尝试、TOML 和 JUnit 均可检查；“规则接受”与“任务完全完成”
-分别展示。
-
-[![EvalArc v0.5：相同分数，不同验收结果](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
-
-[Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-把 251 条审计用例、6 次重复尝试和 3 项验收作业分别整理为可筛选的表，
-保留未经改写的原始 JSON 和版本指纹。可先选择 `suite_jobs`，
-对照 `gate_accepted` 与 `fully_resolved`，或用 Python 读取。
-这些是公开开发任务中的脚本对照，不是隐藏模型测试集。详见[数据说明](docs/casebook.md)。
-
-`evalarc repeat` 固定一份候选快照，在相同场景上重新启动多轮评测，
-保存每轮证据并显示逐项通过率与结果波动。同时补齐场景总时间预算、JSONL 进度
-和受限进程诊断。详见[重复评测指南](docs/reliability.zh-CN.md)。
-
-[重复评测展示](https://glayguo-evalarc.static.hf.space/#repeat)保留了两种脚本策略各三次
-Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平均分为 93.75%，却 0/3 轮
-完全通过。可以查看每轮原始证据和逐项计数。这些观察中未出现检查结果波动，
-也不能据此估计模型在未见任务上的可靠性。
-
-[![EvalArc v0.4：三轮平均分 93.75%，但没有一轮完全通过](docs/assets/repeat-lab.png)](https://glayguo-evalarc.static.hf.space/#repeat)
-
-现有流程包含环境预检查、单次评测 HTML 报告和逐项回归比较，即使总分上升也能指出
-退步的检查；输出保护会保留之前的运行证据。详见[使用流程](docs/workflow.zh-CN.md)。
-
-两个场景使用共同的报告元数据，各自定义评分规则。工单环境记录工具调用和
-真实状态变化，支持写入前失败、写入后响应失败及幂等重试。
-已提供 Python 和 JavaScript 策略；浏览器环境、真实模型 API 适配与 RL 集成
-仍在路线图中。具体边界见[架构设计](docs/architecture.md)。
-
-当前版本尚未经过前沿模型、真实人类工时或强化学习收益标定。
-
-**收到报告后，先独立复核。** `evalarc verify 报告路径 --json` 无需执行候选程序，
-即可重算单次评测、重复运行和前后对照的汇总，并记录每份输入的指纹。
-需要全部任务通过时加 `--require-resolved`。
-[使用说明与校验范围](docs/verification.md)。
-
-
-[![三个任务包的覆盖薄弱点与原始证据入口](docs/coverage-review.png)](https://noteflowai.github.io/evalarc/#coverage)
-
-**在信任满分前，先检查覆盖薄弱点。** 网页现展示全部三个任务包，可从仅靠一个用例检出的缺陷直接定位到原始检查与种子记录。离线审计报告也提供相同的证据展开入口，不依赖脚本或远程资源；新增界面沿用原始数据，不冒充新模型运行。
-
-## 0.11.0：运行记录评估工作台
-
-导入已保存的 AgentCore Evaluate 结果、版本化黄金案例和 Skills Anywhere 加载回执，分别查看有效零分、评估跳过、缺少结果及漏调用技能。支持相同测试集与评分规则下的对比，以及原始输入的离线复核。[交互示例](https://noteflowai.github.io/evalarc/trace-workbench/index.html) · [真实本地 MCP 加载](https://noteflowai.github.io/evalarc/trace-mcp/index.html) · [数据契约](docs/trace-workbench.md)。示例明确区分合成评分与真实加载记录，未运行云端评估。
-
-## v0.12.0：同一记录，多次评判
-
-新增 `trace-stability`，固定执行记录与评估规则，分别检查分数变化、通过/拒绝翻转、
-跳过与缺失，并保存原始输入供离线复核。三次都拒绝仍然是拒绝，不把一致性当作
-任务成功。[在线交互示例](https://noteflowai.github.io/evalarc/judge-stability/index.html)
-· [中文使用指南](docs/judge-stability.zh-CN.md)。五个展示案例均为人工构造；
-此功能不重新运行 Agent 或裁判，也不代替独立人工校准。
-
-[![五个人工构造的案例，分别展示分数变化、结论翻转和未评判结果](docs/assets/judge-stability.png)](https://noteflowai.github.io/evalarc/judge-stability/index.html)
-
-## 0.9.0：有原始证据的研究场景
-
-[查看 27 次真实 GPU 技能评测](https://noteflowai.github.io/evalarc/skill-impact/index.html)，并阅读[完整方法与限制](docs/research-pilots.md)。新增[实景 Blender 编辑](https://noteflowai.github.io/robot-reel/scene-lab/)与[官方 LIBERO-Plus 子集回放](https://noteflowai.github.io/robot-reel/libero-plus/)，把原始记录、技能交付与独立验收连接起来。失败尝试全部保留；不宣称技能提分、完整基准成绩或真机效果。
-
-
-## 直接运行
-
-克隆仓库后，在独立 Python 环境中安装：
+在新的虚拟环境安装已发布的复核工具：
 
 ```bash
-git clone https://github.com/noteflowai/evalarc.git
-cd evalarc
 python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e .
+. .venv/bin/activate
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-0.12.1-py3-none-any.whl#sha256=115f3d8d452dee2b5d3aed12f736880aca69aaf3ea42937ef4f8f222c0b2291b"
+evalarc --version
+```
+
+离线复核不需要 Docker、Node、GPU 或模型 API。继续按
+[下载与对照步骤](docs/first-review.zh-CN.md#3-复算这次退步)生成 HTML 报告，无需克隆源码。
+
+## 用于自己的工作
+
+| 已有材料 | 可以检查什么 | 入口 |
+| --- | --- | --- |
+| 变更前后的 Agent 评测 | 匹配条件下哪些检查退步 | [运行与对照](docs/workflow.md) |
+| AgentCore Evaluate 结果与 spans | 有效零分、跳过、缺失以及技能交付 | [导出到审阅](docs/agentcore-first-review.md) |
+| 同一记录上的多次评判 | 分数变化、通过/拒绝翻转及未评判情况 | [中文指南](docs/judge-stability.zh-CN.md) |
+| 他人交付的报告 | 原始输入与汇总、验收规则、JUnit 是否一致 | [离线复核](docs/verification.md) |
+| 评分器或待执行候选 | 正确实现和刻意缺陷是否被评分器区分 | [运行审计](#运行审计) |
+
+运行记录导入有明确的[受限格式约定](docs/trace-workbench.md)，不直接接受任意云端导出。
+带分数的示例为合成数据，独立 MCP 示例是真实本地加载但没有评委分数；未完成实时 AgentCore 评测。
+
+尝试自己的记录后，欢迎[反馈首次使用的卡点或发现](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml)。
+最小脱敏样例即可；安装失败同样有价值。
+
+## 原始证据覆盖什么
+
+| 任务 | 交互场景 | 声明缺陷 | 仅一个用例检出 |
+| --- | --- | ---: | ---: |
+| `durable-kv` | 代码交付物：响应、事务、重启持久化 | 8 | 3 |
+| `support-routing` | 模拟工单：路由、精确备注、关闭与无关状态保护 | 7 | 2 |
+| `robot-evidence-review` | 有出处的记录：坐标、时钟与缺失观察 | 6 | 1 |
+
+三个任务包保存的审计检出 **21/21 种声明缺陷**。其中六种各依赖一个检测用例；
+移除唯一检测用例后，重新审计的变异分数会下降。覆盖余量用于提前暴露这种依赖，
+不代表覆盖未知缺陷。[检查覆盖](https://noteflowai.github.io/evalarc/#coverage) ·
+[方法说明](docs/methodology.md) · [251 条审计记录](docs/casebook.md)。
+
+更多工作流：[重复运行](docs/reliability.md)、[TOML 套件与 CI](docs/suites.md)、
+[Python／JavaScript](docs/languages.md)、[GPU 研究记录](docs/research-pilots.md)、
+[架构](docs/architecture.md)和[论文分析](docs/research.zh-CN.md)。历史更新见 [CHANGELOG](CHANGELOG.md)。
+
+## 运行审计
+
+安装上面的 wheel 后，用 Docker 执行内置 Python 参考实现和八种刻意带错的代码实现：
+
+```bash
 docker pull python:3.12-slim
 evalarc audit --seeds 17 41 97 --output runs/audit
 ```
 
-输出 `runs/audit/audit.json` 和可独立打开的 `runs/audit/index.html`。
-对仓库自带的可信对照代码，可以运行更快的本机演示：
+打开 `runs/audit/index.html`。退出 0 表示参考实现通过且所有声明缺陷被检出；
+1 表示审计或候选失败；2 表示参数或环境导致结果无效。
+
+对包内可信对照，可以在 CPU 上直接运行：
 
 ```bash
-evalarc audit --backend local --trust-local --output runs/local-audit
 evalarc audit --task support-routing --backend local --trust-local --output runs/support-audit
 ```
 
-本机模式具有当前用户的文件和网络权限。Docker 模式的边界见
-[SECURITY.md](SECURITY.md)。无模型调用，无 API 费用，无 GPU 依赖。
+本机模式具有当前用户权限；候选隔离使用 Docker，边界见 [SECURITY.md](SECURITY.md)。
+重复运行时使用新的输出路径。
 
 ## 已实现
 

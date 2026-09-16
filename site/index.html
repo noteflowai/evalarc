@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="A 93.75% score. A duplicated write. Explore the evidence with EvalArc, an open grader audit toolkit for AI agents.">
+  <meta name="description" content="Find the agent regression behind a better score. Compare changed checks, follow the recorded retry, and verify the evidence locally with EvalArc.">
   <meta name="theme-color" content="#101618">
   <title>EvalArc | Look past the score.</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -22,10 +22,10 @@
         <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW __EVALARC_VERSION__</p>
         <h1>Look past<br>the <em>score.</em></h1>
         <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
-        <p class="muted">EvalArc tests whether an agent's grader catches the difference between plausible progress and a completed task.</p>
-        <a class="primary" href="#suite">Inspect the acceptance gate <span>&#8600;</span></a>
-        <a class="hero-secondary" href="#repeat">Every repeated attempt &#8595;</a>
-        <a class="hero-secondary" href="#regression">Compare revision regressions &#8595;</a>
+        <p class="muted">Review an agent change before you accept it. Compare failed checks, follow the recorded actions, and keep the evidence behind your decision.</p>
+        <a class="primary" href="#regression">Find the regression <span>&#8600;</span></a>
+        <p class="caption">Interactive recorded example · no account, install or model key</p>
+        <a class="hero-secondary" href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md" target="_blank" rel="noopener">Run your first local review &#8599;</a>
       </div>
       <a class="hero-proof" href="#explorer" aria-label="Inspect why a 93.75 percent score fails acceptance">
         <div class="proof-top"><span>RECORDED CONTROL / 01</span><span class="badge fail">NOT RESOLVED</span></div>
@@ -36,79 +36,30 @@
         <p class="caption">Scripted negative control &middot; public seed 17<br>No model call or live customer data.</p>
       </a>
     </section>
-    <p class="muted">Generate Python or JavaScript candidates and audit independent controls against the same task contracts. <a href="https://github.com/noteflowai/evalarc/blob/main/docs/languages.md">Try both runtimes &#8599;</a>. The recorded showcases below retain their original versions and fingerprints.</p>
-    <section class="suite" aria-label="Real GPU research pilots"><p class="eyebrow">NEW / RECORDED MODEL EVIDENCE</p><h2>A skill loaded. Did the task pass?</h2><p>27 real Qwen3-8B trials compare no skill, direct loading and MCP delivery on attributed robot recordings. Inspect every tool receipt, candidate, independent score and ATIF trajectory. Three engineering profiles, including negative results.</p><div class="comparison-links"><a href="skill-impact/index.html">Explore the Skill Impact Lab &#8599;</a><a href="research/index.html">Composition, handoff &amp; Harbor evidence &#8599;</a></div><p class="caption">L40S recordings; one public development task. No skill accuracy gain or general model ranking is claimed.</p></section>
-    <section class="suite" aria-label="Trace Workbench"><p class="eyebrow">NEW / BRING YOUR AGENT RECORDS</p><h2>Zero, skipped, or missing?</h2><p>A zero can be a valid judgment. A skipped evaluator needs context. A required skill may never have loaded. Inspect each against a versioned golden case, with recording identity and explicit acceptance rules.</p><div class="comparison-links"><a href="trace-workbench/index.html">Explore five authored review controls &#8599;</a><a href="trace-mcp/index.html">Inspect an actual MCP delivery &#8599;</a></div><p class="caption">The five controls are synthetic. The separate MCP record contains a real local load and no evaluator scores. Review your own saved AgentCore Evaluate export offline with <code>evalarc trace-import</code>.</p></section>
-    <section id="judge-stability" class="suite" aria-labelledby="judge-title">
-      <p class="eyebrow">NEW / FIXED TRACE, REPEATED JUDGMENTS</p>
-      <h2 id="judge-title">Same trace. Same verdict?</h2>
-      <p>Keep the execution fixed. Inspect three saved judgments per target: a changing score, a flipped acceptance decision, and unavailable assessments are different findings.</p>
-      <div class="judge-preview" role="region" aria-label="Authored judge agreement controls" tabindex="0">
-        <table><caption>Five synthetic controls · configured pass threshold 0.8 · no model or AWS call</caption><thead><tr><th scope="col">Control</th><th scope="col">Judge run 1</th><th scope="col">Judge run 2</th><th scope="col">Judge run 3</th></tr></thead><tbody>__JUDGE_PREVIEW__</tbody></table>
-      </div>
-      <div class="comparison-links"><a href="judge-stability/index.html">Inspect repeated judge decisions &#8599;</a><a href="judge-stability-evidence.zip?download=true" download>Download all judgment evidence &#8595;</a></div>
-      <p class="caption">Agreement is not accuracy: three rejections still reject the case. Agent reruns remain separate in the <a href="#repeat">execution repeatability report</a>.</p>
+
+    <section class="start-path" aria-label="Your first review">
+      <a href="#regression"><span class="eyebrow">01 / SEE THE CHANGE</span><strong>90% → 93.75%. One regression.</strong><span>Compare the checks behind the improved score.</span></a>
+      <a href="#explorer"><span class="eyebrow">02 / FOLLOW THE RETRY</span><strong>The note was already written.</strong><span>Step through the recorded action and changed state.</span></a>
+      <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md" target="_blank" rel="noopener"><span class="eyebrow">03 / CHECK IT LOCALLY</span><strong>Keep the evidence and the rules.</strong><span>Install the wheel and rebuild the report. No Docker needed.</span></a>
     </section>
+    <details class="tour">
+      <summary>Watch the 30-second walkthrough</summary>
+      <video controls playsinline preload="none" poster="first-review.png" aria-label="Recorded regression walkthrough">
+        <source src="first-review.mp4" type="video/mp4">
+        <track kind="captions" src="first-review.vtt" srclang="en" label="English">
+        <a href="first-review.mp4">Download the walkthrough</a>
+      </video>
+      <p class="caption">Four annotated views of saved scripted Docker controls. No audio or new agent run. <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review-media.md" target="_blank" rel="noopener">Transcript and recording method &#8599;</a></p>
+    </details>
     <div class="facts" aria-label="Audit scope">
       <div><strong>__TASK_PACK_COUNT__</strong><span>task packs</span></div>
       <div><strong>__FAULT_COUNT__</strong><span>declared faults caught</span></div>
       <div><strong>JSON</strong><span>downloadable evidence</span></div>
       <div><strong>CPU</strong><span>reproduce without a model API</span></div>
     </div>
-    <nav class="section-nav" aria-label="Evidence sections"><a href="#coverage">Audit coverage</a><a href="#suite">Acceptance gates</a><a href="#repeat">Repeated attempts</a><a href="#regression">Revision comparison</a><a href="#explorer">Case explorer</a></nav>
-    <section id="coverage" aria-labelledby="coverage-title">
-      <p class="eyebrow">THREE TASK PACKS / DECLARED FAULTS</p>
-      <h2 id="coverage-title">A perfect score.<br>How much coverage remains?</h2>
-      <p class="muted">A fault detected by one case loses its coverage if that case is removed or weakened. Open each dependency to inspect the recorded checks, status and seed. Margins count distinct case IDs, not repeated runs.</p>
-      <div class="coverage-grid">__AUDIT_COVERAGE__</div>
-      <p class="muted">These summaries derive from the original scripted audit records. They are not new agent runs or a guarantee against unseen faults.</p>
-    </section>
-    <section id="suite" class="suite">
-      <div class="section-top"><div><p class="eyebrow">NEW IN 0.5 / DECLARE YOUR ACCEPTANCE RULES</p><h2>Same score. Different gate.</h2></div><p>One frozen policy.<br>Two explicit acceptance rules.</p></div>
-      <p class="muted">Both support jobs score 93.75% and resolve 0/2 attempts. A deliberately permissive gate accepts the result; requiring every notes check to pass rejects it. The task outcome stays the same.</p>
-      <p id="suite-status" role="status">Loading the recorded suite&hellip;</p>
-      <div id="suite-recovery" class="recovery" hidden><button id="suite-retry" type="button">Retry suite</button><a href="suite/index.html">Open the standalone suite report</a></div>
-      <div id="suite-workspace" tabindex="-1" role="region" aria-label="Recorded acceptance gates" hidden>
-        <div class="suite-comparison">
-          <article id="suite-partial"><p class="eyebrow">PERMISSIVE / NO REQUIRED DIMENSION</p><h3>Partial progress allowed <span id="suite-partial-verdict" class="badge"></span></h3><strong id="suite-partial-score"></strong><p id="suite-partial-resolution" class="fail"></p><pre id="suite-partial-gate"></pre><a href="suite/jobs/support-partial/index.html">Inspect both attempts &#8599;</a></article>
-          <article id="suite-protected"><p class="eyebrow">PROTECTED / EVERY NOTES CHECK REQUIRED</p><h3>Notes must be correct <span id="suite-protected-verdict" class="badge"></span></h3><strong id="suite-protected-score"></strong><p id="suite-protected-resolution" class="fail"></p><pre id="suite-protected-gate"></pre><a href="suite/jobs/support-protected/index.html">Inspect both attempts &#8599;</a></article>
-        </div>
-        <p class="story">Gate acceptance is a configured decision, separate from full task resolution. The permissive gate intentionally accepts an unresolved policy. No score is averaged across coding and support jobs.</p>
-        <p id="suite-summary" class="muted" aria-live="polite"></p>
-        <div class="comparison-links"><a href="suite/index.html">Full suite report &#8599;</a><a href="suite/junit.xml" download>JUnit XML &#8595;</a><a href="suite/suite.json" download>Suite JSON &#8595;</a><a href="suite/suite.toml" download>Recorded TOML &#8595;</a><a href="suite/events.jsonl" download>Progress JSONL &#8595;</a></div>
-        <details class="provenance"><summary>Shared candidate, gate decisions &amp; provenance</summary><pre id="suite-provenance"></pre></details>
-      </div>
-      <p class="caption">Recorded Docker suite: three jobs, five attempts, 31 case executions. JUnit distinguishes a rejected gate from an environment error; a hosted CI importer was not exercised. This is scripted development evidence.</p>
-      <noscript><p>Read the <a href="suite/index.html">standalone suite report</a> without JavaScript.</p></noscript>
-      <p class="muted">Prefer a filterable table or Python? Open the <a href="https://huggingface.co/datasets/glayguo/evalarc-casebook">Hugging Face Casebook &#8599;</a> and compare <code>gate_accepted</code> with <code>fully_resolved</code>. The original records accompany every row.</p>
-    </section>
-    <section id="repeat" class="repeat">
-      <div class="section-top"><div><p class="eyebrow">NEW IN 0.4 / REPEAT ONE FROZEN CANDIDATE</p><h2>One run is not the whole record.</h2></div><p>Same cases. Fresh state.<br>Every attempt stays visible.</p></div>
-      <p class="muted">Three Docker attempts per scripted control. The reference passes every time; the duplicate-write policy keeps its 93.75% score and fails acceptance every time. Switch controls and open any attempt's full evidence.</p>
-      <div class="task-switch" role="group" aria-label="Repeated control">
-        <button id="repeat-reference" type="button" aria-pressed="false">01 &nbsp; Reference<span>Known-good scripted control</span></button>
-        <button id="repeat-faulty" type="button" aria-pressed="true">02 &nbsp; Duplicate write<span>The same declared defect, three attempts</span></button>
-      </div>
-      <p id="repeat-status" role="status">Loading the recorded attempts&hellip;</p>
-      <div id="repeat-recovery" class="recovery" hidden><button id="repeat-retry" type="button">Retry attempts</button><a href="repeat/reference/index.html">Reference report</a><a href="repeat/faulty/index.html">Faulty control report</a></div>
-      <div id="repeat-workspace" tabindex="-1" role="region" aria-label="Recorded repeated attempts" hidden>
-        <div class="repeat-summary" aria-live="polite">
-          <div><span class="eyebrow">RESOLVED ATTEMPTS</span><strong id="repeat-resolved"></strong></div>
-          <div><span class="eyebrow">MEAN ASSESSED SCORE</span><strong id="repeat-score"></strong></div>
-          <div><span class="eyebrow">INVALID ATTEMPTS</span><strong id="repeat-invalid"></strong></div>
-          <div><span class="eyebrow">OBSERVED VARIABLE CHECKS</span><strong id="repeat-variable"></strong></div>
-        </div>
-        <div id="repeat-attempts" class="repeat-attempts" aria-label="Every recorded attempt"></div>
-        <div id="repeat-cases" class="repeat-cases" aria-label="Observed pass counts by case"></div>
-        <p id="repeat-context" class="story"></p>
-        <div class="comparison-links"><a id="repeat-report" href="repeat/faulty/index.html">Full repeatability report &#8599;</a><a id="repeat-json" href="repeat/faulty/repetition.json" download>Repeatability JSON &#8595;</a><a id="repeat-events" href="repeat/faulty/events.jsonl" download>Progress JSONL &#8595;</a><a href="https://github.com/noteflowai/evalarc/blob/main/docs/reliability.md">CLI guide &#8599;</a></div>
-        <details class="provenance"><summary>Frozen candidate &amp; execution conditions</summary><pre id="repeat-provenance"></pre></details>
-      </div>
-      <p class="caption">These v0.4 recordings show fixed public cases, with no observed check variation in either control. They are not stochastic model trials or an estimate of reliability on unseen tasks. The v0.3 comparison below retains its original records and grading fingerprint.</p>
-      <noscript><p>Open the standalone <a href="repeat/reference/index.html">reference repetition</a> or <a href="repeat/faulty/index.html">faulty-control repetition</a> without JavaScript.</p></noscript>
-    </section>
+    <nav class="section-nav" aria-label="Evidence sections"><a href="#regression">Revision comparison</a><a href="#explorer">Recorded actions</a><a href="#suite">Acceptance gates</a><a href="#repeat">Repeated attempts</a><a href="#coverage">Audit coverage</a><a href="#own-records">Your own records</a></nav>
     <section id="regression" class="regression">
-      <div class="section-top"><div><p class="eyebrow">NEW IN 0.3 / COMPARE TWO REVISIONS</p><h2>Better score. New failure.</h2></div><p>Two closure checks improve.<br>A previously passing note check fails.</p></div>
+      <div class="section-top"><div><p class="eyebrow">COMPARE TWO RECORDED REVISIONS</p><h2>Better score. New failure.</h2></div><p>Two closure checks improve.<br>A previously passing note check fails.</p></div>
       <p class="muted">These recorded policies use the same task, seeds, grader and runtime. Select a changed case to compare the observed outcomes.</p>
       <p id="comparison-status" role="status">Loading the recorded comparison&hellip;</p>
       <div id="comparison-recovery" class="recovery" hidden><button id="comparison-retry" type="button">Retry comparison</button><a href="comparison/index.html">Open the standalone comparison</a></div>
@@ -126,10 +77,10 @@
           <article><h3>After <span id="after-verdict" class="badge"></span></h3><div id="after-checks" class="check-list"></div><h4>Final ticket state</h4><pre id="after-state"></pre></article>
         </div>
         <div class="comparison-links"><a href="comparison/index.html">Full comparison report &#8599;</a><a href="evaluation/index.html">Individual evaluation &#8599;</a><a href="comparison/comparison.json" download>Comparison JSON &#8595;</a><a href="comparison/baseline.json" download>Baseline JSON &#8595;</a><a href="comparison/current.json" download>Current JSON &#8595;</a></div>
-        <details><summary>Reproduce this comparison without running candidates</summary><pre><code>evalarc compare examples/comparison/baseline.json \
-  examples/comparison/current.json \
+        <details><summary>Reproduce this comparison without running candidates</summary><pre><code>evalarc compare evalarc-evidence-explorer/comparison/baseline.json \
+  evalarc-evidence-explorer/comparison/current.json \
   --output runs/comparison-001
-# Exit 1: a check regressed, despite the higher score.</code></pre><p class="caption">Use a fresh output directory. The CLI validates report consistency and matching execution conditions before comparison. It does not authenticate the producer of the reports.</p></details>
+# Exit 1: a check regressed, despite the higher score.</code></pre><p class="caption">Download the records using the <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md">first-review guide</a> and use a fresh output directory. The CLI validates report consistency and matching execution conditions before comparison. It does not authenticate the producer of the reports.</p></details>
       </div>
       <noscript><p>Open the <a href="comparison/index.html">offline comparison report</a> and <a href="evaluation/index.html">individual evaluation</a> without JavaScript.</p></noscript>
     </section>
@@ -177,8 +128,76 @@
       </div>
       <noscript><p>This explorer requires JavaScript. Read the standalone <a href="support/index.html">support report</a> or <a href="coding/index.html">coding report</a> without it.</p></noscript>
     </section>
+    <section id="suite" class="suite">
+      <div class="section-top"><div><p class="eyebrow">DECLARE YOUR ACCEPTANCE RULES</p><h2>Same score. Different gate.</h2></div><p>One frozen policy.<br>Two explicit acceptance rules.</p></div>
+      <p class="muted">Both support jobs score 93.75% and resolve 0/2 attempts. A deliberately permissive gate accepts the result; requiring every notes check to pass rejects it. The task outcome stays the same.</p>
+      <p id="suite-status" role="status">Loading the recorded suite&hellip;</p>
+      <div id="suite-recovery" class="recovery" hidden><button id="suite-retry" type="button">Retry suite</button><a href="suite/index.html">Open the standalone suite report</a></div>
+      <div id="suite-workspace" tabindex="-1" role="region" aria-label="Recorded acceptance gates" hidden>
+        <div class="suite-comparison">
+          <article id="suite-partial"><p class="eyebrow">PERMISSIVE / NO REQUIRED DIMENSION</p><h3>Partial progress allowed <span id="suite-partial-verdict" class="badge"></span></h3><strong id="suite-partial-score"></strong><p id="suite-partial-resolution" class="fail"></p><pre id="suite-partial-gate"></pre><a href="suite/jobs/support-partial/index.html">Inspect both attempts &#8599;</a></article>
+          <article id="suite-protected"><p class="eyebrow">PROTECTED / EVERY NOTES CHECK REQUIRED</p><h3>Notes must be correct <span id="suite-protected-verdict" class="badge"></span></h3><strong id="suite-protected-score"></strong><p id="suite-protected-resolution" class="fail"></p><pre id="suite-protected-gate"></pre><a href="suite/jobs/support-protected/index.html">Inspect both attempts &#8599;</a></article>
+        </div>
+        <p class="story">Gate acceptance is a configured decision, separate from full task resolution. The permissive gate intentionally accepts an unresolved policy. No score is averaged across coding and support jobs.</p>
+        <p id="suite-summary" class="muted" aria-live="polite"></p>
+        <div class="comparison-links"><a href="suite/index.html">Full suite report &#8599;</a><a href="suite/junit.xml" download>JUnit XML &#8595;</a><a href="suite/suite.json" download>Suite JSON &#8595;</a><a href="suite/suite.toml" download>Recorded TOML &#8595;</a><a href="suite/events.jsonl" download>Progress JSONL &#8595;</a></div>
+        <details class="provenance"><summary>Shared candidate, gate decisions &amp; provenance</summary><pre id="suite-provenance"></pre></details>
+      </div>
+      <p class="caption">Recorded Docker suite: three jobs, five attempts, 31 case executions. JUnit distinguishes a rejected gate from an environment error; a hosted CI importer was not exercised. This is scripted development evidence.</p>
+      <noscript><p>Read the <a href="suite/index.html">standalone suite report</a> without JavaScript.</p></noscript>
+      <p class="muted">Prefer a filterable table or Python? Open the <a href="https://huggingface.co/datasets/glayguo/evalarc-casebook">Hugging Face Casebook &#8599;</a> and compare <code>gate_accepted</code> with <code>fully_resolved</code>. The original records accompany every row.</p>
+    </section>
+    <section id="repeat" class="repeat">
+      <div class="section-top"><div><p class="eyebrow">REPEAT ONE FROZEN CANDIDATE</p><h2>One run is not the whole record.</h2></div><p>Same cases. Fresh state.<br>Every attempt stays visible.</p></div>
+      <p class="muted">Three Docker attempts per scripted control. The reference passes every time; the duplicate-write policy keeps its 93.75% score and fails acceptance every time. Switch controls and open any attempt's full evidence.</p>
+      <div class="task-switch" role="group" aria-label="Repeated control">
+        <button id="repeat-reference" type="button" aria-pressed="false">01 &nbsp; Reference<span>Known-good scripted control</span></button>
+        <button id="repeat-faulty" type="button" aria-pressed="true">02 &nbsp; Duplicate write<span>The same declared defect, three attempts</span></button>
+      </div>
+      <p id="repeat-status" role="status">Loading the recorded attempts&hellip;</p>
+      <div id="repeat-recovery" class="recovery" hidden><button id="repeat-retry" type="button">Retry attempts</button><a href="repeat/reference/index.html">Reference report</a><a href="repeat/faulty/index.html">Faulty control report</a></div>
+      <div id="repeat-workspace" tabindex="-1" role="region" aria-label="Recorded repeated attempts" hidden>
+        <div class="repeat-summary" aria-live="polite">
+          <div><span class="eyebrow">RESOLVED ATTEMPTS</span><strong id="repeat-resolved"></strong></div>
+          <div><span class="eyebrow">MEAN ASSESSED SCORE</span><strong id="repeat-score"></strong></div>
+          <div><span class="eyebrow">INVALID ATTEMPTS</span><strong id="repeat-invalid"></strong></div>
+          <div><span class="eyebrow">OBSERVED VARIABLE CHECKS</span><strong id="repeat-variable"></strong></div>
+        </div>
+        <div id="repeat-attempts" class="repeat-attempts" aria-label="Every recorded attempt"></div>
+        <div id="repeat-cases" class="repeat-cases" aria-label="Observed pass counts by case"></div>
+        <p id="repeat-context" class="story"></p>
+        <div class="comparison-links"><a id="repeat-report" href="repeat/faulty/index.html">Full repeatability report &#8599;</a><a id="repeat-json" href="repeat/faulty/repetition.json" download>Repeatability JSON &#8595;</a><a id="repeat-events" href="repeat/faulty/events.jsonl" download>Progress JSONL &#8595;</a><a href="https://github.com/noteflowai/evalarc/blob/main/docs/reliability.md">CLI guide &#8599;</a></div>
+        <details class="provenance"><summary>Frozen candidate &amp; execution conditions</summary><pre id="repeat-provenance"></pre></details>
+      </div>
+      <p class="caption">These v0.4 recordings show fixed public cases, with no observed check variation in either control. They are not stochastic model trials or an estimate of reliability on unseen tasks. The v0.3 comparison below retains its original records and grading fingerprint.</p>
+      <noscript><p>Open the standalone <a href="repeat/reference/index.html">reference repetition</a> or <a href="repeat/faulty/index.html">faulty-control repetition</a> without JavaScript.</p></noscript>
+    </section>
+    <section id="coverage" aria-labelledby="coverage-title">
+      <p class="eyebrow">THREE TASK PACKS / DECLARED FAULTS</p>
+      <h2 id="coverage-title">A perfect score.<br>How much coverage remains?</h2>
+      <p class="muted">A fault detected by one case loses its coverage if that case is removed or weakened. Open each dependency to inspect the recorded checks, status and seed. Margins count distinct case IDs, not repeated runs.</p>
+      <div class="coverage-grid">__AUDIT_COVERAGE__</div>
+      <p class="muted">These summaries derive from the original scripted audit records. They are not new agent runs or a guarantee against unseen faults.</p>
+    </section>
+    <section id="own-records" class="reproduce" aria-labelledby="own-title">
+      <div><p class="eyebrow">YOUR NEXT REVIEW</p><h2 id="own-title">Bring a change<br>you need to trust.</h2><p>Start with two EvalArc evaluations, or prepare a saved AgentCore export using the documented input contract. Review locally, then share a minimal finding.</p><p><a href="https://github.com/noteflowai/evalarc/blob/main/docs/agentcore-first-review.md" target="_blank" rel="noopener">Export-to-review walkthrough &#8599;</a></p><p class="caption">Bounded import format; no automatic cloud collection. The scored trace controls are synthetic. Live AgentCore evaluation has not been validated by this demo.</p></div>
+      <div class="feedback-card"><p class="eyebrow">FIRST-USE FEEDBACK</p><h3>Where did the review help?</h3><p>Tell us what you were checking, where you got stuck, and whether the result changed a decision. A failed setup is useful feedback too.</p><a href="https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml" target="_blank" rel="noopener">Share a first-use report &#8599;</a><p class="caption">Use a minimal redacted example. No production traces, private prompts or credentials are needed.</p></div>
+    </section>
+    <section class="suite" aria-label="Trace Workbench"><p class="eyebrow">SAVED TRACE REVIEW</p><h2>Zero, skipped, or missing?</h2><p>A zero can be a valid judgment. A skipped evaluator needs context. A required skill may never have loaded. Inspect each against a versioned golden case, with recording identity and explicit acceptance rules.</p><div class="comparison-links"><a href="trace-workbench/index.html">Explore five authored review controls &#8599;</a><a href="trace-mcp/index.html">Inspect an actual MCP delivery &#8599;</a></div><p class="caption">The five controls are synthetic. The separate MCP record contains a real local load and no evaluator scores. Review your own saved AgentCore Evaluate export offline with <code>evalarc trace-import</code>.</p></section>
+    <section id="judge-stability" class="suite" aria-labelledby="judge-title">
+      <p class="eyebrow">FIXED TRACE, REPEATED JUDGMENTS</p>
+      <h2 id="judge-title">Same trace. Same verdict?</h2>
+      <p>Keep the execution fixed. Inspect three saved judgments per target: a changing score, a flipped acceptance decision, and unavailable assessments are different findings.</p>
+      <div class="judge-preview" role="region" aria-label="Authored judge agreement controls" tabindex="0">
+        <table><caption>Five synthetic controls · configured pass threshold 0.8 · no model or AWS call</caption><thead><tr><th scope="col">Control</th><th scope="col">Judge run 1</th><th scope="col">Judge run 2</th><th scope="col">Judge run 3</th></tr></thead><tbody>__JUDGE_PREVIEW__</tbody></table>
+      </div>
+      <div class="comparison-links"><a href="judge-stability/index.html">Inspect repeated judge decisions &#8599;</a><a href="judge-stability-evidence.zip?download=true" download>Download all judgment evidence &#8595;</a></div>
+      <p class="caption">Agreement is not accuracy: three rejections still reject the case. Agent reruns remain separate in the <a href="#repeat">execution repeatability report</a>.</p>
+    </section>
+    <section class="suite" aria-label="Real GPU research pilots"><p class="eyebrow">RECORDED MODEL EVIDENCE</p><h2>A skill loaded. Did the task pass?</h2><p>27 real Qwen3-8B trials compare no skill, direct loading and MCP delivery on attributed robot recordings. Inspect every tool receipt, candidate, independent score and ATIF trajectory. Three engineering profiles, including negative results.</p><div class="comparison-links"><a href="skill-impact/index.html">Explore the Skill Impact Lab &#8599;</a><a href="research/index.html">Composition, handoff &amp; Harbor evidence &#8599;</a></div><p class="caption">L40S recordings; one public development task. No skill accuracy gain or general model ranking is claimed.</p></section>
+
     <section class="reproduce" aria-label="Verify a received report">
-      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Download the evidence.<br>Check every gate.</h2><p>Recompute the original suite configuration, plan, five attempts, acceptance decisions and JUnit without executing a candidate.</p><p><a href="suite-evidence.zip?download=true" download>Download suite evidence (ZIP)</a> &middot; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/verification.md">Offline verification guide &#8599;</a></p></div>
+      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Download the evidence.<br>Check every gate.</h2><p>Recompute the original suite configuration, plan, five attempts, acceptance decisions and JUnit without executing a candidate.</p><p><a href="suite-evidence.zip?download=true" download>Download suite evidence (ZIP)</a> &middot; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md">Install and verify locally &#8599;</a></p></div>
       <div class="terminal"><div>EVALARC 0.8+ / READ-ONLY</div><pre><code># Unzip the downloaded archive first.
 evalarc verify suite-evidence --json
 
@@ -198,8 +217,8 @@ evalarc audit --task support-routing \
   --backend local --trust-local \
   --output runs/support</code></pre><p>Local mode runs with your user privileges. Use the documented Docker backend for candidate isolation.</p></div>
     </section>
-    <section class="scope"><h3>What this evidence establishes</h3><p>The bundled references pass and the 15 declared faulty implementations fail their intended checks. These are public development tasks and scripted policies. They do not establish frontier-model performance, coverage of arbitrary reward hacks, a human time horizon, or RL training gains. The browser replays saved reports; it does not execute submissions.</p></section>
+    <section class="scope"><h3>What this evidence establishes</h3><p>The saved audits detect __FAULT_COUNT__ declared faults across __TASK_PACK_COUNT__ task packs. These are public development tasks and scripted policies. They do not establish frontier-model performance, coverage of arbitrary reward hacks, a human time horizon, or RL training gains. The browser replays saved reports; it does not execute submissions.</p></section>
   </main>
-  <footer><a class="wordmark" href="https://github.com/noteflowai/evalarc">EvalArc</a><p>Run agents. Measure outcomes.</p><a href="https://github.com/noteflowai/evalarc/blob/main/docs/methodology.md">Methodology</a><a href="LICENSE">MIT license</a><a href="manifest.json">Build provenance</a></footer>
+  <footer><a class="wordmark" href="https://github.com/noteflowai/evalarc">EvalArc</a><p>Find the regression behind the score.</p><a href="https://github.com/noteflowai/evalarc/blob/main/docs/methodology.md">Methodology</a><a href="LICENSE">MIT license</a><a href="manifest.json">Build provenance</a></footer>
 </body>
 </html>

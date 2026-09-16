@@ -7,7 +7,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: Inspect scores, acceptance gates and every agent attempt.
+short_description: Find agent regressions behind a better score. Inspect the evidence.
 tags:
   - agent-evaluation
   - tool-use
@@ -16,99 +16,70 @@ tags:
   - developer-tools
 ---
 
-# EvalArc — Look past the score.
+# EvalArc — Find the regression behind the score.
 
-**New in v0.12: same trace, same verdict?** Inspect three saved judgments for
-each of five synthetic controls. Separate changing scores, flipped acceptance
-decisions and unavailable results; download the complete evidence for offline
-verification. All-reject agreement remains rejection. No model or AWS evaluation
-was run for these controls. [Judge Stability](https://glayguo-evalarc.static.hf.space/judge-stability/index.html)
-· [Import guide](https://github.com/noteflowai/evalarc/blob/main/docs/judge-stability.md).
+**90% → 93.75%. Two checks improve. One previously passing check fails.**
+A tool committed a note but returned an error. Retrying with a new key wrote it
+again. Inspect the recorded regression, follow the action, and check the
+acceptance rule before trusting the higher score.
 
-**Share the exact evidence.** Select a case and trace step, then **Copy evidence
-link**. Recipients reopen the same recorded observation. Keyboard users can
-inspect a case and return to its list; failed sections can be retried separately.
-If one task pack fails to load, the other remains inspectable.
+[**Try the revision comparison →**](https://glayguo-evalarc.static.hf.space/#regression)
+· [First local review](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md)
+· [中文](https://github.com/noteflowai/evalarc/blob/main/README.zh-CN.md)
 
-**Python and JavaScript candidates.** Generate starters or independent
-references for all three task packs, audit the declared faults, and combine runtimes
-in one suite. The task contracts and graders are unchanged. See the
-[language guide](https://github.com/noteflowai/evalarc/blob/main/docs/languages.md)
-and recorded mixed-language Docker suite; this does not establish a language ranking.
+No account, installation or model key is needed to explore the saved records.
+The featured comparison contains scripted Docker controls, not customer data
+or a model leaderboard.
 
-**The score rose from 90% to 93.75%. A previously passing check now fails.**
+## Start with one review
 
-**New in v0.5: same score, different gate.** Two support jobs use the same
-frozen defective policy and score 93.75%, with 0/2 resolved attempts each.
-A deliberately permissive gate accepts the partial result; requiring every
-notes check rejects it. Inspect the three-job Docker suite, all five attempts,
-the original TOML, and JUnit output distinguishing a failed gate from an
-environment error. Gate acceptance remains separate from full task resolution.
-A hosted CI importer was not exercised.
+1. Compare the two revisions and select `retry-after-commit`.
+2. Step through the action that duplicates the note in the case explorer.
+3. Compare the permissive gate with the strict notes gate. The score stays
+   93.75%; acceptance changes with the declared rule.
+4. [Install the published wheel and recompute the report](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md).
+   The local review needs Python 3.11+, with no Docker, Node, GPU or model call.
 
-**Explore the data as tables:** the
-[EvalArc Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-offers three separate configurations for 251 audit cases, six repeated attempts
-and three suite jobs. Filter the results or load the JSONL in Python; original
-source records and fingerprints accompany every row.
+## Bring your own evidence
 
-**Every v0.4 attempt remains visible.** Switch between three
-recorded Docker attempts of the reference and three of the duplicate-write
-control. The reference resolves 3/3 attempts; the faulty control resolves 0/3
-despite a mean score of 93.75%. Open every attempt, inspect per-check
-denominators, and download the full summary and progress JSONL.
-No check variation was observed in either scripted control.
+- **Matching EvalArc evaluations:** compare changed checks and retain original inputs.
+- **Saved AgentCore Evaluate results and spans:** use the
+  [export-to-review walkthrough](https://github.com/noteflowai/evalarc/blob/main/docs/agentcore-first-review.md).
+  The adapter accepts a bounded input wrapper, not arbitrary cloud exports.
+- **Repeated judgments on a fixed trace:** inspect
+  [score variation and verdict disagreement](https://glayguo-evalarc.static.hf.space/judge-stability/index.html)
+  separately from missing judgments. The five displayed controls are synthetic.
+- **A received suite:** download `suite-evidence.zip` and verify the preserved
+  configuration, plan, attempts, gates and JUnit offline.
 
-The **v0.3 comparison** remains available: compare two recorded support
-policies side by side. Two closure
-checks improve, while a retry introduces a duplicate note. Inspect all three
-changed cases, then open the standalone comparison and individual reports.
-`evalarc compare` returns exit code 1 for the regression despite the higher score.
+Trying your own records? [Share a first-use finding or setup problem](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml).
+A minimal redacted example is enough.
 
-Explore saved evidence from two executable task packs for AI-agent evaluation.
-Switch between known-good references and 15 declared faulty implementations,
-inspect failed checks, and step through tool calls and state changes.
+## Evidence and scope
 
-- **Support tools:** a note is committed, its response fails, and a retry with a
-  new idempotency key duplicates it. The recorded partial score is 0.9375;
-  full resolution fails.
-- **Coding artifacts:** treating JSON `true` and `1` as equal breaks
-  compare-and-swap. The recorded partial score is 0.925; full resolution fails.
-- **Reproduction:** full JSON, grader/candidate/case fingerprints, seeds and
-  container image IDs accompany the reports.
+The saved audits detect **21 declared faults across three task packs**; six
+faults each depend on one detecting case. The
+[Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook) contains
+251 audit case records, six repeated attempts and three suite jobs in separate
+configurations. These public-development controls do not establish coverage
+of unseen faults or general model performance.
 
-The browser replays the committed Docker audits and evaluation records. It does not execute arbitrary
-submissions or call a model. The Python CLI has no third-party runtime
-dependencies; the bundled trusted controls can run on a CPU.
+The recorded suite has two accepted jobs and one fully resolved job out of
+three. Consistency, acceptance and full resolution are separate outcomes.
+Offline verification recomputes supplied records; it does not authenticate
+the producer or rerun the candidate.
 
-[Source & quickstart](https://github.com/noteflowai/evalarc) ·
-[中文说明](https://github.com/noteflowai/evalarc/blob/main/README.zh-CN.md) ·
+The Trace Workbench's five scored controls are synthetic. Its separate MCP
+example contains real local delivery and no evaluator scores; no live
+AgentCore evaluation is claimed. The
+[GPU pilot](https://glayguo-evalarc.static.hf.space/skill-impact/index.html)
+contains 27 recorded model trials with every failure retained; it does not
+establish skill efficacy or a model ranking.
+
+MIT · Research preview. `manifest.json` identifies the deployed source commit
+and SHA-256 of published files. Maintainer publication does not imply
+Hugging Face endorsement.
+
+[Source](https://github.com/noteflowai/evalarc) ·
 [Methodology](https://github.com/noteflowai/evalarc/blob/main/docs/methodology.md) ·
-[Security boundaries](https://github.com/noteflowai/evalarc/blob/main/SECURITY.md)
-
-## Scope
-
-Research preview 0.8.0. These are scripted controls and public development
-tasks, not held-out frontier-model results. Detection applies only to the
-declared faults. No arbitrary reward-hack resistance, human time horizon,
-hardware-agent validation or RL improvement is established. Repeated fixed
-cases do not establish reliability on unseen tasks or a model success rate.
-
-The source and evidence are MIT licensed. `manifest.json` identifies the source
-commit and SHA-256 of each published file. Publication is performed by the
-maintainer and does not imply endorsement by Hugging Face.
-
-### Verify a handoff offline
-
-With EvalArc 0.8+, download **suite-evidence.zip** from the lab and unzip it.
-Run `evalarc verify suite-evidence --json` to check the original configuration,
-plan, all five attempts, custom gates and JUnit without executing a candidate.
-The 12 original input files are unchanged: two of three jobs are accepted, one
-is fully resolved. Default verification exits 0 for consistency;
-`--require-accepted` exits 1 because the strict notes gate rejects the result.
-`--require-resolved` separately requires full resolution.
-[Workflow and limits](https://github.com/noteflowai/evalarc/blob/main/docs/verification.md).
-
-## Recorded GPU pilot
-
-[Inspect 27 actual model trials](https://noteflowai.github.io/evalarc/skill-impact/): no skill, direct delivery and real MCP, with independent grading and every failure retained. [Composition and public-session handoff records](https://noteflowai.github.io/evalarc/research/) are separate small pilots. No accuracy or memory efficacy gain is claimed.
+[Changelog](https://github.com/noteflowai/evalarc/blob/main/CHANGELOG.md)
