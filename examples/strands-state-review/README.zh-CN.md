@@ -13,6 +13,17 @@ Strands 本身已经保留逐项 `test_passes` 和评估器身份。示例展示
 [原生基线报告](recorded/baseline-native.json) ·
 [原生新版报告](recorded/current-native.json) · [对照结果](recorded/comparison.json)
 
+## 免安装查看
+
+[打开原生状态交互报告](https://noteflowai.github.io/evalarc/strands/index.html)，
+并排检查预期值、基线值和新版值。可以筛选退步、改善，或展开全部八项检查。
+每项检查的链接同时关联两份原生报告的内容身份、案例和评估器。
+
+页面提供 ZIP 下载，包含 HTML、两份原生报告、对照结果、原始 EvalArc 输入
+和 SHA-256 文件清单。解压后直接打开 `strands-review/index.html` 即可离线复核，
+不需要服务器。禁用 JavaScript 时仍可阅读全部检查。这是固定示例的查看器，
+不是上传入口或通用 Strands 导入器。
+
 ## 运行
 
 在独立环境安装可选 SDK 依赖：

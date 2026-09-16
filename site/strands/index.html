@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Inspect a Strands Evals state review: the mean rises from 75% to 87.5%, but a notes rule regresses. Browse all eight checks and download the original reports.">
+  <meta name="theme-color" content="#101618">
+  <title>Strands state review | EvalArc</title>
+  <link rel="stylesheet" href="review.css">
+  <script src="review.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#checks">Skip to state checks</a>
+  <header><a class="wordmark" href="https://noteflowai.github.io/evalarc/">EvalArc <span>/ Strands state review</span></a><nav aria-label="Resources"><a href="https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review">Run the SDK example ↗</a><a href="https://github.com/noteflowai/evalarc/blob/main/examples/strands-state-review/README.zh-CN.md" lang="zh-CN">中文</a></nav></header>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <p class="eyebrow">STRANDS EVALS __SDK_VERSION__ / RECORDED STATE REVIEW</p>
+      <h1 id="title">The mean improved.<br><em>One rule regressed.</em></h1>
+      <p class="lead">The retry wrote the same note twice. Inspect the expected state beside both observed outcomes, using the native report’s case and evaluator identities.</p>
+      <p class="muted">Four saved scripted Docker cases · two deterministic state rules · no account, installation or model key needed to browse.</p>
+      <div class="metrics" aria-label="Native report results">
+        <div><span>Baseline mean</span><strong id="baseline-mean">__BASELINE_MEAN__</strong><small>Not every rule passed</small></div>
+        <div><span>Current mean</span><strong id="current-mean">__CURRENT_MEAN__</strong><small>Not every rule passed</small></div>
+        <div class="verdict"><span>Regression gate</span><strong>REJECTED</strong><small>__REGRESSIONS__ regression · __IMPROVEMENTS__ improvements</small></div>
+      </div>
+      <p class="scope">This is the <strong>equally weighted mean of eight native state-rule rows</strong>. EvalArc’s original 90% → 93.75% uses five weighted dimensions. These are different scoring scopes; the notes regression appears in both.</p>
+    </section>
+    <section id="checks" aria-labelledby="checks-title">
+      <p class="eyebrow">CASE + EVALUATOR / EVERY CHECK RETAINED</p>
+      <h2 id="checks-title">Find the change in the state.</h2>
+      <p class="muted"><code>ticket.notes</code> compares the complete ordered list, including duplicates. <code>ticket.status</code> expects “closed” for a resolved ticket and “open” otherwise.</p>
+      <div id="filters" role="group" aria-label="Filter checks" hidden>
+        <button type="button" data-filter="regression" aria-pressed="true">Regressions (__REGRESSIONS__)</button>
+        <button type="button" data-filter="improvement" aria-pressed="false">Improvements (__IMPROVEMENTS__)</button>
+        <button type="button" data-filter="all" aria-pressed="false">All checks (__ROW_COUNT__)</button>
+      </div>
+      <p id="filter-status" role="status">All __ROW_COUNT__ checks are available below. Expand a check to inspect its state.</p>
+      <div id="check-list">__ROWS__</div>
+      <noscript><p>All checks and downloads work without JavaScript. Expand any check to read its evidence.</p></noscript>
+    </section>
+    <section id="download" aria-labelledby="download-title">
+      <p class="eyebrow">KEEP THE EVIDENCE</p><h2 id="download-title">A review you can hand off.</h2>
+      <p>Download the HTML, both native reports and original EvalArc inputs together. Extract the ZIP and open <code>strands-review/index.html</code>; all checks and filters work offline.</p>
+      <p><a id="archive-link" class="primary" href="../strands-review.zip?download=true" download>Download Strands review (ZIP)</a><span id="offline-download" hidden>This extracted review already contains the evidence files below.</span></p>
+      <div class="downloads">
+        <a href="baseline-native.json?download=true" download>Native baseline JSON</a><a href="current-native.json?download=true" download>Native current JSON</a><a href="comparison.json?download=true" download>Comparison JSON</a><a href="baseline-evalarc.json?download=true" download>Original baseline JSON</a><a href="current-evalarc.json?download=true" download>Original current JSON</a><a href="manifest.json?download=true" download>File checksums</a>
+      </div>
+      <details class="provenance"><summary>Native report fingerprints</summary><pre>__SOURCE_HASHES__</pre><p>Check links identify the case, evaluator and both native report files. File hashes establish content identity, not the identity of the producer.</p></details>
+      <p class="muted">The site build rechecks the saved rule outcomes against the original state. CI separately runs the real SDK with network attempts rejected. Neither process reruns an agent or calls AWS. Strands already includes per-row verdicts; this independent companion displays them.</p>
+      <p><a href="https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review">Reproduce with the pinned SDK ↗</a> · <a href="https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml">Share a first-use finding ↗</a></p>
+    </section>
+  </main>
+  <footer>EvalArc · MIT · Public scripted controls, not customer incidents or model rankings. Independent example; no upstream endorsement.</footer>
+</body>
+</html>
