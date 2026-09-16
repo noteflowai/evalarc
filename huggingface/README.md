@@ -7,7 +7,7 @@ sdk: static
 app_file: index.html
 pinned: false
 license: mit
-short_description: Find agent regressions behind a better score. Inspect the evidence.
+short_description: Find agent regressions behind a better score.
 tags:
   - agent-evaluation
   - tool-use

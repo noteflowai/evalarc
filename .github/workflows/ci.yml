@@ -68,6 +68,10 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+      - name: Validate the Space card before merge
+        run: |
+          python -m pip install huggingface_hub==1.31.0
+          python -c "from huggingface_hub import SpaceCard; SpaceCard.load('huggingface/README.md').validate()"
       - run: python scripts/build_site.py --output dist/site
       - run: python scripts/build_dataset.py --output dist/casebook
       - run: npm ci
