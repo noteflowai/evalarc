@@ -362,6 +362,9 @@ def build(destination: Path) -> dict:
                 )
             else:
                 shutil.copyfile(path, destination / path.name)
+    from scripts.strands_page import build_strands
+
+    build_strands(ROOT, destination / "strands")
     for suffix in ("png", "gif", "mp4", "vtt"):
         name = f"first-review.{suffix}"
         shutil.copyfile(ROOT / "docs" / "assets" / name, destination / name)

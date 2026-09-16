@@ -4,6 +4,11 @@ native **Strands Evals 1.3.0** APIs. It was developed with AI assistance.
 The example asks a narrow review question: **which previously passing state
 rule regressed when the mean score improved?**
 
+[Inspect the native state review without installing](https://noteflowai.github.io/evalarc/strands/index.html):
+filter the regression and improvements, compare expected and observed values,
+or download the complete offline review with the original native reports.
+All eight checks remain available.
+
 It uses `Case.expected_environment_state`, task-returned `EnvironmentState`,
 two deterministic `Evaluator` instances, and native `EvaluationReport` JSON.
 The input is four saved scripted Docker cases, not a new model or agent run.

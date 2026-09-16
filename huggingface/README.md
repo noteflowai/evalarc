@@ -43,7 +43,9 @@ or a model leaderboard.
 ## Bring your own evidence
 
 - **Matching EvalArc evaluations:** compare changed checks and retain original inputs.
-- **Strands Evals users:** run the [native state-review companion](https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review).
+- **Strands Evals users:** [inspect the native state review](https://glayguo-evalarc.static.hf.space/strands/index.html)
+  without installing, or run the [SDK companion](https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review).
+  Filter all eight checks, compare expected and observed state, and download the offline review.
   Two deterministic rules recheck saved states; its equally weighted mean is
   separate from the original five-dimension EvalArc score.
 - **Saved AgentCore Evaluate results and spans:** use the

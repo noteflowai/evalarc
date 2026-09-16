@@ -56,3 +56,6 @@ button:disabled{opacity:.5;cursor:default}
 .tour summary{min-height:44px;color:var(--green)}
 .tour video{display:block;width:100%;height:auto;max-height:80vh;margin:10px 0}
 @media(max-width:750px){.start-path{grid-template-columns:minmax(0,1fr)}.start-path>a{padding:20px}}
+.strands-entry{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:24px;margin-top:40px;background:var(--panel)}
+.strands-entry h2{font-size:28px;margin:12px 0}.strands-entry p{font-size:14px}.strands-entry .caption{font-size:12px}
+@media(max-width:750px){.strands-entry{grid-template-columns:minmax(0,1fr);gap:10px;padding:20px}.strands-entry .primary{font-size:14px;gap:8px}}

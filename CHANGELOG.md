@@ -1,5 +1,11 @@
 # Changelog
 
+## Strands browser review — 2026-09-16
+
+- Add an install-free review of the native Strands example: filter regressions and improvements, inspect all eight expected/baseline/current state checks, and link to a check identified by both native report files.
+- Publish a deterministic offline ZIP containing the complete page, native reports, original EvalArc inputs and file checksums. All evidence remains readable without JavaScript.
+- Recheck the displayed native rules against original state during the site build. Keep the native two-rule mean distinct from EvalArc's five-dimension weighted score. This presentation update leaves the Python release at 0.12.1.
+
 ## Strands Evals companion example — 2026-09-16
 
 - Recheck notes and closure in four saved Docker cases using Strands Evals 1.3.0 and native environment-state/report APIs. Preserve case/evaluator identities and expose the notes regression despite an improved two-rule mean.

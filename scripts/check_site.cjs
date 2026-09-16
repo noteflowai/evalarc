@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const http = require("node:http");
 const { once } = require("node:events");
+const { checkStrands } = require("./check_strands_browser.cjs");
 
 async function main() {
   const root = path.resolve(process.env.SITE_DIR || "dist/site");
@@ -471,6 +472,53 @@ async function main() {
           assert.match(await page.locator("#target-1").innerText(), /0 pass · 3 reject/);
           results.push({offlineJudgeReport:true,allRejectAgreementDisclosed:true});
         } finally { await page.close(); }
+      }
+    }
+    if (process.env.SITE_HUB !== "1") {
+      for (const width of [1440, 390, 320]) {
+        const page = await browser.newPage({ viewport: { width, height: 1000 } });
+        const errors = [];
+        page.on("pageerror", error => errors.push(error.message));
+        try {
+          await page.goto(base);
+          await page.getByRole("link", { name: "Inspect the Strands state review" }).click();
+          results.push({ width, ...await checkStrands(page, page, root) });
+          if (process.env.SITE_SCREENSHOTS) {
+            await page.locator(".intro").screenshot({
+              path: path.join(process.env.SITE_SCREENSHOTS, `strands-overview-${width}.png`)
+            });
+            await page.locator("#checks").screenshot({
+              path: path.join(process.env.SITE_SCREENSHOTS, `strands-checks-${width}.png`)
+            });
+          }
+          assert.deepEqual(errors, []);
+        } finally { await page.close(); }
+      }
+      if (!process.env.SITE_URL) {
+        for (const javaScriptEnabled of [true, false]) {
+          const page = await browser.newPage({
+            viewport: { width: 390, height: 1000 }, javaScriptEnabled
+          });
+          const network = [];
+          page.on("request", request => {
+            if (/^https?:/.test(request.url())) network.push(request.url());
+          });
+          await page.route("http**/*", route => route.abort());
+          try {
+            await page.goto(require("node:url").pathToFileURL(path.join(root, "strands/index.html")).href);
+            if (javaScriptEnabled) {
+              await checkStrands(page, page, root, { downloads: false });
+              assert(await page.locator("#archive-link").isHidden());
+            } else {
+              assert.equal(await page.locator(".check:visible").count(), 8);
+              const unchanged = page.locator('.check[data-change="unchanged"]').first();
+              await unchanged.locator("summary").click();
+              assert(await unchanged.locator(".states").isVisible());
+            }
+            assert.deepEqual(network, [], "Offline state review must not request the network");
+            results.push({ offlineStrandsReview: true, javaScriptEnabled, networkRequests: 0 });
+          } finally { await page.close(); }
+        }
       }
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

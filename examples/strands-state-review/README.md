@@ -16,6 +16,19 @@ defect in Strands or introduce a replacement report format.
 [Native current report](recorded/current-native.json) ·
 [Recorded comparison](recorded/comparison.json)
 
+## Inspect without installing
+
+[Open the interactive native-state review](https://noteflowai.github.io/evalarc/strands/index.html)
+to compare the expected, baseline and current values. Filter regressions or
+improvements, then expand all eight checks. Each check link identifies both
+native report files as well as the case and evaluator.
+
+The page's ZIP includes its HTML, both native reports, the comparison, original
+EvalArc inputs and a SHA-256 file inventory. Extract it and open
+`strands-review/index.html` offline; no server is needed. Without JavaScript,
+all checks remain readable. This is a viewer for this fixed example, not an
+uploader or a general Strands importer.
+
 ## Run it
 
 From a source checkout, use a separate environment for the optional SDK:

@@ -3,6 +3,7 @@ const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const { checkStrands } = require("./check_strands_browser.cjs");
 
 async function main() {
   const url = process.env.SITE_URL;
@@ -61,9 +62,13 @@ async function main() {
         }, appUrl);
         await download(app.getByRole("link", { name: "Download all research records" }),
           "research/research-records.zip");
+        await app.locator("body").evaluate((element, base) => {
+          location.href = new URL("strands/index.html", base).href;
+        }, appUrl);
+        const strands = await checkStrands(page, app, root);
         checks.push({ width, sourceCommit: expected.source_commit, hubIframe: true,
-          archiveDownloadsMatched: 3, originalJudgmentMatched: true, filters: true,
-          allRejectDisclosed: true, missingJudgmentsVisible: true });
+          archiveDownloadsMatched: 4, originalJudgmentMatched: true, filters: true,
+          allRejectDisclosed: true, missingJudgmentsVisible: true, strands });
       } finally {
         await page.close();
       }
