@@ -78,7 +78,7 @@ remain inspectable. Configured acceptance is separate from task resolution.
 [![EvalArc v0.5: the same score meets one gate and fails another](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
 
 Prefer tables or Python? The [Hugging Face casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-separates 167 audit cases, six repeated attempts and three suite jobs into
+separates 251 audit cases, six repeated attempts and three suite jobs into
 filterable configurations, with unchanged source JSON and provenance.
 Start with `suite_jobs` to compare `gate_accepted` and `fully_resolved`.
 These are scripted public-development records, not a held-out model benchmark.
@@ -114,6 +114,17 @@ also requires all checks to pass. [Verification and limits](docs/verification.md
 [![Three task packs with direct evidence links for six single-case dependencies.](docs/coverage-review.png)](https://noteflowai.github.io/evalarc/#coverage)
 
 **Inspect coverage before trusting a perfect score.** The website now lists all three task packs and links each single-case dependency directly to its recorded checks and seeds. Offline audit reports provide the same disclosures without scripts or remote assets. These are new views of the original records, not new model runs.
+
+## Judge Stability — 0.12.0
+
+**Same trace. Same verdict?** Compare repeated saved judgments on one fixed
+recording. Keep score variation, pass/reject disagreement and incomplete
+assessments separate; inspect every value and verify preserved inputs offline.
+All-reject agreement remains rejection. [Interactive controls](https://noteflowai.github.io/evalarc/judge-stability/index.html)
+· [Local import guide](docs/judge-stability.md). The five controls are synthetic;
+this diagnostic does not rerun an agent or judge or establish calibration.
+
+[![Five synthetic controls separate score changes, gate flips and unavailable judgments](docs/assets/judge-stability.png)](https://noteflowai.github.io/evalarc/judge-stability/index.html)
 
 ## Trace Workbench — 0.11.0
 

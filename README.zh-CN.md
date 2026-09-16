@@ -62,7 +62,7 @@ v0.5 新增 `evalarc suite`：用 TOML 声明任务、候选、轮次、预算�
 [![EvalArc v0.5：相同分数，不同验收结果](docs/assets/suite-lab.png)](https://glayguo-evalarc.static.hf.space/#suite)
 
 [Hugging Face Casebook](https://huggingface.co/datasets/glayguo/evalarc-casebook)
-把 167 条审计用例、6 次重复尝试和 3 项验收作业分别整理为可筛选的表，
+把 251 条审计用例、6 次重复尝试和 3 项验收作业分别整理为可筛选的表，
 保留未经改写的原始 JSON 和版本指纹。可先选择 `suite_jobs`，
 对照 `gate_accepted` 与 `fully_resolved`，或用 Python 读取。
 这些是公开开发任务中的脚本对照，不是隐藏模型测试集。详见[数据说明](docs/casebook.md)。
@@ -101,6 +101,16 @@ Docker 评测：参考策略 3/3 轮完全通过，重复写入策略虽然平�
 ## 0.11.0：运行记录评估工作台
 
 导入已保存的 AgentCore Evaluate 结果、版本化黄金案例和 Skills Anywhere 加载回执，分别查看有效零分、评估跳过、缺少结果及漏调用技能。支持相同测试集与评分规则下的对比，以及原始输入的离线复核。[交互示例](https://noteflowai.github.io/evalarc/trace-workbench/index.html) · [真实本地 MCP 加载](https://noteflowai.github.io/evalarc/trace-mcp/index.html) · [数据契约](docs/trace-workbench.md)。示例明确区分合成评分与真实加载记录，未运行云端评估。
+
+## v0.12.0：同一记录，多次评判
+
+新增 `trace-stability`，固定执行记录与评估规则，分别检查分数变化、通过/拒绝翻转、
+跳过与缺失，并保存原始输入供离线复核。三次都拒绝仍然是拒绝，不把一致性当作
+任务成功。[在线交互示例](https://noteflowai.github.io/evalarc/judge-stability/index.html)
+· [中文使用指南](docs/judge-stability.zh-CN.md)。五个展示案例均为人工构造；
+此功能不重新运行 Agent 或裁判，也不代替独立人工校准。
+
+[![五个人工构造的案例，分别展示分数变化、结论翻转和未评判结果](docs/assets/judge-stability.png)](https://noteflowai.github.io/evalarc/judge-stability/index.html)
 
 ## 0.9.0：有原始证据的研究场景
 

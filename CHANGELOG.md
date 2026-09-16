@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0 — 2026-09-16
+
+- Add offline `trace-stability` and `trace-stability-verify` for repeated saved judgments of one fixed recording. Reject changed execution/configuration/rubrics and duplicate repetition IDs.
+- Keep score variation, observed pass/reject disagreement, missing assessments and not-applicable skill targets distinct. Agreement gates do not require task acceptance; all-reject results remain visible.
+- Add an interactive homepage matrix, standalone filtered report, preserved-input downloads and deterministic evidence ZIP. Five synthetic controls cover three judgment sets; no new model or AWS evaluation is claimed.
+- Extend installed-wheel and desktop/mobile/offline checks. Correct stale casebook counts to the existing 251 audit rows; original research and audit records are unchanged.
+
 ## 0.11.1 — 2026-09-15
 
 - Use explicit HTML filenames for published lab navigation. Hugging Face redirects bare directory paths to Hub routes rather than serving each directory index. Cover homepage entries and research/skill-lab return links.

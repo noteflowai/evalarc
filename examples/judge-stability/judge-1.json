@@ -1,0 +1,226 @@
+{
+  "schema_version": "evalarc.trace-input.v1",
+  "run_id": "authored-judgment-1",
+  "provenance": {
+    "kind": "synthetic",
+    "description": "Five authored controls with three judgment sets on identical simulated spans. Scores and placeholder identities are synthetic; no model or AWS evaluation."
+  },
+  "dataset": {
+    "id": "judge-stability-controls",
+    "version": "1",
+    "cases": [
+      {
+        "id": "same-pass",
+        "goal": "Inspect the same-pass condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "same-reject",
+        "goal": "Inspect the same-reject condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "gate-flip",
+        "goal": "Inspect the gate-flip condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "score-only-change",
+        "goal": "Inspect the score-only-change condition.",
+        "expected_skills": []
+      },
+      {
+        "id": "partial-judgments",
+        "goal": "Inspect the partial-judgments condition.",
+        "expected_skills": []
+      }
+    ]
+  },
+  "configuration": {
+    "model": "synthetic-control",
+    "model_parameters": {},
+    "prompt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tools_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "skills": {}
+  },
+  "evaluators": [
+    {
+      "id": "authored-goal",
+      "revision": "control-1; no model or AWS call",
+      "level": "session",
+      "rating": {
+        "kind": "numeric",
+        "min": 0,
+        "max": 1,
+        "pass_at_least": 0.8
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "same-pass",
+      "session_id": "session-0",
+      "trace_ids": [
+        "00000000000000000000000000000001"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000001",
+          "spanId": "0000000000000001",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-0"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "authored-goal",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-0"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored judgment; not a performance measurement."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "same-reject",
+      "session_id": "session-1",
+      "trace_ids": [
+        "00000000000000000000000000000002"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000002",
+          "spanId": "0000000000000002",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-1"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "authored-goal",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-1"
+              }
+            },
+            "value": 0,
+            "explanation": "Authored judgment; not a performance measurement."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "gate-flip",
+      "session_id": "session-2",
+      "trace_ids": [
+        "00000000000000000000000000000003"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000003",
+          "spanId": "0000000000000003",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-2"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "authored-goal",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-2"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored judgment; not a performance measurement."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "score-only-change",
+      "session_id": "session-3",
+      "trace_ids": [
+        "00000000000000000000000000000004"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000004",
+          "spanId": "0000000000000004",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-3"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "authored-goal",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-3"
+              }
+            },
+            "value": 0.8,
+            "explanation": "Authored judgment; not a performance measurement."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "partial-judgments",
+      "session_id": "session-4",
+      "trace_ids": [
+        "00000000000000000000000000000005"
+      ],
+      "skill_observation_complete": true,
+      "spans": [
+        {
+          "traceId": "00000000000000000000000000000005",
+          "spanId": "0000000000000005",
+          "name": "authored-control",
+          "attributes": {
+            "session.id": "session-4"
+          }
+        }
+      ],
+      "skill_calls": [],
+      "evaluation_response": {
+        "evaluationResults": [
+          {
+            "evaluatorId": "authored-goal",
+            "context": {
+              "spanContext": {
+                "sessionId": "session-4"
+              }
+            },
+            "value": 1,
+            "explanation": "Authored judgment; not a performance measurement."
+          }
+        ]
+      }
+    }
+  ]
+}

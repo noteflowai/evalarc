@@ -103,6 +103,10 @@ instructions or completed work. Multiple loads need distinct receipt IDs.
 
 ## Compare and verify
 
+For repeated judgments on one fixed recording, use the separate
+[Judge Stability diagnostic](judge-stability.md). It requires frozen execution
+and evaluator definitions; a new Agent execution is not a judge repetition.
+
 Comparison requires identical complete golden-set contents and evaluator
 definitions, including revision and rating rules. It shows configuration changes
 and case transitions without pooling evaluator scores or claiming causal gains.

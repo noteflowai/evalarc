@@ -4,7 +4,8 @@ EvalArc's direction is open environments and auditable evaluations for
 software agents. This document distinguishes current implementation from proposed interfaces.
 The foundational coding/support architecture below is supplemented by the
 robot evidence task, Harbor/ATIF research adapters and the offline
-[Trace Workbench](trace-workbench.md) in v0.11.0.
+[Trace Workbench](trace-workbench.md) in v0.11.0 and
+[fixed-record judge diagnosis](judge-stability.md) in v0.12.0.
 
 ## Current implementation
 
@@ -27,6 +28,11 @@ scripts include recorded local-model pilots and native Harbor execution.
 `trace-import` reviews supplied AgentCore Evaluate responses offline; it does not
 invoke a cloud model. A general model-provider or browser-task adapter is not
 implemented. See [research scope](research-pilots.md).
+
+`trace-stability` freezes the supplied recording and evaluator definitions while
+comparing saved judgment payloads. It reports per-target coverage, score
+variation and pass/reject disagreement. Its consistency gate does not require
+task acceptance; overall case gates remain separate.
 
 `repeat` executes fresh attempts from a frozen candidate and summarizes
 case/check variability. `suite` coordinates repetitions across declared jobs:

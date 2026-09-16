@@ -16,6 +16,7 @@ from evalarc.doctor import diagnose
 from evalarc.evaluate import evaluate, write_json
 from evalarc.events import EventLog, emit
 from evalarc.interop import import_harbor, inspect_atif, read_document, trial_to_atif
+from evalarc.judge_stability import import_judgments, verify_judgments
 from evalarc.records import read_evaluation
 from evalarc.repetition import repeat
 from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
@@ -69,6 +70,20 @@ def parser() -> argparse.ArgumentParser:
         "trace-verify", help="recompute a trace review from its preserved input bytes"
     )
     trace_verify.add_argument("directory", type=Path)
+    stability = commands.add_parser(
+        "trace-stability", help="compare saved judge repetitions on one fixed recording"
+    )
+    stability.add_argument("inputs", type=Path, nargs="+")
+    stability.add_argument("--output", type=Path, required=True)
+    stability.add_argument(
+        "--require-consistent-gates",
+        action="store_true",
+        help="require complete judgments without pass/reject disagreement; not task acceptance",
+    )
+    stability_verify = commands.add_parser(
+        "trace-stability-verify", help="recompute judge agreement from preserved input files"
+    )
+    stability_verify.add_argument("directory", type=Path)
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
@@ -199,6 +214,29 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Verification failed: {result['error']}", file=sys.stderr)
         return code
     try:
+        if args.command == "trace-stability-verify":
+            print(json.dumps(verify_judgments(args.directory), indent=2))
+            return 0
+        if args.command == "trace-stability":
+            result = import_judgments(args.inputs, args.output)
+            print(
+                json.dumps(
+                    {
+                        "summary": result["summary"],
+                        "fixed_record_sha256": result["fixed_record_sha256"],
+                        "report": str(args.output / "index.html"),
+                        "scope": result["scope"],
+                    },
+                    indent=2,
+                )
+            )
+            if args.require_consistent_gates:
+                return (
+                    2
+                    if result["summary"]["incomplete_targets"]
+                    else (1 if result["summary"]["gate_disagreements"] else 0)
+                )
+            return 0
         if args.command == "trace-verify":
             print(json.dumps(verify_trace(args.directory), indent=2))
             return 0

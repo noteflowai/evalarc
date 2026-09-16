@@ -3,7 +3,11 @@
 `evalarc repeat` evaluates one frozen candidate on the same cases several
 times. Each attempt receives a fresh workspace, processes, and case state.
 Durable KV still preserves state across restarts within a case. The command
-works with both task packs and their existing command manifests.
+works with all built-in task packs and their existing command manifests.
+
+For repeated **judge** decisions on the same saved execution, see
+[Judge Stability](judge-stability.md). This guide covers fresh candidate
+executions; those observations must not be pooled with judge repetitions.
 
 ```bash
 evalarc init workspace/repeated-support --task support-routing --reference

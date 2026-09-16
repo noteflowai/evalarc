@@ -37,3 +37,9 @@ button:disabled{opacity:.5;cursor:default}
 }
 
 #coverage{padding:48px 0;border-top:1px solid var(--line)}.coverage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.coverage-card{padding:22px;border:1px solid var(--line);border-radius:12px;min-width:0}.coverage-card h3{font-size:15px;overflow-wrap:anywhere}.coverage-card strong{font-size:32px;color:var(--mint)}.coverage-card ul{padding-left:18px}.coverage-card li{margin:14px 0;overflow-wrap:anywhere;font-size:13px}.coverage-card li span{display:block;color:var(--muted);font-size:12px}.coverage-fragile{color:#efa6a0}@media(max-width:850px){.coverage-grid{grid-template-columns:minmax(0,1fr)}}
+/* Keep repeated judgments readable within narrow and embedded viewports. */
+.judge-preview{max-width:100%;overflow-x:auto;margin:24px 0}
+.judge-preview table{width:100%;border-collapse:collapse;min-width:500px}
+.judge-preview caption{text-align:left;color:var(--muted,#a8b5ab);margin-bottom:14px}
+.judge-preview th,.judge-preview td{text-align:left;padding:12px;border-bottom:1px solid #46534b}
+.judge-preview .unknown{color:#f0d48b;border-color:#f0d48b}
