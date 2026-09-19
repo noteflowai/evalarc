@@ -1,0 +1,7 @@
+{
+  "id": "metadata-open-path",
+  "expected_behavior_accepted": true,
+  "expected_task_complete": true,
+  "expected_acceptance": true,
+  "kind": "scripted-control"
+}

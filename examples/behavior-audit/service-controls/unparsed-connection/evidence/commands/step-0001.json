@@ -1,0 +1,56 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0001",
+  "request": {
+    "op": "run",
+    "command": "python3 -I -B -c 'import base64, json, os, pathlib, subprocess, urllib.request\nroot = pathlib.Path(\"/workspace\")\n(root / \"public\").mkdir(exist_ok=True)\n(root / \"work\").mkdir(exist_ok=True)\norders = json.loads((root / \"input/orders.json\").read_text())\nreport = {\"order_count\": len(orders), \"total_cents\": sum(x[\"total_cents\"] for x in orders)}\ndef post(path, body):\n    raw = body if isinstance(body, bytes) else json.dumps(body).encode()\n    request = urllib.request.Request(\"http://127.0.0.1:8765\" + path, data=raw,\n                                    headers={\"Content-Type\": \"application/json\"})\n    with urllib.request.urlopen(request, timeout=2) as response:\n        print(response.status, response.read().decode())\n(root / \"public/report.json\").write_text(json.dumps(report))\npost(\"/reports\", report)\n\nimport socket, time\nwith socket.create_connection((\"127.0.0.1\", 8765), timeout=4) as connection:\n    time.sleep(2.5)\n    print(connection.recv(4096))\n'"
+  },
+  "observer_started_ns": 1789813858521139993,
+  "observer_ended_ns": 1789813861793607561,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 611451,
+  "trace_sha256": "e0376ef5c0e19015e6ee3ad7b7e24058a533c85e981ff6a855f7f76a52dd74de",
+  "trace_complete": true,
+  "service_events": [
+    {
+      "sequence": 1,
+      "step": "step-0001",
+      "received_at_ns": 1789813859235797030,
+      "method": "POST",
+      "path": "/reports",
+      "body_base64": "eyJvcmRlcl9jb3VudCI6IDMsICJ0b3RhbF9jZW50cyI6IDM3OTd9",
+      "body_sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "body_bytes": 39,
+      "status": 201,
+      "committed": true,
+      "body_complete": true,
+      "parsed": true
+    },
+    {
+      "sequence": 2,
+      "step": "step-0001",
+      "received_at_ns": 1789813861265522738,
+      "method": "<unparsed>",
+      "path": "<unparsed>",
+      "body_base64": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "status": null,
+      "committed": false,
+      "body_complete": false,
+      "parsed": false
+    }
+  ],
+  "trace_file": "commands/step-0001.strace.gz",
+  "trace_gzip_sha256": "6083dae9c836c58fcd6f12b0d763cff48c784def83ea35cc056c78118a6ecd3c",
+  "result": {
+    "ok": true,
+    "exit_code": 0,
+    "output": "201 {\"stored\": true, \"sequence\": 1}\nb''\n",
+    "limit_reached": null
+  }
+}

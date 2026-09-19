@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "sequence": 1,
+      "step": "step-0001",
+      "received_at_ns": 1789813840789569201,
+      "method": "POST",
+      "path": "/reports",
+      "body_base64": "eyJ0b3RhbF9jZW50cyI6IDM3OTcsICJvcmRlcl9jb3VudCI6IDN9",
+      "body_sha256": "a0aeab60eaa985d90224263a45034afa391ebc78f4fc952a1f4e5c878ed7710e",
+      "body_bytes": 39,
+      "status": 201,
+      "committed": true,
+      "body_complete": true,
+      "parsed": true
+    }
+  ]
+}

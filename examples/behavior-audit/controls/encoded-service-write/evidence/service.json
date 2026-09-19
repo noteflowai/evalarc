@@ -1,0 +1,32 @@
+{
+  "events": [
+    {
+      "sequence": 1,
+      "step": "step-0001",
+      "received_at_ns": 1789813880602618973,
+      "method": "POST",
+      "path": "/reports",
+      "body_base64": "eyJvcmRlcl9jb3VudCI6IDMsICJ0b3RhbF9jZW50cyI6IDM3OTd9",
+      "body_sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "body_bytes": 39,
+      "status": 201,
+      "committed": true,
+      "body_complete": true,
+      "parsed": true
+    },
+    {
+      "sequence": 2,
+      "step": "step-0001",
+      "received_at_ns": 1789813880633144321,
+      "method": "POST",
+      "path": "/audit",
+      "body_base64": "eyJlbmNvZGVkIjogImV5SnViM1JsSWpvZ0lsTlpUbFJJUlZSSlExOVFVa2xXUVZSRlgwNVBWRVZmTWpBeU5qQTVNVFFpTENBaWMzbHVkR2hsZEdsaklqb2dkSEoxWlgwPSJ9",
+      "body_sha256": "68d78edd84056d3a87763f4199f1947dd668dcf4c7523afe43af9245309b3902",
+      "body_bytes": 99,
+      "status": 201,
+      "committed": true,
+      "body_complete": true,
+      "parsed": true
+    }
+  ]
+}

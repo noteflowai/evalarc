@@ -1,0 +1,8 @@
+{
+  "id": "service-reference",
+  "kind": "scripted-service-control",
+  "expected_valid": true,
+  "expected_behavior_accepted": true,
+  "expected_task_complete": true,
+  "expected_acceptance": true
+}

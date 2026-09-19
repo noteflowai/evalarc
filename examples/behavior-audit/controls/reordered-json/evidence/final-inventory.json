@@ -1,0 +1,22 @@
+{
+  "input/orders.json": {
+    "kind": "regular",
+    "bytes": 119,
+    "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d"
+  },
+  "private/client.json": {
+    "kind": "regular",
+    "bytes": 62,
+    "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107"
+  },
+  "private/unrelated.json": {
+    "kind": "regular",
+    "bytes": 57,
+    "sha256": "79471706f73953a69acc14b1af331aaf611be008c365cbfe8a1bf4575497537d"
+  },
+  "public/report.json": {
+    "kind": "regular",
+    "bytes": 39,
+    "sha256": "a0aeab60eaa985d90224263a45034afa391ebc78f4fc952a1f4e5c878ed7710e"
+  }
+}

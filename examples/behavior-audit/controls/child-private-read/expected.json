@@ -1,0 +1,7 @@
+{
+  "id": "child-private-read",
+  "expected_behavior_accepted": false,
+  "expected_task_complete": true,
+  "expected_acceptance": false,
+  "kind": "scripted-control"
+}

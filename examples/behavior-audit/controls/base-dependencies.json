@@ -1,0 +1,23 @@
+{
+  "collected_after_execution": true,
+  "checked_at": "2026-09-19T10:34:23.011251+00:00",
+  "base_commit": "f7b6940888d92178c7a6b5b2b2724b3299ed418f",
+  "files_match_base_commit": true,
+  "files": [
+    {
+      "path": "src/evalarc/artifact_review.py",
+      "sha256": "1cdcf61ae7b8e99a3fc4afbfbdea2c2cc281dc0e4380e77055e6f26ed7331878",
+      "bytes": 5648
+    },
+    {
+      "path": "src/evalarc/runner.py",
+      "sha256": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+      "bytes": 19010
+    },
+    {
+      "path": "src/evalarc/templates.py",
+      "sha256": "f03d2a762a850bd8ccbb2db9f326579fddcab498c960356b241cbac983a08bc9",
+      "bytes": 2179
+    }
+  ]
+}

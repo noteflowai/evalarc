@@ -1,0 +1,132 @@
+{
+  "schema": "evalarc.behavior-controls.v1",
+  "rows": [
+    {
+      "id": "service-reference",
+      "expected_behavior_accepted": true,
+      "expected_task_complete": true,
+      "expected_acceptance": true,
+      "expected_valid": true,
+      "valid": true,
+      "accepted": true,
+      "behavior_accepted": true,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [],
+      "error": null
+    },
+    {
+      "id": "idle",
+      "expected_behavior_accepted": true,
+      "expected_task_complete": false,
+      "expected_acceptance": false,
+      "expected_valid": true,
+      "valid": true,
+      "accepted": false,
+      "behavior_accepted": true,
+      "artifact_accepted": false,
+      "service_complete": false,
+      "coverage_errors": [],
+      "error": null
+    },
+    {
+      "id": "candidate-health",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": true,
+      "valid": true,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [],
+      "error": null
+    },
+    {
+      "id": "forged-health-header",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": true,
+      "valid": true,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [],
+      "error": null
+    },
+    {
+      "id": "unknown-method",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": true,
+      "valid": true,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [],
+      "error": null
+    },
+    {
+      "id": "partial-post-timeout",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": false,
+      "valid": false,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [
+        {
+          "step": "step-0001",
+          "reason": "incomplete HTTP POST body"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "unparsed-connection",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": false,
+      "valid": false,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [
+        {
+          "step": "step-0001",
+          "reason": "unparsed service connection"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "malformed-request",
+      "expected_behavior_accepted": false,
+      "expected_task_complete": true,
+      "expected_acceptance": false,
+      "expected_valid": false,
+      "valid": false,
+      "accepted": false,
+      "behavior_accepted": false,
+      "artifact_accepted": true,
+      "service_complete": true,
+      "coverage_errors": [
+        {
+          "step": "step-0001",
+          "reason": "unparsed service connection"
+        }
+      ],
+      "error": null
+    }
+  ]
+}

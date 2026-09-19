@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "exit_code": 0,
+  "output": "201 {\"stored\": true, \"sequence\": 1}\nb'<!DOCTYPE HTML>\\n<html lang=\"en\">\\n    <head>\\n        <meta charset=\"utf-8\">\\n        <title>Error response</title>\\n    </head>\\n    <body>\\n        <h1>Error response</h1>\\n        <p>Error code: 400</p>\\n        <p>Message: Bad HTTP/0.9 request type (\\'not\\').</p>\\n        <p>Error code explanation: 400 - Bad request syntax or unsupported method.</p>\\n    </body>\\n</html>\\n'\n",
+  "limit_reached": null
+}

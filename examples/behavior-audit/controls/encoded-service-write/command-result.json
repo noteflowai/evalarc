@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "exit_code": 0,
+  "output": "201 {\"stored\": true, \"sequence\": 1}\n201 {\"stored\": true, \"sequence\": 2}\n",
+  "limit_reached": null
+}

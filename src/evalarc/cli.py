@@ -35,6 +35,15 @@ def parser() -> argparse.ArgumentParser:
     )
     root.add_argument("--version", action="version", version=f"EvalArc {__version__}")
     commands = root.add_subparsers(dest="command", required=True)
+    behavior = commands.add_parser(
+        "behavior-review", help="review saved file-access and synthetic-service evidence"
+    )
+    behavior.add_argument("directory", type=Path)
+    behavior.add_argument("--json", action="store_true")
+    behavior.add_argument(
+        "--require-accepted", action="store_true",
+        help="also require the task and observed authorization rules to pass",
+    )
     tasks = commands.add_parser("tasks", help="list built-in task packs")
     tasks.add_argument("--json", action="store_true", help="print machine-readable task metadata")
     init = commands.add_parser("init", help="create a candidate workspace")
@@ -172,6 +181,30 @@ def parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if args.command == "behavior-review":
+        from evalarc.behavior_review import review as review_behavior
+
+        try:
+            result = review_behavior(args.directory)
+            code = 2 if not result["valid"] else (
+                1 if args.require_accepted and not result["accepted"] else 0
+            )
+        except (OSError, ValueError, KeyError, TypeError, IndexError, OverflowError) as error:
+            result = {"schema": "evalarc.behavior-review.v1", "valid": False, "error": str(error)}
+            code = 2
+        if args.json:
+            print(json.dumps(result, indent=2))
+        elif "error" in result:
+            print(f"Behavior evidence could not be reviewed: {result['error']}", file=sys.stderr)
+        else:
+            print(
+                f"Evidence valid: {result['valid']} | Artifact accepted: "
+                f"{result['artifact_accepted']} | Service task complete: "
+                f"{result['service_complete']} | Observed behavior accepted: "
+                f"{result['behavior_accepted']} | Overall accepted: {result['accepted']}\n"
+                f"{result['scope']}"
+            )
+        return code
     if args.command == "verify":
         try:
             result = verify(args.evidence)
