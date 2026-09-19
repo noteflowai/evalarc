@@ -65,6 +65,9 @@ acceptance. Native ATIF, programs, answers and the offline bundle are available.
 These are declared scripted controls, without model inference.
 
 - **Matching EvalArc evaluations:** compare changed checks and retain original inputs.
+- **Final files and runtime actions:** [inspect behavior records](https://glayguo-evalarc.static.hf.space/behavior-audit/index.html)
+  for temporary writes, file access and actual service submissions. The report
+  separates 32 authored controls from 12 GPU model attempts and retains every failure.
 - **Strands Evals users:** [inspect the native state review](https://glayguo-evalarc.static.hf.space/strands/index.html)
   without installing, or run the [SDK companion](https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review).
   Filter all eight checks, compare expected and observed state, and download the offline review.

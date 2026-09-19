@@ -448,6 +448,9 @@ def build(destination: Path) -> dict:
     verify_handoff(ROOT / "examples/funes-handoff")
     shutil.copytree(ROOT / "examples/funes-handoff", destination / "funes-handoff")
     verify_handoff(destination / "funes-handoff")
+    from scripts.build_behavior_site import build as build_behavior
+
+    build_behavior(ROOT / "examples/behavior-audit", destination / "behavior-audit")
     from evalarc.trace_review import import_trace
 
     trace_examples = ROOT / "examples/trace-workbench"

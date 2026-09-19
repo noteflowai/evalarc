@@ -15,3 +15,11 @@ node_modules/
 # Synthetic internal cache artifacts are part of the published composition evidence.
 !examples/research/skill-composition-pilot/*/candidate/build/
 !examples/research/skill-composition-pilot/*/candidate/build/cache.json
+
+# Recorded candidate files and the frozen dependency lock are evidence.
+!examples/behavior-audit/**/candidate/build/
+!examples/behavior-audit/pilot/harness/provider/node_modules/
+examples/behavior-audit/pilot/harness/provider/node_modules/*
+!examples/behavior-audit/pilot/harness/provider/node_modules/.pnpm/
+examples/behavior-audit/pilot/harness/provider/node_modules/.pnpm/*
+!examples/behavior-audit/pilot/harness/provider/node_modules/.pnpm/lock.yaml

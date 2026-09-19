@@ -1,0 +1,27 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0004",
+  "request": {
+    "op": "run",
+    "command": "wget --post-data @public/report.json --header=\"Content-Type: application/json\" http://127.0.0.1:8765/reports"
+  },
+  "observer_started_ns": 1789814611795720967,
+  "observer_ended_ns": 1789814612018794637,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 192195,
+  "trace_sha256": "9684da9d348746bc782b315e7b38a8c4103c9bf777f7fdc182adc9bcf2c9011d",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0004.strace.gz",
+  "trace_gzip_sha256": "81777f6f2969832b1fa0a05950c260434f2ee7f81b3c82c014f074db75cec9c5",
+  "result": {
+    "ok": true,
+    "exit_code": 127,
+    "output": "/bin/sh: 1: wget: not found\n",
+    "limit_reached": null
+  }
+}

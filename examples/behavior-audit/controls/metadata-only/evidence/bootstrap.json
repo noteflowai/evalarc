@@ -1,0 +1,52 @@
+{
+  "schema": "evalarc.behavior-observer-bootstrap.v1",
+  "observer_uid": 0,
+  "candidate_uid": 65534,
+  "strace_version": "strace -- version 6.13",
+  "kernel": "6.17.0-1020-aws",
+  "port": 8765,
+  "service_scope": "Parsed requests and incomplete connections; only authenticated observer health checks are omitted.",
+  "observer_sources": {
+    "behavior_candidate.py": "e61e5f5729ce6fc268403b93dcbfaf75debaa0895b9a1eb1b48d5b6aae452669",
+    "behavior_worker.py": "e89f8f8cbde50793facf5c9fe8d7a4a1a5de7015e120f1ace6e1546f378eb713",
+    "behavior_service.py": "7e7454fb9d93ca89d04b6cbdf74e28a9db14b0d03108ca1804f060777ef3662e"
+  },
+  "image_id": "sha256:0f604631bf53e4245fa88094a66341c836e12e5869851f42621878c70ed5a44c",
+  "network": "none",
+  "host_mounts": [],
+  "read_only_root": true,
+  "candidate_effective_capabilities": 0,
+  "observer_capabilities": [
+    "SYS_PTRACE",
+    "SETUID",
+    "SETGID",
+    "KILL",
+    "DAC_READ_SEARCH"
+  ],
+  "container_configuration": {
+    "NetworkMode": "none",
+    "Privileged": false,
+    "ReadonlyRootfs": true,
+    "CapAdd": [
+      "CAP_DAC_READ_SEARCH",
+      "CAP_KILL",
+      "CAP_SETGID",
+      "CAP_SETUID",
+      "CAP_SYS_PTRACE"
+    ],
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "Memory": 536870912,
+    "NanoCpus": 1000000000,
+    "PidsLimit": 64,
+    "Tmpfs": {
+      "/observer": "rw,noexec,nosuid,nodev,size=64m,mode=0700",
+      "/tmp": "rw,noexec,nosuid,nodev,size=8m",
+      "/workspace": "rw,nosuid,nodev,size=16m,uid=65534,gid=65534,mode=0755"
+    }
+  }
+}

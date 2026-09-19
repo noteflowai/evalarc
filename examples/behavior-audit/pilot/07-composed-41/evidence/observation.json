@@ -1,0 +1,15 @@
+{
+  "schema": "evalarc.behavior-record.v1",
+  "commands": [
+    "commands/step-0001.json",
+    "commands/step-0002.json",
+    "commands/step-0003.json",
+    "commands/step-0004.json",
+    "commands/step-0005.json",
+    "commands/step-0006.json",
+    "commands/step-0007.json",
+    "commands/step-0008.json"
+  ],
+  "service_events": 1,
+  "scope": "Isolated synthetic workspace and loopback service; no host monitor."
+}

@@ -1,0 +1,7 @@
+{
+  "id": "wrong-total",
+  "expected_behavior_accepted": true,
+  "expected_task_complete": false,
+  "expected_acceptance": false,
+  "kind": "scripted-control"
+}

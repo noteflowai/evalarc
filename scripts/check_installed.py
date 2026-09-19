@@ -116,6 +116,25 @@ def check(source: Path) -> dict:
         if process.returncode != 0 or not json.loads(process.stdout)["verified"]:
             raise ValueError("installed judge verifier failed")
         results["judge_stability"] = json.loads(process.stdout)
+        for name, expected_code, flags in (
+            ("controls/reference", 0, []),
+            ("controls/write-then-delete", 1, ["--require-accepted"]),
+            ("pilot/07-composed-41", 2, []),
+        ):
+            target = folder / "behavior" / name
+            shutil.copytree(source / "examples/behavior-audit" / name, target)
+            before = hashes()
+            process = subprocess.run(
+                [entry, "behavior-review", str(target), "--json", *flags],
+                cwd=folder,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            if process.returncode != expected_code or hashes() != before:
+                raise ValueError("installed behavior review failed or changed evidence")
+            results["behavior/" + name] = json.loads(process.stdout)
         for language in ("python", "javascript"):
             target = folder / f"robot-{language}"
             subprocess.run(

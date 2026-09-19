@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evalarc"
+version = "0.12.1"
+description = "Auditable task environments and evaluations for coding and tool-using agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "EvalArc contributors"}]
+keywords = ["agents", "evaluation", "reinforcement-learning", "software-engineering"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Testing",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/noteflowai/evalarc"
+Documentation = "https://github.com/noteflowai/evalarc/blob/main/README.md"
+Repository = "https://github.com/noteflowai/evalarc"
+Issues = "https://github.com/noteflowai/evalarc/issues"
+Demo = "https://huggingface.co/spaces/glayguo/evalarc"
+
+[project.scripts]
+evalarc = "evalarc.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1,<2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+evalarc = ["assets/*.py", "assets/*.md", "assets/*.js", "assets/*.json", "assets/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+
+[tool.ruff]
+extend-exclude = [
+    "examples/skill-impact", "examples/research", "examples/harbor-controls",
+    "examples/context-controls", "examples/funes-handoff",
+    "examples/behavior-audit",
+]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

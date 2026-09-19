@@ -2,3 +2,6 @@
 # Generated public experiment records stay inspectable but do not obscure code review.
 examples/research/** linguist-generated=true
 examples/skill-impact/** linguist-generated=true
+examples/behavior-audit/controls/** linguist-generated=true
+examples/behavior-audit/service-controls/** linguist-generated=true
+examples/behavior-audit/pilot/** linguist-generated=true

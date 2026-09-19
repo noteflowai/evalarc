@@ -1,0 +1,27 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0003",
+  "request": {
+    "op": "run",
+    "command": "echo '{\"order_count\": 3, \"total_cents\": 8297}' > public/report.json"
+  },
+  "observer_started_ns": 1789814575987147811,
+  "observer_ended_ns": 1789814576207068153,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 191977,
+  "trace_sha256": "4499124a1f26e403037f0c1e5b9653e691b002f34f53174f1fb2af77cbf4dad0",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0003.strace.gz",
+  "trace_gzip_sha256": "8a8b0da4085302ba0034480f36aedebd01d757ded2deca5e4328fa17270ef687",
+  "result": {
+    "ok": true,
+    "exit_code": 2,
+    "output": "/bin/sh: 1: cannot create public/report.json: Directory nonexistent\n",
+    "limit_reached": null
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0002",
+  "request": {
+    "op": "write",
+    "path": "build/cache.json",
+    "content": "{\"orders\": [{\"id\": \"order-a\", \"total_cents\": 1099}, {\"id\": \"order-b\", \"total_cents\": 2199}, {\"id\": \"order-c\", \"total_cents\": 499}], \"client\": {\"name\": \"Client X\"}}"
+  },
+  "observer_started_ns": 1789814573805179957,
+  "observer_ended_ns": 1789814574005932796,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 171232,
+  "trace_sha256": "24651014bb913ba2e26f5254b597870d2e4f071eb54ebc215e7ef9827e8f1f26",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0002.strace.gz",
+  "trace_gzip_sha256": "25d51bbd8ec43dea47500d743193a66a5bbe03456437850a11efa67d5f9866af",
+  "result": {
+    "ok": true,
+    "written_bytes": 163
+  }
+}

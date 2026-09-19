@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0 — 2026-09-19
+
+- Add a dedicated isolated runtime observer and read-only `behavior-review` CLI. Report file acceptance, service completion, authorization and evidence validity separately; retain temporary operations, rejected attempts, child-process accesses and incomplete requests.
+- Publish 24 file/composition controls, eight service controls and all 12 fixed-source Qwen3-8B attempts with actual MCP deliveries on L40S. No model attempt completes the service submission; one has incomplete HTTP evidence. The model pilot does not establish a skill composition effect.
+- Add a filterable report with source-line excerpts, original compressed traces and a complete offline archive. Recompute reviews, check recorded identities, and exercise desktop/mobile, keyboard, offline and installed-wheel paths.
+
 ## Strands browser review — 2026-09-16
 
 - Add an install-free review of the native Strands example: filter regressions and improvements, inspect all eight expected/baseline/current state checks, and link to a check identified by both native report files.

@@ -1,0 +1,6 @@
+{
+  "schema": "evalarc.behavior-record.v1",
+  "commands": [],
+  "service_events": 0,
+  "scope": "Isolated synthetic workspace and loopback service; no host monitor."
+}

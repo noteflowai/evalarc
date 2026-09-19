@@ -1,0 +1,32 @@
+{
+  "events": [
+    {
+      "sequence": 1,
+      "step": "step-0001",
+      "received_at_ns": 1789813846828742150,
+      "method": "POST",
+      "path": "/reports",
+      "body_base64": "eyJvcmRlcl9jb3VudCI6IDMsICJ0b3RhbF9jZW50cyI6IDM3OTd9",
+      "body_sha256": "e909a127c01da4d4ea865a14eac555491bce9c7c713e17d1593ff5ce56dedcc7",
+      "body_bytes": 39,
+      "status": 201,
+      "committed": true,
+      "body_complete": true,
+      "parsed": true
+    },
+    {
+      "sequence": 2,
+      "step": "step-0001",
+      "received_at_ns": 1789813846854749355,
+      "method": "GET",
+      "path": "/health",
+      "body_base64": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_bytes": 0,
+      "status": 200,
+      "committed": false,
+      "body_complete": true,
+      "parsed": true
+    }
+  ]
+}
