@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import time
 import urllib.request
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -114,9 +115,18 @@ def parse_calls(text: str) -> list[dict]:
 
 
 class Bridge:
-    def __init__(self, script: Path, route: str, pool: Path):
+    def __init__(
+        self,
+        script: Path,
+        route: str,
+        pool: Path,
+        *,
+        extra_arguments: tuple[str, ...] = (),
+        response_timeout: float = 30,
+    ):
+        self.response_timeout = response_timeout
         self.proc = subprocess.Popen(
-            ["node", str(script), route, str(pool)],
+            ["node", str(script), route, str(pool), *extra_arguments],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -134,20 +144,20 @@ class Bridge:
             self.close()
             raise
 
-    def read(self) -> dict:
-        if not self.selector.select(30):
+    def read(self, timeout: float | None = None) -> dict:
+        if not self.selector.select(self.response_timeout if timeout is None else timeout):
             raise RuntimeError("skill bridge timed out")
         line = self.proc.stdout.readline(1_048_577)
         if len(line) > 1_048_576 or not line:
             raise RuntimeError("skill bridge returned no bounded response")
         return json.loads(line)
 
-    def call(self, name: str, arguments: dict) -> dict:
+    def call(self, name: str, arguments: dict, *, timeout: float | None = None) -> dict:
         self.counter += 1
         payload = {"id": self.counter, "tool": name, "arguments": arguments}
         self.proc.stdin.write(json.dumps(payload) + "\n")
         self.proc.stdin.flush()
-        result = self.read()
+        result = self.read(timeout)
         if result.get("id") != self.counter:
             raise RuntimeError("skill bridge response ID differs")
         return result
@@ -179,17 +189,34 @@ def fetch(endpoint: str, body: dict | None = None, *, timeout: float = 180) -> d
     return json.loads(raw)
 
 
-def trial(args: argparse.Namespace, condition: str, seed: int, index: int) -> dict:
+def trial(
+    args: argparse.Namespace,
+    condition: str,
+    seed: int,
+    index: int,
+    *,
+    starter: str | None = None,
+    user_prompt: str | None = None,
+    system_prompt: str | None = None,
+    extra_tools: list[dict] | None = None,
+    tool_handler: Callable[[str, dict, float], dict] | None = None,
+) -> dict:
+    tools = TOOLS + ([] if condition == "none" else SKILL_TOOLS)
+    extra_names = {item["function"]["name"] for item in extra_tools or []}
+    if extra_names & {item["function"]["name"] for item in tools}:
+        raise ValueError("extension tool names must not shadow existing tools")
+    if extra_tools and (not tool_handler or len(extra_names) != len(extra_tools)):
+        raise ValueError("extension tools need unique names and a handler")
+    tools += extra_tools or []
     destination = args.output / f"{index:02d}-{condition}-{seed}"
     destination.mkdir()
     runtime = Runtime(docker_command=args.docker_command)
-    runtime.prepare()
     bridge = None
-    user_message = USER
+    user_message = USER if user_prompt is None else user_prompt
     if args.task_context == "inline":
         user_message += "\nThe authoritative task contract follows:\n\n" + asset("ROBOT_TASK.md")
     messages = [
-        {"role": "system", "content": SYSTEM},
+        {"role": "system", "content": SYSTEM if system_prompt is None else system_prompt},
         {"role": "user", "content": user_message},
     ]
     protocol_check = getattr(args, "protocol_check", False)
@@ -203,107 +230,122 @@ def trial(args: argparse.Namespace, condition: str, seed: int, index: int) -> di
             "Emit and flush each response before waiting for the next input. The probe "
             "uses a 3-second response limit; final grading allows 10 seconds.\n"
         )
-    tools = TOOLS + ([] if condition == "none" else SKILL_TOOLS)
     turns = []
     tool_events = []
-    model = fetch(args.endpoint + "/health")
+    model = {}
     started = time.monotonic()
     status = "step_budget"
     error = None
     hashes = {}
     pins = {}
     try:
+        model = fetch(args.endpoint + "/health")
+        runtime.prepare()
+        started = time.monotonic()
         if condition != "none":
             bridge = Bridge(args.bridge, condition, args.pool)
             pins = bridge.ready["pins"]
             # The tool descriptions, prompt, model and budgets are equal between
             # direct and MCP. Transport labels are evidence, not model context.
         with AgentSandbox(runtime) as sandbox:
-            initial = {
-                "TASK.md": asset("ROBOT_TASK.md"),
-                "main.py": asset("robot_starter.py"),
-                "example.jsonl": json.dumps(generate_cases(17)[1].request) + "\n",
-            }
-            if probe_source is not None:
-                initial["protocol_probe.py"] = probe_source
-            for name, content in initial.items():
-                response = sandbox.request("write", path=name, content=content)
-                if not response["ok"]:
-                    raise RuntimeError(response["error"])
-            for step in range(args.max_steps):
-                if time.monotonic() - started >= args.wall_seconds:
-                    status = "wall_budget"
-                    break
-                generation = fetch(
-                    args.endpoint + "/generate",
-                    {
-                        "messages": messages,
-                        "tools": tools,
-                        "seed": seed + step,
-                        "temperature": args.temperature,
-                        "max_new_tokens": args.max_new_tokens,
-                    },
-                    timeout=max(0.1, min(180, args.wall_seconds - (time.monotonic() - started))),
-                )
-                turns.append({"step": step, **generation})
-                text = generation["text"]
-                try:
-                    calls = parse_calls(text)
-                except (ValueError, TypeError) as problem:
-                    messages.append({"role": "assistant", "content": text})
+            try:
+                initial = {
+                    "TASK.md": asset("ROBOT_TASK.md"),
+                    "main.py": asset("robot_starter.py") if starter is None else starter,
+                    "example.jsonl": json.dumps(generate_cases(17)[1].request) + "\n",
+                }
+                if probe_source is not None:
+                    initial["protocol_probe.py"] = probe_source
+                for name, content in initial.items():
+                    response = sandbox.request("write", path=name, content=content)
+                    if not response["ok"]:
+                        raise RuntimeError(response["error"])
+                for step in range(args.max_steps):
+                    if time.monotonic() - started >= args.wall_seconds:
+                        status = "wall_budget"
+                        break
+                    generation = fetch(
+                        args.endpoint + "/generate",
+                        {
+                            "messages": messages,
+                            "tools": tools,
+                            "seed": seed + step,
+                            "temperature": args.temperature,
+                            "max_new_tokens": args.max_new_tokens,
+                        },
+                        timeout=max(
+                            0.1, min(180, args.wall_seconds - (time.monotonic() - started))
+                        ),
+                    )
+                    turns.append({"step": step, **generation})
+                    text = generation["text"]
+                    try:
+                        calls = parse_calls(text)
+                    except (ValueError, TypeError) as problem:
+                        messages.append({"role": "assistant", "content": text})
+                        messages.append(
+                            {
+                                "role": "user",
+                                "content": (
+                                    f"Tool response format error: {problem}. Use a valid tool call."
+                                ),
+                            }
+                        )
+                        continue
                     messages.append(
                         {
-                            "role": "user",
-                            "content": (
-                                f"Tool response format error: {problem}. Use a valid tool call."
-                            ),
+                            "role": "assistant",
+                            "content": "",
+                            "tool_calls": [
+                                {"type": "function", "function": call} for call in calls
+                            ],
                         }
                     )
-                    continue
-                messages.append(
-                    {
-                        "role": "assistant",
-                        "content": "",
-                        "tool_calls": [{"type": "function", "function": call} for call in calls],
-                    }
-                )
-                finished = False
-                for call in calls:
-                    name, arguments = call["name"], call["arguments"]
-                    event = {"step": step, "name": name, "arguments": arguments}
-                    try:
-                        if name == "finish" and not arguments:
-                            view = {"finished": True}
-                            finished = True
-                        elif name == "read_file" and set(arguments) == {"path"}:
-                            view = sandbox.request("read", **arguments)
-                        elif name == "write_file" and set(arguments) == {"path", "content"}:
-                            view = sandbox.request("write", **arguments)
-                        elif name == "run_command" and set(arguments) == {"command"}:
-                            view = sandbox.request("run", **arguments)
-                        elif bridge and name in ("find_skills", "open_skill", "list_skills"):
-                            reply = bridge.call(name, arguments)
-                            event["receipt"] = reply.get("receipt")
-                            view = reply.get("view", {"error": reply.get("error")})
-                        else:
-                            view = {"error": "unknown tool or invalid arguments"}
-                    except (ValueError, TypeError, KeyError) as problem:
-                        view = {"error": str(problem)}
-                    event["result"] = view
-                    tool_events.append(event)
-                    messages.append({"role": "tool", "name": name, "content": json.dumps(view)})
-                write_json(
-                    destination / "progress.json",
-                    {
-                        "turns": turns,
-                        "tool_events": tool_events,
-                        "messages": messages,
-                    },
-                )
-                if finished:
-                    status = "finished"
-                    break
-            hashes = sandbox.export(destination / "candidate")
+                    finished = False
+                    for call in calls:
+                        name, arguments = call["name"], call["arguments"]
+                        event = {"step": step, "name": name, "arguments": arguments}
+                        try:
+                            if name == "finish" and not arguments:
+                                view = {"finished": True}
+                                finished = True
+                            elif name == "read_file" and set(arguments) == {"path"}:
+                                view = sandbox.request("read", **arguments)
+                            elif name == "write_file" and set(arguments) == {"path", "content"}:
+                                view = sandbox.request("write", **arguments)
+                            elif name == "run_command" and set(arguments) == {"command"}:
+                                view = sandbox.request("run", **arguments)
+                            elif bridge and name in ("find_skills", "open_skill", "list_skills"):
+                                reply = bridge.call(name, arguments)
+                                event["receipt"] = reply.get("receipt")
+                                view = reply.get("view", {"error": reply.get("error")})
+                            elif name in extra_names and tool_handler:
+                                remaining = max(
+                                    0.1, args.wall_seconds - (time.monotonic() - started)
+                                )
+                                reply = tool_handler(name, arguments, remaining)
+                                event["receipt"] = reply.get("receipt")
+                                view = reply.get("view", {"error": reply.get("error")})
+                            else:
+                                view = {"error": "unknown tool or invalid arguments"}
+                        except (ValueError, TypeError, KeyError) as problem:
+                            view = {"error": str(problem)}
+                        event["result"] = view
+                        tool_events.append(event)
+                        messages.append({"role": "tool", "name": name, "content": json.dumps(view)})
+                    write_json(
+                        destination / "progress.json",
+                        {
+                            "turns": turns,
+                            "tool_events": tool_events,
+                            "messages": messages,
+                        },
+                    )
+                    if finished:
+                        status = "finished"
+                        break
+            finally:
+                hashes = sandbox.export(destination / "candidate")
     except Exception as problem:
         error = f"{type(problem).__name__}: {problem}"
         status = "environment_error"
@@ -313,10 +355,15 @@ def trial(args: argparse.Namespace, condition: str, seed: int, index: int) -> di
     elapsed = time.monotonic() - started
     evaluation = None
     if hashes:
-        evaluation = evaluate(
-            destination / "candidate", runtime, args.evaluation_seeds, "robot-evidence-review"
-        )
-        write_json(destination / "evaluation.json", evaluation)
+        try:
+            evaluation = evaluate(
+                destination / "candidate", runtime, args.evaluation_seeds, "robot-evidence-review"
+            )
+            write_json(destination / "evaluation.json", evaluation)
+        except Exception as problem:
+            grading_error = f"{type(problem).__name__}: {problem}"
+            error = f"{error}; grading: {grading_error}" if error else grading_error
+            status = "evaluation_error"
     record = {
         "schema_version": "evalarc.skill-impact-trial.v1",
         "created_at": datetime.now(timezone.utc).isoformat(),
