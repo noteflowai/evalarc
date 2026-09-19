@@ -16,6 +16,18 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+# The pinned upstream wheel excludes these stand-alone collection utilities.
+# Their omission is recorded explicitly; installed evaluation code must match.
+WHEEL_EXCLUSIONS = frozenset(
+    {
+        "collect/cleanup/delete_gh_workflows.py",
+        "collect/cleanup/remove_envs.py",
+        "collect/make_lite/criteria.py",
+        "collect/make_lite/make_lite.py",
+        "collect/make_repo/call_make_repo.py",
+    }
+)
+
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -25,12 +37,36 @@ def save(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
 
 
+def verify_installed_source(source: Path, installed: Path) -> dict:
+    source_files = {p.relative_to(source).as_posix(): p for p in source.rglob("*.py")}
+    installed_files = {p.relative_to(installed).as_posix(): p for p in installed.rglob("*.py")}
+    omitted = set(source_files) - set(installed_files)
+    if omitted != WHEEL_EXCLUSIONS:
+        raise ValueError(f"unexpected omitted SWE-bench files: {sorted(omitted)}")
+    if set(installed_files) - set(source_files):
+        raise ValueError("installed SWE-bench has unexpected Python files")
+    files = {}
+    for relative, actual in sorted(installed_files.items()):
+        if digest(source_files[relative]) != digest(actual):
+            raise ValueError(f"installed SWE-bench differs: {relative}")
+        files[relative] = digest(actual)
+    if not files or "harness/run_evaluation.py" not in files:
+        raise ValueError("SWE-bench runtime source inventory is incomplete")
+    return {
+        "installed_python_files": files,
+        "wheel_omitted_collection_utilities": {
+            name: digest(source_files[name]) for name in sorted(omitted)
+        },
+    }
+
+
 class RecordedContainer:
-    def __init__(self, container, output: Path, base_commit: str, image_id: str):
+    def __init__(self, container, output: Path, base_commit: str, image_id: str, image_head: str):
         self.container = container
         self.output = output
         self.base_commit = base_commit
         self.image_id = image_id
+        self.image_head = image_head
 
     def __getattr__(self, name):
         return getattr(self.container, name)
@@ -41,6 +77,17 @@ class RecordedContainer:
         attrs = self.container.attrs
         host = attrs["HostConfig"]
         observed = self.container.exec_run(["git", "rev-parse", "HEAD"], workdir="/testbed")
+        tracked = self.container.exec_run(
+            ["git", "status", "--porcelain", "--untracked-files=no"], workdir="/testbed"
+        )
+        ancestor = self.container.exec_run(
+            ["git", "merge-base", "--is-ancestor", self.base_commit, "HEAD"],
+            workdir="/testbed",
+        )
+        initial_diff = self.container.exec_run(
+            ["git", "diff", "--binary", self.base_commit, "HEAD"], workdir="/testbed"
+        )
+        (self.output / "image-base.diff").write_bytes(initial_diff.output)
         observed_commit = observed.output.decode().strip()
         record = {
             "container_id": self.container.id,
@@ -51,11 +98,18 @@ class RecordedContainer:
             "cap_drop": host["CapDrop"],
             "security_opt": host["SecurityOpt"],
             "binds": host["Binds"],
+            "mounts": attrs.get("Mounts", []),
             "privileged": host["Privileged"],
             "memory_bytes": host["Memory"],
             "pids_limit": host["PidsLimit"],
-            "base_commit": observed_commit,
+            "dataset_base_commit": self.base_commit,
+            "image_head": observed_commit,
             "base_check_exit_code": observed.exit_code,
+            "base_ancestor_exit_code": ancestor.exit_code,
+            "image_base_diff_exit_code": initial_diff.exit_code,
+            "image_base_diff_sha256": digest(self.output / "image-base.diff"),
+            "initial_tracked_status": tracked.output.decode(),
+            "initial_tracked_status_exit_code": tracked.exit_code,
         }
         save(self.output / "container.json", record)
         if (
@@ -65,20 +119,28 @@ class RecordedContainer:
             or "ALL" not in host["CapDrop"]
             or not any("no-new-privileges" in item for item in host["SecurityOpt"])
             or host["Binds"]
+            or attrs.get("Mounts")
             or host["Privileged"]
+            or host["Memory"] != 8 * 1024**3
+            or host["PidsLimit"] != 512
             or observed.exit_code
-            or observed_commit != self.base_commit
+            or observed_commit != self.image_head
+            or ancestor.exit_code
+            or initial_diff.exit_code
+            or tracked.exit_code
+            or tracked.output.strip()
         ):
             raise RuntimeError("actual container differs from the declared isolated base")
         return result
 
 
 class RecordedContainers:
-    def __init__(self, containers, output: Path, base_commit: str, image_id: str):
+    def __init__(self, containers, output: Path, base_commit: str, image_id: str, image_head: str):
         self.containers = containers
         self.output = output
         self.base_commit = base_commit
         self.image_id = image_id
+        self.image_head = image_head
 
     def __getattr__(self, name):
         return getattr(self.containers, name)
@@ -111,13 +173,17 @@ class RecordedContainers:
             },
         )
         container = self.containers.create(*args, **kwargs)
-        return RecordedContainer(container, self.output, self.base_commit, self.image_id)
+        return RecordedContainer(
+            container, self.output, self.base_commit, self.image_id, self.image_head
+        )
 
 
 class RecordedClient:
-    def __init__(self, client, output: Path, base_commit: str, image_id: str):
+    def __init__(self, client, output: Path, base_commit: str, image_id: str, image_head: str):
         self.client = client
-        self.containers = RecordedContainers(client.containers, output, base_commit, image_id)
+        self.containers = RecordedContainers(
+            client.containers, output, base_commit, image_id, image_head
+        )
 
     def __getattr__(self, name):
         return getattr(self.client, name)
@@ -136,19 +202,27 @@ def run(args) -> dict:
         raise ValueError("unsafe upstream instance ID")
     if not re.fullmatch(r"[a-f0-9]{40}", row["base_commit"]):
         raise ValueError("require the full upstream base commit")
+    if not re.fullmatch(r"[a-f0-9]{40}", args.image_head):
+        raise ValueError("require the reviewed image's full initial commit")
     output = args.output.resolve()
     source = args.swe_source.resolve()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
+    subprocess.run(
+        ["git", "diff", "--exit-code", "--quiet", "HEAD", "--", "swebench"],
+        cwd=source,
+        check=True,
+    )
+    tracked = set(
+        subprocess.check_output(["git", "ls-files", "-z", "swebench"], cwd=source)
+        .decode()
+        .split("\0")
+    )
+    if any(
+        p.relative_to(source).as_posix() not in tracked for p in (source / "swebench").rglob("*.py")
+    ):
+        raise ValueError("upstream checkout contains untracked Python sources")
     installed = Path(swebench.__file__).parent
-    files = {}
-    for original in sorted((source / "swebench").rglob("*.py")):
-        relative = original.relative_to(source / "swebench")
-        actual = installed / relative
-        if not actual.is_file() or digest(original) != digest(actual):
-            raise ValueError("installed SWE-bench differs from the reviewed checkout")
-        files[relative.as_posix()] = digest(actual)
-    if not files:
-        raise ValueError("SWE-bench source inventory is empty")
+    inventory = verify_installed_source(source / "swebench", installed)
     output.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(Path(__file__), output / "recorder.py")
     client = docker.from_env(timeout=1800)
@@ -168,7 +242,7 @@ def run(args) -> dict:
             "swebench_version": swebench.__version__,
             "source_commit": commit,
             "installed_package": str(installed),
-            "source_files": files,
+            "source_inventory": inventory,
             "python": sys.version,
             "executable": sys.executable,
             "source_instance_sha256": digest(args.instance),
@@ -180,6 +254,7 @@ def run(args) -> dict:
         "kind": "scripted-upstream-control-without-model-generation",
         "instance_id": row["instance_id"],
         "base_commit": row["base_commit"],
+        "image_head": args.image_head,
         "mode": args.mode,
         "skip_patch": args.mode == "original-defect",
         "image": args.image,
@@ -198,7 +273,7 @@ def run(args) -> dict:
         result = run_evaluation.run_instance(
             spec,
             candidate,
-            RecordedClient(client, output, row["base_commit"], image.id),
+            RecordedClient(client, output, row["base_commit"], image.id, args.image_head),
             run_id,
             timeout=args.timeout,
             skip_patch=metadata["skip_patch"],
@@ -228,6 +303,7 @@ if __name__ == "__main__":
     parser.add_argument("--instance", required=True, type=Path)
     parser.add_argument("--swe-source", required=True, type=Path)
     parser.add_argument("--image", required=True)
+    parser.add_argument("--image-head", required=True)
     parser.add_argument("--mode", choices=("original-defect", "original-fix"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=600)
