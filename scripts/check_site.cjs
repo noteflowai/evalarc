@@ -526,6 +526,13 @@ async function main() {
       for (const width of [1440, 390, 320]) {
         const page = await browser.newPage({ viewport: { width, height: 1000 } });
         try {
+          if (!process.env.SITE_URL) {
+            await page.route("**/context-controls/protocol/index.html", async route => {
+              // Expose stale-page assertions even on a fast local server.
+              await new Promise(resolve => setTimeout(resolve, 400));
+              await route.continue();
+            });
+          }
           await page.goto(base);
           await page.getByRole("link", { name: "Inspect both context-control cohorts" }).click();
           results.push({ width, ...await checkContextControls(page, page, root) });

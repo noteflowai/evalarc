@@ -33,6 +33,9 @@ async function checkContextControls(page, app, root, { downloads = true } = {}) 
   for (const name of ["initial", "protocol"]) {
     await app.locator("body").evaluate((element, url) => { location.href = url; },
       new URL(`${name}/index.html`, base).href);
+    // Both pages share their heading. Wait for the requested cohort before
+    // interacting, including when an embedded frame is still showing the old one.
+    await app.getByText(name === "initial" ? /^Initial cohort:/ : /^Follow-up:/).waitFor();
     await app.getByRole("heading", { name: "Same length. Different guidance." }).waitFor();
     await app.locator("article").first().waitFor();
     assert.equal(await app.locator("article").count(), 6);
