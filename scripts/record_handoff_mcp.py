@@ -120,6 +120,7 @@ def main():
     shutil.copytree(args.source, root / "source")
     args.source = root / "source"
     starter = (args.source / "prior/main.py").read_text()
+    prior_trial = json.loads((args.source / "prior/trial.json").read_text())
     starter_hash = digest(args.source / "prior/main.py")
     harness = root / "harness"
     harness.mkdir()
@@ -258,7 +259,7 @@ def main():
                 "Repeated operation counts do not establish wasted work or human time saved.",
                 "Earlier pre-injected-context handoff records are a separate experiment.",
             ]
-            metrics = operation_metrics(trial, starter_hash)
+            metrics = operation_metrics(trial, starter_hash, prior_trial)
             trial["handoff"] = {
                 "condition": condition,
                 "source_manifest_sha256": plan["source_manifest_sha256"],

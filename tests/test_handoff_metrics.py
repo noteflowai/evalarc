@@ -40,6 +40,28 @@ def test_repeated_operations_are_counted_without_claiming_they_were_wasted():
     assert metrics["retrieved_results"] == 1
     assert metrics["memory_error_results"] == 1
     assert metrics["program_changed"] is False
+    assert metrics["command_attempts_seen_in_prior"] is None
+    assert metrics["writes_seen_in_prior"] is None
+
+
+def test_prior_session_matches_count_successful_operations_without_equating_them_to_waste():
+    write = {
+        "name": "write_file",
+        "arguments": {"path": "main.py", "content": "old program"},
+        "result": {"ok": True},
+    }
+    command = {
+        "name": "run_command",
+        "arguments": {"command": "python3 main.py < example.jsonl"},
+        "result": {"ok": True, "exit_code": 1},
+    }
+    changed_write = {**write, "arguments": {"path": "main.py", "content": "fixed program"}}
+    prior = {"tool_events": [write, command]}
+    trial = {"tool_events": [write, changed_write, command, command], "candidate_files": {}}
+    metrics = operation_metrics(trial, "0" * 64, prior)
+    assert metrics["writes_seen_in_prior"] == 1
+    assert metrics["command_attempts_seen_in_prior"] == 2
+    assert metrics["repeated_command_strings"] == 1
 
 
 def test_failed_writes_and_absent_candidates_do_not_count_as_delivered_programs():
