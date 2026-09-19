@@ -169,7 +169,7 @@ class RecordedContainers:
                 "memory_bytes": kwargs["mem_limit"],
                 "pids_limit": kwargs["pids_limit"],
                 "host_bind_mounts": False,
-                "scope": "Scripted upstream control; no model generation.",
+                "scope": "Native grader; model generation uses a separate container.",
             },
         )
         container = self.containers.create(*args, **kwargs)
@@ -229,10 +229,19 @@ def run(args) -> dict:
     image = client.images.get(args.image)
     spec = make_test_spec({**row, "image": args.image})
     run_id = "evalarc-" + uuid.uuid4().hex
+    model_patch = (
+        args.candidate_patch.read_bytes().decode("utf-8")
+        if args.mode == "candidate"
+        else row["patch"]
+        if args.mode == "original-fix"
+        else ""
+    )
     candidate = {
         "instance_id": row["instance_id"],
-        "model_name_or_path": "upstream-" + args.mode,
-        "model_patch": row["patch"] if args.mode == "original-fix" else "",
+        "model_name_or_path": (
+            "recorded-candidate" if args.mode == "candidate" else "upstream-" + args.mode
+        ),
+        "model_patch": model_patch,
     }
     save(output / "prediction.json", candidate)
     save(output / "test-spec.json", dataclasses.asdict(spec))
@@ -251,12 +260,17 @@ def run(args) -> dict:
     )
     metadata = {
         "schema": "evalarc.native-swe-control.v1",
-        "kind": "scripted-upstream-control-without-model-generation",
+        "kind": (
+            "recorded-candidate-native-evaluation"
+            if args.mode == "candidate"
+            else "scripted-upstream-control-without-model-generation"
+        ),
         "instance_id": row["instance_id"],
         "base_commit": row["base_commit"],
         "image_head": args.image_head,
         "mode": args.mode,
-        "skip_patch": args.mode == "original-defect",
+        "skip_patch": not model_patch,
+        "candidate_patch_sha256": hashlib.sha256(model_patch.encode()).hexdigest(),
         "image": args.image,
         "image_id": image.id,
         "run_id": run_id,
@@ -304,12 +318,17 @@ if __name__ == "__main__":
     parser.add_argument("--swe-source", required=True, type=Path)
     parser.add_argument("--image", required=True)
     parser.add_argument("--image-head", required=True)
-    parser.add_argument("--mode", choices=("original-defect", "original-fix"), required=True)
+    parser.add_argument(
+        "--mode", choices=("original-defect", "original-fix", "candidate"), required=True
+    )
+    parser.add_argument("--candidate-patch", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=600)
     arguments = parser.parse_args()
     if arguments.timeout <= 0:
         parser.error("--timeout must be positive")
+    if (arguments.mode == "candidate") != bool(arguments.candidate_patch):
+        parser.error("--candidate-patch is required only in candidate mode")
     record = run(arguments)
     print(json.dumps(record, indent=2))
     if record["status"] != "reported":
