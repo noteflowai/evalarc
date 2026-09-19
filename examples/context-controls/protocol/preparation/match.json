@@ -1,0 +1,56 @@
+{
+  "schema": "evalarc.skill-context-match.v1",
+  "tokenizer_model": "Qwen/Qwen3-8B",
+  "tokenizer_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "tokenizer_files": {
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+  },
+  "serialization": "json.dumps(view), ensure_ascii=True; add_special_tokens=False",
+  "model_visible_open_skill_tokens": 476,
+  "relevant": {
+    "view": {
+      "name": "robot-recording-review",
+      "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+      "content": "# Review recorded robot motion\n\nBuild the review around the supplied recording contract. Read its frame mapping,\nunits, clock origin, sample identifiers, and source digest before computing\nphysical quantities.\n\n- Convert positions and velocities into the same world convention. Translation\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\n  after conversion, rather than interpreting a component as a magnitude.\n- Subtract a clock's origin before scaling to elapsed seconds. Avoid converting\n  frame numbers directly to time when measured timestamps are provided.\n- Index observations by their explicit identifiers. Preserve omissions; array\n  order, row count and last row do not establish chronology or completeness.\n- When comparing with constant-acceleration motion, evaluate the reference\n  equation separately at each available timestamp. Use the Euclidean vector\n  error, then aggregate only the observations actually present.\n- Locate a trajectory peak from world height, applying the contract's tie rule.\n  A final frame can follow the peak by a substantial interval.\n- Keep original attribution in the result. A matching digest shows which\n  recording was used; it does not establish that the recording is physically\n  accurate or that its author is authenticated.\n\nFor a service implementation, keep the numerical transformation separate from\nstdin/stdout handling. Exercise the completed program on the supplied example,\nincluding its actual JSON-lines input. Report missing evidence explicitly and\nkeep diagnostic text out of machine-readable output.",
+      "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+      "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+    },
+    "pins": {
+      "robot-recording-review": {
+        "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+        "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+      }
+    }
+  },
+  "neutral": {
+    "view": {
+      "name": "robot-recording-review",
+      "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+      "content": "# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.",
+      "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+      "bundle_sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32"
+    },
+    "pins": {
+      "robot-recording-review": {
+        "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+        "bundle_sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32"
+      }
+    }
+  },
+  "preparation_attempts": [
+    {
+      "words": 258,
+      "ending": "\n",
+      "tokens": 481
+    },
+    {
+      "words": 258,
+      "ending": ".\n",
+      "tokens": 476
+    }
+  ],
+  "scope": "Equal token length for the initial open_skill result, including file hashes. Same advertised name and description; neutral body is unrelated descriptive prose. Later tool calls and generated conversations may differ and must be reported."
+}

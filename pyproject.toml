@@ -39,10 +39,13 @@ evalarc = ["assets/*.py", "assets/*.md", "assets/*.js", "assets/*.json", "assets
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 
 [tool.ruff]
-extend-exclude = ["examples/skill-impact", "examples/research", "examples/harbor-controls"]
+extend-exclude = [
+    "examples/skill-impact", "examples/research", "examples/harbor-controls",
+    "examples/context-controls",
+]
 target-version = "py311"
 line-length = 100
 

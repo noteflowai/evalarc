@@ -1,0 +1,59 @@
+{
+  "purpose": "Post-run transport diagnostic only; does not replace any planned trial score.",
+  "trial": "neutral/02-mcp-17",
+  "candidate_sha256": "e4cd11d8011c74caada206b212d58e99378b4cf2db2d2f7910b00b53f6354ab4",
+  "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "case_id": "world-meters",
+  "runs": [
+    {
+      "command": [
+        "{python}",
+        "-I",
+        "-B",
+        "main.py"
+      ],
+      "response": null,
+      "error": "response timeout",
+      "diagnostics": {
+        "exit_code": null,
+        "output_bytes": 0,
+        "stderr_tail": "",
+        "stderr_tail_limit_bytes": 2048
+      }
+    },
+    {
+      "command": [
+        "{python}",
+        "-I",
+        "-B",
+        "-u",
+        "main.py"
+      ],
+      "response": {
+        "ok": true,
+        "report": {
+          "source_sha256": "31a20c5c4c16174c4431e4a65ce7777862076108b9916fc388360d70077a53b3",
+          "frame": 28,
+          "time_seconds": 0.9333333333333333,
+          "position_m": [
+            1.86666738986969,
+            0.0,
+            5.907934188842773
+          ],
+          "speed_m_s": 2.170791321911835,
+          "max_position_error_m": 0.32700288772800196,
+          "peak_frame": 30,
+          "peak_height_m": 5.9315009117126465,
+          "missing_frames": []
+        }
+      },
+      "error": null,
+      "diagnostics": {
+        "exit_code": null,
+        "output_bytes": 371,
+        "stderr_tail": "",
+        "stderr_tail_limit_bytes": 2048
+      }
+    }
+  ]
+}

@@ -1,0 +1,521 @@
+{
+  "target": 476,
+  "attempts": [
+    {
+      "words": 258,
+      "tokens": 481
+    },
+    {
+      "words": 257,
+      "tokens": 480
+    },
+    {
+      "words": 259,
+      "tokens": 483
+    },
+    {
+      "words": 256,
+      "tokens": 478
+    },
+    {
+      "words": 260,
+      "tokens": 475
+    },
+    {
+      "words": 255,
+      "tokens": 467
+    },
+    {
+      "words": 261,
+      "tokens": 484
+    },
+    {
+      "words": 254,
+      "tokens": 470
+    },
+    {
+      "words": 262,
+      "tokens": 479
+    },
+    {
+      "words": 253,
+      "tokens": 472
+    },
+    {
+      "words": 263,
+      "tokens": 482
+    },
+    {
+      "words": 252,
+      "tokens": 472
+    },
+    {
+      "words": 264,
+      "tokens": 482
+    },
+    {
+      "words": 251,
+      "tokens": 469
+    },
+    {
+      "words": 265,
+      "tokens": 484
+    },
+    {
+      "words": 250,
+      "tokens": 469
+    },
+    {
+      "words": 266,
+      "tokens": 490
+    },
+    {
+      "words": 249,
+      "tokens": 462
+    },
+    {
+      "words": 267,
+      "tokens": 484
+    },
+    {
+      "words": 248,
+      "tokens": 467
+    },
+    {
+      "words": 268,
+      "tokens": 489
+    },
+    {
+      "words": 247,
+      "tokens": 462
+    },
+    {
+      "words": 269,
+      "tokens": 485
+    },
+    {
+      "words": 246,
+      "tokens": 467
+    },
+    {
+      "words": 270,
+      "tokens": 488
+    },
+    {
+      "words": 245,
+      "tokens": 462
+    },
+    {
+      "words": 271,
+      "tokens": 485
+    },
+    {
+      "words": 244,
+      "tokens": 458
+    },
+    {
+      "words": 272,
+      "tokens": 488
+    },
+    {
+      "words": 243,
+      "tokens": 459
+    },
+    {
+      "words": 273,
+      "tokens": 493
+    },
+    {
+      "words": 242,
+      "tokens": 456
+    },
+    {
+      "words": 274,
+      "tokens": 491
+    },
+    {
+      "words": 241,
+      "tokens": 462
+    },
+    {
+      "words": 275,
+      "tokens": 494
+    },
+    {
+      "words": 240,
+      "tokens": 455
+    },
+    {
+      "words": 276,
+      "tokens": 503
+    },
+    {
+      "words": 239,
+      "tokens": 462
+    },
+    {
+      "words": 277,
+      "tokens": 492
+    },
+    {
+      "words": 238,
+      "tokens": 457
+    },
+    {
+      "words": 278,
+      "tokens": 498
+    },
+    {
+      "words": 237,
+      "tokens": 453
+    },
+    {
+      "words": 279,
+      "tokens": 499
+    },
+    {
+      "words": 236,
+      "tokens": 452
+    },
+    {
+      "words": 280,
+      "tokens": 495
+    },
+    {
+      "words": 235,
+      "tokens": 445
+    },
+    {
+      "words": 281,
+      "tokens": 508
+    },
+    {
+      "words": 234,
+      "tokens": 451
+    },
+    {
+      "words": 282,
+      "tokens": 503
+    },
+    {
+      "words": 233,
+      "tokens": 452
+    },
+    {
+      "words": 283,
+      "tokens": 509
+    },
+    {
+      "words": 232,
+      "tokens": 444
+    },
+    {
+      "words": 284,
+      "tokens": 503
+    },
+    {
+      "words": 231,
+      "tokens": 444
+    },
+    {
+      "words": 285,
+      "tokens": 499
+    },
+    {
+      "words": 230,
+      "tokens": 440
+    },
+    {
+      "words": 286,
+      "tokens": 503
+    },
+    {
+      "words": 229,
+      "tokens": 439
+    },
+    {
+      "words": 287,
+      "tokens": 506
+    },
+    {
+      "words": 228,
+      "tokens": 443
+    },
+    {
+      "words": 288,
+      "tokens": 507
+    },
+    {
+      "words": 227,
+      "tokens": 436
+    },
+    {
+      "words": 289,
+      "tokens": 510
+    },
+    {
+      "words": 226,
+      "tokens": 446
+    },
+    {
+      "words": 290,
+      "tokens": 507
+    },
+    {
+      "words": 225,
+      "tokens": 436
+    },
+    {
+      "words": 291,
+      "tokens": 508
+    },
+    {
+      "words": 224,
+      "tokens": 437
+    },
+    {
+      "words": 292,
+      "tokens": 517
+    },
+    {
+      "words": 223,
+      "tokens": 441
+    },
+    {
+      "words": 293,
+      "tokens": 518
+    },
+    {
+      "words": 222,
+      "tokens": 437
+    },
+    {
+      "words": 294,
+      "tokens": 506
+    },
+    {
+      "words": 221,
+      "tokens": 435
+    },
+    {
+      "words": 295,
+      "tokens": 519
+    },
+    {
+      "words": 220,
+      "tokens": 434
+    },
+    {
+      "words": 296,
+      "tokens": 518
+    },
+    {
+      "words": 219,
+      "tokens": 433
+    },
+    {
+      "words": 297,
+      "tokens": 516
+    },
+    {
+      "words": 218,
+      "tokens": 430
+    },
+    {
+      "words": 298,
+      "tokens": 522
+    },
+    {
+      "words": 217,
+      "tokens": 424
+    },
+    {
+      "words": 299,
+      "tokens": 522
+    },
+    {
+      "words": 216,
+      "tokens": 425
+    },
+    {
+      "words": 300,
+      "tokens": 523
+    },
+    {
+      "words": 215,
+      "tokens": 428
+    },
+    {
+      "words": 301,
+      "tokens": 525
+    },
+    {
+      "words": 214,
+      "tokens": 426
+    },
+    {
+      "words": 302,
+      "tokens": 523
+    },
+    {
+      "words": 213,
+      "tokens": 425
+    },
+    {
+      "words": 303,
+      "tokens": 533
+    },
+    {
+      "words": 212,
+      "tokens": 425
+    },
+    {
+      "words": 304,
+      "tokens": 523
+    },
+    {
+      "words": 211,
+      "tokens": 417
+    },
+    {
+      "words": 305,
+      "tokens": 526
+    },
+    {
+      "words": 210,
+      "tokens": 422
+    },
+    {
+      "words": 306,
+      "tokens": 526
+    },
+    {
+      "words": 209,
+      "tokens": 416
+    },
+    {
+      "words": 307,
+      "tokens": 535
+    },
+    {
+      "words": 208,
+      "tokens": 410
+    },
+    {
+      "words": 308,
+      "tokens": 532
+    },
+    {
+      "words": 207,
+      "tokens": 420
+    },
+    {
+      "words": 309,
+      "tokens": 533
+    },
+    {
+      "words": 206,
+      "tokens": 410
+    },
+    {
+      "words": 310,
+      "tokens": 542
+    },
+    {
+      "words": 205,
+      "tokens": 419
+    },
+    {
+      "words": 311,
+      "tokens": 535
+    },
+    {
+      "words": 204,
+      "tokens": 410
+    },
+    {
+      "words": 312,
+      "tokens": 543
+    },
+    {
+      "words": 203,
+      "tokens": 420
+    },
+    {
+      "words": 313,
+      "tokens": 536
+    },
+    {
+      "words": 202,
+      "tokens": 406
+    },
+    {
+      "words": 314,
+      "tokens": 541
+    },
+    {
+      "words": 201,
+      "tokens": 416
+    },
+    {
+      "words": 315,
+      "tokens": 542
+    },
+    {
+      "words": 200,
+      "tokens": 410
+    },
+    {
+      "words": 316,
+      "tokens": 552
+    },
+    {
+      "words": 199,
+      "tokens": 408
+    },
+    {
+      "words": 317,
+      "tokens": 548
+    },
+    {
+      "words": 198,
+      "tokens": 415
+    },
+    {
+      "words": 318,
+      "tokens": 542
+    },
+    {
+      "words": 197,
+      "tokens": 410
+    },
+    {
+      "words": 319,
+      "tokens": 550
+    },
+    {
+      "words": 196,
+      "tokens": 406
+    },
+    {
+      "words": 320,
+      "tokens": 553
+    },
+    {
+      "words": 195,
+      "tokens": 402
+    },
+    {
+      "words": 321,
+      "tokens": 552
+    },
+    {
+      "words": 194,
+      "tokens": 402
+    },
+    {
+      "words": 322,
+      "tokens": 550
+    }
+  ]
+}

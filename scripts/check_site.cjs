@@ -5,6 +5,7 @@ const path = require("node:path");
 const http = require("node:http");
 const { once } = require("node:events");
 const { checkStrands } = require("./check_strands_browser.cjs");
+const { checkContextControls } = require("./check_context_browser.cjs");
 
 async function main() {
   const root = path.resolve(process.env.SITE_DIR || "dist/site");
@@ -519,6 +520,28 @@ async function main() {
             results.push({ offlineStrandsReview: true, javaScriptEnabled, networkRequests: 0 });
           } finally { await page.close(); }
         }
+      }
+    }
+    if (process.env.SITE_HUB !== "1") {
+      for (const width of [1440, 390, 320]) {
+        const page = await browser.newPage({ viewport: { width, height: 1000 } });
+        try {
+          await page.goto(base);
+          await page.getByRole("link", { name: "Inspect both context-control cohorts" }).click();
+          results.push({ width, ...await checkContextControls(page, page, root) });
+        } finally { await page.close(); }
+      }
+      if (!process.env.SITE_URL) {
+        const page = await browser.newPage({ viewport: { width: 390, height: 1000 }, javaScriptEnabled: false });
+        const network = [];
+        page.on("request", request => { if (/^https?:/.test(request.url())) network.push(request.url()); });
+        await page.route("http**/*", route => route.abort());
+        try {
+          await page.goto(require("node:url").pathToFileURL(path.join(root, "context-controls/index.html")).href);
+          results.push({ offlineContextControls: true,
+            ...await checkContextControls(page, page, root, { downloads: false }) });
+          assert.deepEqual(network, []);
+        } finally { await page.close(); }
       }
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

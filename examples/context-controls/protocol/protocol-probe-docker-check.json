@@ -1,0 +1,26 @@
+{
+  "helper_sha256": "0d71ac25064de4fd7449e762ea910fd71cc79142aa1b52dd0470c10fa453f916",
+  "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "results": [
+    {
+      "kind": "reference",
+      "result": {
+        "ok": true,
+        "exit_code": 0,
+        "output": "{\"protocol_ok\": true, \"requests\": 2, \"responses\": [{\"ok\": true, \"report\": {\"source_sha256\": \"ed8caf612cae5c056d5a9f32b2074f1f7c6cdd1e50214b26ad70ebeaecb56b2e\", \"frame\": 31, \"time_seconds\": 1.033333333333372, \"position_m\": [2.066678047180176, 0.0, 6.085323333740234], \"speed_m_s\": 2.0046877195638113, \"max_position_error_m\": 0.02046407548115492, \"peak_frame\": 31, \"peak_height_m\": 6.085323333740234, \"missing_frames\": []}}, {\"ok\": true, \"report\": {\"source_sha256\": \"ed8caf612cae5c056d5a9f32b2074f1f7c6cdd1e50214b26ad70ebeaecb56b2e\", \"frame\": 31, \"time_seconds\": 1.033333333333372, \"position_m\": [2.066678047180176, 0.0, 6.085323333740234], \"speed_m_s\": 2.0046877195638113, \"max_position_error_m\": 0.02046407548115492, \"peak_frame\": 31, \"peak_height_m\": 6.085323333740234, \"missing_frames\": []}}], \"numerical_correctness\": \"not_assessed\"}\n",
+        "limit_reached": null
+      },
+      "program_sha256": "42ba09f8896bd11aae872d1f45bb240333bc577f19010bf0480106b0b73ff7af"
+    },
+    {
+      "kind": "buffered",
+      "result": {
+        "ok": true,
+        "exit_code": 1,
+        "output": "{\"protocol_ok\": false, \"error\": \"response timeout: flush each JSON response before waiting for more input\"}\n",
+        "limit_reached": null
+      },
+      "program_sha256": "c4760e04ba35da3a02929178c9ec5ca866a4f2609f8efd2dbc53e713c409aba8"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "evalarc.skill-context-experiment.v1",
+  "model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "conditions": [
+    "relevant",
+    "neutral"
+  ],
+  "route": "mcp",
+  "model_seeds": [
+    17,
+    41,
+    97
+  ],
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "task_context": "inline",
+  "max_steps": 12,
+  "max_new_tokens_per_step": 4096,
+  "wall_seconds": 600,
+  "temperature": 0.2,
+  "model_visible_open_skill_tokens": 476,
+  "match_sha256": "cb9c2b97a1b056afc8479449b8c0bc8828e2d65e58a9115518ede94012b82ff6",
+  "harness_files": {
+    "record_skill_impact.py": "417b496191fb794a988957dc841fa199dda371de33ace60366daaa0dd0abc052",
+    "bridge.mjs": "adaa2b517a367c063eeda25a32a47f232642b0a254718692581cc2a816e81960",
+    "record_context_controls.py": "0a73390150f43779e614f03c211d7ab3fa2369a83cffa788ede98b44a1cedcf1",
+    "runner.py": "53346d1eaec035586e9a489b6751654300453c3669c313dca4402a36f4620f5f",
+    "agent_sandbox.py": "f949e3b3536ea11a6457e062867c003a1d180609638166c11fe92914e0d72422",
+    "robot_task.py": "f8f2fb3e4a163bb35315ae5a97376231eba041d0af0193ecaa776530912730cc",
+    "protocol_probe.py": "0d71ac25064de4fd7449e762ea910fd71cc79142aa1b52dd0470c10fa453f916",
+    "local_model_server.py": "94125874cd72aef26c3487761c2841323ec87812bf10ccb268615565be66af59"
+  },
+  "results_policy": "All six scheduled trials retained, including errors; no retries.",
+  "scope": "One public development task; a new paired context-content control. Same model, catalog metadata, tools, task and budgets. First skill-load payloads have identical token lengths; all later token usage is measured. No independent-author or held-out evaluation, and no pooled efficacy claim.",
+  "protocol_profile": "persistent-request",
+  "interpretation": "Follow-up planned after observing protocol timeouts in all original controls; reported as a separate development cohort, never as a hidden test or a retry."
+}

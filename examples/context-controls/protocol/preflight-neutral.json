@@ -1,0 +1,54 @@
+{
+  "id": 1,
+  "view": {
+    "name": "robot-recording-review",
+    "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+    "content": "# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.",
+    "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+    "bundle_sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32"
+  },
+  "receipt": {
+    "route": "mcp",
+    "tool": "open_skill",
+    "arguments": {
+      "name": "robot-recording-review"
+    },
+    "elapsed_ms": 287.1657630000001,
+    "protocol_era": "modern",
+    "raw": {
+      "_meta": {
+        "io.modelcontextprotocol/serverInfo": {
+          "name": "dsh-skills-anywhere",
+          "version": "0.12.0"
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<skill_content name=\"robot-recording-review\">\n<skill_resources>\nBase directory for this skill: /home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review\nResolve relative paths mentioned by this skill against the base directory before using them. Load referenced resources only as needed.\n</skill_resources>\n\n<skill_instructions>\n# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.\n</skill_instructions>\n</skill_content>"
+        }
+      ],
+      "structuredContent": {
+        "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+        "name": "robot-recording-review",
+        "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+        "directory": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review",
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review/SKILL.md",
+        "source": "anywhere-user",
+        "content": "# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.",
+        "bundle": {
+          "schema": "skills-anywhere-bundle-1",
+          "sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32",
+          "total_bytes": 1712,
+          "files": [
+            {
+              "path": "SKILL.md",
+              "bytes": 1712,
+              "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

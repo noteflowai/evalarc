@@ -85,6 +85,14 @@ For deeper exploration: [repeated attempts](docs/reliability.md),
 [recorded GPU research pilots](docs/research-pilots.md),
 [architecture](docs/architecture.md) and [papers](docs/research.zh-CN.md).
 
+**Does “finished” mean the task passed?**
+[Equal-length context controls](https://noteflowai.github.io/evalarc/context-controls/index.html)
+retain twelve Qwen3-8B attempts in two separate cohorts. Relevant guidance and
+unrelated prose each use a 476-token MCP payload. Inspect protocol timeouts,
+unchanged starter programs, numerical errors and every independent case check.
+Each cohort resolves 0 of 6 tasks; the diagnostic follow-up is a public development
+experiment, not a held-out efficacy result. [Methods and offline verification](examples/context-controls/README.md).
+
 **Does a correct answer file prove the delivered program works?**
 [Three native Harbor controls](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
 separate answer reward from independently executed code. One control receives

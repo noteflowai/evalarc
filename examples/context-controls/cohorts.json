@@ -1,0 +1,29 @@
+{
+  "schema": "evalarc.skill-context-collection.v1",
+  "tokens_per_skill_load": 476,
+  "cohorts": [
+    {
+      "id": "initial",
+      "trials": 6,
+      "resolved": 0,
+      "cases": 48,
+      "response_timeouts": 48,
+      "case_statuses": {
+        "agent_error": 48
+      }
+    },
+    {
+      "id": "protocol",
+      "trials": 6,
+      "resolved": 0,
+      "cases": 48,
+      "response_timeouts": 0,
+      "case_statuses": {
+        "passed": 12,
+        "failed": 12,
+        "agent_error": 24
+      }
+    }
+  ],
+  "outcomes_are_pooled": false
+}

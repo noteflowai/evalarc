@@ -42,6 +42,14 @@ or a model leaderboard.
 
 ## Bring your own evidence
 
+**A finish signal is not task acceptance.**
+[Context controls](https://glayguo-evalarc.static.hf.space/context-controls/index.html)
+compare relevant guidance and unrelated prose at 476 tokens per MCP load.
+Twelve real Qwen3-8B attempts remain in two separate cohorts, each with 0/6
+resolved tasks. Inspect protocol failures, partial scores and unchanged starter
+programs, with complete records and an offline download. This diagnostic
+follow-up does not establish general skill efficacy.
+
 **Correct answers can accompany an incorrect program.**
 The [Harbor control report](https://glayguo-evalarc.static.hf.space/harbor-controls/index.html)
 compares three actual container runs. A detached answer file receives 100%

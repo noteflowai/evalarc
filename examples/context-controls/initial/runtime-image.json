@@ -1,0 +1,9 @@
+{
+  "Id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "RepoDigests": [
+    "python@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea"
+  ],
+  "Architecture": "amd64",
+  "Os": "linux",
+  "metadata_observed_after_runs": true
+}
