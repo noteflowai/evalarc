@@ -448,6 +448,11 @@ def build(destination: Path) -> dict:
     verify_handoff(ROOT / "examples/funes-handoff")
     shutil.copytree(ROOT / "examples/funes-handoff", destination / "funes-handoff")
     verify_handoff(destination / "funes-handoff")
+    from scripts.build_skill_handoff import verify_bundle as verify_skill_handoff
+
+    verify_skill_handoff(ROOT / "examples/skill-handoff")
+    shutil.copytree(ROOT / "examples/skill-handoff", destination / "skill-handoff")
+    verify_skill_handoff(destination / "skill-handoff")
     from scripts.build_behavior_site import build as build_behavior
 
     build_behavior(ROOT / "examples/behavior-audit", destination / "behavior-audit")

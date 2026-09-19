@@ -99,6 +99,14 @@ evalarc --version
 [运行源码示例](https://github.com/noteflowai/dsh-skills-anywhere/tree/main/examples/funes-handoff)
 · [方法与离线证据](examples/funes-handoff/README.md)。
 
+**将已审核的技能版本带入下一次会话。**
+[固定技能交接报告](https://noteflowai.github.io/evalarc/skill-handoff/index.html)
+把前序实际 MCP 加载与六次新接续关联起来。两个条件均由工作流通过 MCP
+预加载相同历史技能，其中一个额外提供 Funes 检索。六次预加载、六次历史检索
+均成功，但程序均未修改，完整验收为 0/6。
+[中文方法与完整证据](examples/skill-handoff/README.zh-CN.md)。
+本组使用另一份前序会话，与上面的无额外技能交接分开记录。
+
 ## 运行审计
 
 安装上面的 wheel 后，用 Docker 执行内置 Python 参考实现和八种刻意带错的代码实现：

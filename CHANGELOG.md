@@ -1,5 +1,12 @@
 # Changelog
 
+## Pinned skill handoff — 2026-09-19
+
+- Continue an explicitly selected public session with its original instruction and bundle hashes, using actual MCP preloads. Reject changed skill versions before starting a new provider session.
+- Publish all six Qwen3-4B continuations with separate delivery, retrieval and task outcomes: six successful workflow preloads, six retrieved results, unchanged programs and 0/6 full acceptance. The report includes original receipts, independent grades and a complete offline archive.
+- Bind future recorder invocations to their own source checkout. Preserve the recorded cohort’s during-run and post-run package observations with their original timing.
+- Include both handoff evidence trees and report templates in source distributions, and verify their recorded bytes before publication. The Python API version remains 0.13.0.
+
 ## 0.13.0 — 2026-09-19
 
 - Add a dedicated isolated runtime observer and read-only `behavior-review` CLI. Report file acceptance, service completion, authorization and evidence validity separately; retain temporary operations, rejected attempts, child-process accesses and incomplete requests.

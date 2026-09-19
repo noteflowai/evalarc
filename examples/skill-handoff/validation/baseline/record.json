@@ -1,0 +1,14 @@
+{
+  "kind": "scripted-post-run-baseline-without-agent-generation",
+  "started_at": "2026-09-19T12:22:59.868423+00:00",
+  "completed_at": "2026-09-19T12:23:03.477308+00:00",
+  "program_sha256": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+  "candidate_sha256": "038f2c65a7bb6fe907918e972c26ae8ab4672892c64c28dd061aadfcef0f931f",
+  "evaluation_sha256": "807c9f5083f56b458255dd8ebe7a03e108d763e19059c189312cbe3f27d82e96",
+  "evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.0,
+    "status": "failed"
+  }
+}

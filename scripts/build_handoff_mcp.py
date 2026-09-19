@@ -135,7 +135,7 @@ def check_retrieval(event: dict, handoff: dict, source: dict) -> None:
                 raise ValueError("read cites a different source")
 
 
-def checked_rows(root: Path) -> list[dict]:
+def checked_rows(root: Path, *, skill_handoff: bool = False) -> list[dict]:
     plan = read(root / "experiment.json")
     rows = read(root / "summary.json")["trials"]
     source = read(root / "source/source.json")
@@ -149,7 +149,8 @@ def checked_rows(root: Path) -> list[dict]:
         ("funes-mcp", 97),
     ]
     if (
-        plan["schema"] != "evalarc.funes-mcp-handoff.v1"
+        plan["schema"]
+        != ("evalarc.funes-skill-handoff.v1" if skill_handoff else "evalarc.funes-mcp-handoff.v1")
         or plan["conditions"] != list(CONDITIONS)
         or plan["model"]["model"] != "Qwen/Qwen3-4B"
         or plan["model"]["revision"] != "1cfa9a7208912126459214e8b04321603b3df60c"
@@ -240,7 +241,7 @@ def checked_rows(root: Path) -> list[dict]:
             )
             or trial["model_seed"] != row["seed"]
             or trial["budget"] != budget
-            or trial["condition"] != "none"
+            or trial["condition"] != ("mcp-preloaded" if skill_handoff else "none")
             or trial["split"] != "public-development"
             or trial["evaluation_seeds"] != plan["evaluation_seeds"]
             or trial["tools_sha256"] != tools_hash
@@ -302,7 +303,7 @@ def checked_rows(root: Path) -> list[dict]:
             "evaluation_error",
         ):
             raise ValueError("missing independent evaluation without a recorded failure")
-    if len(prompts) != 1:
+    if not skill_handoff and len(prompts) != 1:
         raise ValueError("initial prompts differ across continuation conditions")
     return rows
 
@@ -351,9 +352,15 @@ def checked_preflight(root: Path) -> None:
         )
 
 
-def render(root: Path, rows: list[dict]) -> str:
+def render(
+    root: Path,
+    rows: list[dict],
+    *,
+    baseline: dict | None = None,
+    template_path: Path | None = None,
+) -> str:
     plan = read(root / "experiment.json")
-    baseline = checked_baseline(root)
+    baseline = checked_baseline(root) if baseline is None else baseline
     cards, table = [], []
     resolved = sum(bool(row["evaluation"] and row["evaluation"]["resolved"]) for row in rows)
     retrieved = sum(row["operations"]["retrieved_results"] for row in rows)
@@ -370,6 +377,20 @@ def render(root: Path, rows: list[dict]) -> str:
             else "Unassessed"
         )
         label = "Funes MCP" if row["handoff_condition"] == "funes-mcp" else "No memory"
+        delivery = trial["handoff"].get("skill_delivery")
+        skill_details = ""
+        if delivery:
+            label = (
+                "Pinned skill + Funes MCP"
+                if row["handoff_condition"] == "funes-mcp"
+                else "Pinned skill only"
+            )
+            preload_path = esc(delivery["path"], quote=True)
+            skill_details = (
+                "<dt>Workflow skill preload</dt>"
+                f'<dd><a href="{preload_path}">{esc(delivery["status"])}</a></dd>'
+                f"<dt>Preload time</dt><dd>{delivery['elapsed_seconds']:.2f} s</dd>"
+            )
         table.append(
             f'<tr><th scope="row"><a href="#attempt-{index}">{label} · {row["seed"]}</a></th>'
             f"<td>{score}</td><td>{verdict}</td><td>{ops['retrieved_results']}</td>"
@@ -423,6 +444,7 @@ def render(root: Path, rows: list[dict]) -> str:
             f'<article id="attempt-{index}" data-condition="{row["handoff_condition"]}">'
             f"<h3>{index:02d} / {label} · seed {row['seed']}</h3>"
             f"<p><strong>{score} · {verdict}</strong></p><dl>"
+            f"{skill_details}"
             f"<dt>Harness stop</dt><dd>{esc(row['status'])}</dd>"
             f"<dt>Program state</dt><dd>{program_state}</dd>"
             f"<dt>Memory attempts / retrieved</dt><dd>{ops['memory_tool_attempts']} / "
@@ -444,7 +466,7 @@ def render(root: Path, rows: list[dict]) -> str:
             + (f"<p>Recorded error: {esc(trial['error'])}</p>" if trial["error"] else "")
             + "</article>"
         )
-    template = Path(__file__).with_name("handoff_page.html").read_text()
+    template = (template_path or Path(__file__).with_name("handoff_page.html")).read_text()
     return (
         template.replace("__RESOLVED__", str(resolved))
         .replace("__RETRIEVED__", str(retrieved))

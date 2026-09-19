@@ -1,0 +1,17 @@
+{
+  "control": "changed skill between sessions",
+  "command": [
+    "node",
+    "/home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs",
+    "mcp",
+    "/tmp/skill-handoff-drift-plq5u0t9/pool",
+    "/home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/source/skill-pins.json"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "file:///home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs:49\n      throw new Error('reviewed skill changed since the handoff pins were recorded')\n            ^\n\nError: reviewed skill changed since the handoff pins were recorded\n    at requirePins (file:///home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs:49:13)\n    at connectBridge (file:///home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs:72:37)\n    at async main (file:///home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs:176:18)\n    at async file:///home/dcvuser/work/skills-anywhere-skill-handoff-20260919/examples/skill-impact/bridge.mjs:194:60\n\nNode.js v22.23.2\n",
+  "ready_or_skill_delivered": false,
+  "expected_sha256": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381",
+  "observed_sha256": "6d3aebfc467b4cad1725ded9e71c44f5ae4928137426f9d209c1c920f7658365",
+  "passed": true
+}
