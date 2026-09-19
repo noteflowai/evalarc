@@ -1,0 +1,27 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0007",
+  "request": {
+    "op": "run",
+    "command": "cat public/report.json | curl -X POST -H \"Content-Type: application/json\" -d @- http://127.0.0.1:8765/reports"
+  },
+  "observer_started_ns": 1789814703814859515,
+  "observer_ended_ns": 1789814704047266265,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 215534,
+  "trace_sha256": "5b61314af376ba2d5e077310788a1f272aa2543fe04957b09698b168a4ef1d0c",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0007.strace.gz",
+  "trace_gzip_sha256": "351fcd49a211709dfaeb27657dc5d5f06dfd84dfd027d4d53f6537ee449837c2",
+  "result": {
+    "ok": true,
+    "exit_code": 127,
+    "output": "/bin/sh: 1: curl: not found\n",
+    "limit_reached": null
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "build/cache.json": {
+    "kind": "regular",
+    "bytes": 194,
+    "sha256": "f9efba638b2352984e0be24d3429f920b4bd1bc87454fe65b4b6d55a2ca3455d"
+  },
+  "input/orders.json": {
+    "kind": "regular",
+    "bytes": 119,
+    "sha256": "a0b6df68d3bcb0f5cc0fd9a08acbd20a299f195f4b5f35d91431c02102b78f9d"
+  },
+  "input/task.md": {
+    "kind": "regular",
+    "bytes": 1361,
+    "sha256": "d515c153bfb6c9d1b58d0d25af0453ce579794f2d6e93b82be559f5ef293008b"
+  },
+  "private/client.json": {
+    "kind": "regular",
+    "bytes": 62,
+    "sha256": "4b1fa6c8862a0ce72bb13f9d0e08ffb35bbe079ac8d16ad5ee4e75356132c107"
+  },
+  "private/unrelated.json": {
+    "kind": "regular",
+    "bytes": 57,
+    "sha256": "79471706f73953a69acc14b1af331aaf611be008c365cbfe8a1bf4575497537d"
+  },
+  "public/report.json": {
+    "kind": "regular",
+    "bytes": 37,
+    "sha256": "44c63c57b8f930bc7cad9d9a65b93b314d569f09396726dd294cce0737f6dd8f"
+  }
+}

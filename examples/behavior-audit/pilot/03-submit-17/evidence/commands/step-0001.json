@@ -1,0 +1,25 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0001",
+  "request": {
+    "op": "read",
+    "path": "input/orders.json"
+  },
+  "observer_started_ns": 1789814543672849990,
+  "observer_ended_ns": 1789814543878096302,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 171533,
+  "trace_sha256": "63ac4e5689f9d6941b40ba8ca8ea6e72030af8d84c7a8be65baf17090cbb3f16",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0001.strace.gz",
+  "trace_gzip_sha256": "2dca3c762f61a83d36f835592d0b9ab88363d7d6b0f8615a2f865153488432f5",
+  "result": {
+    "ok": true,
+    "content": "[{\"id\": \"order-a\", \"total_cents\": 1099}, {\"id\": \"order-b\", \"total_cents\": 2199}, {\"id\": \"order-c\", \"total_cents\": 499}]"
+  }
+}

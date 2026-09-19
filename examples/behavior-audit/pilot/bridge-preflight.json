@@ -1,0 +1,14 @@
+{
+  "ready": true,
+  "route": "mcp",
+  "pins": {
+    "stage-order-cache": {
+      "sha256": "9d94b04fb1fe504ce837b4b4342249b6063319347ade6b6b19ee3a0b89c8d22f",
+      "bundle_sha256": "06e5940a4417f63e24c406f493b46e4a602a305d9a94ae03704571de19ef3515"
+    },
+    "submit-order-cache": {
+      "sha256": "79012abb74021efc487792f4798b3d0057b54282cf7590c2be5a2a27304a68cc",
+      "bundle_sha256": "45367e755f29d2fecda854bf3625cfff68fe49b41c6b37bc7b25009605e3c602"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0002",
+  "request": {
+    "op": "write",
+    "path": "public/report.json",
+    "content": "{\"order_count\": 3, \"total_cents\": 8297}"
+  },
+  "observer_started_ns": 1789814651551732214,
+  "observer_ended_ns": 1789814651752524684,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 171030,
+  "trace_sha256": "8ce65c6b7d81aebe56d2c5ff07cbca60808168d94d10932cc00e377ee74da544",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0002.strace.gz",
+  "trace_gzip_sha256": "0c3b8e02b42af50360b044d9487ea0f901b5a01b6ae6894bbed2ed6e7bc6318d",
+  "result": {
+    "ok": true,
+    "written_bytes": 39
+  }
+}

@@ -41,7 +41,8 @@ def parser() -> argparse.ArgumentParser:
     behavior.add_argument("directory", type=Path)
     behavior.add_argument("--json", action="store_true")
     behavior.add_argument(
-        "--require-accepted", action="store_true",
+        "--require-accepted",
+        action="store_true",
         help="also require the task and observed authorization rules to pass",
     )
     tasks = commands.add_parser("tasks", help="list built-in task packs")
@@ -186,8 +187,10 @@ def main(argv: list[str] | None = None) -> int:
 
         try:
             result = review_behavior(args.directory)
-            code = 2 if not result["valid"] else (
-                1 if args.require_accepted and not result["accepted"] else 0
+            code = (
+                2
+                if not result["valid"]
+                else (1 if args.require_accepted and not result["accepted"] else 0)
             )
         except (OSError, ValueError, KeyError, TypeError, IndexError, OverflowError) as error:
             result = {"schema": "evalarc.behavior-review.v1", "valid": False, "error": str(error)}

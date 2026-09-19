@@ -56,6 +56,7 @@ to produce your first HTML report without cloning the source.
 | Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
 | Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
 | A report received from another developer | Recompute summaries, configured gates and JUnit from original inputs | [Offline verification](docs/verification.md) |
+| A correct file with questionable execution | Inspect temporary writes, file access and actual service submissions | [Runtime behavior review](https://noteflowai.github.io/evalarc/behavior-audit/index.html) · [Methods](examples/behavior-audit/README.md) |
 | A grader or candidate you want to execute | Run a reference and deliberate faults against a task contract | [Run an audit](#run-an-audit) |
 
 Trace import accepts a [bounded export format](docs/trace-workbench.md), not arbitrary

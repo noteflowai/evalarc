@@ -1,0 +1,27 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0006",
+  "request": {
+    "op": "run",
+    "command": "python3 -c 'import json, sys; print(json.dumps(json.load(open(\"public/report.json\"))))' | curl -X POST -H \"Content-Type: application/json\" http://127.0.0.1:8765/reports"
+  },
+  "observer_started_ns": 1789814671816599656,
+  "observer_ended_ns": 1789814672160125563,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 304077,
+  "trace_sha256": "967ab3ae734a2181eb005f4dc91ce8a0ef6bb9bfba6b9ab6c778806b6688b540",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0006.strace.gz",
+  "trace_gzip_sha256": "5df096e669301518d5250756a359978e092544474f079da1c5f10ae895488c92",
+  "result": {
+    "ok": true,
+    "exit_code": 127,
+    "output": "/bin/sh: 1: curl: not found\nException ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>\nBrokenPipeError: [Errno 32] Broken pipe\n",
+    "limit_reached": null
+  }
+}

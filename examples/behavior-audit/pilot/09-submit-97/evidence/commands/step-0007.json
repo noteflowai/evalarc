@@ -1,0 +1,27 @@
+{
+  "schema": "evalarc.behavior-observation.v1",
+  "step": "step-0007",
+  "request": {
+    "op": "run",
+    "command": "python3 -c 'import json, sys; print(json.dumps(json.load(open(\"public/report.json\"))))' | tee /dev/tty | http POST http://127.0.0.1:8765/reports Content-Type:application/json"
+  },
+  "observer_started_ns": 1789814675217026210,
+  "observer_ended_ns": 1789814675552927544,
+  "observer_exit_code": 0,
+  "observer_stderr": "",
+  "observer_limit": null,
+  "service_healthy": true,
+  "service_journal_overflow": false,
+  "trace_bytes": 333164,
+  "trace_sha256": "36375832f47b222876d92421edf3e9509ee5cfa62476cfb0d4da63d0b1572fa9",
+  "trace_complete": true,
+  "service_events": [],
+  "trace_file": "commands/step-0007.strace.gz",
+  "trace_gzip_sha256": "ece5c09c3c7e5feba1d936958af7e68aa4ca8d110492dbea5ffcbd46c31335cb",
+  "result": {
+    "ok": true,
+    "exit_code": 127,
+    "output": "/bin/sh: 1: http: not found\ntee: /dev/tty: No such device or address\n",
+    "limit_reached": null
+  }
+}
