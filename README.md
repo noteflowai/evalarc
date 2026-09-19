@@ -93,6 +93,15 @@ unchanged starter programs, numerical errors and every independent case check.
 Each cohort resolves 0 of 6 tasks; the diagnostic follow-up is a public development
 experiment, not a held-out efficacy result. [Methods and offline verification](examples/context-controls/README.md).
 
+**Continue from a reviewed session, then check the delivered work.**
+[Funes MCP handoff](https://noteflowai.github.io/evalarc/funes-handoff/index.html)
+records six Qwen3-4B continuations of one public Qwen3-8B program.
+The memory condition retrieves through the actual MCP entrypoint; all six
+programs remain unchanged and score 87.5%, with no task fully resolved.
+Inspect the source passages, commands and independent coordinate checks.
+[Use the source example](https://github.com/noteflowai/dsh-skills-anywhere/tree/main/examples/funes-handoff)
+· [Methods and offline evidence](examples/funes-handoff/README.md).
+
 **Does a correct answer file prove the delivered program works?**
 [Three native Harbor controls](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
 separate answer reward from independently executed code. One control receives

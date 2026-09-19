@@ -44,7 +44,7 @@ pythonpath = ["src", "."]
 [tool.ruff]
 extend-exclude = [
     "examples/skill-impact", "examples/research", "examples/harbor-controls",
-    "examples/context-controls",
+    "examples/context-controls", "examples/funes-handoff",
 ]
 target-version = "py311"
 line-length = 100

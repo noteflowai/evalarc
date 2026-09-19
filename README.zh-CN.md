@@ -90,6 +90,14 @@ evalarc --version
 严格验收拒绝。对照由预先声明的脚本执行，提供原始 ATIF 和完整离线证据包；
 本实验没有模型推理，也不代表发现了未知评分漏洞。
 
+**从已审核会话继续工作，再验收交付物。**
+[Funes MCP 交接实验](https://noteflowai.github.io/evalarc/funes-handoff/index.html)
+保留 Qwen3-4B 接续一份公开 Qwen3-8B 程序的六次运行。
+记忆组通过实际 MCP 入口检索原会话；六份程序均未修改，评分均为 87.5%，没有任务完全通过。
+报告可检查检索原文、命令输出和独立坐标检查。
+[运行源码示例](https://github.com/noteflowai/dsh-skills-anywhere/tree/main/examples/funes-handoff)
+· [方法与离线证据](examples/funes-handoff/README.md)。
+
 ## 运行审计
 
 安装上面的 wheel 后，用 Docker 执行内置 Python 参考实现和八种刻意带错的代码实现：
