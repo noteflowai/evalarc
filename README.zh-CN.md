@@ -77,6 +77,13 @@ evalarc --version
 [Python／JavaScript](docs/languages.md)、[GPU 研究记录](docs/research-pilots.md)、
 [架构](docs/architecture.md)和[论文分析](docs/research.zh-CN.md)。历史更新见 [CHANGELOG](CHANGELOG.md)。
 
+**Agent 宣布完成，任务是否通过了验收？**
+[等长度上下文对照](https://noteflowai.github.io/evalarc/context-controls/index.html)
+保留两组共 12 次 Qwen3-8B 试验：相关技能与无关文本均通过 MCP 交付，每次载荷为 476 token。
+可逐项查看协议超时、未修改的初始程序、数值错误和独立验收结果。两组各有 0/6 个任务完全通过；
+增加协议诊断工具的后续组属于公开开发试验，不与初始组合并推导技能收益。
+[方法与离线核验](examples/context-controls/README.md)。
+
 **答案文件正确，是否代表交付程序可用？**
 [三次原生 Harbor 对照](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
 分别检查答案得分和程序实际运行结果。其中一项答案得分 100%，交付程序得分 80%，

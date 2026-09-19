@@ -438,6 +438,11 @@ def build(destination: Path) -> dict:
     verify_harbor_controls(ROOT / "examples/harbor-controls")
     shutil.copytree(ROOT / "examples/harbor-controls", destination / "harbor-controls")
     verify_harbor_controls(destination / "harbor-controls")
+    from scripts.build_context_collection import verify as verify_context_controls
+
+    verify_context_controls(ROOT / "examples/context-controls")
+    shutil.copytree(ROOT / "examples/context-controls", destination / "context-controls")
+    verify_context_controls(destination / "context-controls")
     from evalarc.trace_review import import_trace
 
     trace_examples = ROOT / "examples/trace-workbench"

@@ -1,0 +1,54 @@
+{
+  "id": 1,
+  "view": {
+    "name": "robot-recording-review",
+    "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+    "content": "# Review recorded robot motion\n\nBuild the review around the supplied recording contract. Read its frame mapping,\nunits, clock origin, sample identifiers, and source digest before computing\nphysical quantities.\n\n- Convert positions and velocities into the same world convention. Translation\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\n  after conversion, rather than interpreting a component as a magnitude.\n- Subtract a clock's origin before scaling to elapsed seconds. Avoid converting\n  frame numbers directly to time when measured timestamps are provided.\n- Index observations by their explicit identifiers. Preserve omissions; array\n  order, row count and last row do not establish chronology or completeness.\n- When comparing with constant-acceleration motion, evaluate the reference\n  equation separately at each available timestamp. Use the Euclidean vector\n  error, then aggregate only the observations actually present.\n- Locate a trajectory peak from world height, applying the contract's tie rule.\n  A final frame can follow the peak by a substantial interval.\n- Keep original attribution in the result. A matching digest shows which\n  recording was used; it does not establish that the recording is physically\n  accurate or that its author is authenticated.\n\nFor a service implementation, keep the numerical transformation separate from\nstdin/stdout handling. Exercise the completed program on the supplied example,\nincluding its actual JSON-lines input. Report missing evidence explicitly and\nkeep diagnostic text out of machine-readable output.",
+    "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+    "bundle_sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a"
+  },
+  "receipt": {
+    "route": "mcp",
+    "tool": "open_skill",
+    "arguments": {
+      "name": "robot-recording-review"
+    },
+    "elapsed_ms": 283.37424799999997,
+    "protocol_era": "modern",
+    "raw": {
+      "_meta": {
+        "io.modelcontextprotocol/serverInfo": {
+          "name": "dsh-skills-anywhere",
+          "version": "0.12.0"
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<skill_content name=\"robot-recording-review\">\n<skill_resources>\nBase directory for this skill: /home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/relevant/robot-recording-review\nResolve relative paths mentioned by this skill against the base directory before using them. Load referenced resources only as needed.\n</skill_resources>\n\n<skill_instructions>\n# Review recorded robot motion\n\nBuild the review around the supplied recording contract. Read its frame mapping,\nunits, clock origin, sample identifiers, and source digest before computing\nphysical quantities.\n\n- Convert positions and velocities into the same world convention. Translation\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\n  after conversion, rather than interpreting a component as a magnitude.\n- Subtract a clock's origin before scaling to elapsed seconds. Avoid converting\n  frame numbers directly to time when measured timestamps are provided.\n- Index observations by their explicit identifiers. Preserve omissions; array\n  order, row count and last row do not establish chronology or completeness.\n- When comparing with constant-acceleration motion, evaluate the reference\n  equation separately at each available timestamp. Use the Euclidean vector\n  error, then aggregate only the observations actually present.\n- Locate a trajectory peak from world height, applying the contract's tie rule.\n  A final frame can follow the peak by a substantial interval.\n- Keep original attribution in the result. A matching digest shows which\n  recording was used; it does not establish that the recording is physically\n  accurate or that its author is authenticated.\n\nFor a service implementation, keep the numerical transformation separate from\nstdin/stdout handling. Exercise the completed program on the supplied example,\nincluding its actual JSON-lines input. Report missing evidence explicitly and\nkeep diagnostic text out of machine-readable output.\n</skill_instructions>\n</skill_content>"
+        }
+      ],
+      "structuredContent": {
+        "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66",
+        "name": "robot-recording-review",
+        "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+        "directory": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/relevant/robot-recording-review",
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/relevant/robot-recording-review/SKILL.md",
+        "source": "anywhere-user",
+        "content": "# Review recorded robot motion\n\nBuild the review around the supplied recording contract. Read its frame mapping,\nunits, clock origin, sample identifiers, and source digest before computing\nphysical quantities.\n\n- Convert positions and velocities into the same world convention. Translation\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\n  after conversion, rather than interpreting a component as a magnitude.\n- Subtract a clock's origin before scaling to elapsed seconds. Avoid converting\n  frame numbers directly to time when measured timestamps are provided.\n- Index observations by their explicit identifiers. Preserve omissions; array\n  order, row count and last row do not establish chronology or completeness.\n- When comparing with constant-acceleration motion, evaluate the reference\n  equation separately at each available timestamp. Use the Euclidean vector\n  error, then aggregate only the observations actually present.\n- Locate a trajectory peak from world height, applying the contract's tie rule.\n  A final frame can follow the peak by a substantial interval.\n- Keep original attribution in the result. A matching digest shows which\n  recording was used; it does not establish that the recording is physically\n  accurate or that its author is authenticated.\n\nFor a service implementation, keep the numerical transformation separate from\nstdin/stdout handling. Exercise the completed program on the supplied example,\nincluding its actual JSON-lines input. Report missing evidence explicitly and\nkeep diagnostic text out of machine-readable output.",
+        "bundle": {
+          "schema": "skills-anywhere-bundle-1",
+          "sha256": "ff2fc36c02adefff16771c44ab749e1ff8a2e93f206f30f41c2234a522f6e39a",
+          "total_bytes": 1800,
+          "files": [
+            {
+              "path": "SKILL.md",
+              "bytes": 1800,
+              "sha256": "790242a892dcadcae145c6e8e0e37460c805fdaf8dfb4198076d5ea44a401d66"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const { checkStrands } = require("./check_strands_browser.cjs");
+const { checkContextControls } = require("./check_context_browser.cjs");
 
 async function main() {
   const url = process.env.SITE_URL;
@@ -66,9 +67,13 @@ async function main() {
           location.href = new URL("strands/index.html", base).href;
         }, appUrl);
         const strands = await checkStrands(page, app, root);
+        await app.locator("body").evaluate((element, base) => {
+          location.href = new URL("context-controls/index.html", base).href;
+        }, appUrl);
+        const contextControls = await checkContextControls(page, app, root);
         checks.push({ width, sourceCommit: expected.source_commit, hubIframe: true,
-          archiveDownloadsMatched: 4, originalJudgmentMatched: true, filters: true,
-          allRejectDisclosed: true, missingJudgmentsVisible: true, strands });
+          archiveDownloadsMatched: 5, originalJudgmentMatched: true, filters: true,
+          allRejectDisclosed: true, missingJudgmentsVisible: true, strands, contextControls });
       } finally {
         await page.close();
       }

@@ -1,0 +1,6 @@
+{
+  "skills_source_commit": "c1bdb14aa6570c42426c1111530f6f5b3b9f4474",
+  "note": "Archived built library is used directly; dependency lock is unchanged in the active provider checkout.",
+  "evalarc_checkout_base": "6169a8cc544ee11aff83499b6620a3c4cac90de6",
+  "node_observed_after_run": "v22.23.2"
+}

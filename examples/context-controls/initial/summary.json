@@ -1,0 +1,107 @@
+{
+  "schema": "evalarc.skill-context-results.v1",
+  "trials": [
+    {
+      "path": "relevant/01-mcp-17",
+      "condition": "mcp",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 79.32643001404358,
+      "completion_tokens": 1671,
+      "skill_loads": 1,
+      "context_condition": "relevant"
+    },
+    {
+      "path": "neutral/02-mcp-17",
+      "condition": "mcp",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 127.6080254020053,
+      "completion_tokens": 2829,
+      "skill_loads": 1,
+      "context_condition": "neutral"
+    },
+    {
+      "path": "neutral/03-mcp-41",
+      "condition": "mcp",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 149.73424933303613,
+      "completion_tokens": 3336,
+      "skill_loads": 1,
+      "context_condition": "neutral"
+    },
+    {
+      "path": "relevant/04-mcp-41",
+      "condition": "mcp",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 72.21215019800002,
+      "completion_tokens": 1549,
+      "skill_loads": 1,
+      "context_condition": "relevant"
+    },
+    {
+      "path": "relevant/05-mcp-97",
+      "condition": "mcp",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 123.04152664600406,
+      "completion_tokens": 2735,
+      "skill_loads": 1,
+      "context_condition": "relevant"
+    },
+    {
+      "path": "neutral/06-mcp-97",
+      "condition": "mcp",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.0,
+        "status": "failed"
+      },
+      "elapsed_seconds": 260.5222003329545,
+      "completion_tokens": 5646,
+      "skill_loads": 1,
+      "context_condition": "neutral"
+    }
+  ]
+}

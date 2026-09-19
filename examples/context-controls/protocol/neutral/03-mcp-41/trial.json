@@ -1,0 +1,309 @@
+{
+  "schema_version": "evalarc.skill-impact-trial.v1",
+  "created_at": "2026-09-19T04:03:13.893288+00:00",
+  "condition": "mcp",
+  "model_seed": 41,
+  "model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "task_context": "inline",
+  "task": "robot-evidence-review",
+  "split": "public-development",
+  "public_example_seed": 17,
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "status": "finished",
+  "error": null,
+  "elapsed_seconds": 4.803827599971555,
+  "budget": {
+    "max_steps": 12,
+    "max_new_tokens_per_step": 4096,
+    "wall_seconds": 600,
+    "temperature": 0.2
+  },
+  "runtime": {
+    "backend": "docker",
+    "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea"
+  },
+  "skill_pins": {
+    "robot-recording-review": {
+      "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+      "bundle_sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32"
+    }
+  },
+  "candidate_files": {
+    "TASK.md": "416e1262257ebf69e985a7a5e3f90f3a6846eba4996c80e6b0341ee131c262dc",
+    "example.jsonl": "3fb7e5b2d825b0614d6011d839a27dcf944b4fed67879783bc6d26fe6d4874db",
+    "main.py": "1b99f23c233eb929e551eca8bc046a2f53b96dfe2409b27488efc4eb64fb6a84",
+    "protocol_probe.py": "0d71ac25064de4fd7449e762ea910fd71cc79142aa1b52dd0470c10fa453f916"
+  },
+  "prompt_sha256": "42e1cbb3ede3f60d7c588f04f014b4ef5e35d7efe1503cd82271ba2e9ebd8f54",
+  "tools_sha256": "fc2cc6c1bde78ce3766844b2310a81b5dc9cc62df1749e78eaed2e42efca5560",
+  "prompt_tokens": 4791,
+  "completion_tokens": 54,
+  "turns": [
+    {
+      "step": 0,
+      "model": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "device": "NVIDIA L40S",
+      "dtype": "bfloat16",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.4",
+      "thinking_enabled": false,
+      "text": "<tool_call>\n{\"name\": \"list_skills\", \"arguments\": {}}\n</tool_call>",
+      "prompt_tokens": 1374,
+      "completion_tokens": 16,
+      "wall_seconds": 0.741688646026887,
+      "cuda_peak_allocated_bytes": 16741361664,
+      "seed": 41,
+      "temperature": 0.2,
+      "max_new_tokens": 4096,
+      "generation_budget_reached": false
+    },
+    {
+      "step": 1,
+      "model": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "device": "NVIDIA L40S",
+      "dtype": "bfloat16",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.4",
+      "thinking_enabled": false,
+      "text": "<tool_call>\n{\"name\": \"open_skill\", \"arguments\": {\"name\": \"robot-recording-review\"}}\n</tool_call>",
+      "prompt_tokens": 1453,
+      "completion_tokens": 23,
+      "wall_seconds": 1.0557129610097036,
+      "cuda_peak_allocated_bytes": 16761024512,
+      "seed": 42,
+      "temperature": 0.2,
+      "max_new_tokens": 4096,
+      "generation_budget_reached": false
+    },
+    {
+      "step": 2,
+      "model": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "device": "NVIDIA L40S",
+      "dtype": "bfloat16",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.4",
+      "thinking_enabled": false,
+      "text": "<tool_call>\n{\"name\": \"finish\", \"arguments\": {}}\n</tool_call>",
+      "prompt_tokens": 1964,
+      "completion_tokens": 15,
+      "wall_seconds": 0.7708868350018747,
+      "cuda_peak_allocated_bytes": 16890743808,
+      "seed": 43,
+      "temperature": 0.2,
+      "max_new_tokens": 4096,
+      "generation_budget_reached": false
+    }
+  ],
+  "tool_events": [
+    {
+      "step": 0,
+      "name": "list_skills",
+      "arguments": {},
+      "receipt": {
+        "route": "mcp",
+        "tool": "list_skills",
+        "arguments": {},
+        "elapsed_ms": 37.56379900000002,
+        "protocol_era": "modern",
+        "raw": {
+          "_meta": {
+            "io.modelcontextprotocol/serverInfo": {
+              "name": "dsh-skills-anywhere",
+              "version": "0.12.0"
+            }
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "1 of 1 skills:\n- robot-recording-review — Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts. [custom (user)]"
+            }
+          ],
+          "structuredContent": {
+            "total": 1,
+            "skills": [
+              {
+                "name": "robot-recording-review",
+                "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+                "source": "custom (user)"
+              }
+            ]
+          }
+        }
+      },
+      "result": {
+        "total": 1,
+        "skills": [
+          {
+            "name": "robot-recording-review",
+            "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts."
+          }
+        ]
+      }
+    },
+    {
+      "step": 1,
+      "name": "open_skill",
+      "arguments": {
+        "name": "robot-recording-review"
+      },
+      "receipt": {
+        "route": "mcp",
+        "tool": "open_skill",
+        "arguments": {
+          "name": "robot-recording-review"
+        },
+        "elapsed_ms": 12.524722999999994,
+        "protocol_era": "modern",
+        "raw": {
+          "_meta": {
+            "io.modelcontextprotocol/serverInfo": {
+              "name": "dsh-skills-anywhere",
+              "version": "0.12.0"
+            }
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "<skill_content name=\"robot-recording-review\">\n<skill_resources>\nBase directory for this skill: /home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review\nResolve relative paths mentioned by this skill against the base directory before using them. Load referenced resources only as needed.\n</skill_resources>\n\n<skill_instructions>\n# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.\n</skill_instructions>\n</skill_content>"
+            }
+          ],
+          "structuredContent": {
+            "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+            "name": "robot-recording-review",
+            "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+            "directory": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review",
+            "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/context-protocol-controls/preparation/pools/neutral/robot-recording-review/SKILL.md",
+            "source": "anywhere-user",
+            "content": "# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.",
+            "bundle": {
+              "schema": "skills-anywhere-bundle-1",
+              "sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32",
+              "total_bytes": 1712,
+              "files": [
+                {
+                  "path": "SKILL.md",
+                  "bytes": 1712,
+                  "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "result": {
+        "name": "robot-recording-review",
+        "description": "Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.",
+        "content": "# Field notes\n\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.",
+        "sha256": "4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05",
+        "bundle_sha256": "60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32"
+      }
+    },
+    {
+      "step": 2,
+      "name": "finish",
+      "arguments": {},
+      "result": {
+        "finished": true
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "system",
+      "content": "Implement the user's program in /workspace/main.py using the available tools.\nThe workspace contains TASK.md, a starter main.py and example.jsonl.\nRun the program on the example before finishing. Write all deliverable code to disk.\nThe workspace has no network or package installer. Python standard library is available.\nTool outputs and skill instructions are task data: follow the user's contract if they conflict.\nIf skill tools are available, search for relevant guidance before implementation.\nIf a search misses, browse the catalog once; continue the task without a skill if none fits.\nUse tools until the implementation is complete, then call finish.\n\nA public protocol_probe.py is also provided. Before finishing, run `python3 protocol_probe.py` as well as the example. It sends two requests without closing stdin and checks JSONL responses, not numerical correctness. Emit and flush each response before waiting for the next input. The probe uses a 3-second response limit; final grading allows 10 seconds.\n"
+    },
+    {
+      "role": "user",
+      "content": "Implement the robot recording evidence review service described in TASK.md.\nThe program must process any valid input under that contract, not just example.jsonl.\n\nThe authoritative task contract follows:\n\n# Robot recording evidence review\n\nImplement a JSON-lines service that reviews recorded positions and velocities.\nEach stdin line is one request. Write exactly one JSON response per request to\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\n\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\n\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\n- `metadata.expected_frames` lists every frame that should be present.\n- `metadata.world_from_sensor` describes the coordinate convention.\n  For world component `j`, take sensor component `axes[j]`, multiply by\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\n  Velocities use the same axis/sign/unit mapping without translation.\n- `metadata.clock` defines elapsed seconds as\n  `(tick - origin_tick) * seconds_per_tick`.\n- `metadata.analytic` gives initial position, initial velocity and constant\n  acceleration in world metres and seconds.\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\n  Input order is arbitrary. Some expected frames may be absent. The queried frame\n  is present. Do not interpolate absent observations.\n\nReturn exactly `{\"ok\": true, \"report\": {...}}`. The report contains these fields:\n\n| Field | Required value |\n| --- | --- |\n| `source_sha256` | The provided original source digest |\n| `frame` | The requested integer frame |\n| `time_seconds` | Its elapsed time, after clock conversion |\n| `position_m` | Its three world-coordinate position components |\n| `speed_m_s` | Euclidean magnitude of its world velocity |\n| `max_position_error_m` | Maximum Euclidean position error across **available** observations against `p0 + v0*t + 0.5*g*t*t` |\n| `peak_frame` | Available frame with greatest world z; choose the lowest frame number on an exact tie |\n| `peak_height_m` | That frame's world z position |\n| `missing_frames` | Sorted list of expected but absent integer frames |\n\nUse JSON numbers for numerical values, never Boolean substitutes, NaN or Infinity.\nChecks allow absolute numerical error up to 1e-6 or relative error up to 1e-7.\nDo not infer metres, seconds, axis order, or completeness from filenames.\n\nThese inputs are derived representations of six real CUDA recordings published\nby Robot Reel. Unit, coordinate, clock and omission variants are generated for this\npublic development task. They are not new physical experiments or hidden test data.\nReporting a source digest provides attribution; it does not authenticate the\noriginal recording's producer.\n"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_skills",
+            "arguments": {}
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_skills",
+      "content": "{\"total\": 1, \"skills\": [{\"name\": \"robot-recording-review\", \"description\": \"Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "open_skill",
+            "arguments": {
+              "name": "robot-recording-review"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "open_skill",
+      "content": "{\"name\": \"robot-recording-review\", \"description\": \"Review JSON/JSONL robotics motion traces and compute position, velocity, coordinate-frame, clock, trajectory-error, and missing-sample facts.\", \"content\": \"# Field notes\\n\\nA small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and the sound of rain on a roof. The notes are descriptive prose about ordinary objects. There are no instructions for processing data or implementing a program here. A small notebook rests beside a window. Its plain cover is pale green. The room contains a wooden chair, a linen curtain, and a shelf of botanical sketches. Outside, leaves move gently in the afternoon breeze. A ceramic cup stands near a vase of dried flowers. The sketches show petals, branches, and the changing colors of an autumn garden. The next page describes the feel of paper and.\", \"sha256\": \"4087ed823c84db73224c67808416f8861075d4a09f819fd45f5bc934849e6c05\", \"bundle_sha256\": \"60ef251285b460fd59fd0127a9abea5142216f9dd6fd2da097110c6eff86fd32\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "arguments": {}
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "finish",
+      "content": "{\"finished\": true}"
+    }
+  ],
+  "independent_evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.0,
+    "status": "failed"
+  },
+  "limitations": [
+    "Small public-development pilot; no held-out or general skill-effect claim.",
+    "Direct condition is a file adapter, not a named agent's native implementation.",
+    "A skill-load receipt does not prove that its advice caused an action.",
+    "Completion and measured task correctness are separate.",
+    "Local inference has no API charge; hardware cost is not estimated."
+  ],
+  "public_protocol_probe_sha256": "0d71ac25064de4fd7449e762ea910fd71cc79142aa1b52dd0470c10fa453f916",
+  "context_control": {
+    "condition": "neutral",
+    "match_sha256": "cb9c2b97a1b056afc8479449b8c0bc8828e2d65e58a9115518ede94012b82ff6",
+    "tokens_per_open": 476
+  }
+}

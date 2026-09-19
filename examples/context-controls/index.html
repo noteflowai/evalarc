@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Context Controls · EvalArc</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:auto;max-width:1080px;
+padding:32px 22px;background:#101725;color:#e6ecf5;font:17px/1.65 system-ui,sans-serif}
+a{color:#8ee1dc}a:focus-visible{outline:3px solid #ffc87d;outline-offset:4px}
+h1{font-size:clamp(32px,5vw,54px);line-height:1.1;max-width:24ch}h2{font-size:24px}
+p{max-width:82ch}.eyebrow{color:#8ee1dc;letter-spacing:.08em;font-size:13px}
+.card,.method{border:1px solid #3c4961;border-radius:10px;background:#1c293c;
+padding:20px;margin:28px 0}.method{background:#142d31}strong{color:#ffc87d}
+table{border-collapse:collapse;width:100%;margin:18px 0}caption{text-align:left;
+color:#b1c4dd;font-size:14px;margin-bottom:12px}th,td{text-align:left;padding:10px;
+border-bottom:1px solid #3c4961}td span{font-size:14px;color:#b1c4dd}
+.button{display:inline-block;padding:8px 14px;border:1px solid #8ee1dc;
+border-radius:6px;margin:5px 12px 5px 0}code{overflow-wrap:anywhere}
+@media(max-width:540px){body{padding:20px 12px}.card,.method{padding:14px}
+th,td{padding:8px 5px;font-size:14px}h2{font-size:21px}}
+</style></head><body><nav><a href="https://noteflowai.github.io/evalarc/">EvalArc online</a> ·
+<a href="experiment.zip?download=true" download>Complete offline evidence</a></nav>
+<p class="eyebrow">RECORDED GPU CONTEXT CONTROLS · QWEN3-8B / L40S</p>
+<h1>Check the protocol before interpreting the score.</h1>
+<p>Twelve recorded model attempts compare relevant robot-review guidance with
+unrelated descriptive text. Both MCP skill-load payloads contain <strong>476 tokens</strong>,
+including file hashes. The original six attempts and the six-attempt follow-up remain separate.</p>
+<div class="method"><h2>What changed between the cohorts?</h2>
+<p>The initial programs timed out waiting for a JSON response. Their EOF example could finish
+without testing persistent interaction. A separate reference run passed under the same grader.
+The follow-up gives both conditions the same two-request protocol diagnostic and a flush
+instruction. It was planned after observing the original failures.</p>
+<p>The task, model, skill texts, seeds, tools and budgets remain fixed. Initial instructions and
+the supplied helper differ between cohorts; outcomes are not pooled into an efficacy estimate.
+The helper checks JSONL interaction and does not grade numerical correctness.</p></div>
+<section class="card"><h2>01 · Initial EOF example</h2><p><strong>0 / 6 tasks resolved.</strong> 48 response timeouts in 48 recorded cases.</p><table><caption>Each seed receives both conditions. Scores are independent program checks.</caption><thead><tr><th scope="col">Model seed</th><th scope="col">Relevant guidance</th><th scope="col">Unrelated prose</th></tr></thead><tbody><tr><th scope="row">17</th><td><a href="initial/relevant/01-mcp-17/evaluation.json">0.0%</a><br><span>unresolved</span></td><td><a href="initial/neutral/02-mcp-17/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr><tr><th scope="row">41</th><td><a href="initial/relevant/04-mcp-41/evaluation.json">0.0%</a><br><span>unresolved</span></td><td><a href="initial/neutral/03-mcp-41/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr><tr><th scope="row">97</th><td><a href="initial/relevant/05-mcp-97/evaluation.json">0.0%</a><br><span>unresolved</span></td><td><a href="initial/neutral/06-mcp-97/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr></tbody></table><p><a class="button" href="initial/index.html">Inspect all six attempts →</a> <a href="initial/context-controls.zip?download=true" download>Download cohort</a></p></section><section class="card"><h2>02 · Persistent-request diagnostic available</h2><p><strong>0 / 6 tasks resolved.</strong> 0 response timeouts in 48 recorded cases.</p><table><caption>Each seed receives both conditions. Scores are independent program checks.</caption><thead><tr><th scope="col">Model seed</th><th scope="col">Relevant guidance</th><th scope="col">Unrelated prose</th></tr></thead><tbody><tr><th scope="row">17</th><td><a href="protocol/relevant/01-mcp-17/evaluation.json">87.5%</a><br><span>unresolved</span></td><td><a href="protocol/neutral/02-mcp-17/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr><tr><th scope="row">41</th><td><a href="protocol/relevant/04-mcp-41/evaluation.json">87.5%</a><br><span>unresolved</span></td><td><a href="protocol/neutral/03-mcp-41/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr><tr><th scope="row">97</th><td><a href="protocol/relevant/05-mcp-97/evaluation.json">87.5%</a><br><span>unresolved</span></td><td><a href="protocol/neutral/06-mcp-97/evaluation.json">0.0%</a><br><span>unresolved</span></td></tr></tbody></table><p><a class="button" href="protocol/index.html">Inspect all six attempts →</a> <a href="protocol/context-controls.zip?download=true" download>Download cohort</a></p></section>
+<section><h2>Inspect the failure before trusting a finish signal</h2>
+<p>An agent can call <code>finish</code> without implementing the program. A program can
+return JSON correctly while computing a metric incorrectly. Each cohort preserves submitted
+programs, complete messages, tool receipts and independent case checks. A declared finish,
+program score and resolved task are separate outcomes.</p>
+<p>The unrelated control is descriptive prose, not a second task-specific reference. It retains
+the same catalog name and description; inspect both exact payloads before interpreting any
+difference. This is one public-development task and three model seeds, not a model ranking
+or evidence of general skill efficacy.</p></section>
+<section><h2>Reproduce and review</h2><p>
+<a href="README.md">Methods and exact commands</a> ·
+<a href="cohorts.json">Separate cohort summaries</a> ·
+<a href="manifest.json">File identities</a> ·
+<a href="initial/diagnostics/evaluation.json">Reference environment check</a> ·
+<a href="initial/diagnostics/buffering-diagnostic.json">Unchanged-program buffering diagnostic</a>
+</p><p>The page displays saved records and works offline. No inference or candidate execution
+runs in the browser. Offline verification checks consistency;
+it does not authenticate a producer.</p>
+</section></body></html>
