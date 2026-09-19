@@ -35,5 +35,5 @@ def test_replacement_program_cannot_be_presented_as_the_collected_program(tmp_pa
     original = tmp_path / "lab" / rows[0]["trial_path"] / "artifacts/candidate/main.py"
     replaced = tmp_path / "lab" / rows[2]["trial_path"] / "artifacts/candidate/main.py"
     replaced.write_bytes(original.read_bytes())
-    with pytest.raises(ValueError, match="collected files"):
+    with pytest.raises(ValueError, match="different collected program"):
         checked_rows(tmp_path / "lab")

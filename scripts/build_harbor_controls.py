@@ -9,12 +9,14 @@ import json
 import math
 import re
 import shutil
+import tempfile
 import zipfile
 from pathlib import Path
 
 from evalarc.interop import inspect_atif
 from evalarc.robot_task import DIMENSIONS, generate_cases
 from evalarc.robot_task import verify as check_answer
+from evalarc.runner import snapshot
 from evalarc.verify import verify as verify_evaluation
 
 CONTROLS = ("reference", "clock-fault", "detached-answers")
@@ -58,6 +60,10 @@ def checked_rows(root: Path) -> list[dict]:
         report = document(imported / "harbor-import.json")
         evaluation = document(imported / "evaluation.json")
         verify_evaluation(imported / "evaluation.json")
+        with tempfile.TemporaryDirectory(prefix="evalarc-harbor-review-") as temporary:
+            candidate_hash = snapshot(trial / "artifacts/candidate", Path(temporary) / "candidate")
+        if candidate_hash != evaluation["candidate_sha256"]:
+            raise ValueError("independent evaluation belongs to a different collected program")
         trajectory = document(trial / "agent/trajectory.json")
         inspect_atif(trajectory)
         if (
