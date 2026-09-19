@@ -9,10 +9,12 @@ import re
 import shutil
 import subprocess
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import record_skill_impact as protocol
 from handoff_metrics import operation_metrics
+from prepare_skill_handoff import prior_skill
 
 from evalarc.evaluate import write_json
 
@@ -83,10 +85,107 @@ def repository_identity(root: Path) -> dict:
     }
 
 
+def freeze_skill_inputs(root: Path, evalarc: Path, provider: Path) -> dict[str, Path]:
+    """Copy and identify the source, compiled provider and dependency locks used."""
+    inputs = {}
+    selectors = {
+        "evalarc": (
+            evalarc,
+            [
+                "src/evalarc",
+                "pyproject.toml",
+                "LICENSE",
+                "scripts/record_handoff_mcp.py",
+                "scripts/record_skill_impact.py",
+                "scripts/prepare_skill_handoff.py",
+                "scripts/prepare_funes_source.py",
+                "scripts/export_funes_trace.py",
+                "scripts/handoff_metrics.py",
+                "scripts/protocol_probe.py",
+                "scripts/local_model_server.py",
+            ],
+        ),
+        "provider": (
+            provider,
+            [
+                "src",
+                "examples/skill-impact",
+                "examples/funes-handoff",
+                "package.json",
+                "pnpm-lock.yaml",
+                "LICENSE",
+            ],
+        ),
+    }
+    for role, (repository, paths) in selectors.items():
+        names = (
+            subprocess.check_output(["git", "ls-files", "-z", "--", *paths], cwd=repository)
+            .decode()
+            .split("\0")
+        )
+        for name in filter(None, names):
+            inputs[f"{role}/{name}"] = repository / name
+    for path in sorted((provider / "lib").rglob("*")):
+        if path.is_file():
+            inputs["provider/" + path.relative_to(provider).as_posix()] = path
+    inputs["provider/runtime-lock.yaml"] = provider / "node_modules/.pnpm/lock.yaml"
+    for name, source in inputs.items():
+        target = root / "frozen" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    return inputs
+
+
+def preload_skill(bridge_path: Path, source: Path, expected: dict) -> dict:
+    started = time.monotonic()
+    bridge = None
+    result = {
+        "actor": "harness",
+        "method": "workflow-selected MCP preload before interactive generation",
+        "status": "unavailable",
+        "expected_pins": expected,
+    }
+    try:
+        bridge = protocol.Bridge(
+            bridge_path,
+            "mcp",
+            source / "skills",
+            extra_arguments=(str(source / "skill-pins.json"),),
+            response_timeout=70,
+        )
+        result["ready"] = bridge.ready
+        if bridge.ready.get("pins") != expected:
+            raise ValueError("provider pins differ from the selected prior skill")
+        reply = bridge.call("open_skill", {"name": "robot-recording-review"}, timeout=70)
+        result["reply"] = reply
+        pin = expected["robot-recording-review"]
+        view = reply.get("view", {})
+        if (
+            view.get("sha256") != pin["sha256"]
+            or view.get("bundle_sha256") != pin["bundle_sha256"]
+            or not isinstance(view.get("content"), str)
+            or not view["content"]
+            or reply.get("receipt", {}).get("route") != "mcp"
+            or reply.get("receipt", {}).get("raw", {}).get("isError")
+        ):
+            raise ValueError("provider did not return the reviewed skill over MCP")
+        result["status"] = "loaded"
+    except Exception as error:
+        result["error"] = f"{type(error).__name__}: {error}"
+    finally:
+        if bridge:
+            bridge.close()
+        result["elapsed_seconds"] = time.monotonic() - started
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--bridge", type=Path, required=True)
+    parser.add_argument(
+        "--skill-bridge", type=Path, help="Preload the selected prior skill through pinned MCP"
+    )
     parser.add_argument("--funes", type=Path, required=True)
     parser.add_argument("--model-cache", type=Path, required=True)
     parser.add_argument("--model-files", type=Path, required=True)
@@ -122,6 +221,22 @@ def main():
     starter = (args.source / "prior/main.py").read_text()
     prior_trial = json.loads((args.source / "prior/trial.json").read_text())
     starter_hash = digest(args.source / "prior/main.py")
+    expected_pins = None
+    frozen_inputs = {}
+    if args.skill_bridge:
+        expected_pins, prior_event = prior_skill(
+            prior_trial, args.source / "skills/robot-recording-review/SKILL.md"
+        )
+        if (
+            source.get("skill_handoff", {}).get("schema") != "noteflow.skill-handoff.v1"
+            or source["skill_handoff"].get("prior_event_index") != prior_event
+            or json.loads((args.source / "skill-pins.json").read_text()) != expected_pins
+            or args.skill_bridge.resolve().parents[2] != args.bridge.resolve().parents[2]
+        ):
+            parser.error("use the bound prior skill and the same reviewed provider checkout")
+        frozen_inputs = freeze_skill_inputs(
+            root, Path(__file__).resolve().parents[1], args.bridge.resolve().parents[2]
+        )
     harness = root / "harness"
     harness.mkdir()
     for path in (
@@ -131,6 +246,7 @@ def main():
         Path(__file__).with_name("protocol_probe.py"),
         Path(__file__).with_name("local_model_server.py"),
         Path(__file__).with_name("prepare_funes_source.py"),
+        Path(__file__).with_name("prepare_skill_handoff.py"),
         args.bridge,
         args.bridge.with_name("client.mjs"),
         args.bridge.with_name("server.mjs"),
@@ -149,7 +265,10 @@ def main():
     cache_before = memory_model_files(args.model_cache)
     write_json(root / "memory-models-before.json", cache_before)
     plan = {
-        "schema": "evalarc.funes-mcp-handoff.v1",
+        "schema": "evalarc.funes-skill-handoff.v1"
+        if args.skill_bridge
+        else "evalarc.funes-mcp-handoff.v1",
+        "frozen_at": datetime.now(timezone.utc).isoformat(),
         "repositories": repositories,
         "conditions": ["no-memory", "funes-mcp"],
         "model": model,
@@ -187,6 +306,25 @@ def main():
             "operations, not evidence of wasted work or estimated human time saved."
         ),
     }
+    if args.skill_bridge:
+        plan["skill_handoff"] = {
+            "source": source["skill_handoff"],
+            "expected_pins": expected_pins,
+            "delivery_actor": "harness",
+            "delivery": (
+                "MCP preload before generation in both conditions; not autonomous discovery."
+            ),
+            "preload_outside_interactive_budget": True,
+        }
+        plan["scope"] = (
+            "One selected public development Qwen3-8B session with an actual MCP skill load. "
+            "Qwen3-4B receives the same historical skill via workflow-selected MCP in both "
+            "conditions; Funes retrieval is agent-requested in the memory condition only. "
+            "Both receive the same starter, task, diagnostics and interactive budget. "
+            "Earlier no-skill handoff records are separate. No held-out, branded-client "
+            "restore or general efficacy claim."
+        )
+        plan["frozen_files"] = {name: digest(path) for name, path in frozen_inputs.items()}
     write_json(root / "experiment.json", plan)
     rows = []
     for offset, seed in enumerate(plan["model_seeds"]):
@@ -194,6 +332,25 @@ def main():
         for condition in order:
             args.output = root / condition
             args.output.mkdir(exist_ok=True)
+            delivery = None
+            delivery_path = None
+            user_prompt = USER
+            if args.skill_bridge:
+                delivery = preload_skill(args.skill_bridge, args.source, expected_pins)
+                delivery_path = Path("preloads") / f"{condition}-{seed}.json"
+                (root / delivery_path).parent.mkdir(exist_ok=True)
+                write_json(root / delivery_path, delivery)
+                supplied = (
+                    delivery["reply"]["view"]
+                    if delivery["status"] == "loaded"
+                    else {"status": "unavailable", "error": delivery.get("error")}
+                )
+                user_prompt += (
+                    "\nThe workflow selected the prior agent's exact skill version and attempted "
+                    "to load it through MCP before this conversation. This is harness-provided "
+                    "task guidance, not a call made by you. The load result is:\n"
+                    + json.dumps(supplied, ensure_ascii=False)
+                )
             bridge = None
             bridge_ready = None
             bridge_error = None
@@ -241,7 +398,7 @@ def main():
                     seed,
                     len(rows) + 1,
                     starter=starter,
-                    user_prompt=USER,
+                    user_prompt=user_prompt,
                     system_prompt=SYSTEM,
                     extra_tools=MEMORY_TOOLS if condition == "funes-mcp" else None,
                     tool_handler=handle if condition == "funes-mcp" else None,
@@ -271,6 +428,26 @@ def main():
                 "bridge_error": bridge_error,
                 "operations": metrics,
             }
+            if delivery is not None:
+                trial["condition"] = "mcp-preloaded"
+                trial["skill_pins"] = expected_pins
+                trial["handoff"]["skill_delivery"] = {
+                    "status": delivery["status"],
+                    "actor": "harness",
+                    "path": delivery_path.as_posix(),
+                    "sha256": digest(root / delivery_path),
+                    "elapsed_seconds": delivery["elapsed_seconds"],
+                    "outside_interactive_budget": True,
+                }
+                trial["limitations"].extend(
+                    [
+                        "The fixed prior skill is workflow-selected and MCP-preloaded in both "
+                        "conditions; it is not autonomously discovered by the successor.",
+                        "Earlier no-skill Funes continuations use another source and are separate.",
+                    ]
+                )
+                row["condition"] = "mcp-preloaded"
+                row["skill_delivery_status"] = delivery["status"]
             write_json(path, trial)
             row["handoff_condition"] = condition
             row["path"] = f"{condition}/{row['path']}"
@@ -290,6 +467,29 @@ def main():
     )
     if cache_before != cache_after:
         raise ValueError("Funes model cache changed; retain the trials and review input drift")
+    if frozen_inputs:
+        after = {name: digest(path) for name, path in frozen_inputs.items()}
+        source_after = {name: digest(args.source / name) for name in source["files"]}
+        check = {
+            "frozen_files_unchanged": after == plan["frozen_files"],
+            "source_files_unchanged": source_after == source["files"],
+            "repositories_unchanged": repositories
+            == {
+                "evalarc": repository_identity(Path(__file__).resolve().parents[1]),
+                "dsh-skills-anywhere": repository_identity(args.bridge.resolve().parents[2]),
+            },
+        }
+        write_json(root / "frozen-inputs-check.json", check)
+        if not all(check.values()):
+            raise ValueError("inputs changed; retain all attempts and review the drift")
+    write_json(
+        root / "completion.json",
+        {
+            "completed_at": datetime.now(timezone.utc).isoformat(),
+            "scheduled": 6,
+            "recorded": len(rows),
+        },
+    )
 
 
 if __name__ == "__main__":
