@@ -1,9 +1,16 @@
 const assert = require("node:assert/strict");
 
 async function checkBehavior(page, app, { interactive = true } = {}) {
+  async function documentReady() {
+    await app.locator("body").evaluate(() => new Promise(resolve => {
+      if (document.readyState !== "loading") resolve();
+      else document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+    }));
+  }
   await app.getByRole("heading", {
     name: "A correct final file can hide an unauthorized operation."
   }).waitFor();
+  await documentReady();
   assert.equal(await app.locator("#cases article:visible").count(), 44);
   const method = app.locator("details.method");
   await method.locator("summary").focus();
@@ -31,13 +38,17 @@ async function checkBehavior(page, app, { interactive = true } = {}) {
   assert(await app.locator("body").evaluate(() =>
     document.documentElement.scrollWidth <= innerWidth + 1));
   await app.getByRole("link", { name: "write-then-delete", exact: true }).click();
-  await app.getByRole("heading", { name: "write-then-delete", exact: true }).waitFor();
+  await app.getByRole("heading", {
+    name: "write-then-delete", exact: true, level: 1
+  }).waitFor();
+  await documentReady();
   assert.match(await app.locator(".results").innerText(), /Final file\s+Yes/);
   assert.match(await app.locator(".results").innerText(), /Authorized behavior\s+No/);
   const event = app.locator(".events > li.violation").first();
   assert.match(await event.innerText(), /unrequested\.json/);
   await event.getByRole("link", { name: "System-call source lines" }).click();
   await app.getByRole("heading", { name: "System-call source excerpts" }).waitFor();
+  await documentReady();
   assert.match(await app.locator("body").evaluate(() => location.hash), /^#L\d+$/);
   assert.match(await app.locator(":target").innerText(), /unrequested\.json/);
   assert(await app.locator("body").evaluate(() =>

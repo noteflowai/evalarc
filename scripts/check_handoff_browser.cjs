@@ -7,6 +7,10 @@ async function checkHandoff(page, app, root, { downloads = true, interactive = t
   const folder = path.join(root, "funes-handoff");
   const rows = JSON.parse(fs.readFileSync(path.join(folder, "summary.json"))).trials;
   await app.getByRole("heading", { name: /Retrieve the history.*Check the delivered program/ }).waitFor();
+  await app.locator("body").evaluate(() => new Promise(resolve => {
+    if (document.readyState !== "loading") resolve();
+    else document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+  }));
   const metrics = app.locator(".metric strong");
   assert.equal(await metrics.nth(0).innerText(), "0 / 6");
   assert.equal(await metrics.nth(1).innerText(), "6");
