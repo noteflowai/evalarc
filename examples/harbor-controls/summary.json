@@ -1,0 +1,153 @@
+{
+  "schema": "evalarc.harbor-controls.v1",
+  "plan": "plan.json",
+  "runs": [
+    {
+      "control": "reference",
+      "command": [
+        "/home/dcvuser/work/robot-reel-agents/codex/.venv-harbor/bin/harbor",
+        "run",
+        "--path",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task",
+        "--agent",
+        "scripts.harbor_control_agent:ControlAgent",
+        "--agent-kwarg",
+        "control=reference",
+        "--env",
+        "docker",
+        "--jobs-dir",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs",
+        "--job-name",
+        "reference",
+        "--n-concurrent",
+        "1",
+        "--max-retries",
+        "0"
+      ],
+      "return_code": 0,
+      "candidate_file_sha256": "42ba09f8896bd11aae872d1f45bb240333bc577f19010bf0480106b0b73ff7af",
+      "trial_path": "jobs/reference/task__V4pJMVL",
+      "import_path": "imports/reference",
+      "answers_sha256": "86d5d68cf902e61f65af507be1066e0678bd038735e45ddf28128d7433d1bc73",
+      "source_result_sha256": "715e692ef74b5ef7e07b5fad41b5495800d79b76a0a20be6f83928e1f33cb086",
+      "source_trajectory_sha256": "5a824d6e9efc62cf6fdfc0b9afd67bc9fc62f6f1c9b69021cfb0851db587d72c",
+      "full_upstream_schema_validated": true,
+      "upstream_rewards": {
+        "reward": 1.0
+      },
+      "independent": {
+        "evaluation": "evaluation.json",
+        "candidate_sha256": "9a9922a8dfa396f483afd2228dfcd34a5ba78093dd6e14f1ab29422256cd09e1",
+        "candidate_selection": "explicit caller-supplied directory",
+        "valid": true,
+        "resolved": true,
+        "score": 1.0,
+        "status": "passed"
+      },
+      "acceptance": {
+        "minimum_independent_score": 1.0,
+        "requires_valid_independent_evaluation": true,
+        "requires_upstream_reward": false,
+        "accepted": true
+      }
+    },
+    {
+      "control": "clock-fault",
+      "command": [
+        "/home/dcvuser/work/robot-reel-agents/codex/.venv-harbor/bin/harbor",
+        "run",
+        "--path",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task",
+        "--agent",
+        "scripts.harbor_control_agent:ControlAgent",
+        "--agent-kwarg",
+        "control=clock-fault",
+        "--env",
+        "docker",
+        "--jobs-dir",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs",
+        "--job-name",
+        "clock-fault",
+        "--n-concurrent",
+        "1",
+        "--max-retries",
+        "0"
+      ],
+      "return_code": 0,
+      "candidate_file_sha256": "e384f31a3702185e69bd42fcca74e4e4a2557ba460984598376082fe5f5f3ee1",
+      "trial_path": "jobs/clock-fault/task__vMuY9HA",
+      "import_path": "imports/clock-fault",
+      "answers_sha256": "7983a4f7fb70d7efcbbbe4256925e8083ba57bb8b128e3d1dd77c5ae83f4221c",
+      "source_result_sha256": "63b48e1cd63d24da71408c4820113fa874641739932695fa62fe6b8dbe556d90",
+      "source_trajectory_sha256": "1b3071d515c5ce465059d55909572904460beebf33ad9e0248c1eee8ba1fc41d",
+      "full_upstream_schema_validated": true,
+      "upstream_rewards": {
+        "reward": 0.8
+      },
+      "independent": {
+        "evaluation": "evaluation.json",
+        "candidate_sha256": "cd010948f452fd7c835911291502258fc93dcc3d8b039a7be73e335635ee776a",
+        "candidate_selection": "explicit caller-supplied directory",
+        "valid": true,
+        "resolved": false,
+        "score": 0.8,
+        "status": "failed"
+      },
+      "acceptance": {
+        "minimum_independent_score": 1.0,
+        "requires_valid_independent_evaluation": true,
+        "requires_upstream_reward": false,
+        "accepted": false
+      }
+    },
+    {
+      "control": "detached-answers",
+      "command": [
+        "/home/dcvuser/work/robot-reel-agents/codex/.venv-harbor/bin/harbor",
+        "run",
+        "--path",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task",
+        "--agent",
+        "scripts.harbor_control_agent:ControlAgent",
+        "--agent-kwarg",
+        "control=detached-answers",
+        "--env",
+        "docker",
+        "--jobs-dir",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs",
+        "--job-name",
+        "detached-answers",
+        "--n-concurrent",
+        "1",
+        "--max-retries",
+        "0"
+      ],
+      "return_code": 0,
+      "candidate_file_sha256": "e384f31a3702185e69bd42fcca74e4e4a2557ba460984598376082fe5f5f3ee1",
+      "trial_path": "jobs/detached-answers/task__v4kEuZQ",
+      "import_path": "imports/detached-answers",
+      "answers_sha256": "86d5d68cf902e61f65af507be1066e0678bd038735e45ddf28128d7433d1bc73",
+      "source_result_sha256": "84f92a6f75777f184a81c56b5ebcf42a84a8ecf2f6edf925fe0d39443cb471ec",
+      "source_trajectory_sha256": "2bd1f24b0c90a8bf6b4e456f352242c9c5bce4a4ee8f8eef2d1681235d528c14",
+      "full_upstream_schema_validated": true,
+      "upstream_rewards": {
+        "reward": 1.0
+      },
+      "independent": {
+        "evaluation": "evaluation.json",
+        "candidate_sha256": "cd010948f452fd7c835911291502258fc93dcc3d8b039a7be73e335635ee776a",
+        "candidate_selection": "explicit caller-supplied directory",
+        "valid": true,
+        "resolved": false,
+        "score": 0.8,
+        "status": "failed"
+      },
+      "acceptance": {
+        "minimum_independent_score": 1.0,
+        "requires_valid_independent_evaluation": true,
+        "requires_upstream_reward": false,
+        "accepted": false
+      }
+    }
+  ]
+}

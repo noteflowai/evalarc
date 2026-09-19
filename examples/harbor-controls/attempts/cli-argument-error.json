@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "control": "reference",
+      "command": [
+        "/home/dcvuser/work/robot-reel-agents/codex/.venv-harbor/bin/harbor",
+        "run",
+        "--path",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls/task",
+        "--agent",
+        "scripts.harbor_control_agent:ControlAgent",
+        "--agent-kwarg",
+        "control=reference",
+        "--environment",
+        "docker",
+        "--jobs-dir",
+        "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls/jobs",
+        "--job-name",
+        "reference",
+        "--n-concurrent",
+        "1",
+        "--max-retries",
+        "0"
+      ],
+      "return_code": 2
+    }
+  ]
+}

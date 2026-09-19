@@ -77,6 +77,12 @@ evalarc --version
 [Python／JavaScript](docs/languages.md)、[GPU 研究记录](docs/research-pilots.md)、
 [架构](docs/architecture.md)和[论文分析](docs/research.zh-CN.md)。历史更新见 [CHANGELOG](CHANGELOG.md)。
 
+**答案文件正确，是否代表交付程序可用？**
+[三次原生 Harbor 对照](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
+分别检查答案得分和程序实际运行结果。其中一项答案得分 100%，交付程序得分 80%，
+严格验收拒绝。对照由预先声明的脚本执行，提供原始 ATIF 和完整离线证据包；
+本实验没有模型推理，也不代表发现了未知评分漏洞。
+
 ## 运行审计
 
 安装上面的 wheel 后，用 Docker 执行内置 Python 参考实现和八种刻意带错的代码实现：

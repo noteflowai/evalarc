@@ -1,0 +1,40 @@
+schema_version = "1.4"
+
+[task]
+name = "noteflowai/robot-evidence-review"
+version = "0.2.0"
+description = "Review recorded robot states through coordinate, clock and provenance contracts."
+keywords = ["robotics", "physical-ai", "evidence", "no-api"]
+authors = [{name = "Note Flow AI"}]
+
+[metadata]
+license = "MIT; source recordings Apache-2.0"
+split = "public-development"
+harbor_version = "0.23.0"
+ai_assisted = true
+
+[agent]
+timeout_sec = 600
+user = "65534"
+
+[environment]
+cpus = 1
+memory_mb = 512
+network_mode = "no-network"
+
+[verifier]
+timeout_sec = 60
+environment_mode = "separate"
+
+[verifier.environment]
+cpus = 1
+memory_mb = 256
+network_mode = "no-network"
+
+[[artifacts]]
+source = "/workspace/answers.jsonl"
+destination = "answers.jsonl"
+
+[[artifacts]]
+source = "/workspace/main.py"
+destination = "candidate/main.py"

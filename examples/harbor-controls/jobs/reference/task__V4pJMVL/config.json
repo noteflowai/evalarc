@@ -1,0 +1,14 @@
+{
+    "task": {
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task"
+    },
+    "trial_name": "task__V4pJMVL",
+    "trials_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs/reference",
+    "agent": {
+        "name": "scripts.harbor_control_agent:ControlAgent",
+        "kwargs": {
+            "control": "reference"
+        }
+    },
+    "job_id": "07bd3652-2356-4d49-bd67-f0861a33c508"
+}

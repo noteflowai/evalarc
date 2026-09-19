@@ -42,6 +42,13 @@ or a model leaderboard.
 
 ## Bring your own evidence
 
+**Correct answers can accompany an incorrect program.**
+The [Harbor control report](https://glayguo-evalarc.static.hf.space/harbor-controls/index.html)
+compares three actual container runs. A detached answer file receives 100%
+answer reward while the delivered program scores 80% and fails strict
+acceptance. Native ATIF, programs, answers and the offline bundle are available.
+These are declared scripted controls, without model inference.
+
 - **Matching EvalArc evaluations:** compare changed checks and retain original inputs.
 - **Strands Evals users:** [inspect the native state review](https://glayguo-evalarc.static.hf.space/strands/index.html)
   without installing, or run the [SDK companion](https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review).
