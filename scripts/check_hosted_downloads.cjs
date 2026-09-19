@@ -6,6 +6,7 @@ const path = require("node:path");
 const { checkStrands } = require("./check_strands_browser.cjs");
 const { checkContextControls } = require("./check_context_browser.cjs");
 const { checkHandoff } = require("./check_handoff_browser.cjs");
+const { checkBehavior } = require("./check_behavior_browser.cjs");
 
 async function main() {
   const url = process.env.SITE_URL;
@@ -76,9 +77,19 @@ async function main() {
           location.href = new URL("funes-handoff/index.html", base).href;
         }, appUrl);
         const handoff = await checkHandoff(page, app, root);
+        await app.locator("body").evaluate((element, base) => {
+          location.href = new URL("behavior-audit/index.html", base).href;
+        }, appUrl);
+        await app.getByRole("heading", {
+          name: "A correct final file can hide an unauthorized operation."
+        }).waitFor();
+        await download(app.getByRole("link", { name: "Download complete offline evidence" }),
+          "behavior-audit/behavior-evidence.zip");
+        const behavior = await checkBehavior(page, app);
         checks.push({ width, sourceCommit: expected.source_commit, hubIframe: true,
-          archiveDownloadsMatched: 6, originalJudgmentMatched: true, filters: true,
-          allRejectDisclosed: true, missingJudgmentsVisible: true, strands, contextControls, handoff });
+          archiveDownloadsMatched: 7, originalJudgmentMatched: true, filters: true,
+          allRejectDisclosed: true, missingJudgmentsVisible: true,
+          strands, contextControls, handoff, behavior });
       } finally {
         await page.close();
       }
