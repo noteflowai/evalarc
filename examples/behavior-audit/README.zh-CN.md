@@ -49,6 +49,8 @@ evalarc behavior-review examples/behavior-audit/pilot/07-composed-41 --json
 
 网页提供全部记录筛选、逐操作来源行和压缩原始 trace。完整 ZIP 包含校验清单，
 解压后可离线浏览及复算；打开页面不会执行候选程序。
+归档的 Skills Anywhere 桥接器及 JavaScript 保留原项目的 MIT 版权许可，
+见从已记录提供方提交复制的 `PROVIDER-LICENSE.txt`。后续采集也将该许可纳入源码快照。
 
 成功打开文件、可读映射、读取到字节和服务已提交写入分别记录。覆盖范围不包括
 通用污点跟踪、内核证明或任意宿主监控；哈希核对记录一致性，不认证生产者身份。
