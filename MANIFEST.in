@@ -3,6 +3,8 @@ include CHANGELOG.md
 recursive-include docs *.md *.svg *.png
 recursive-include research *.json *.bib
 recursive-include examples *.md *.json *.jsonl *.html *.js *.toml *.xml
+graft examples/behavior-audit
+global-exclude *.py[cod]
 recursive-include site *.html *.css *.js *.svg
 recursive-include scripts *.py *.cjs
 recursive-include huggingface *.md

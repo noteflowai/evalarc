@@ -26,6 +26,8 @@ jobs:
       - run: ruff format --check .
       - run: pytest -q
       - run: python -m build
+      - name: Check complete behavior evidence in the source archive
+        run: python scripts/check_sdist.py --source . --archive dist/*.tar.gz
       - name: Verify received evidence from the installed wheel without runtime tools
         run: |
           python -m venv "$RUNNER_TEMP/installed"
