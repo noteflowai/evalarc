@@ -433,6 +433,11 @@ def build(destination: Path) -> dict:
         explicit_lab_navigation(destination / lab, commit)
     verify_lab(destination / "skill-impact")
     verify_records(destination / "research")
+    from scripts.build_harbor_controls import verify_bundle as verify_harbor_controls
+
+    verify_harbor_controls(ROOT / "examples/harbor-controls")
+    shutil.copytree(ROOT / "examples/harbor-controls", destination / "harbor-controls")
+    verify_harbor_controls(destination / "harbor-controls")
     from evalarc.trace_review import import_trace
 
     trace_examples = ROOT / "examples/trace-workbench"

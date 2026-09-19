@@ -1,0 +1,14 @@
+{
+    "task": {
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task"
+    },
+    "trial_name": "task__v4kEuZQ",
+    "trials_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs/detached-answers",
+    "agent": {
+        "name": "scripts.harbor_control_agent:ControlAgent",
+        "kwargs": {
+            "control": "detached-answers"
+        }
+    },
+    "job_id": "74326206-1df1-45e4-af06-327ffefdbb86"
+}

@@ -1,0 +1,6 @@
+Usage: harbor run [OPTIONS]
+Try 'harbor run -h' for help.
+╭─ Error ──────────────────────────────────────────────────────────────────────╮
+│ No such option: --environment (Possible options: --allow-environment-host,   │
+│ --environment-import-path, --environment-kwarg)                              │
+╰──────────────────────────────────────────────────────────────────────────────╯

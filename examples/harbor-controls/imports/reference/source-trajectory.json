@@ -1,0 +1,124 @@
+{
+  "schema_version": "ATIF-v1.8",
+  "session_id": "task__V4pJMVL__agent",
+  "agent": {
+    "name": "evalarc-scripted-control",
+    "version": "1.0.0",
+    "extra": {
+      "control": "reference",
+      "model_inference": false
+    }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "source": "user",
+      "message": "# Robot recording evidence review\n\nImplement a JSON-lines service that reviews recorded positions and velocities.\nEach stdin line is one request. Write exactly one JSON response per request to\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\n\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\n\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\n- `metadata.expected_frames` lists every frame that should be present.\n- `metadata.world_from_sensor` describes the coordinate convention.\n  For world component `j`, take sensor component `axes[j]`, multiply by\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\n  Velocities use the same axis/sign/unit mapping without translation.\n- `metadata.clock` defines elapsed seconds as\n  `(tick - origin_tick) * seconds_per_tick`.\n- `metadata.analytic` gives initial position, initial velocity and constant\n  acceleration in world metres and seconds.\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\n  Input order is arbitrary. Some expected frames may be absent. The queried frame\n  is present. Do not interpolate absent observations.\n\nReturn exactly `{\"ok\": true, \"report\": {...}}`. The report contains these fields:\n\n| Field | Required value |\n| --- | --- |\n| `source_sha256` | The provided original source digest |\n| `frame` | The requested integer frame |\n| `time_seconds` | Its elapsed time, after clock conversion |\n| `position_m` | Its three world-coordinate position components |\n| `speed_m_s` | Euclidean magnitude of its world velocity |\n| `max_position_error_m` | Maximum Euclidean position error across **available** observations against `p0 + v0*t + 0.5*g*t*t` |\n| `peak_frame` | Available frame with greatest world z; choose the lowest frame number on an exact tie |\n| `peak_height_m` | That frame's world z position |\n| `missing_frames` | Sorted list of expected but absent integer frames |\n\nUse JSON numbers for numerical values, never Boolean substitutes, NaN or Infinity.\nChecks allow absolute numerical error up to 1e-6 or relative error up to 1e-7.\nDo not infer metres, seconds, axis order, or completeness from filenames.\n\nThese inputs are derived representations of six real CUDA recordings published\nby Robot Reel. Unit, coordinate, clock and omission variants are generated for this\npublic development task. They are not new physical experiments or hidden test data.\nReporting a source digest provides attribution; it does not authenticate the\noriginal recording's producer.\n\n## Deliverables\n\nImplement `/workspace/main.py`. Run it on `/workspace/requests.jsonl` and write exactly one answer per request, in input order, to `/workspace/answers.jsonl`. Deliver both files. Python's standard library is available and the environment has no network.\n\nA fresh verifier container checks the answer data. The downloadable main.py can additionally be independently executed by EvalArc; Harbor reward alone does not prove that the program produced the answers.\n\nThis task version reports weighted partial credit for the answer data. Full completion still requires every check to pass. Weights: provenance 0.10, coordinates 0.25, clock 0.15, metrics 0.25, completeness 0.15, protocol 0.10. The independent program acceptance threshold is 1.0.\n"
+    },
+    {
+      "step_id": 2,
+      "source": "agent",
+      "timestamp": "2026-09-19T02:58:27.004593+00:00",
+      "message": "Execute scripted reference control step.",
+      "tool_calls": [
+        {
+          "tool_call_id": "exec-2",
+          "function_name": "environment.exec",
+          "arguments": {
+            "command": "python3 -c 'import json, os; from pathlib import Path; print(json.dumps({'\"'\"'uid'\"'\"': os.getuid(), '\"'\"'cwd'\"'\"': os.getcwd(), '\"'\"'network_interfaces'\"'\"': sorted(p.name for p in Path('\"'\"'/sys/class/net'\"'\"').iterdir())})); assert os.getuid() != 0'",
+            "cwd": "/workspace",
+            "timeout_sec": 30
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "exec-2",
+            "content": "{\"return_code\": 0, \"stdout\": \"{\\\"uid\\\": 65534, \\\"cwd\\\": \\\"/workspace\\\", \\\"network_interfaces\\\": [\\\"eth0\\\", \\\"lo\\\"]}\\n\", \"stderr\": null}"
+          }
+        ]
+      }
+    },
+    {
+      "step_id": 3,
+      "source": "agent",
+      "timestamp": "2026-09-19T02:58:27.308272+00:00",
+      "message": "Execute scripted reference control step.",
+      "tool_calls": [
+        {
+          "tool_call_id": "exec-3",
+          "function_name": "environment.exec",
+          "arguments": {
+            "command": "python3 -c 'from pathlib import Path; Path('\"'\"'main.py'\"'\"').write_text('\"'\"'\"\"\"Independent Python implementation of the public recording-review contract.\"\"\"\\n\\nimport json\\nimport math\\nimport sys\\n\\nUSE_UNITS = True\\nUSE_ORIGIN = True\\nUSE_CLOCK = True\\nCHECK_MISSING = True\\nFIND_PEAK = True\\nPRESERVE_SOURCE = True\\n\\n\\ndef review(request):\\n    recording = request[\"recording\"]\\n    metadata = recording[\"metadata\"]\\n    mapping = metadata[\"world_from_sensor\"]\\n    clock = metadata[\"clock\"]\\n    scale = mapping[\"meters_per_unit\"] if USE_UNITS else 1\\n    converted = []\\n    for sample in recording[\"observations\"]:\\n        p, v = [], []\\n        for axis, sign, origin in zip(mapping[\"axes\"], mapping[\"signs\"], mapping[\"origin_m\"]):\\n            p.append(sample[\"position\"][axis] * sign * scale + (origin if USE_ORIGIN else 0))\\n            v.append(sample[\"velocity\"][axis] * sign * scale)\\n        t = (sample[\"tick\"] - clock[\"origin_tick\"]) * clock[\"seconds_per_tick\"]\\n        if not USE_CLOCK:\\n            t = sample[\"tick\"]\\n        converted.append({\"frame\": sample[\"frame\"], \"position\": p, \"velocity\": v, \"time\": t})\\n    query = next(row for row in converted if row[\"frame\"] == request[\"query_frame\"])\\n    analytic = metadata[\"analytic\"]\\n    errors = []\\n    for row in converted:\\n        ideal = [\\n            analytic[\"position0_m\"][axis]\\n            + analytic[\"velocity0_m_s\"][axis] * row[\"time\"]\\n            + analytic[\"gravity_m_s2\"][axis] * row[\"time\"] ** 2 / 2\\n            for axis in range(3)\\n        ]\\n        errors.append(math.sqrt(sum((a - b) ** 2 for a, b in zip(ideal, row[\"position\"]))))\\n    peak = sorted(converted, key=lambda row: (-row[\"position\"][2], row[\"frame\"]))[0]\\n    if not FIND_PEAK:\\n        peak = max(converted, key=lambda row: row[\"frame\"])\\n    seen = {row[\"frame\"] for row in converted}\\n    return {\\n        \"source_sha256\": recording[\"source\"][\"sha256\"] if PRESERVE_SOURCE else \"0\" * 64,\\n        \"frame\": query[\"frame\"],\\n        \"time_seconds\": query[\"time\"],\\n        \"position_m\": query[\"position\"],\\n        \"speed_m_s\": math.sqrt(sum(value * value for value in query[\"velocity\"])),\\n        \"max_position_error_m\": max(errors),\\n        \"peak_frame\": peak[\"frame\"],\\n        \"peak_height_m\": peak[\"position\"][2],\\n        \"missing_frames\": sorted(set(metadata[\"expected_frames\"]) - seen) if CHECK_MISSING else [],\\n    }\\n\\n\\nfor line in sys.stdin:\\n    print(json.dumps({\"ok\": True, \"report\": review(json.loads(line))}, allow_nan=False), flush=True)\\n'\"'\"')'",
+            "cwd": "/workspace",
+            "timeout_sec": 30
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "exec-3",
+            "content": "{\"return_code\": 0, \"stdout\": null, \"stderr\": null}"
+          }
+        ]
+      }
+    },
+    {
+      "step_id": 4,
+      "source": "agent",
+      "timestamp": "2026-09-19T02:58:27.537000+00:00",
+      "message": "Execute scripted reference control step.",
+      "tool_calls": [
+        {
+          "tool_call_id": "exec-4",
+          "function_name": "environment.exec",
+          "arguments": {
+            "command": "python3 -I -B /workspace/main.py < /workspace/requests.jsonl > /workspace/answers.jsonl",
+            "cwd": "/workspace",
+            "timeout_sec": 30
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "exec-4",
+            "content": "{\"return_code\": 0, \"stdout\": null, \"stderr\": null}"
+          }
+        ]
+      }
+    },
+    {
+      "step_id": 5,
+      "source": "agent",
+      "timestamp": "2026-09-19T02:58:27.733836+00:00",
+      "message": "Execute scripted reference control step.",
+      "tool_calls": [
+        {
+          "tool_call_id": "exec-5",
+          "function_name": "environment.exec",
+          "arguments": {
+            "command": "python3 -c 'import hashlib, json; from pathlib import Path; print(json.dumps({name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in ('\"'\"'main.py'\"'\"', '\"'\"'answers.jsonl'\"'\"')}))'",
+            "cwd": "/workspace",
+            "timeout_sec": 30
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "exec-5",
+            "content": "{\"return_code\": 0, \"stdout\": \"{\\\"main.py\\\": \\\"42ba09f8896bd11aae872d1f45bb240333bc577f19010bf0480106b0b73ff7af\\\", \\\"answers.jsonl\\\": \\\"86d5d68cf902e61f65af507be1066e0678bd038735e45ddf28128d7433d1bc73\\\"}\\n\", \"stderr\": null}"
+          }
+        ]
+      }
+    }
+  ],
+  "notes": "Actual Harbor container executions of a declared scripted control. Programs are provided fixtures, not model-generated solutions.",
+  "extra": {
+    "control": "reference",
+    "reference_sha256": "42ba09f8896bd11aae872d1f45bb240333bc577f19010bf0480106b0b73ff7af"
+  }
+}

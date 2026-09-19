@@ -84,6 +84,13 @@ For deeper exploration: [repeated attempts](docs/reliability.md),
 [TOML suites and CI](docs/suites.md), [Python/JavaScript candidates](docs/languages.md),
 [recorded GPU research pilots](docs/research-pilots.md),
 [architecture](docs/architecture.md) and [papers](docs/research.zh-CN.md).
+
+**Does a correct answer file prove the delivered program works?**
+[Three native Harbor controls](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
+separate answer reward from independently executed code. One control receives
+100% answer reward but its program scores 80% and fails strict acceptance.
+These are declared scripted controls, with raw ATIF and an offline evidence
+bundle; no model inference or unseen-exploit claim.
 Feature history lives in the [changelog](CHANGELOG.md).
 
 ## Run an audit

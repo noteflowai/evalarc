@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harbor reward and program acceptance · EvalArc</title>
+<style>
+:root{color-scheme:dark}body{font:17px/1.65 system-ui,sans-serif;background:#101725;color:#e6ecf5;
+max-width:1040px;margin:auto;padding:32px 20px}a{color:#8ee1dc}
+a:focus-visible{outline:3px solid #ffc87d}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.2}h2{font-size:23px}p{max-width:80ch}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:14px;border-bottom:1px solid #3c4961}
+th{color:#b1c4dd}.table{overflow-x:auto}code{overflow-wrap:anywhere}strong{color:#ffc87d}
+.note{padding:16px 20px;background:#1c293c;border-left:4px solid #8ee1dc}li{margin:10px 0}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body>
+<nav><a href="../">EvalArc</a> ·
+<a href="harbor-controls.zip" download>Complete offline evidence</a></nav>
+<h1>Correct answers. Incorrect delivered program.</h1>
+<p>Harbor checks the saved answer file. EvalArc separately runs the delivered program.
+These three scripted controls show why the two results need distinct meanings.</p>
+<p class="note"><strong>Declared controls, actual container executions.</strong>
+Harbor 0.23.0; non-root agent; separate verifier container; eight public requests.
+No model inference, hidden test, or model capability ranking.</p>
+<div class="table" role="region" aria-label="Recorded control outcomes" tabindex="0">
+<table><caption>Answer-file reward and independent program results</caption>
+<thead><tr><th scope="col">Control</th><th scope="col">Harbor reward</th>
+<th scope="col">Program score</th><th scope="col">All checks pass</th><th scope="col">Accepted</th>
+<th scope="col">Evidence</th></tr></thead><tbody><tr><th scope="row">reference</th><td>100%</td><td>100%</td><td>Yes</td><td>Yes</td><td><a href="jobs/reference/task__V4pJMVL/agent/trajectory.json">ATIF</a> · <a href="jobs/reference/task__V4pJMVL/artifacts/candidate/main.py">Program</a> · <a href="jobs/reference/task__V4pJMVL/artifacts/answers.jsonl">Answers</a> · <a href="imports/reference/harbor-import.json">Import</a> · <a href="imports/reference/evaluation.json">Grade</a></td></tr><tr><th scope="row">clock-fault</th><td>80%</td><td>80%</td><td>No</td><td>No</td><td><a href="jobs/clock-fault/task__vMuY9HA/agent/trajectory.json">ATIF</a> · <a href="jobs/clock-fault/task__vMuY9HA/artifacts/candidate/main.py">Program</a> · <a href="jobs/clock-fault/task__vMuY9HA/artifacts/answers.jsonl">Answers</a> · <a href="imports/clock-fault/harbor-import.json">Import</a> · <a href="imports/clock-fault/evaluation.json">Grade</a></td></tr><tr><th scope="row">detached-answers</th><td>100%</td><td>80%</td><td>No</td><td>No</td><td><a href="jobs/detached-answers/task__v4kEuZQ/agent/trajectory.json">ATIF</a> · <a href="jobs/detached-answers/task__v4kEuZQ/artifacts/candidate/main.py">Program</a> · <a href="jobs/detached-answers/task__v4kEuZQ/artifacts/answers.jsonl">Answers</a> · <a href="imports/detached-answers/harbor-import.json">Import</a> · <a href="imports/detached-answers/evaluation.json">Grade</a></td></tr></tbody></table></div>
+<h2>What changes between controls</h2>
+<ol><li><b>Reference:</b> the correct program generates its own answer file.</li>
+<li><b>Clock fault:</b> the program treats raw sensor ticks as seconds.
+World-clock cases pass; offset-clock cases fail time and derived error checks.</li>
+<li><b>Detached answers:</b> the correct program writes the answers, then the fixture
+replaces the delivered program with the clock-fault version. The recorded commands
+and final hashes show exactly when the files diverge.</li></ol>
+<p>Partial credit uses the task's six published dimension weights. Version 0.2.0
+introduces weighted answer scoring; the earlier 0.1.0 task retains its all-or-nothing reward.
+Independent acceptance here requires a valid program evaluation with score 1.0.</p>
+<h2>Inspect and reproduce</h2>
+<p><a href="summary.json">Summary</a> · <a href="plan.json">Preselected plan</a> ·
+<a href="manifest.json">File identities</a> · <a href="task/instruction.md">Task contract</a> ·
+<a href="task/task.toml">Harbor task</a> · <a href="README.md">Commands and scope</a></p>
+<p>The full upstream ATIF schema was checked in the recorded runtime. The offline
+packager checks source identity, tool linkage, recorded commands, answer scoring
+and evaluation consistency. It does not re-execute a program just by opening this page.</p>
+<p>This demonstrates the stated task's answer-only verification boundary.
+It is not an exploit of Harbor isolation or evidence about unseen reward hacking.</p>
+</body></html>

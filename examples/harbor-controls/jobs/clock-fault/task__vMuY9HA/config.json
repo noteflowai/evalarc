@@ -1,0 +1,14 @@
+{
+    "task": {
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task"
+    },
+    "trial_name": "task__vMuY9HA",
+    "trials_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs/clock-fault",
+    "agent": {
+        "name": "scripts.harbor_control_agent:ControlAgent",
+        "kwargs": {
+            "control": "clock-fault"
+        }
+    },
+    "job_id": "e129c33c-d32f-45f6-bbf3-11ce10465e14"
+}

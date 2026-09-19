@@ -1,0 +1,105 @@
+{
+  "scope": "Answers checked in a fresh verifier container; submitted code is not executed here.",
+  "passed": true,
+  "error": null,
+  "findings": [
+    {
+      "case_id": "world-meters",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "millimeters-sensor-frame",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "centimeters-offset-clock",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "incomplete-recording",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "world-meters",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "millimeters-sensor-frame",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "centimeters-offset-clock",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    },
+    {
+      "case_id": "incomplete-recording",
+      "checks": {
+        "provenance": true,
+        "coordinates": true,
+        "clock": true,
+        "metrics": true,
+        "completeness": true,
+        "protocol": true
+      },
+      "passed": true
+    }
+  ],
+  "weighted_score": 1.0,
+  "partial_credit": true
+}

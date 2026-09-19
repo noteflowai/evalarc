@@ -1,0 +1,26 @@
+  1/1 Mean: 1.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:00:36 0:00:00
+adhoc • evalarc-scripted-control
+┏━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━┓
+┃ Trials ┃ Exceptions ┃  Mean ┃
+┡━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━┩
+│      1 │          0 │ 1.000 │
+└────────┴────────────┴───────┘
+
+┏━━━━━━━━┳━━━━━━━┓
+┃ Reward ┃ Count ┃
+┡━━━━━━━━╇━━━━━━━┩
+│ 1.0    │     1 │
+└────────┴───────┘
+
+Job Info
+Total runtime: 36s
+Results written to 
+/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-2026091
+9/harbor-controls-2/jobs/reference/result.json
+Inspect results by running `harbor view 
+/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-2026091
+9/harbor-controls-2/jobs`
+Share results by running `harbor upload 
+/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-2026091
+9/harbor-controls-2/jobs/reference`
+

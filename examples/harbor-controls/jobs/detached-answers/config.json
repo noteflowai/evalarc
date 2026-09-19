@@ -1,0 +1,18 @@
+{
+    "job_name": "detached-answers",
+    "jobs_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs",
+    "n_concurrent_trials": 1,
+    "agents": [
+        {
+            "name": "scripts.harbor_control_agent:ControlAgent",
+            "kwargs": {
+                "control": "detached-answers"
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task"
+        }
+    ]
+}

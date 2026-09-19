@@ -1,0 +1,121 @@
+{
+    "id": "d709b9c2-64f8-4267-9cc5-2bf13be383b1",
+    "task_name": "noteflowai/robot-evidence-review",
+    "trial_name": "task__vMuY9HA",
+    "trial_uri": "file:///home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs/clock-fault/task__vMuY9HA",
+    "task_id": {
+        "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task"
+    },
+    "source": null,
+    "task_checksum": "756d31d68583c134bb94069b1b8383aa23e8a861669a0a5b8c2f4488016a8556",
+    "config": {
+        "task": {
+            "path": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/task",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": null
+        },
+        "trial_name": "task__vMuY9HA",
+        "trials_dir": "/home/dcvuser/work/robot-reel-agents/codex/artifacts/research-completion-20260919/harbor-controls-2/jobs/clock-fault",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "scripts.harbor_control_agent:ControlAgent",
+            "import_path": null,
+            "model_name": null,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {
+                "control": "clock-fault"
+            },
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "e129c33c-d32f-45f6-bbf3-11ce10465e14",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "evalarc-scripted-control",
+        "version": "1.0.0",
+        "model_info": null
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": {
+            "control": "clock-fault",
+            "scripted": true,
+            "model_inference": false
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.8
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": null,
+    "started_at": "2026-09-19T02:59:07.723782Z",
+    "finished_at": "2026-09-19T02:59:42.658412Z",
+    "environment_setup": {
+        "started_at": "2026-09-19T02:59:07.768749Z",
+        "finished_at": "2026-09-19T02:59:12.826240Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-19T02:59:12.826295Z",
+        "finished_at": "2026-09-19T02:59:12.826356Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-19T02:59:12.826434Z",
+        "finished_at": "2026-09-19T02:59:13.728455Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-19T02:59:25.522962Z",
+        "finished_at": "2026-09-19T02:59:42.658398Z"
+    },
+    "step_results": null
+}

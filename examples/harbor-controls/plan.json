@@ -1,0 +1,23 @@
+{
+  "schema": "evalarc.harbor-controls-plan.v1",
+  "harbor_version": "0.23.0",
+  "task_version": "0.2.0",
+  "controls": [
+    "reference",
+    "clock-fault",
+    "detached-answers"
+  ],
+  "evaluation_seeds": [
+    41,
+    97
+  ],
+  "minimum_independent_score": 1.0,
+  "source_commit": "7cdeaebdd82ea05f391ebfa39b5d1b914a9b7af7",
+  "source_dirty": true,
+  "harness_files": {
+    "export_harbor_task.py": "e2511c2ab4976580c3d1c9bda6df73215ecd07e7296143eb9cafae61e2f47a6f",
+    "harbor_control_agent.py": "abaa88efc54a353e6553eedf8865622f0b6b8a076e067896a3c46dcb64603d71",
+    "record_harbor_controls.py": "0367682e2ed931e0ab872b07a0f8ed14cea9feb954998c90b68f7dae713ea3f7"
+  },
+  "scope": "One task, three scripted controls, no model inference. Answer-file reward and independently executed program correctness are separate. All attempted jobs, including errors, must be retained."
+}

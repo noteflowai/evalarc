@@ -42,7 +42,7 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.ruff]
-extend-exclude = ["examples/skill-impact", "examples/research"]
+extend-exclude = ["examples/skill-impact", "examples/research", "examples/harbor-controls"]
 target-version = "py311"
 line-length = 100
 
