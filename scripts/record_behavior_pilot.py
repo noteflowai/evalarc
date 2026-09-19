@@ -391,6 +391,7 @@ def main():
         (provider, "provider", path)
         for path in [
             args.bridge.resolve(),
+            provider / "LICENSE",
             provider / "package.json",
             provider / "pnpm-lock.yaml",
             provider / "node_modules/.pnpm/lock.yaml",

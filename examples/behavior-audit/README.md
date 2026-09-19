@@ -161,6 +161,9 @@ same command. Open `index.html` to filter all records without network access,
 then follow a case to its source-line excerpts or complete compressed trace.
 Opening a page does not run the candidate. Packaging recomputes reviews from
 the raw evidence and checks the frozen harness, model identity and MCP receipts.
+The archived Skills Anywhere bridge and built JavaScript retain their original
+MIT notice in `PROVIDER-LICENSE.txt`, copied from the recorded provider commit.
+New recordings also freeze that notice with the provider sources.
 
 ### Observation boundary
 
