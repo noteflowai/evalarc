@@ -1,0 +1,12 @@
+{
+  "kind": "scripted-preflight-without-agent-generation",
+  "program_sha256": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+  "candidate_sha256": "004af06a6b75110761ce00f1bbb4c4fc7585e2b663bd5124aec322e3b16f0d06",
+  "evaluation_sha256": "f1e8ef3109a6d27f078bdaa7fe181d629a9f6461fc9648b816488ea7b894f893",
+  "evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.875,
+    "status": "failed"
+  }
+}

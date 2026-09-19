@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Funes MCP Handoff Lab · EvalArc</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1522;--panel:#17263a;--line:#40546f;--text:#edf3ff;--muted:#b5c7e0;--accent:#8de5d0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,sans-serif}
+main{max-width:1160px;margin:auto;padding:32px 22px}a{color:var(--accent);overflow-wrap:anywhere}
+a:focus-visible,select:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffd084;outline-offset:3px}
+h1{font-size:clamp(32px,5.5vw,58px);line-height:1.12;margin:18px 0}h2{font-size:26px}h3{font-size:20px}
+p{max-width:88ch}.eyebrow{color:var(--accent);letter-spacing:.12em;font-size:12px;text-transform:uppercase}
+.lede{font-size:19px;color:var(--muted)}.metrics,.cards{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.metrics{grid-template-columns:repeat(3,1fr)}article,.metric,.note{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:12px;min-width:0}
+.metric strong{display:block;font-size:34px;color:var(--accent)}.metric span{color:var(--muted)}
+.route{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}.route li{padding:9px 13px;border:1px solid var(--line);border-radius:8px}.route li+li:before{content:"→ ";color:var(--accent)}
+code{overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;max-height:360px;padding:12px;background:#09111d;border-radius:6px;font:13px/1.55 ui-monospace,monospace}
+dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 16px}dt{color:var(--muted)}dd{margin:0;text-align:right}
+details{margin:15px 0}summary{cursor:pointer;color:var(--accent)}li{margin-bottom:10px}
+.table{overflow:auto;margin:22px 0}table{border-collapse:collapse;min-width:700px;width:100%}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}caption{text-align:left;color:var(--muted);margin-bottom:10px}
+select{font:inherit;padding:7px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px}nav{display:flex;flex-wrap:wrap;gap:10px 22px}
+[hidden]{display:none!important}.source{color:var(--muted)}footer{margin-top:28px;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:600px){main{padding:22px 15px}.metrics{grid-template-columns:1fr}.metric strong{font-size:29px}}
+</style></head><body><main>
+<nav aria-label="Report links"><a href="https://noteflowai.github.io/evalarc/">EvalArc</a>
+<a id="archive-link" href="funes-handoff.zip?download=true" download>Download the complete offline evidence</a>
+<a href="https://github.com/noteflowai/dsh-skills-anywhere/tree/main/examples/funes-handoff">Use the MCP entrypoint</a></nav>
+<p class="eyebrow">Cross-model continuation · one selected public session</p>
+<p id="offline-note" hidden>You are viewing unpacked evidence. Use the included record inventory to verify this folder.</p>
+<noscript><p>The archive download is available on the hosted report. Unpacked evidence can be reviewed directly with all six attempts below.</p></noscript>
+<h1>Retrieve the history.<br>Check the delivered program.</h1>
+<p class="lede">Qwen3-4B continues a recorded Qwen3-8B implementation, with or without
+agent-requested Funes MCP retrieval. Inspect what was recovered, what the agent did,
+and what independent execution actually accepted.</p>
+<p>The task normalizes coordinates and clocks in robot recordings. Review the
+centimeter and millimeter coordinate checks alongside the protocol outputs:
+the diagnostic checks responses; the independent grader checks the numbers.</p>
+<div class="metrics" aria-label="Complete experiment outcomes">
+<div class="metric"><strong>__RESOLVED__ / 6</strong><span>tasks fully resolved</span></div>
+<div class="metric"><strong>__RETRIEVED__</strong><span>successful native retrieval results</span></div>
+<div class="metric"><strong>__CHANGED__ / 6</strong><span>starter programs changed</span></div></div>
+<p class="note">The supplied program scores <strong>__BASELINE__</strong> in a separate
+preflight under the current grader. All six attempts remain visible, including
+unchanged programs and errors. A successful retrieval or an agent's finish signal
+is separate from task acceptance. <a href="preflight/baseline/evaluation.json">Inspect the starter check</a>.</p>
+<h2>Follow the actual retrieval route</h2>
+<ol class="route" aria-label="Recorded MCP connection route"><li>Local model</li><li>JSONL recorder</li><li>Scoped MCP server</li><li>Native Funes MCP</li></ol>
+<p>The experiment uses the standard MCP entrypoint provided in Skills Anywhere's
+source example. The recorder retains both negotiated protocol eras and native
+responses. Memory paths and session IDs are fixed to the reviewed source.</p>
+<p class="source">Selected session: <code>__SESSION__</code><br>
+Source manifest SHA-256: <code>__SOURCE_SHA__</code><br>
+<a href="source/prior/trial.json">Prior agent record</a> ·
+<a href="source/prior/main.py">Prior program</a> ·
+<a href="source/source.json">Source inventory</a> ·
+<a href="preflight/mcp-entrypoint.json">Actual MCP and missing-source controls</a></p>
+<h2>Compare all six continuations</h2>
+<p>Both conditions share the task, prior program, initial instructions, protocol
+diagnostic and interaction budget. Memory tools are available only in the Funes
+condition. Three model seeds are paired in alternating order.</p>
+<div class="table" tabindex="0" role="region" aria-label="Six continuation results">
+<table><caption>One public development task · independent execution under two public evaluation seeds</caption>
+<thead><tr><th scope="col">Condition / seed</th><th scope="col">Score</th><th scope="col">Task</th><th scope="col">Retrieved</th><th scope="col">Writes</th><th scope="col">Commands</th></tr></thead>
+<tbody>__ROWS__</tbody></table></div>
+<div id="filter" hidden><label for="condition">Inspect attempts: </label>
+<select id="condition"><option value="all">All six attempts</option><option value="no-memory">No memory</option><option value="funes-mcp">Funes MCP</option></select>
+<p id="visible-count" role="status">Showing all six attempts</p></div>
+<div class="cards">__CARDS__</div>
+<h2>Read operation counts in context</h2>
+<p>Command matches compare exact strings after trimming surrounding whitespace.
+Write matches compare normalized workspace paths and content hashes. The report
+separates matches with the prior session from repeats inside a continuation.
+Repeating a diagnostic can be necessary; fewer commands can also mean skipped
+checks. These counts do not estimate wasted work or human time saved.</p>
+<details><summary>Methods, failure controls and limits</summary>
+<p>Each attempt has up to 12 model turns, 4,096 generated tokens per turn and a
+600-second interaction budget. Bridge startup and final grading are recorded
+separately. The same public protocol probe checks persistent JSONL responses in
+both conditions; numerical correctness comes from the independent grader.</p>
+<p>Preflight controls exercise real Funes retrieval, an empty range, a rejected
+memory override and deliberate removal of the selected public Parquet. They are
+scripted checks, not extra agent trials. The exported prior session stores
+historical message strings; it does not reconstruct dedicated Funes tool-result blocks.</p>
+<p>This is one public development task and one selected prior session. It does
+not establish general memory efficacy, held-out performance or native session
+restore in branded agent applications. Earlier handoff trials used pre-injected
+context and remain a separate experiment. No retries or successful-attempt filtering
+are used in this cohort.</p></details>
+<p><a href="experiment.json">Preselected plan</a> · <a href="summary.json">Every result</a> ·
+<a href="model-files.json">Reviewed model files</a> ·
+<a href="memory-models-check.json">Retrieval model cache check</a> ·
+<a href="README.md">Offline verification</a> · <a href="records-manifest.json">Record checksums</a></p>
+<footer><p>This page displays recorded evidence. Local model inference used NVIDIA L40S;
+viewing the report runs no model or candidate program. Code and original records
+retain their included licenses and source notices.</p></footer>
+</main><script>
+"use strict";
+if(location.protocol==="file:"){document.querySelector("#archive-link").hidden=true;document.querySelector("#offline-note").hidden=false;}
+const selector=document.querySelector("#condition"),cards=[...document.querySelectorAll("[data-condition]")];
+document.querySelector("#filter").hidden=false;
+function applyFilter(){let shown=0;for(const card of cards){card.hidden=selector.value!=="all"&&card.dataset.condition!==selector.value;if(!card.hidden)shown++;}document.querySelector("#visible-count").textContent=`Showing ${shown} of 6 attempts`;}
+selector.addEventListener("change",applyFilter);
+document.querySelectorAll('a[href^="#attempt-"]').forEach(link=>link.addEventListener("click",()=>{selector.value="all";applyFilter();}));
+window.addEventListener("hashchange",()=>{const selected=cards.find(card=>`#${card.id}`===location.hash);if(selected?.hidden){selector.value="all";applyFilter();}});
+</script></body></html>

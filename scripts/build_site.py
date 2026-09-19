@@ -443,6 +443,11 @@ def build(destination: Path) -> dict:
     verify_context_controls(ROOT / "examples/context-controls")
     shutil.copytree(ROOT / "examples/context-controls", destination / "context-controls")
     verify_context_controls(destination / "context-controls")
+    from scripts.build_handoff_mcp import verify_bundle as verify_handoff
+
+    verify_handoff(ROOT / "examples/funes-handoff")
+    shutil.copytree(ROOT / "examples/funes-handoff", destination / "funes-handoff")
+    verify_handoff(destination / "funes-handoff")
     from evalarc.trace_review import import_trace
 
     trace_examples = ROOT / "examples/trace-workbench"

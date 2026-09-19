@@ -1,0 +1,45 @@
+{
+  "schema": "noteflow.public-handoff-source.v1",
+  "split": "public-development",
+  "session_id": "evalarc-public-2f665fd5734bb89435224913",
+  "memory_directory": "memory",
+  "funes": {
+    "version": "1.3.0",
+    "sha256": "7ac544a6d14c0018949ada32c39b374fd0b5f6b963a75eb4688b4d23afc944f9"
+  },
+  "prior_model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "prior_evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.875,
+    "status": "failed"
+  },
+  "source_policy": "Only this explicitly selected generated public session is available. No client history discovery, auto-indexing or automatic memory publication. Hashes bind supplied files; they do not authenticate their producer.",
+  "files": {
+    "LICENSE": "30620fe428dab60ad3cca87344feccbe0bc1d44ba3639d4fbf64276ae7780288",
+    "ROBOT_DATA_LICENSE.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "ROBOT_DATA_NOTICE.md": "cd9081380cd230008c7e96f4092272195055e3e4500817d3bfe105280359f0a7",
+    "memory/chunks.lance/_indices/5d3cabe8-ebc2-4547-89fd-a89116844bfe/metadata.lance": "4a638c1732f280b2464c9b78a1e2a0bb22b6e8564599ace5ca2ba0a75fcbb29f",
+    "memory/chunks.lance/_indices/5d3cabe8-ebc2-4547-89fd-a89116844bfe/part_0_docs.lance": "940a6fd275cfe65ea31fbafa79d0db56b675cc97bcd5e4e2e360dfa042a1c9ac",
+    "memory/chunks.lance/_indices/5d3cabe8-ebc2-4547-89fd-a89116844bfe/part_0_invert.lance": "15a25dc4c8a0b28d6c2d3fcec06d207d2be5abcd590b47b567106d2deb36acb7",
+    "memory/chunks.lance/_indices/5d3cabe8-ebc2-4547-89fd-a89116844bfe/part_0_tokens.lance": "0c58dea5c7fb68166143d4c5cfafdd538876ebd44485863a99ca880ea950a07b",
+    "memory/chunks.lance/_transactions/0-31c6cd72-063d-4586-b9c2-da2390276d8e.txn": "531d849990d4b7353aba2895fbb567d83f2dc5521cbcf113c300730b1644604e",
+    "memory/chunks.lance/_transactions/1-3e9493b6-edcc-4c8b-b460-8c38b49d81b7.txn": "a79e0b5a896268e16188f1c94e2e34e2b3112f40e8e070fdbacdaf2975b55db1",
+    "memory/chunks.lance/_versions/18446744073709551613.manifest": "f35ce41fc4b406d2e888d8387cd8b9d3d18e2083bb57058e14e8a93e37251a4e",
+    "memory/chunks.lance/_versions/18446744073709551614.manifest": "20b136e905465f84fec4317fe44ba0071a63fbefc8b6be009a4311ff85021259",
+    "memory/chunks.lance/_versions/latest_version_hint.json": "732322c128ed67841ef5aa42c7cd04ffcd74a61b2d17d710cd502b713d62930d",
+    "memory/chunks.lance/data/01010110111111010101001042459d4b4abc6af5fca566c7fb.lance": "3e7cacec13a4d7845c82b31aaac960e499596b52f4a2acafb7860613617abc42",
+    "prior/main.py": "0f8d610ce4894ef43620e6f356a39c79775a09a4613b61e6e9818f34371bbf2a",
+    "prior/trial.json": "2f665fd5734bb89435224913d43b4a69d91d53495c33d5ba9c375d2c59710004",
+    "prior-session.manifest.json": "9dcc8fc54c23c63352cbc05baf25a15523a45a3e243ab38883d39112a43d0f6c",
+    "prior-session.parquet": "4f38babfcd1c0fb84eac003667d0ac465f2024068c8616cc38a3da44e4f9ca4e"
+  }
+}

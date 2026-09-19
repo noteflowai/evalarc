@@ -1,0 +1,191 @@
+{
+  "schema": "evalarc.funes-mcp-handoff.v1",
+  "trials": [
+    {
+      "path": "no-memory/01-none-17",
+      "condition": "none",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 4.8198562519974075,
+      "completion_tokens": 37,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 0,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 0,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 0,
+        "retrieved_results": 0,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    },
+    {
+      "path": "funes-mcp/02-none-17",
+      "condition": "none",
+      "seed": 17,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 37.704179764026776,
+      "completion_tokens": 153,
+      "skill_loads": 0,
+      "handoff_condition": "funes-mcp",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 2,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 1,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 2,
+        "retrieved_results": 2,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    },
+    {
+      "path": "funes-mcp/03-none-41",
+      "condition": "none",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 33.492590806039516,
+      "completion_tokens": 153,
+      "skill_loads": 0,
+      "handoff_condition": "funes-mcp",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 2,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 1,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 2,
+        "retrieved_results": 2,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    },
+    {
+      "path": "no-memory/04-none-41",
+      "condition": "none",
+      "seed": 41,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 3.3260664099943824,
+      "completion_tokens": 37,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 0,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 0,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 0,
+        "retrieved_results": 0,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    },
+    {
+      "path": "no-memory/05-none-97",
+      "condition": "none",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 3.360630785988178,
+      "completion_tokens": 37,
+      "skill_loads": 0,
+      "handoff_condition": "no-memory",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 0,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 0,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 0,
+        "retrieved_results": 0,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    },
+    {
+      "path": "funes-mcp/06-none-97",
+      "condition": "none",
+      "seed": 97,
+      "status": "finished",
+      "error": null,
+      "evaluation": {
+        "valid": true,
+        "resolved": false,
+        "score": 0.875,
+        "status": "failed"
+      },
+      "elapsed_seconds": 33.81718921801075,
+      "completion_tokens": 153,
+      "skill_loads": 0,
+      "handoff_condition": "funes-mcp",
+      "operations": {
+        "successful_file_writes": 0,
+        "exact_duplicate_writes": 0,
+        "unchanged_starter_writes": 0,
+        "bytes_written_including_repeats": 0,
+        "command_attempts": 2,
+        "repeated_command_strings": 0,
+        "command_attempts_seen_in_prior": 1,
+        "writes_seen_in_prior": 0,
+        "memory_tool_attempts": 2,
+        "retrieved_results": 2,
+        "memory_error_results": 0,
+        "program_changed": false
+      }
+    }
+  ]
+}

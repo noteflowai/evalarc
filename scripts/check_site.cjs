@@ -6,6 +6,7 @@ const http = require("node:http");
 const { once } = require("node:events");
 const { checkStrands } = require("./check_strands_browser.cjs");
 const { checkContextControls } = require("./check_context_browser.cjs");
+const { checkHandoff } = require("./check_handoff_browser.cjs");
 
 async function main() {
   const root = path.resolve(process.env.SITE_DIR || "dist/site");
@@ -549,6 +550,37 @@ async function main() {
             ...await checkContextControls(page, page, root, { downloads: false }) });
           assert.deepEqual(network, []);
         } finally { await page.close(); }
+      }
+    }
+    if (process.env.SITE_HUB !== "1") {
+      for (const width of [1440, 390, 320]) {
+        const page = await browser.newPage({ viewport: { width, height: 1000 } });
+        try {
+          await page.goto(base);
+          await page.getByRole("link", { name: "Inspect the Funes MCP handoff" }).click();
+          results.push({ width, ...await checkHandoff(page, page, root) });
+          if (process.env.SITE_SCREENSHOTS) {
+            await page.goto(new URL("funes-handoff/index.html", base).href);
+            await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `handoff-${width}.png`), fullPage: true });
+          }
+        } finally { await page.close(); }
+      }
+      if (!process.env.SITE_URL) {
+        for (const javaScriptEnabled of [true, false]) {
+          const page = await browser.newPage({ viewport: { width: 390, height: 1000 }, javaScriptEnabled });
+          const requests = [];
+          page.on("request", request => {
+            if (/^https?:/.test(request.url())) requests.push(request.url());
+          });
+          await page.route("http**/*", route => route.abort());
+          try {
+            await page.goto(require("node:url").pathToFileURL(path.join(root, "funes-handoff/index.html")).href);
+            results.push({ offlineHandoff: true, ...await checkHandoff(page, page, root, {
+              downloads: false, interactive: javaScriptEnabled
+            }) });
+            assert.deepEqual(requests, [], "Offline handoff review must not request the network");
+          } finally { await page.close(); }
+        }
       }
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

@@ -50,6 +50,13 @@ resolved tasks. Inspect protocol failures, partial scores and unchanged starter
 programs, with complete records and an offline download. This diagnostic
 follow-up does not establish general skill efficacy.
 
+**Retrieve a prior session and inspect what changed.**
+[Funes MCP handoff](https://glayguo-evalarc.static.hf.space/funes-handoff/index.html)
+retains six Qwen3-4B continuations, native retrieval receipts and independently
+graded programs. Six retrieval results succeed; all six programs remain unchanged
+at 87.5%, and none fully resolves the task. Review operation counts alongside
+the prior session; they do not estimate work or time saved.
+
 **Correct answers can accompany an incorrect program.**
 The [Harbor control report](https://glayguo-evalarc.static.hf.space/harbor-controls/index.html)
 compares three actual container runs. A detached answer file receives 100%
