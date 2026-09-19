@@ -57,6 +57,15 @@ graded programs. Six retrieval results succeed; all six programs remain unchange
 at 87.5%, and none fully resolves the task. Review operation counts alongside
 the prior session; they do not estimate work or time saved.
 
+**Keep the reviewed skill version across sessions.**
+[Pinned skill handoff](https://glayguo-evalarc.static.hf.space/skill-handoff/index.html)
+links a prior MCP load to six new continuations. Both conditions receive the
+same historical skill through workflow-selected MCP, and one also offers
+Funes retrieval. All six preloads and six historical retrieval results succeed;
+the programs remain unchanged and full task acceptance is 0/6. The original
+skill, version-rejection control and complete records are downloadable.
+This is a separate cohort with a different prior session from the report above.
+
 **Correct answers can accompany an incorrect program.**
 The [Harbor control report](https://glayguo-evalarc.static.hf.space/harbor-controls/index.html)
 compares three actual container runs. A detached answer file receives 100%

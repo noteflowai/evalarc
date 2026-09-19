@@ -1,0 +1,10 @@
+{
+  "schema": "evalarc.funes-export.v1",
+  "source_sha256": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+  "session_id": "evalarc-public-51386ef67505aceb3c9bf349",
+  "messages": 26,
+  "parquet_sha256": "1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0",
+  "pyarrow_version": "25.0.1",
+  "contract": "Funes session_id Utf8 + messages List<Utf8>, optional string provenance",
+  "limits": "Funes currently represents string tool-message content as text; its Parquet importer does not reconstruct dedicated tool_result blocks. No native named-agent integration or publication is implied by this export."
+}

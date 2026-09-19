@@ -86,10 +86,14 @@ async function main() {
         await download(app.getByRole("link", { name: "Download complete offline evidence" }),
           "behavior-audit/behavior-evidence.zip");
         const behavior = await checkBehavior(page, app);
+        await app.locator("body").evaluate((element, base) => {
+          location.href = new URL("skill-handoff/index.html", base).href;
+        }, appUrl);
+        const skillHandoff = await checkHandoff(page, app, root, { skillHandoff: true });
         checks.push({ width, sourceCommit: expected.source_commit, hubIframe: true,
-          archiveDownloadsMatched: 7, originalJudgmentMatched: true, filters: true,
+          archiveDownloadsMatched: 8, originalJudgmentMatched: true, filters: true,
           allRejectDisclosed: true, missingJudgmentsVisible: true,
-          strands, contextControls, handoff, behavior });
+          strands, contextControls, handoff, behavior, skillHandoff });
       } finally {
         await page.close();
       }

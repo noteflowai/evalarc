@@ -16,6 +16,7 @@ import record_skill_impact as protocol
 from handoff_metrics import operation_metrics
 from prepare_skill_handoff import prior_skill
 
+import evalarc
 from evalarc.evaluate import write_json
 
 REVISION = "1cfa9a7208912126459214e8b04321603b3df60c"
@@ -193,6 +194,13 @@ def main():
     parser.add_argument("--endpoint", default="http://127.0.0.1:47865")
     parser.add_argument("--docker-command", default="docker")
     args = parser.parse_args()
+    if args.skill_bridge and Path(evalarc.__file__).resolve().parent != (
+        Path(__file__).resolve().parents[1] / "src/evalarc"
+    ):
+        parser.error(
+            "the editable package belongs to another checkout; run with PYTHONPATH=src "
+            "from this checkout so the runtime uses the source being frozen"
+        )
     source = json.loads((args.source / "source.json").read_text())
     if (
         source.get("schema") != "noteflow.public-handoff-source.v1"

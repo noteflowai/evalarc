@@ -79,3 +79,26 @@ def test_pins_alone_or_failed_delivery_do_not_establish_a_handoff(delivery, muta
         trial["skill_pins"] = {}
     with pytest.raises(ValueError):
         preparation.prior_skill(trial, skill)
+
+
+def test_future_cohort_rejects_a_different_editable_checkout(monkeypatch, tmp_path, capsys):
+    import record_handoff_mcp as recorder
+
+    monkeypatch.setattr(recorder.evalarc, "__file__", str(tmp_path / "other/evalarc/__init__.py"))
+    arguments = ["record_handoff_mcp.py"]
+    for option in (
+        "source",
+        "bridge",
+        "skill-bridge",
+        "funes",
+        "model-cache",
+        "model-files",
+        "output",
+    ):
+        arguments += ["--" + option, str(tmp_path / option)]
+    monkeypatch.setattr(sys, "argv", arguments)
+    with pytest.raises(SystemExit) as error:
+        recorder.main()
+    assert error.value.code == 2
+    assert "editable package belongs to another checkout" in capsys.readouterr().err
+    assert not (tmp_path / "output").exists()

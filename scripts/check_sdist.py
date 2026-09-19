@@ -1,4 +1,4 @@
-"""Check complete behavior evidence in a source distribution without extracting it."""
+"""Check complete experiment evidence and report templates in a source distribution."""
 
 import argparse
 import hashlib
@@ -11,11 +11,15 @@ from pathlib import Path, PurePosixPath
 def check(source: Path, archive: Path) -> dict:
     version = tomllib.loads((source / "pyproject.toml").read_text())["project"]["version"]
     prefix = PurePosixPath(f"evalarc-{version}")
-    folder = source / "examples/behavior-audit"
+    folders = ("behavior-audit", "funes-handoff", "skill-handoff")
     expected = {}
-    for path in folder.rglob("*"):
+    files = [path for folder in folders for path in (source / "examples" / folder).rglob("*")]
+    templates = sorted((source / "scripts").glob("*handoff*.html")) + sorted(
+        (source / "scripts").glob("skill_handoff_README*.md")
+    )
+    for path in files + templates:
         if path.is_symlink():
-            raise ValueError("behavior source contains a symlink")
+            raise ValueError("evidence source contains a symlink")
         if (
             not path.is_file()
             or "__pycache__" in path.parts
@@ -23,7 +27,8 @@ def check(source: Path, archive: Path) -> dict:
         ):
             continue
         expected[(prefix / path.relative_to(source).as_posix()).as_posix()] = path
-    checked = 0
+    counts = {name: 0 for name in folders}
+    template_count = 0
     with tarfile.open(archive) as package:
         members = package.getmembers()
         names = [item.name for item in members]
@@ -39,10 +44,13 @@ def check(source: Path, archive: Path) -> dict:
                 or not (member.isfile() or member.isdir())
             ):
                 raise ValueError("unsafe source-archive member")
-            if member.isfile() and name.is_relative_to(prefix / "examples/behavior-audit"):
+            if member.isfile() and (
+                any(name.is_relative_to(prefix / "examples" / folder) for folder in folders)
+                or member.name in expected
+            ):
                 actual[member.name] = member
         if set(actual) != set(expected):
-            raise ValueError("source archive lost or added behavior evidence files")
+            raise ValueError("source archive lost or added experiment evidence files or templates")
         for name, original in expected.items():
             stream = package.extractfile(actual[name])
             if (
@@ -51,8 +59,18 @@ def check(source: Path, archive: Path) -> dict:
                 != hashlib.sha256(original.read_bytes()).digest()
             ):
                 raise ValueError("source archive changed recorded bytes: " + name)
-            checked += 1
-    return {"version": version, "behavior_files_checked": checked, "byte_identical": True}
+            relative = original.relative_to(source)
+            if relative.parts[0] == "examples":
+                counts[relative.parts[1]] += 1
+            else:
+                template_count += 1
+    return {
+        "version": version,
+        "behavior_files_checked": counts["behavior-audit"],
+        "evidence_files_checked": counts,
+        "report_templates_checked": template_count,
+        "byte_identical": True,
+    }
 
 
 if __name__ == "__main__":

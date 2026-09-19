@@ -1,0 +1,59 @@
+{
+  "schema": "noteflow.public-handoff-source.v1",
+  "split": "public-development",
+  "session_id": "evalarc-public-51386ef67505aceb3c9bf349",
+  "memory_directory": "memory",
+  "funes": {
+    "version": "1.3.0",
+    "sha256": "7ac544a6d14c0018949ada32c39b374fd0b5f6b963a75eb4688b4d23afc944f9"
+  },
+  "prior_model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false
+  },
+  "prior_evaluation": {
+    "valid": true,
+    "resolved": false,
+    "score": 0.0,
+    "status": "failed"
+  },
+  "source_policy": "Only this explicitly selected generated public session is available. No client history discovery, auto-indexing or automatic memory publication. Hashes bind supplied files; they do not authenticate their producer.",
+  "files": {
+    "LICENSE": "30620fe428dab60ad3cca87344feccbe0bc1d44ba3639d4fbf64276ae7780288",
+    "ROBOT_DATA_LICENSE.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "ROBOT_DATA_NOTICE.md": "cd9081380cd230008c7e96f4092272195055e3e4500817d3bfe105280359f0a7",
+    "SKILL-LICENSE.txt": "165708f86c7a3a34cdeca62eb2831d506c9cd343c85b277a60a1de1252a253ac",
+    "memory/chunks.lance/_indices/735b8def-2665-443f-a267-48a5aeeca292/metadata.lance": "dea8029d81e7a95927c1b3221fd95fc2f5fe328dad1a5c30e15d48ecd9ff5ed2",
+    "memory/chunks.lance/_indices/735b8def-2665-443f-a267-48a5aeeca292/part_0_docs.lance": "a040f69826d26a7633362128d7e1f9dccb9de4f1b4869841b04f5eb564efb98e",
+    "memory/chunks.lance/_indices/735b8def-2665-443f-a267-48a5aeeca292/part_0_invert.lance": "f94bf22e441afb5bf2fcdd0317ebfeba7d5d19ebebff1088d67b93e65e6dac73",
+    "memory/chunks.lance/_indices/735b8def-2665-443f-a267-48a5aeeca292/part_0_tokens.lance": "cdd785e90f2f4383cd31eb7a5c520daf6568900260f601367e7046c3d25692a4",
+    "memory/chunks.lance/_transactions/0-1b9813af-7636-4918-bf12-7b8c43dc5ed6.txn": "c50ae7553bd4d9e1dc22dcbe8931b99d3b6157c6979d1fa34a17732b59ea7e54",
+    "memory/chunks.lance/_transactions/1-3e12aea4-1d1c-4c50-b909-870cd24ee4ab.txn": "6b6d9654f251e037fb1e7813b82f4a84253f0c60f6a81e762b3eac2ca8da4459",
+    "memory/chunks.lance/_versions/18446744073709551613.manifest": "0c9aaf24c8936dd69ac20ec929d23f977abf22b1f1dc85d3a8c442ff8d4f582a",
+    "memory/chunks.lance/_versions/18446744073709551614.manifest": "ddcea66d7fd5bc94014d1b26ce1c1dca33a931511059870f8baedcd0177125fa",
+    "memory/chunks.lance/_versions/latest_version_hint.json": "732322c128ed67841ef5aa42c7cd04ffcd74a61b2d17d710cd502b713d62930d",
+    "memory/chunks.lance/data/0010111101101010001000011605494953a8cebc1b74e9ed25.lance": "c46d9afa856d057e14fbd3af32c422d8c4fc91513ea3495dda356f9f766f1ccc",
+    "prior/main.py": "20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc",
+    "prior/trial.json": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+    "prior-session.manifest.json": "2e73e19172126e3185599dd6a95febb2b15dbea9dbbd1ca74e09c2048c663c53",
+    "prior-session.parquet": "1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0",
+    "prior-skill-load.json": "cb8bee5ab34ba2fb546a69c9ecc260a33840defd36c99d13c22a5b0f228548b3",
+    "skill-pins.json": "9b3ad610d4ce3c9f066e15acd2a8e639169c5d3f2b8a6967e4b4b3fda3229e1b",
+    "skills/robot-recording-review/SKILL.md": "fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381"
+  },
+  "skill_handoff": {
+    "schema": "noteflow.skill-handoff.v1",
+    "name": "robot-recording-review",
+    "pool_directory": "skills",
+    "pins_path": "skill-pins.json",
+    "prior_event_index": 1,
+    "prior_trial_sha256": "51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414",
+    "original_load_path": "prior-skill-load.json",
+    "delivery": "Prior agent-requested MCP load; successor workflow-selected MCP preload."
+  }
+}

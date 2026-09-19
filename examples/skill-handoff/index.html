@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pinned Skill Handoff · EvalArc</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1522;--panel:#17263a;--line:#40546f;--text:#edf3ff;--muted:#b5c7e0;--accent:#8de5d0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,sans-serif}
+main{max-width:1160px;margin:auto;padding:32px 22px}a{color:var(--accent);overflow-wrap:anywhere}
+a:focus-visible,select:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffd084;outline-offset:3px}
+h1{font-size:clamp(32px,5.5vw,58px);line-height:1.12;margin:18px 0}h2{font-size:26px}h3{font-size:20px}
+p{max-width:88ch}.eyebrow{color:var(--accent);letter-spacing:.12em;font-size:12px;text-transform:uppercase}
+.lede{font-size:19px;color:var(--muted)}.metrics,.cards{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}article,.metric,.note{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:12px;min-width:0}
+.metric strong{display:block;font-size:34px;color:var(--accent)}.metric span{color:var(--muted)}
+.route{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}.route li{padding:9px 13px;border:1px solid var(--line);border-radius:8px}.route li+li:before{content:"→ ";color:var(--accent)}
+code{overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;max-height:360px;padding:12px;background:#09111d;border-radius:6px;font:13px/1.55 ui-monospace,monospace}
+dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 16px}dt{color:var(--muted)}dd{margin:0;text-align:right}
+details{margin:15px 0}summary{cursor:pointer;color:var(--accent);min-height:44px;align-content:center}li{margin-bottom:10px}
+.table{overflow:auto;margin:22px 0}table{border-collapse:collapse;min-width:700px;width:100%}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}caption{text-align:left;color:var(--muted);margin-bottom:10px}
+select{font:inherit;min-height:44px;padding:7px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px}nav{display:flex;flex-wrap:wrap;gap:10px 22px}
+[hidden]{display:none!important}.source{color:var(--muted)}footer{margin-top:28px;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:800px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){main{padding:22px 15px}.metrics{grid-template-columns:1fr}.metric strong{font-size:29px}}
+</style></head><body><main>
+<nav aria-label="Report links"><a href="https://noteflowai.github.io/evalarc/">EvalArc</a>
+<a id="archive-link" href="skill-handoff.zip?download=true" download>Download complete handoff evidence</a>
+<a href="README.zh-CN.md">中文方法</a></nav>
+<p class="eyebrow">Fixed skill version · actual MCP delivery · recorded GPU continuations</p>
+<p id="offline-note" hidden>You are viewing unpacked evidence. Verify the included record inventory before reuse.</p>
+<noscript><p>All six attempts and their source links are available without JavaScript. The archive download is available on the hosted report.</p></noscript>
+<h1>Carry the reviewed skill.<br>Check what the next agent delivers.</h1>
+<p class="lede">A recorded Qwen3-8B session loaded a robot-recording skill but left an
+unfinished program. Qwen3-4B receives that exact skill through MCP, with or without
+access to the earlier session through Funes. Follow the version, the retrieved
+evidence and the independently checked output.</p>
+<div class="metrics" aria-label="Complete experiment outcomes">
+<div class="metric"><strong>6 / 6</strong><span>workflow MCP skill preloads</span></div>
+<div class="metric"><strong>6</strong><span>successful historical retrieval results</span></div>
+<div class="metric"><strong>0 / 6</strong><span>tasks fully resolved</span></div>
+<div class="metric"><strong>0 / 6</strong><span>starter programs changed</span></div></div>
+<p>The workflow preloads the skill before model generation in both conditions.
+Historical retrieval is requested by the model. These are separate actions:
+delivery and retrieval receipts establish what was returned; task acceptance
+comes from executing the delivered program.</p>
+<h2>Follow the handoff</h2>
+<ol class="route" aria-label="Recorded handoff route">
+<li>Qwen3-8B: original MCP load</li><li>Selected public session and program</li>
+<li>Workflow: same pinned skill over MCP</li><li>Qwen3-4B: continue and verify</li></ol>
+<p class="source">Session: <code>evalarc-public-51386ef67505aceb3c9bf349</code><br>
+SKILL.md SHA-256: <code>fefef58511b20107efb3b06e938e212f9b922f690a7c002a04af57bb17f20381</code><br>
+Source manifest SHA-256: <code>0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165</code></p>
+<nav aria-label="Source evidence">
+<a href="source/prior/trial.json">Prior agent record</a>
+<a href="source/prior/main.py">Prior program</a>
+<a href="source/prior-skill-load.json">Original MCP skill load</a>
+<a href="source/skills/robot-recording-review/SKILL.md">Historical skill bytes</a>
+<a href="source/skill-pins.json">Reviewed pins</a>
+<a href="source/source.json">Source inventory</a></nav>
+<p class="note">The unchanged starting program scores <strong>0.0%</strong>
+in a separate control executed after the six continuations. All six attempts
+remain visible, including early finish signals and unchanged programs.
+<a href="validation/baseline/record.json">Inspect the control and its timing</a>.</p>
+<h2>Compare all six continuations</h2>
+<p>Both conditions share the prior program, authoritative task, pinned skill,
+protocol diagnostic and interaction budget. Only the Funes condition offers
+historical retrieval tools. Three public generation seeds are paired in
+alternating order. This is a development workflow study on one task.</p>
+<div class="table" tabindex="0" role="region" aria-label="Six continuation results">
+<table><caption>Every scheduled attempt · independent execution under two public evaluation seeds</caption>
+<thead><tr><th scope="col">Condition / seed</th><th scope="col">Score</th><th scope="col">Task</th><th scope="col">Retrieved</th><th scope="col">Writes</th><th scope="col">Commands</th></tr></thead>
+<tbody><tr><th scope="row"><a href="#attempt-1">Pinned skill only · 17</a></th><td>0.0%</td><td>Unresolved</td><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row"><a href="#attempt-2">Pinned skill + Funes MCP · 17</a></th><td>0.0%</td><td>Unresolved</td><td>2</td><td>0</td><td>0</td></tr><tr><th scope="row"><a href="#attempt-3">Pinned skill + Funes MCP · 41</a></th><td>0.0%</td><td>Unresolved</td><td>2</td><td>0</td><td>0</td></tr><tr><th scope="row"><a href="#attempt-4">Pinned skill only · 41</a></th><td>0.0%</td><td>Unresolved</td><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row"><a href="#attempt-5">Pinned skill only · 97</a></th><td>0.0%</td><td>Unresolved</td><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row"><a href="#attempt-6">Pinned skill + Funes MCP · 97</a></th><td>0.0%</td><td>Unresolved</td><td>2</td><td>0</td><td>0</td></tr></tbody></table></div>
+<div id="filter" hidden><label for="condition">Inspect attempts: </label>
+<select id="condition"><option value="all">All six attempts</option>
+<option value="no-memory">Pinned skill only</option>
+<option value="funes-mcp">Pinned skill + Funes MCP</option></select>
+<p id="visible-count" role="status">Showing all six attempts</p></div>
+<div class="cards"><article id="attempt-1" data-condition="no-memory"><h3>01 / Pinned skill only · seed 17</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/no-memory-17.json">loaded</a></dd><dt>Preload time</dt><dd>0.90 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>0 / 0</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>37</dd><dt>Interaction time</dt><dd>4.7 s</dd></dl><details><summary>Inspect 2 tool calls</summary><ol><li data-tool="read_file"><strong>read_file</strong><pre>{
+  &quot;path&quot;: &quot;/workspace/main.py&quot;
+}</pre></li><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="no-memory/01-none-17/trial.json" download>Trial JSON</a> · <a href="no-memory/01-none-17/candidate/main.py">Program</a> · <a href="no-memory/01-none-17/evaluation.json" download>Independent grade</a></p></article><article id="attempt-2" data-condition="funes-mcp"><h3>02 / Pinned skill + Funes MCP · seed 17</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/funes-mcp-17.json">loaded</a></dd><dt>Preload time</dt><dd>0.89 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>2 / 2</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>91</dd><dt>Interaction time</dt><dd>29.6 s</dd></dl><details><summary>Inspect 4 tool calls</summary><ol><li data-tool="recall_prior_session"><strong>recall_prior_session · retrieved</strong><pre>{
+  &quot;query&quot;: &quot;robot-recording-review&quot;
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.999\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 0 --to 6 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;total\&quot;: 1, \&quot;matches\&quot;: [{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;}]}\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.995\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 2 --to 8 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;, \&quot;content\&quot;: \&quot;# Review recorded robot motion\\n\\nBuild the review around the supplied recording contract. Read its frame mapping,\\nunits, clock origin, sample identifiers, and source digest before computing\\nphysical quantities.\\n\\n- Convert positions and velocities into the same world convention. Translation\\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\\n  after conversion, rather than interpreting a component as a magnitude.\\n- Subtract a clock&#x27;s origin before scaling to elapsed seconds. Avoid converting\\n  frame numbers directly to time when measured timestamps are provided.\\n- Index observations by their explicit identifiers. Preserve omissions; array\\n  order, row count and last row do not establish chronology or completeness.\\n- When comparing with constant-acceleration motion, evaluate the reference\\n  equation separately at each available timestamp. Use the Euclidean vector\\n  error, then aggregate only the observations actually present.\\n- Locate a\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.991\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 22 --to 28 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- tool_use  score=0.989\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 1 --to 7 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n[tool_use open_skill] {\&quot;name\&quot;:\&quot;robot-recording-review\&quot;}\n---\n&quot;,
+  &quot;passages&quot;: [
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 0,
+      &quot;to&quot;: 6
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 2,
+      &quot;to&quot;: 8
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 22,
+      &quot;to&quot;: 28
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 1,
+      &quot;to&quot;: 7
+    }
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_prior_turns"><strong>read_prior_turns · retrieved</strong><pre>{
+  &quot;from&quot;: 22,
+  &quot;to&quot;: 28
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] assistant seq22 turn=evalarc-public-51386ef67505aceb3c9bf349-22\n[tool_use run_command] {\&quot;command\&quot;:\&quot;python3 /workspace/main.py &lt; /workspace/example.jsonl\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq23 turn=evalarc-public-51386ef67505aceb3c9bf349-23\n{\&quot;ok\&quot;: true, \&quot;exit_code\&quot;: 0, \&quot;output\&quot;: \&quot;{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {\\\&quot;error\\\&quot;: \\\&quot;Missing requested facts in the request\\\&quot;}}\\n\&quot;, \&quot;limit_reached\&quot;: null}\n---\n[2026-09-14T11:04:41.281633+00:00] assistant seq24 turn=evalarc-public-51386ef67505aceb3c9bf349-24\n[tool_use read_file] {\&quot;path\&quot;:\&quot;/workspace/TASK.md\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq25 turn=evalarc-public-51386ef67505aceb3c9bf349-25\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried frame\\n  is present. Do not interpolate absent observations.\\n\\nReturn exactly `{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {...}}`. The report contains these fields:\\n\\n| Field | Required value |\\n| --- | --- |\\n| `source_sha256` | The provided original source digest |\\n| `frame` | The requested integer frame |\\n| `time_seconds` | Its elapsed time, after clock conversion |\\n| `position_m` | Its three world-coordinate position components |\\n| `speed_m_s` | Euclidean magnitude of its world velocity |\\n| `max_position_error_m` | Maximum Euclidean position error across **available** observations against `p0 + v0*t + 0.5*g*t*t` |\\n| `peak_frame` | Available frame with greatest world z; choose the lowest frame number on an exact tie |\\n| `peak_height_m` | That frame&#x27;s world z position |\\n| `missing_frames` | Sorted list of expected but absent integer frames |\\n\\nUse JSON numbers for numerical values, never Boolean substitutes, NaN or Infinity.\\nChecks allow absolute numerical error up to 1e-6 or relative error up to 1e-7.\\nDo not infer metres, seconds, axis order, or completeness from filenames.\\n\\nThese inputs are derived representations of six real CUDA recordings published\\nby Robot Reel. Unit, coordinate, clock and omission variants are generated for this\\npublic development task. They are not new physical experiments or hidden test data.\\nReporting a source digest provides attribution; it does not authenticate the\\noriginal recording&#x27;s producer.\\n\&quot;}\n---\nturns 22-25 of 26\n&quot;,
+  &quot;turns&quot;: [
+    22,
+    23,
+    24,
+    25
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_file"><strong>read_file</strong><pre>{
+  &quot;path&quot;: &quot;/workspace/main.py&quot;
+}</pre></li><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="funes-mcp/02-none-17/trial.json" download>Trial JSON</a> · <a href="funes-mcp/02-none-17/candidate/main.py">Program</a> · <a href="funes-mcp/02-none-17/evaluation.json" download>Independent grade</a></p></article><article id="attempt-3" data-condition="funes-mcp"><h3>03 / Pinned skill + Funes MCP · seed 41</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/funes-mcp-41.json">loaded</a></dd><dt>Preload time</dt><dd>0.87 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>2 / 2</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>91</dd><dt>Interaction time</dt><dd>29.2 s</dd></dl><details><summary>Inspect 4 tool calls</summary><ol><li data-tool="recall_prior_session"><strong>recall_prior_session · retrieved</strong><pre>{
+  &quot;query&quot;: &quot;robot-recording-review&quot;
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.999\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 0 --to 6 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;total\&quot;: 1, \&quot;matches\&quot;: [{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;}]}\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.995\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 2 --to 8 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;, \&quot;content\&quot;: \&quot;# Review recorded robot motion\\n\\nBuild the review around the supplied recording contract. Read its frame mapping,\\nunits, clock origin, sample identifiers, and source digest before computing\\nphysical quantities.\\n\\n- Convert positions and velocities into the same world convention. Translation\\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\\n  after conversion, rather than interpreting a component as a magnitude.\\n- Subtract a clock&#x27;s origin before scaling to elapsed seconds. Avoid converting\\n  frame numbers directly to time when measured timestamps are provided.\\n- Index observations by their explicit identifiers. Preserve omissions; array\\n  order, row count and last row do not establish chronology or completeness.\\n- When comparing with constant-acceleration motion, evaluate the reference\\n  equation separately at each available timestamp. Use the Euclidean vector\\n  error, then aggregate only the observations actually present.\\n- Locate a\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.991\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 22 --to 28 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- tool_use  score=0.989\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 1 --to 7 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n[tool_use open_skill] {\&quot;name\&quot;:\&quot;robot-recording-review\&quot;}\n---\n&quot;,
+  &quot;passages&quot;: [
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 0,
+      &quot;to&quot;: 6
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 2,
+      &quot;to&quot;: 8
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 22,
+      &quot;to&quot;: 28
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 1,
+      &quot;to&quot;: 7
+    }
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_prior_turns"><strong>read_prior_turns · retrieved</strong><pre>{
+  &quot;from&quot;: 22,
+  &quot;to&quot;: 28
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] assistant seq22 turn=evalarc-public-51386ef67505aceb3c9bf349-22\n[tool_use run_command] {\&quot;command\&quot;:\&quot;python3 /workspace/main.py &lt; /workspace/example.jsonl\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq23 turn=evalarc-public-51386ef67505aceb3c9bf349-23\n{\&quot;ok\&quot;: true, \&quot;exit_code\&quot;: 0, \&quot;output\&quot;: \&quot;{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {\\\&quot;error\\\&quot;: \\\&quot;Missing requested facts in the request\\\&quot;}}\\n\&quot;, \&quot;limit_reached\&quot;: null}\n---\n[2026-09-14T11:04:41.281633+00:00] assistant seq24 turn=evalarc-public-51386ef67505aceb3c9bf349-24\n[tool_use read_file] {\&quot;path\&quot;:\&quot;/workspace/TASK.md\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq25 turn=evalarc-public-51386ef67505aceb3c9bf349-25\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried frame\\n  is present. Do not interpolate absent observations.\\n\\nReturn exactly `{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {...}}`. The report contains these fields:\\n\\n| Field | Required value |\\n| --- | --- |\\n| `source_sha256` | The provided original source digest |\\n| `frame` | The requested integer frame |\\n| `time_seconds` | Its elapsed time, after clock conversion |\\n| `position_m` | Its three world-coordinate position components |\\n| `speed_m_s` | Euclidean magnitude of its world velocity |\\n| `max_position_error_m` | Maximum Euclidean position error across **available** observations against `p0 + v0*t + 0.5*g*t*t` |\\n| `peak_frame` | Available frame with greatest world z; choose the lowest frame number on an exact tie |\\n| `peak_height_m` | That frame&#x27;s world z position |\\n| `missing_frames` | Sorted list of expected but absent integer frames |\\n\\nUse JSON numbers for numerical values, never Boolean substitutes, NaN or Infinity.\\nChecks allow absolute numerical error up to 1e-6 or relative error up to 1e-7.\\nDo not infer metres, seconds, axis order, or completeness from filenames.\\n\\nThese inputs are derived representations of six real CUDA recordings published\\nby Robot Reel. Unit, coordinate, clock and omission variants are generated for this\\npublic development task. They are not new physical experiments or hidden test data.\\nReporting a source digest provides attribution; it does not authenticate the\\noriginal recording&#x27;s producer.\\n\&quot;}\n---\nturns 22-25 of 26\n&quot;,
+  &quot;turns&quot;: [
+    22,
+    23,
+    24,
+    25
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_file"><strong>read_file</strong><pre>{
+  &quot;path&quot;: &quot;/workspace/main.py&quot;
+}</pre></li><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="funes-mcp/03-none-41/trial.json" download>Trial JSON</a> · <a href="funes-mcp/03-none-41/candidate/main.py">Program</a> · <a href="funes-mcp/03-none-41/evaluation.json" download>Independent grade</a></p></article><article id="attempt-4" data-condition="no-memory"><h3>04 / Pinned skill only · seed 41</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/no-memory-41.json">loaded</a></dd><dt>Preload time</dt><dd>0.88 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>0 / 0</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>15</dd><dt>Interaction time</dt><dd>2.2 s</dd></dl><details><summary>Inspect 1 tool calls</summary><ol><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="no-memory/04-none-41/trial.json" download>Trial JSON</a> · <a href="no-memory/04-none-41/candidate/main.py">Program</a> · <a href="no-memory/04-none-41/evaluation.json" download>Independent grade</a></p></article><article id="attempt-5" data-condition="no-memory"><h3>05 / Pinned skill only · seed 97</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/no-memory-97.json">loaded</a></dd><dt>Preload time</dt><dd>0.91 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>0 / 0</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>37</dd><dt>Interaction time</dt><dd>3.4 s</dd></dl><details><summary>Inspect 2 tool calls</summary><ol><li data-tool="read_file"><strong>read_file</strong><pre>{
+  &quot;path&quot;: &quot;/workspace/main.py&quot;
+}</pre></li><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="no-memory/05-none-97/trial.json" download>Trial JSON</a> · <a href="no-memory/05-none-97/candidate/main.py">Program</a> · <a href="no-memory/05-none-97/evaluation.json" download>Independent grade</a></p></article><article id="attempt-6" data-condition="funes-mcp"><h3>06 / Pinned skill + Funes MCP · seed 97</h3><p><strong>0.0% · Unresolved</strong></p><dl><dt>Workflow skill preload</dt><dd><a href="preloads/funes-mcp-97.json">loaded</a></dd><dt>Preload time</dt><dd>0.89 s</dd><dt>Harness stop</dt><dd>finished</dd><dt>Program state</dt><dd>Unchanged</dd><dt>Memory attempts / retrieved</dt><dd>2 / 2</dd><dt>Memory errors</dt><dd>0</dd><dt>Command attempts</dt><dd>0</dd><dt>Command attempts also seen in prior</dt><dd>0</dd><dt>Repeated commands within this attempt</dt><dd>0</dd><dt>Identical writes seen in prior</dt><dd>0</dd><dt>Repeated writes within this attempt</dt><dd>0</dd><dt>Generated tokens</dt><dd>91</dd><dt>Interaction time</dt><dd>29.2 s</dd></dl><details><summary>Inspect 4 tool calls</summary><ol><li data-tool="recall_prior_session"><strong>recall_prior_session · retrieved</strong><pre>{
+  &quot;query&quot;: &quot;robot-recording-review&quot;
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.999\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 0 --to 6 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;total\&quot;: 1, \&quot;matches\&quot;: [{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;}]}\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.995\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 2 --to 8 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;name\&quot;: \&quot;robot-recording-review\&quot;, \&quot;description\&quot;: \&quot;Review recorded robot motion when position, velocity, coordinate-frame, clock, or missing-sample facts must be computed from a trace.\&quot;, \&quot;content\&quot;: \&quot;# Review recorded robot motion\\n\\nBuild the review around the supplied recording contract. Read its frame mapping,\\nunits, clock origin, sample identifiers, and source digest before computing\\nphysical quantities.\\n\\n- Convert positions and velocities into the same world convention. Translation\\n  belongs to positions; apply axis signs and unit scale to both. Compute speed\\n  after conversion, rather than interpreting a component as a magnitude.\\n- Subtract a clock&#x27;s origin before scaling to elapsed seconds. Avoid converting\\n  frame numbers directly to time when measured timestamps are provided.\\n- Index observations by their explicit identifiers. Preserve omissions; array\\n  order, row count and last row do not establish chronology or completeness.\\n- When comparing with constant-acceleration motion, evaluate the reference\\n  equation separately at each available timestamp. Use the Euclidean vector\\n  error, then aggregate only the observations actually present.\\n- Locate a\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- text  score=0.991\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 22 --to 28 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried\n---\n[2026-09-14T11:04:41.281633+00:00] evalarc_local_model_pilot -public-demo-robot-recording-review/evalarc- tool_use  score=0.989\n  → get evalarc-public-51386ef67505aceb3c9bf349 --from 1 --to 7 --memory /home/dcvuser/work/robot-reel-agents/codex/artifacts/skill-handoff-20260919/cohort/source/memory\n[tool_use open_skill] {\&quot;name\&quot;:\&quot;robot-recording-review\&quot;}\n---\n&quot;,
+  &quot;passages&quot;: [
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 0,
+      &quot;to&quot;: 6
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 2,
+      &quot;to&quot;: 8
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 22,
+      &quot;to&quot;: 28
+    },
+    {
+      &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+      &quot;from&quot;: 1,
+      &quot;to&quot;: 7
+    }
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_prior_turns"><strong>read_prior_turns · retrieved</strong><pre>{
+  &quot;from&quot;: 22,
+  &quot;to&quot;: 28
+}</pre><details><summary>Read retrieved text and source identity</summary><pre tabindex="0">{
+  &quot;status&quot;: &quot;retrieved&quot;,
+  &quot;text&quot;: &quot;[2026-09-14T11:04:41.281633+00:00] assistant seq22 turn=evalarc-public-51386ef67505aceb3c9bf349-22\n[tool_use run_command] {\&quot;command\&quot;:\&quot;python3 /workspace/main.py &lt; /workspace/example.jsonl\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq23 turn=evalarc-public-51386ef67505aceb3c9bf349-23\n{\&quot;ok\&quot;: true, \&quot;exit_code\&quot;: 0, \&quot;output\&quot;: \&quot;{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {\\\&quot;error\\\&quot;: \\\&quot;Missing requested facts in the request\\\&quot;}}\\n\&quot;, \&quot;limit_reached\&quot;: null}\n---\n[2026-09-14T11:04:41.281633+00:00] assistant seq24 turn=evalarc-public-51386ef67505aceb3c9bf349-24\n[tool_use read_file] {\&quot;path\&quot;:\&quot;/workspace/TASK.md\&quot;}\n---\n[2026-09-14T11:04:41.281633+00:00] tool seq25 turn=evalarc-public-51386ef67505aceb3c9bf349-25\n{\&quot;ok\&quot;: true, \&quot;content\&quot;: \&quot;# Robot recording evidence review\\n\\nImplement a JSON-lines service that reviews recorded positions and velocities.\\nEach stdin line is one request. Write exactly one JSON response per request to\\nstdout; diagnostics belong on stderr. Exit cleanly when stdin reaches EOF.\\n\\nThe input contains an `op` of `review`, a `query_frame`, and a `recording`:\\n\\n- `source.sha256` identifies the original recorded file. Preserve it in the report.\\n- `metadata.expected_frames` lists every frame that should be present.\\n- `metadata.world_from_sensor` describes the coordinate convention.\\n  For world component `j`, take sensor component `axes[j]`, multiply by\\n  `signs[j]` and `meters_per_unit`, then add `origin_m[j]` for positions.\\n  Velocities use the same axis/sign/unit mapping without translation.\\n- `metadata.clock` defines elapsed seconds as\\n  `(tick - origin_tick) * seconds_per_tick`.\\n- `metadata.analytic` gives initial position, initial velocity and constant\\n  acceleration in world metres and seconds.\\n- `observations` contains objects with `frame`, `tick`, `position`, and `velocity`.\\n  Input order is arbitrary. Some expected frames may be absent. The queried frame\\n  is present. Do not interpolate absent observations.\\n\\nReturn exactly `{\\\&quot;ok\\\&quot;: true, \\\&quot;report\\\&quot;: {...}}`. The report contains these fields:\\n\\n| Field | Required value |\\n| --- | --- |\\n| `source_sha256` | The provided original source digest |\\n| `frame` | The requested integer frame |\\n| `time_seconds` | Its elapsed time, after clock conversion |\\n| `position_m` | Its three world-coordinate position components |\\n| `speed_m_s` | Euclidean magnitude of its world velocity |\\n| `max_position_error_m` | Maximum Euclidean position error across **available** observations against `p0 + v0*t + 0.5*g*t*t` |\\n| `peak_frame` | Available frame with greatest world z; choose the lowest frame number on an exact tie |\\n| `peak_height_m` | That frame&#x27;s world z position |\\n| `missing_frames` | Sorted list of expected but absent integer frames |\\n\\nUse JSON numbers for numerical values, never Boolean substitutes, NaN or Infinity.\\nChecks allow absolute numerical error up to 1e-6 or relative error up to 1e-7.\\nDo not infer metres, seconds, axis order, or completeness from filenames.\\n\\nThese inputs are derived representations of six real CUDA recordings published\\nby Robot Reel. Unit, coordinate, clock and omission variants are generated for this\\npublic development task. They are not new physical experiments or hidden test data.\\nReporting a source digest provides attribution; it does not authenticate the\\noriginal recording&#x27;s producer.\\n\&quot;}\n---\nturns 22-25 of 26\n&quot;,
+  &quot;turns&quot;: [
+    22,
+    23,
+    24,
+    25
+  ],
+  &quot;source&quot;: {
+    &quot;session_id&quot;: &quot;evalarc-public-51386ef67505aceb3c9bf349&quot;,
+    &quot;manifest_sha256&quot;: &quot;0da95f0acb66d106b9ac29e1db6ca0460115960c60db8ece70152bdba4f0d165&quot;,
+    &quot;prior_trial_sha256&quot;: &quot;51386ef67505aceb3c9bf349075a6590ed053fb5d3767912adf5ba9344a8c414&quot;,
+    &quot;prior_program_sha256&quot;: &quot;20d880e9d0184ea4b9cbb8c9ced9059559741a571627d5bd9536c368d12f5dfc&quot;,
+    &quot;parquet_sha256&quot;: &quot;1094ae2d0dfa79561129501fcc0257445252ad2b9940a26d66018826dbab89f0&quot;
+  }
+}</pre></details></li><li data-tool="read_file"><strong>read_file</strong><pre>{
+  &quot;path&quot;: &quot;/workspace/main.py&quot;
+}</pre></li><li data-tool="finish"><strong>finish</strong><pre>{}</pre></li></ol></details><details><summary>Inspect 8 failed cases</summary><ul><li>seed 41 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 41 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / world-meters: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / millimeters-sensor-frame: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / centimeters-offset-clock: provenance, coordinates, clock, metrics, completeness, protocol</li><li>seed 97 / incomplete-recording: provenance, coordinates, clock, metrics, completeness, protocol</li></ul></details><p><a href="funes-mcp/06-none-97/trial.json" download>Trial JSON</a> · <a href="funes-mcp/06-none-97/candidate/main.py">Program</a> · <a href="funes-mcp/06-none-97/evaluation.json" download>Independent grade</a></p></article></div>
+<h2>Inspect version and source failures</h2>
+<p>A new provider process rejects changed skill bytes against the earlier pins.
+The native memory controls also exercise an empty result, a rejected memory
+override and removal of the selected source. These controls use scripts, without
+additional model generations.</p>
+<nav aria-label="Control records">
+<a href="validation/preflight-pin-drift.json">Changed-version rejection</a>
+<a href="validation/preflight-skill.json">Original / successor delivery check</a>
+<a href="validation/mcp-controls.json">Native retrieval and missing-source controls</a></nav>
+<details id="methods"><summary>Methods, runtime provenance and interpretation</summary>
+<p>The predecessor is the earliest published Qwen3-8B trial with a successful
+MCP load of this skill. Its result was already known. Each successor attempt
+allows 12 generations, 4,096 generated tokens per generation and 600 seconds
+of interaction. Skill preload, memory startup and grading have separate
+timing records. The public protocol probe checks JSONL responses; the grader
+checks numerical facts. All six attempts are retained.</p>
+<p>During this cohort, the shared editable Python environment imported EvalArc's
+core from the canonical main checkout. Observations during and after execution
+matched all 54 core source files to the frozen copy. These observations were
+collected at the recorded times; the subsequent recorder now requires its own
+checkout at startup. <a href="validation/runtime-package-during.json">During-run mapping</a> ·
+<a href="validation/runtime-package-after.json">Post-run mapping</a> ·
+<a href="frozen-inputs-check.json">Frozen input checks</a>.</p>
+<p>The successful preloads and retrievals do not establish that the model
+followed the guidance. Full task acceptance is reported separately above. Earlier handoff
+experiments use another source and no additional skill, so their results stay
+separate. These records do not establish general memory or skill benefits,
+hidden-test performance, or native state restoration in branded clients.</p>
+<p>Repeated commands compare trimmed strings; repeated writes compare paths and
+content hashes. The counts distinguish matches with prior work from repeats
+inside the continuation. Repeating a diagnostic can be useful, and fewer
+operations can mean skipped checks. The counts do not estimate human time saved.</p>
+</details>
+<footer><p>Code and source notices: <a href="LICENSE">EvalArc MIT</a> ·
+<a href="source/SKILL-LICENSE.txt">Skill provider MIT</a> ·
+<a href="source/ROBOT_DATA_LICENSE.txt">Recording data license</a> ·
+<a href="source/ROBOT_DATA_NOTICE.md">Data attribution</a>.
+Model weights and the Funes executable are not redistributed.</p></footer>
+</main>
+<script>
+(() => {
+  if (location.protocol === "file:") {
+    document.querySelector("#archive-link").hidden = true;
+    document.querySelector("#offline-note").hidden = false;
+  }
+  document.querySelector("#filter").hidden = false;
+  const select = document.querySelector("#condition");
+  function applyFilter() {
+    let shown = 0;
+    for (const card of document.querySelectorAll("article[data-condition]")) {
+      card.hidden = select.value !== "all" && card.dataset.condition !== select.value;
+      if (!card.hidden) shown++;
+    }
+    document.querySelector("#visible-count").textContent =
+      shown === 6 ? "Showing all six attempts" : `Showing ${shown} attempts`;
+  }
+  select.addEventListener("change", applyFilter);
+  document.querySelectorAll('a[href^="#attempt-"]').forEach(link => {
+    link.addEventListener("click", () => {
+      select.value = "all";
+      applyFilter();
+    });
+  });
+  window.addEventListener("hashchange", () => {
+    const card = [...document.querySelectorAll("article[data-condition]")].find(
+      item => `#${item.id}` === location.hash);
+    if (card?.hidden) {
+      select.value = "all";
+      applyFilter();
+    }
+  });
+})();
+</script></body></html>

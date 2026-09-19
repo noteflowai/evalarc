@@ -103,6 +103,15 @@ Inspect the source passages, commands and independent coordinate checks.
 [Use the source example](https://github.com/noteflowai/dsh-skills-anywhere/tree/main/examples/funes-handoff)
 · [Methods and offline evidence](examples/funes-handoff/README.md).
 
+**Carry the reviewed skill into the next session.**
+[Pinned skill handoff](https://noteflowai.github.io/evalarc/skill-handoff/index.html)
+follows an earlier MCP skill load into six new continuations. Both conditions
+receive the exact historical skill through workflow-selected MCP; one also
+offers Funes retrieval. Six preloads and six historical retrieval results
+succeed, but every program remains unchanged and full acceptance is 0/6.
+[Methods and complete evidence](examples/skill-handoff/README.md).
+This uses a different prior session from the no-skill handoff above.
+
 **Does a correct answer file prove the delivered program works?**
 [Three native Harbor controls](https://noteflowai.github.io/evalarc/harbor-controls/index.html)
 separate answer reward from independently executed code. One control receives
