@@ -6,6 +6,9 @@
 [打开交互报告](https://noteflowai.github.io/evalarc/behavior-audit/index.html)
 · [复现命令与英文方法](README.md)。
 
+使用已发布的 wheel 和证据 ZIP，可按[免克隆本地复核](https://github.com/noteflowai/evalarc/blob/main/docs/behavior-first-review.zh-CN.md)
+直接检查保存的案例；原生观察与模型试验的复现步骤见下文及英文方法。
+
 ## 已记录的结果
 
 24 个文件／技能组合对照和 8 个服务对照均符合执行前声明的结果。

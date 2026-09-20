@@ -77,6 +77,8 @@ These are declared scripted controls, without model inference.
 - **Final files and runtime actions:** [inspect behavior records](https://glayguo-evalarc.static.hf.space/behavior-audit/index.html)
   for temporary writes, file access and actual service submissions. The report
   separates 32 authored controls from 12 GPU model attempts and retains every failure.
+  [Recheck a recorded case locally](https://github.com/noteflowai/evalarc/blob/main/docs/behavior-first-review.md)
+  with the released reviewer and evidence ZIP; no source checkout or candidate execution is needed.
 - **Strands Evals users:** [inspect the native state review](https://glayguo-evalarc.static.hf.space/strands/index.html)
   without installing, or run the [SDK companion](https://github.com/noteflowai/evalarc/tree/main/examples/strands-state-review).
   Filter all eight checks, compare expected and observed state, and download the offline review.

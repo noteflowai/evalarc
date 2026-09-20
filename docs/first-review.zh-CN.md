@@ -1,7 +1,8 @@
 # 第一次用 EvalArc 复核
 
 先看一个已记录的失败，在本机复算，再换成自己的证据。下列流程使用已发布的
-**0.12.1 wheel 和记录**，需要 Linux、Python 3.11+ 和用于下载的 `curl`。
+**0.13.0 复核工具**与原始 **0.12.1 证据快照**。工具和证据分别固定版本，
+更新工具时保留记录输入。需要 Linux、Python 3.11+ 和用于下载的 `curl`。
 审阅不需要克隆源码、Docker、Node、GPU 或模型密钥。
 
 ## 1. 先看问题
@@ -22,11 +23,11 @@ mkdir evalarc-first-review
 cd evalarc-first-review
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-0.12.1-py3-none-any.whl#sha256=115f3d8d452dee2b5d3aed12f736880aca69aaf3ea42937ef4f8f222c0b2291b"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.0/evalarc-0.13.0-py3-none-any.whl#sha256=1a3845cb92b594364f83a50307ad6c3b96c4504033a41d41900b9d1390ca803b"
 evalarc --version
 ```
 
-预期输出 `EvalArc 0.12.1`。安装地址固定了发布版本及 SHA-256，
+预期输出 `EvalArc 0.13.0`。安装地址固定了发布版本及 SHA-256，
 包本身没有第三方运行时依赖；不依赖 PyPI 存在同名包。
 
 ## 3. 复算这次退步
@@ -75,6 +76,7 @@ evalarc verify evalarc-evidence-explorer/suite --json --require-accepted
 | AgentCore Evaluate 结果与运行 spans | 按受限输入约定整理后离线导入，区分拒绝、零分与缺少评判。[导出到审阅](agentcore-first-review.md) |
 | 待执行的代码或工具策略 | 使用 Docker 后端执行任务审计或候选评测。[运行审计](../README.md#run-an-audit) |
 | 同一记录上的多次评判 | 分别检查分数变化与结论翻转。[中文指南](judge-stability.zh-CN.md) |
+| 最终文件正确但运行行为存疑 | 从发布证据包复核临时写入和服务请求。[本地行为复核](behavior-first-review.zh-CN.md) |
 
 欢迎提交[首次使用反馈](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml)：
 你原本要检查什么、在哪一步卡住、结果是否帮助做出决定。安装失败同样有价值。

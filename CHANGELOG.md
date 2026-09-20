@@ -1,5 +1,15 @@
 # Changelog
 
+## First local review — 2026-09-20
+
+- Update the English/Chinese installation paths to the released 0.13.0 wheel,
+  including its verified SHA-256, so new users can run `behavior-review`.
+- Recheck the first-review and AgentCore commands against their unchanged 0.12.1
+  evidence snapshots with the 0.13.0 reviewer.
+- Add a bilingual, source-free behavior-review walkthrough using the released
+  archive: distinguish valid evidence, correct files, completed submissions and
+  authorized behavior, including the expected rejection exit code.
+
 ## Pinned skill handoff — 2026-09-19
 
 - Continue an explicitly selected public session with its original instruction and bundle hashes, using actual MCP preloads. Reject changed skill versions before starting a new provider session.
