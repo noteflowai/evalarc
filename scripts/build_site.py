@@ -453,6 +453,11 @@ def build(destination: Path) -> dict:
     verify_skill_handoff(ROOT / "examples/skill-handoff")
     shutil.copytree(ROOT / "examples/skill-handoff", destination / "skill-handoff")
     verify_skill_handoff(destination / "skill-handoff")
+    from scripts.build_swe_report import verify as verify_swe
+
+    verify_swe(ROOT / "examples/independent-swe")
+    shutil.copytree(ROOT / "examples/independent-swe", destination / "independent-swe")
+    verify_swe(destination / "independent-swe")
     from scripts.build_behavior_site import build as build_behavior
 
     build_behavior(ROOT / "examples/behavior-audit", destination / "behavior-audit")

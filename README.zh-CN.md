@@ -91,6 +91,13 @@ evalarc --version
 严格验收拒绝。对照由预先声明的脚本执行，提供原始 ATIF 和完整离线证据包；
 本实验没有模型推理，也不代表发现了未知评分漏洞。
 
+**复核独立来源任务的真实结果。**
+[SWE 工作流报告](https://noteflowai.github.io/evalarc/independent-swe/index.html)
+保留三个公开来源任务、四种固定条件下的 36 次 GPU 尝试。
+31 次有可判读的原生报告，5 次因上游基础设施标记而保留为不确定，没有尝试通过验收。
+可逐次检查真实 MCP 预加载、8 份非空补丁、工具失败和六个上游对照。
+[中文方法与离线证据](examples/independent-swe/README.zh-CN.md)。
+
 **从已审核会话继续工作，再验收交付物。**
 [Funes MCP 交接实验](https://noteflowai.github.io/evalarc/funes-handoff/index.html)
 保留 Qwen3-4B 接续一份公开 Qwen3-8B 程序的六次运行。

@@ -1,0 +1,143 @@
+{
+  "schema": "evalarc.independent-swe-evidence.v1",
+  "attempts": 36,
+  "source_tasks": 3,
+  "dispositions": {
+    "not_accepted": 31,
+    "unavailable": 5
+  },
+  "changed_candidates": 8,
+  "usage_incomplete": 1,
+  "model_requests": 614,
+  "groups": [
+    {
+      "condition": "none",
+      "attempts": 9,
+      "not_accepted": 7,
+      "unavailable": 2,
+      "changed_candidates": 4,
+      "usage_incomplete": 1
+    },
+    {
+      "condition": "direct",
+      "attempts": 9,
+      "not_accepted": 7,
+      "unavailable": 2,
+      "changed_candidates": 2,
+      "usage_incomplete": 0
+    },
+    {
+      "condition": "mcp",
+      "attempts": 9,
+      "not_accepted": 9,
+      "changed_candidates": 0,
+      "usage_incomplete": 0
+    },
+    {
+      "condition": "unrelated",
+      "attempts": 9,
+      "not_accepted": 8,
+      "unavailable": 1,
+      "changed_candidates": 2,
+      "usage_incomplete": 0
+    }
+  ],
+  "model": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "device": "NVIDIA L40S",
+    "dtype": "bfloat16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.4",
+    "thinking_enabled": false,
+    "model_files_manifest_sha256": "06188fd0f01af76aff2dfdcc87207b4977abe32a812e3802baf3f44b737515e9"
+  },
+  "recorder_commit": "285eadef59ec0e673e4feba6322e4c932af0b5ff",
+  "config_sha256": "9c4e23bf68eab62732f0cfcd6ec36e342b439c28d4ddcb35e09feae6b006472c",
+  "controls": [
+    {
+      "instance_id": "astropy__astropy-7606",
+      "mode": "original-defect",
+      "upstream_resolved": false,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "not_accepted",
+      "f2p_passed": 0,
+      "f2p_total": 1,
+      "p2p_passed": 240,
+      "p2p_total": 240,
+      "aggregate_pass_fraction": 0.995850622406639,
+      "aggregate_95_accepted": true
+    },
+    {
+      "instance_id": "astropy__astropy-7606",
+      "mode": "original-fix",
+      "upstream_resolved": true,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "accepted",
+      "f2p_passed": 1,
+      "f2p_total": 1,
+      "p2p_passed": 240,
+      "p2p_total": 240,
+      "aggregate_pass_fraction": 1.0,
+      "aggregate_95_accepted": true
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "mode": "original-defect",
+      "upstream_resolved": false,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "not_accepted",
+      "f2p_passed": 0,
+      "f2p_total": 1,
+      "p2p_passed": 77,
+      "p2p_total": 77,
+      "aggregate_pass_fraction": 0.9871794871794872,
+      "aggregate_95_accepted": true
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "mode": "original-fix",
+      "upstream_resolved": true,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "accepted",
+      "f2p_passed": 1,
+      "f2p_total": 1,
+      "p2p_passed": 77,
+      "p2p_total": 77,
+      "aggregate_pass_fraction": 1.0,
+      "aggregate_95_accepted": true
+    },
+    {
+      "instance_id": "sympy__sympy-15809",
+      "mode": "original-defect",
+      "upstream_resolved": false,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "not_accepted",
+      "f2p_passed": 0,
+      "f2p_total": 2,
+      "p2p_passed": 10,
+      "p2p_total": 10,
+      "aggregate_pass_fraction": 0.8333333333333334,
+      "aggregate_95_accepted": false
+    },
+    {
+      "instance_id": "sympy__sympy-15809",
+      "mode": "original-fix",
+      "upstream_resolved": true,
+      "infra_failure": false,
+      "infra_failure_reason": null,
+      "disposition": "accepted",
+      "f2p_passed": 2,
+      "f2p_total": 2,
+      "p2p_passed": 10,
+      "p2p_total": 10,
+      "aggregate_pass_fraction": 1.0,
+      "aggregate_95_accepted": true
+    }
+  ]
+}

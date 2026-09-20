@@ -8,6 +8,7 @@ const { checkStrands } = require("./check_strands_browser.cjs");
 const { checkContextControls } = require("./check_context_browser.cjs");
 const { checkHandoff } = require("./check_handoff_browser.cjs");
 const { checkBehavior } = require("./check_behavior_browser.cjs");
+const { checkSWE } = require("./check_swe_browser.cjs");
 
 async function main() {
   const root = path.resolve(process.env.SITE_DIR || "dist/site");
@@ -623,6 +624,35 @@ async function main() {
             assert.deepEqual(requests, [], "Offline behavior review requested the network");
           } finally { await page.close(); }
         }
+      }
+    }
+    if (process.env.SITE_HUB !== "1") {
+      for (const width of [1440, 390, 320]) {
+        const page = await browser.newPage({ viewport: { width, height: 1000 } });
+        try {
+          await page.goto(new URL("independent-swe/index.html", base).href);
+          results.push({ width, ...await checkSWE(page, page, root, { downloads: true }) });
+        } finally { await page.close(); }
+      }
+      if (!process.env.SITE_URL) {
+        const temporary = fs.mkdtempSync(path.join(require("node:os").tmpdir(), "evalarc-swe-"));
+        try {
+          require("node:child_process").execFileSync("python3", ["-c",
+            "import sys,zipfile;zipfile.ZipFile(sys.argv[1]).extract('review/index.html',sys.argv[2])",
+            path.join(root, "independent-swe/independent-swe.zip"), temporary]);
+          const page = await browser.newPage({ viewport: { width: 390, height: 1000 } });
+          const network = [];
+          page.on("request", request => {
+            if (/^https?:/.test(request.url())) network.push(request.url());
+          });
+          await page.route("http**/*", route => route.abort());
+          try {
+            await page.goto(require("node:url").pathToFileURL(
+              path.join(temporary, "review/index.html")).href);
+            results.push({ offlineSWE: true, ...await checkSWE(page, page, root) });
+            assert.deepEqual(network, [], "Offline SWE review requested the network");
+          } finally { await page.close(); }
+        } finally { fs.rmSync(temporary, { recursive: true, force: true }); }
       }
     }
     console.log(JSON.stringify({url:base, checks:results}, null, 2));

@@ -7,6 +7,7 @@ const { checkStrands } = require("./check_strands_browser.cjs");
 const { checkContextControls } = require("./check_context_browser.cjs");
 const { checkHandoff } = require("./check_handoff_browser.cjs");
 const { checkBehavior } = require("./check_behavior_browser.cjs");
+const { checkSWE } = require("./check_swe_browser.cjs");
 
 async function main() {
   const url = process.env.SITE_URL;
@@ -90,10 +91,14 @@ async function main() {
           location.href = new URL("skill-handoff/index.html", base).href;
         }, appUrl);
         const skillHandoff = await checkHandoff(page, app, root, { skillHandoff: true });
+        await app.locator("body").evaluate((element, base) => {
+          location.href = new URL("independent-swe/index.html", base).href;
+        }, appUrl);
+        const independentSWE = await checkSWE(page, app, root, { downloads: true });
         checks.push({ width, sourceCommit: expected.source_commit, hubIframe: true,
-          archiveDownloadsMatched: 8, originalJudgmentMatched: true, filters: true,
+          archiveDownloadsMatched: 9, originalJudgmentMatched: true, filters: true,
           allRejectDisclosed: true, missingJudgmentsVisible: true,
-          strands, contextControls, handoff, behavior, skillHandoff });
+          strands, contextControls, handoff, behavior, skillHandoff, independentSWE });
       } finally {
         await page.close();
       }

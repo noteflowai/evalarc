@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Inspect 36 recorded SWE workflow attempts, native grading, actual MCP receipts and unresolved evidence. Includes an offline review.">
+<title>Independent SWE Review · EvalArc</title>
+<style>
+:root{color-scheme:dark;--bg:#0a111b;--panel:#111d2b;--line:#2b4057;--text:#edf5ff;--muted:#b2c3d8;--cyan:#79e2f2;--green:#8be3b2;--amber:#ffd184;--red:#ffb0b9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 90% 0,#16374a 0,transparent 40%),var(--bg);color:var(--text);font:16px/1.65 system-ui,sans-serif}main{max-width:1240px;margin:auto;padding:28px clamp(16px,4vw,48px) 64px}a{color:var(--cyan);text-underline-offset:4px}a:hover{color:#fff}button,input,select{font:inherit}button,select{border:1px solid var(--line);border-radius:8px;background:#172b40;color:var(--text);padding:9px 13px}button{cursor:pointer}button:hover{border-color:var(--cyan)}:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}.skip{position:absolute;left:20px;top:-70px}.skip:focus{top:12px;background:var(--bg);padding:10px;z-index:3}header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px}.brand{font-weight:750;letter-spacing:.04em}header nav{display:flex;gap:20px;flex-wrap:wrap}.eyebrow{color:var(--cyan);font-size:12px;font-weight:700;letter-spacing:.13em;margin:36px 0 12px}h1{font-size:clamp(32px,4.8vw,58px);line-height:1.13;letter-spacing:-.035em;max-width:900px;margin:0 0 20px}h2{font-size:24px;line-height:1.35;margin-top:0}h3{font-size:18px}.lead{max-width:870px;color:var(--muted);font-size:18px}.actions{display:flex;gap:20px;flex-wrap:wrap;margin:24px 0}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:30px 0}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px}.metric{padding:19px}.metric strong{display:block;font-size:38px;line-height:1.2;letter-spacing:-.04em}.metric span{color:var(--muted);font-size:13px}.metric[data-kind=unavailable] strong{color:var(--amber)}.panel{padding:22px;margin:24px 0;min-width:0}.note{border-left:3px solid var(--amber);padding-left:17px;color:var(--muted)}.muted{color:var(--muted)}.small{font-size:13px}.filters{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}.filters label{display:grid;gap:5px;min-width:170px;font-size:13px;color:var(--muted)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}table{border-collapse:collapse;width:100%;text-align:left;font-size:14px;white-space:nowrap}th,td{padding:11px 13px;border-bottom:1px solid var(--line)}th{background:#172537;color:var(--muted);font-size:12px;font-weight:650}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#16293c}.tag{font-size:12px;border-radius:5px;padding:3px 7px;background:#20344a}.tag.unavailable{color:var(--amber)}.tag.not_accepted{color:var(--red)}.tag.accepted{color:var(--green)}.detail-head{display:flex;justify-content:space-between;gap:16px;align-items:start;flex-wrap:wrap}.detail-head h2{overflow-wrap:anywhere;max-width:100%}.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}.split>*{min-width:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#091320;border:1px solid var(--line);border-radius:8px;padding:14px;font:12px/1.55 ui-monospace,monospace;max-height:420px;overflow:auto;margin:10px 0}details{border-top:1px solid var(--line);padding:13px 0}summary{cursor:pointer;font-weight:600}summary:hover{color:var(--cyan)}.timeline{padding-left:23px}.timeline>li{padding-left:8px}.timeline pre{max-height:260px}code{overflow-wrap:anywhere}footer{overflow-wrap:anywhere;border-top:1px solid var(--line);padding-top:22px;margin-top:36px;color:var(--muted);font-size:13px}[hidden]{display:none!important}@media(max-width:700px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.split{grid-template-columns:1fr}.panel{padding:16px}.filters label{flex:1;min-width:140px}.metric{padding:15px}header nav{gap:12px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#attempts">Skip to recorded attempts</a>
+<main>
+<header><span class="brand">EVALARC / INDEPENDENT SWE REVIEW</span><nav aria-label="Report navigation"><a href="#attempts">Attempts</a><a href="#controls">Rule comparison</a><a href="README.md">Methods</a><a href="README.zh-CN.md" lang="zh-CN">中文说明</a></nav></header>
+<p class="eyebrow">PUBLIC SOURCE TASKS · ACTUAL GPU EXECUTION</p>
+<h1>Inspect what the grader actually established.</h1>
+<p class="lead">Follow 36 attempts across three source projects and four workflow conditions. Review the delivered skill, saved changes, tool failures and independent native verdict for each attempt.</p>
+<div class="actions"><a id="zip-link" href="independent-swe.zip?download=true" download>Download the offline review and raw records</a><a href="data.jsonl" download>Download 36 structured rows</a></div>
+<p id="offline-note" class="small muted" hidden>This offline page contains all 36 traces. Raw records are in the adjacent attempts, controls and protocol directories one level above this review.</p>
+<div id="metrics" class="metrics" aria-label="Recorded outcomes"></div>
+<p class="note">No attempt obtained upstream acceptance. Five reports have an infrastructure flag and remain uncertain. Three public tasks with repeated seeds cannot establish a general skill benefit or model ranking.</p>
+<section class="panel" aria-labelledby="conditions-title">
+<h2 id="conditions-title">Compare delivery and outcomes</h2>
+<p class="muted">Direct and MCP workflows preload the same frozen object. Unrelated museum notes match its 444-token length and the full initial prompt length. Preloading is performed by the workflow.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Condition comparison"><table><thead><tr><th scope="col">Condition</th><th scope="col">Attempts</th><th scope="col">Accepted</th><th scope="col">Not accepted</th><th scope="col">Uncertain</th><th scope="col">Nonempty patches</th></tr></thead><tbody id="groups"></tbody></table></div>
+<p class="small muted">Each condition has three tasks × three seeds. Uncertain reports stay in the scheduled denominator. One generation request has incomplete usage.</p>
+</section>
+<section id="attempts" class="panel" aria-labelledby="attempts-title">
+<h2 id="attempts-title">Inspect an attempt</h2>
+<div class="filters"><label>Source project<select id="project"><option value="">All three projects</option></select></label><label>Workflow condition<select id="condition"><option value="">All four conditions</option></select></label><label>Native evidence<select id="outcome"><option value="">All outcomes</option><option value="not_accepted">Not accepted</option><option value="unavailable">Uncertain / unavailable</option><option value="accepted">Accepted</option></select></label></div>
+<p id="result-count" class="small muted" role="status" aria-live="polite"></p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Recorded attempt list"><table><thead><tr><th scope="col">Attempt</th><th scope="col">Source project</th><th scope="col">Condition</th><th scope="col">Seed</th><th scope="col">Outcome</th><th scope="col">Changed files</th><th scope="col">Review</th></tr></thead><tbody id="attempt-rows"></tbody></table></div>
+<p id="empty" hidden>No attempts match these filters. Choose another condition or outcome.</p>
+</section>
+<section id="detail" class="panel" aria-labelledby="detail-title" hidden>
+<div class="detail-head"><h2 id="detail-title" tabindex="-1"></h2><button id="close" type="button">Close attempt</button></div>
+<p id="detail-status" role="status"></p><p id="detail-method" class="small muted"></p>
+<div class="split"><div><h3>Saved patch</h3><pre id="patch"></pre></div><div><h3>Native evaluator report</h3><pre id="native"></pre></div></div>
+<details><summary>Original issue and workflow preload</summary><pre id="initial"></pre></details>
+<details><summary>Recorded usage and source identities</summary><pre id="identity"></pre></details>
+<h3>Model and tool interactions</h3><ol id="timeline" class="timeline"></ol>
+<p class="small muted">The download preserves exact submitted requests, full model responses, context decisions and native logs. Displayed traces are checked against that archive.</p>
+</section>
+<section id="controls" class="panel" aria-labelledby="controls-title">
+<h2 id="controls-title">A high pass fraction can hide a required defect.</h2>
+<p class="muted">Six native executions compare original defects with upstream fixes. The illustrative 95% aggregate rule accepts two defective controls because many regression checks still pass.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Native controls and aggregate rule"><table><thead><tr><th scope="col">Source task</th><th scope="col">Control</th><th scope="col">Required defect tests</th><th scope="col">Regression checks</th><th scope="col">Native verdict</th><th scope="col">Aggregate ≥95%</th></tr></thead><tbody id="control-rows"></tbody></table></div>
+<p class="small muted">These are scripted upstream controls, separate from the 36 model attempts. The illustrative threshold was declared after control inspection and before model generation. This comparison is not a claim of an undisclosed upstream vulnerability.</p>
+</section>
+<details class="panel"><summary>Method, uncertainty and reproduction</summary><p>Task selection and generic guidance were fixed before the model cohort. Each attempt had 20 turns, up to 2,048 new tokens per turn and a 900-second interaction budget. All conditions used the same tools and immutable source images. Every scheduled slot is retained.</p><p>Repeated incorrect source paths explain many failed reads. Five pytest reports contain both offline dependency-installation failures and candidate-code errors. Their original <code>network_unreachable</code> label remains visible; it does not establish a single cause. The report keeps these outcomes uncertain.</p><p>The source archive includes native logs, model requests, exported patches and runtime identities. Images, weights, installed dependencies and full filesystem tar snapshots are referenced by identity, not bundled. Review records offline; reproducing execution needs the recorded runtime.</p><p>EvalArc code and upstream issue, code and test materials have separate attribution and license boundaries. See the methods and the archive's source-attribution directory.</p></details>
+<footer><p id="runtime"></p><p>Dataset: SWE-bench/SWE-bench_Verified · 78f471bf655a3137b2e8a75af1501690ec009ec3.<br>Evaluator: SWE-bench/SWE-bench · 02e7a74ffd0b707aab73d203fe87bdc7c76afc8e.</p></footer>
+</main>
+<script id="summary-data" type="application/json">__SUMMARY__</script>
+<script id="rows-data" type="application/json">__ROWS__</script>
+<script id="trace-data" type="application/json">__TRACES__</script>
+<script>
+"use strict";
+const summary=JSON.parse(document.getElementById("summary-data").textContent);
+const rows=JSON.parse(document.getElementById("rows-data").textContent);
+const embedded=JSON.parse(document.getElementById("trace-data").textContent);
+const names={none:"No skill",direct:"Direct preload",mcp:"MCP preload",unrelated:"Unrelated MCP"};
+const outcomes={accepted:"Accepted",not_accepted:"Not accepted",unavailable:"Uncertain"};
+const el=id=>document.getElementById(id);
+function node(tag,text,klass){const value=document.createElement(tag);if(text!==undefined)value.textContent=text;if(klass)value.className=klass;return value}
+function cells(target,values){const row=node("tr");for(const value of values){const cell=node("td");cell.append(value instanceof Node?value:document.createTextNode(String(value)));row.append(cell)}target.append(row)}
+function tag(value){return node("span",outcomes[value],"tag "+value)}
+for(const [value,label,kind] of [[summary.dispositions.accepted||0,"Accepted","accepted"],[summary.dispositions.not_accepted||0,"Not accepted","not_accepted"],[summary.dispositions.unavailable||0,"Uncertain reports","unavailable"],[summary.changed_candidates,"Nonempty patches","patches"]]){const box=node("div",undefined,"metric");box.dataset.kind=kind;box.append(node("strong",value),node("span",label));el("metrics").append(box)}
+for(const group of summary.groups)cells(el("groups"),[names[group.condition],group.attempts,group.accepted||0,group.not_accepted||0,group.unavailable||0,group.changed_candidates]);
+for(const value of [...new Set(rows.map(row=>row.repository))]){const option=node("option",value);option.value=value;el("project").append(option)}
+for(const [key,value] of Object.entries(names)){const option=node("option",value);option.value=key;el("condition").append(option)}
+let selected=null,lastButton=null;
+function render(){const visible=rows.filter(row=>(!el("project").value||row.repository===el("project").value)&&(!el("condition").value||row.condition===el("condition").value)&&(!el("outcome").value||row.disposition===el("outcome").value));el("attempt-rows").replaceChildren();for(const row of visible){const button=node("button","Inspect");button.type="button";button.setAttribute("aria-label","Inspect attempt "+row.index+", "+row.repository+", "+names[row.condition]+", seed "+row.seed);button.addEventListener("click",()=>{lastButton=button;inspect(row)});cells(el("attempt-rows"),[row.index,row.repository,names[row.condition],row.seed,tag(row.disposition),row.changed_files,button])}el("result-count").textContent=visible.length+" of 36 scheduled attempts";el("empty").hidden=visible.length!==0}
+for(const id of ["project","condition","outcome"])el(id).addEventListener("change",render);
+async function inspect(row){selected=row.id;el("detail").hidden=false;el("detail-title").textContent=row.instance_id+" · "+names[row.condition]+" · seed "+row.seed;el("detail-title").focus();el("detail-status").textContent="Loading recorded evidence…";for(const id of ["patch","native","initial","identity"])el(id).textContent="";el("timeline").replaceChildren();try{const trace=embedded[row.trace_path]||await fetch(row.trace_path).then(response=>{if(!response.ok)throw new Error("HTTP "+response.status);return response.json()});if(selected!==row.id)return;el("detail-status").replaceChildren(tag(row.disposition),document.createTextNode(" · "+row.generation_end.replaceAll("_"," ")+" · "+row.model_requests+" model requests"));el("detail-method").textContent=row.usage_complete?"Usage covers all recorded generation requests.":"Usage is incomplete: the totals count recorded responses only.";el("patch").textContent=trace.candidate_patch||"No source changes were exported.";el("native").textContent=JSON.stringify(trace.native_report,null,2);el("initial").textContent=JSON.stringify(trace.initial_messages,null,2);el("identity").textContent=JSON.stringify(row,null,2);for(const [index,group] of trace.interactions.entries()){const item=node("li");const detail=node("details");detail.append(node("summary","Turn "+(index+1)+" · "+group.filter(message=>message.role==="tool").length+" tool responses"));for(const message of group){detail.append(node("p",message.role+(message.name?" / "+message.name:""),"small muted"),node("pre",message.content||JSON.stringify(message)))}item.append(detail);el("timeline").append(item)}}catch(error){if(selected===row.id)el("detail-status").textContent="Could not load this trace: "+error.message+". Download the archive for offline review."}}
+el("close").addEventListener("click",()=>{selected=null;el("detail").hidden=true;if(lastButton&&document.contains(lastButton))lastButton.focus();else el("project").focus()});
+for(const row of summary.controls)cells(el("control-rows"),[row.instance_id,row.mode,row.f2p_passed+"/"+row.f2p_total,row.p2p_passed+"/"+row.p2p_total,tag(row.disposition),row.aggregate_95_accepted?"Accept":"Reject"]);
+el("runtime").textContent=summary.model.model+" · "+summary.model.device+" · "+summary.model.dtype+" · Recorder "+summary.recorder_commit.slice(0,12)+". Three source tasks; all 36 scheduled attempts retained.";
+if(location.protocol==="file:"){el("zip-link").hidden=true;el("offline-note").hidden=false}
+render();
+</script>
+<noscript><p style="padding:24px">The interactive trace viewer needs JavaScript. The Markdown methods, structured rows and downloadable raw archive remain available from the links above.</p></noscript>
+</body>
+</html>
