@@ -6,6 +6,7 @@ recursive-include examples *.md *.json *.jsonl *.html *.js *.toml *.xml
 graft examples/behavior-audit
 graft examples/funes-handoff
 graft examples/skill-handoff
+graft examples/independent-swe
 global-exclude *.py[cod]
 recursive-include site *.html *.css *.js *.svg
 recursive-include scripts *.py *.cjs *.html *.md

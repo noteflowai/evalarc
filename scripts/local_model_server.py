@@ -100,7 +100,7 @@ def main() -> None:
             self.respond(200 if self.path == "/health" else 404, identity)
 
         def do_POST(self) -> None:
-            if self.path != "/generate":
+            if self.path not in {"/generate", "/measure"}:
                 self.respond(404, {"error": "unknown endpoint"})
                 return
             try:
@@ -130,6 +130,17 @@ def main() -> None:
                 )
                 inputs = tokenizer(prompt, return_tensors="pt")
                 count = inputs["input_ids"].shape[1]
+                if self.path == "/measure":
+                    self.respond(
+                        200,
+                        {
+                            **identity,
+                            "prompt_tokens": count,
+                            "context_limit": 28_000,
+                            "max_new_tokens": budget,
+                        },
+                    )
+                    return
                 if count + budget > 28_000:
                     raise ValueError("prompt and generation exceed the pilot context budget")
                 with lock, torch.inference_mode():

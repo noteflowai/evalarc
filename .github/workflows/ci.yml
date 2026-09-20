@@ -76,6 +76,7 @@ jobs:
           python -c "from huggingface_hub import SpaceCard; SpaceCard.load('huggingface/README.md').validate()"
       - run: python scripts/build_site.py --output dist/site
       - run: python scripts/build_dataset.py --output dist/casebook
+      - run: python scripts/swe_dataset.py --output dist/independent-swe-dataset
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:site
@@ -88,6 +89,10 @@ jobs:
         with:
           name: evidence-casebook
           path: dist/casebook/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: independent-swe-dataset
+          path: dist/independent-swe-dataset/
   strands-recipe:
     runs-on: ubuntu-latest
     steps:
@@ -149,6 +154,10 @@ jobs:
         with:
           name: evidence-casebook
           path: dist/casebook
+      - uses: actions/download-artifact@v4
+        with:
+          name: independent-swe-dataset
+          path: dist/independent-swe-dataset
       - run: python -m pip install huggingface_hub==1.31.0
       - name: Publish and verify public files
         env:
@@ -159,6 +168,7 @@ jobs:
           test "$(gh api repos/$GITHUB_REPOSITORY/git/ref/heads/main --jq .object.sha)" = "$GITHUB_SHA"
           python scripts/publish_space.py --bundle dist/site
           python scripts/publish_dataset.py --bundle dist/casebook
+          python scripts/swe_dataset.py --publish --output dist/independent-swe-dataset
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

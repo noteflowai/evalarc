@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 def check(source: Path, archive: Path) -> dict:
     version = tomllib.loads((source / "pyproject.toml").read_text())["project"]["version"]
     prefix = PurePosixPath(f"evalarc-{version}")
-    folders = ("behavior-audit", "funes-handoff", "skill-handoff")
+    folders = ("behavior-audit", "funes-handoff", "skill-handoff", "independent-swe")
     expected = {}
     files = [path for folder in folders for path in (source / "examples" / folder).rglob("*")]
     templates = sorted((source / "scripts").glob("*handoff*.html")) + sorted(

@@ -86,6 +86,14 @@ For deeper exploration: [repeated attempts](docs/reliability.md),
 [recorded GPU research pilots](docs/research-pilots.md),
 [architecture](docs/architecture.md) and [papers](docs/research.zh-CN.md).
 
+**Review independent-source task outcomes.**
+[The SWE workflow review](https://noteflowai.github.io/evalarc/independent-swe/index.html)
+retains 36 GPU attempts on three public source tasks across four fixed conditions.
+31 have assessable native reports; five remain uncertain because of upstream
+infrastructure flags. None obtained acceptance. Inspect the actual MCP preloads,
+eight nonempty patches, tool failures and six upstream controls.
+[Methods and offline records](examples/independent-swe/README.md).
+
 **Does “finished” mean the task passed?**
 [Equal-length context controls](https://noteflowai.github.io/evalarc/context-controls/index.html)
 retain twelve Qwen3-8B attempts in two separate cohorts. Relevant guidance and
