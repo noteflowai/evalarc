@@ -17,6 +17,10 @@ evaluation continues to use its existing sandbox.
 
 ## Review the recorded controls
 
+For a wheel-only installation and the published evidence ZIP, follow
+[local behavior review](https://github.com/noteflowai/evalarc/blob/main/docs/behavior-first-review.md).
+The commands below use a source checkout.
+
 Install this source checkout, then review saved evidence without executing it:
 
 ```bash

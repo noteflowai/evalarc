@@ -1,8 +1,10 @@
 # Your first EvalArc review
 
 Start with a recorded failure, check it on your machine, then use the same
-workflow with your own evidence. The steps below use the published **0.12.1**
-wheel and records. You need Python 3.11+ on Linux and `curl` for downloads.
+workflow with your own evidence. The steps below use the published **0.13.0**
+reviewer with the original **0.12.1** evidence snapshot. The two versions are
+pinned separately so the tool can advance while the recorded inputs stay fixed.
+You need Python 3.11+ on Linux and `curl` for downloads.
 The review does not need a source checkout, Docker, Node, a GPU or a model key.
 
 ## 1. See the problem
@@ -23,11 +25,11 @@ mkdir evalarc-first-review
 cd evalarc-first-review
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-0.12.1-py3-none-any.whl#sha256=115f3d8d452dee2b5d3aed12f736880aca69aaf3ea42937ef4f8f222c0b2291b"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.0/evalarc-0.13.0-py3-none-any.whl#sha256=1a3845cb92b594364f83a50307ad6c3b96c4504033a41d41900b9d1390ca803b"
 evalarc --version
 ```
 
-Expected: `EvalArc 0.12.1`. This installs the released wheel, which has no
+Expected: `EvalArc 0.13.0`. This installs the released wheel, which has no
 third-party runtime dependencies. The URL includes its SHA-256. It does not
 require a package named `evalarc` to exist on PyPI.
 
@@ -81,6 +83,7 @@ of the producer.
 | Saved AgentCore Evaluate results and spans | Prepare the bounded input wrapper, import locally, and inspect missing judgments as well as rejected gates. [Export-to-review walkthrough](agentcore-first-review.md) |
 | A coding or tool-using candidate to execute | Run a task audit or evaluate its workspace with the Docker backend. [Run an audit](../README.md#run-an-audit) |
 | Repeated judgments on one fixed trace | Check score variation and verdict disagreement separately. [Judge Stability](judge-stability.md) |
+| Correct final files with questionable runtime actions | Recheck temporary writes and service requests from the released evidence bundle. [Local behavior review](behavior-first-review.md) |
 
 ## Share a useful first-use report
 

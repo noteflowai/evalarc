@@ -36,7 +36,7 @@ EvalArc 把这次退步展开给你看，帮助判断分数提高是否满足发
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-0.12.1-py3-none-any.whl#sha256=115f3d8d452dee2b5d3aed12f736880aca69aaf3ea42937ef4f8f222c0b2291b"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.0/evalarc-0.13.0-py3-none-any.whl#sha256=1a3845cb92b594364f83a50307ad6c3b96c4504033a41d41900b9d1390ca803b"
 evalarc --version
 ```
 
@@ -52,7 +52,7 @@ evalarc --version
 | AgentCore Evaluate 结果与 spans | 有效零分、跳过、缺失以及技能交付 | [导出到审阅](docs/agentcore-first-review.md) |
 | 同一记录上的多次评判 | 分数变化、通过/拒绝翻转及未评判情况 | [中文指南](docs/judge-stability.zh-CN.md) |
 | 他人交付的报告 | 原始输入与汇总、验收规则、JUnit 是否一致 | [离线复核](docs/verification.md) |
-| 最终文件正确，但执行过程存疑 | 临时写入、文件访问及真实服务提交是否获授权 | [运行期行为报告](https://noteflowai.github.io/evalarc/behavior-audit/index.html) · [中文方法](examples/behavior-audit/README.zh-CN.md) |
+| 最终文件正确，但执行过程存疑 | 临时写入、文件访问及真实服务提交是否获授权 | [运行期行为报告](https://noteflowai.github.io/evalarc/behavior-audit/index.html) · [免克隆本地复核](docs/behavior-first-review.zh-CN.md) |
 | 评分器或待执行候选 | 正确实现和刻意缺陷是否被评分器区分 | [运行审计](#运行审计) |
 
 运行记录导入有明确的[受限格式约定](docs/trace-workbench.md)，不直接接受任意云端导出。
