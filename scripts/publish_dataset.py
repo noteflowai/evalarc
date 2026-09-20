@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path
 
 from build_dataset import SCHEMA, verify
 from build_site import SOURCE
+from hf_readback import verify_public_files
 
 
 def publish(folder: Path, repo_id: str) -> dict:
@@ -60,20 +60,12 @@ def publish(folder: Path, repo_id: str) -> dict:
         parent_commit=info.sha,
         commit_message="Publish verified EvalArc casebook " + record["source_commit"][:12],
     )
-    for name in allowed:
-        remote = Path(
-            hf_hub_download(repo_id, name, repo_type="dataset", revision=commit.oid, token=False)
-        )
-        if (
-            hashlib.sha256(remote.read_bytes()).digest()
-            != hashlib.sha256((folder / name).read_bytes()).digest()
-        ):
-            raise ValueError(f"Anonymous readback mismatch: {name}")
+    verified = verify_public_files(folder, repo_id, "dataset", commit.oid, allowed)
     return {
         "repo_id": repo_id,
         "source_commit": record["source_commit"],
         "hub_commit": commit.oid,
-        "verified_public_files": len(allowed),
+        "verified_public_files": verified,
         "row_counts": record["row_counts"],
     }
 
