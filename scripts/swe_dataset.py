@@ -11,8 +11,10 @@ from pathlib import Path
 
 if __package__:
     from .build_swe_report import ARCHIVE, ROOT, digest, read, verify, write
+    from .hf_readback import verify_public_files
 else:
     from build_swe_report import ARCHIVE, ROOT, digest, read, verify, write
+    from hf_readback import verify_public_files
 
 SCHEMA = "evalarc.independent-swe-dataset.v1"
 SOURCE = "https://github.com/noteflowai/evalarc"
@@ -185,17 +187,12 @@ def publish(folder):
         parent_commit=info.sha,
         commit_message="Publish checked independent SWE records " + manifest["source_commit"][:12],
     )
-    for name in allowed:
-        received = Path(
-            hf_hub_download(REPO, name, repo_type="dataset", revision=commit.oid, token=False)
-        )
-        if digest(received.read_bytes()) != digest((folder / name).read_bytes()):
-            raise ValueError("anonymous published file differs: " + name)
+    verified = verify_public_files(folder, REPO, "dataset", commit.oid, allowed)
     return {
         "repo_id": REPO,
         "hub_commit": commit.oid,
         "source_commit": manifest["source_commit"],
-        "public_files_verified": len(allowed),
+        "public_files_verified": verified,
         "row_count": 36,
     }
 

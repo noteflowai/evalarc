@@ -1,5 +1,14 @@
 # Changelog
 
+## Publication verification — 2026-09-20
+
+- Use up to four concurrent anonymous downloads when checking a published Space
+  or dataset. Every file, including the manifest, must still match the uploaded
+  bundle at its immutable Hub commit.
+- Report verification progress and elapsed time without mixing logs into JSON
+  receipts. A failed download or checksum cancels queued work and fails publication.
+- Stream file checksums to bound memory use during large evidence downloads.
+
 ## First local review — 2026-09-20
 
 - Update the English/Chinese installation paths to the released 0.13.0 wheel,
