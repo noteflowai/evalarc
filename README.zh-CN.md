@@ -39,7 +39,7 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.0/evalarc-0.13.0-py3-none-any.whl#sha256=1a3845cb92b594364f83a50307ad6c3b96c4504033a41d41900b9d1390ca803b"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.1/evalarc-0.13.1-py3-none-any.whl#sha256=2368c634dfe10906c90e94bc5dc1984cdc993a777a43fb724e3db2cf430243fe"
 evalarc --version
 ```
 
