@@ -5,22 +5,35 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "evalarc"
 version = "0.13.1"
-description = "Auditable task environments and evaluations for coding and tool-using agents."
+description = "Find agent regressions behind better scores: compare changed checks, review recorded tool actions and verify evidence offline."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{name = "EvalArc contributors"}]
-keywords = ["agents", "evaluation", "reinforcement-learning", "software-engineering"]
+keywords = [
+  "agents", "evaluation", "llm-evaluation", "regression-testing", "inspect-ai", "promptfoo",
+  "junit", "github-actions", "reinforcement-learning", "software-engineering",
+]
 classifiers = [
   "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Quality Assurance",
   "Topic :: Software Development :: Testing",
 ]
 dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/noteflowai/evalarc"
-Documentation = "https://github.com/noteflowai/evalarc/blob/main/README.md"
+Documentation = "https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md"
+Changelog = "https://github.com/noteflowai/evalarc/blob/main/CHANGELOG.md"
 Repository = "https://github.com/noteflowai/evalarc"
 Issues = "https://github.com/noteflowai/evalarc/issues"
 Demo = "https://huggingface.co/spaces/glayguo/evalarc"

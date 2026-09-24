@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -20,6 +21,7 @@ from evalarc.judge_stability import import_judgments, verify_judgments
 from evalarc.records import read_evaluation
 from evalarc.repetition import repeat
 from evalarc.report import render_audit, render_comparison, render_evaluation, render_repetition
+from evalarc.results_diff import FORMATS as RESULT_FORMATS
 from evalarc.runner import EnvironmentFailure, Runtime
 from evalarc.suite import load_suite, run_suite
 from evalarc.tasks import TASKS
@@ -147,6 +149,26 @@ def parser() -> argparse.ArgumentParser:
     comparison.add_argument("baseline", type=Path)
     comparison.add_argument("current", type=Path)
     comparison.add_argument("--output", type=Path, default=Path("runs/compare"))
+    results_diff = commands.add_parser(
+        "diff",
+        help="find checks that lost passes between two Inspect AI, promptfoo or JUnit results",
+    )
+    results_diff.add_argument("baseline", type=Path, help="earlier result file")
+    results_diff.add_argument("current", type=Path, help="later result file")
+    results_diff.add_argument("--format", choices=RESULT_FORMATS, default="auto")
+    results_diff.add_argument(
+        "--threshold",
+        type=float,
+        default=1.0,
+        help="numeric Inspect scores at or above this value pass (default: 1.0)",
+    )
+    results_diff.add_argument(
+        "--output", type=Path, help="new folder for diff.json, summary.md, index.html and inputs"
+    )
+    results_diff.add_argument(
+        "--markdown", type=Path, help='append the summary here, e.g. "$GITHUB_STEP_SUMMARY"'
+    )
+    results_diff.add_argument("--json", action="store_true")
     curve = commands.add_parser("trajectory", help="summarize externally recorded checkpoints")
     curve.add_argument("checkpoints", type=Path, help="JSON array of elapsed_seconds + evaluation")
     curve.add_argument("--budget-seconds", type=float, required=True)
@@ -208,6 +230,8 @@ def main(argv: list[str] | None = None) -> int:
                 f"{result['scope']}"
             )
         return code
+    if args.command == "diff":
+        return _results_diff(args)
     if args.command == "verify":
         try:
             result = verify(args.evidence)
@@ -499,6 +523,57 @@ def main(argv: list[str] | None = None) -> int:
     except (ValueError, OSError, KeyError, TypeError, EnvironmentFailure) as error:
         _error(args, "run_error", str(error))
         return 2
+
+
+def _results_diff(args: argparse.Namespace) -> int:
+    from evalarc.results_diff import diff, load_results, render_html, render_markdown
+
+    try:
+        runs = [
+            load_results(path, args.format, args.threshold)
+            for path in (args.baseline, args.current)
+        ]
+        result = diff(*runs)
+        if args.output:
+            with new_run(args.output) as output:
+                for label, path, run in zip(
+                    ("baseline", "current"), (args.baseline, args.current), runs
+                ):
+                    data = path.read_bytes()
+                    if hashlib.sha256(data).hexdigest() != run["source"]["sha256"]:
+                        raise ValueError(f"{path} changed while it was being compared")
+                    (output / f"{label}{path.suffix or '.json'}").write_bytes(data)
+                write_json(output / "diff.json", result)
+                (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
+                render_html(result, output / "index.html")
+        if args.markdown:
+            with args.markdown.open("a", encoding="utf-8") as summary:
+                summary.write(render_markdown(result))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, RecursionError) as error:
+        print(f"evalarc: {error}", file=sys.stderr)
+        return 2
+    if args.json:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+    else:
+        before, after = result["baseline"]["headline"], result["current"]["headline"]
+        headline = (
+            f"{before['name']}: {before['value']} -> {after['value']} | "
+            if before and after and before["value"] is not None and after["value"] is not None
+            else ""
+        )
+        counts = result["counts"]
+        print(
+            f"{headline}Checks that lost passes or coverage: {result['blocking_changes']} | "
+            f"Improved: {counts['improved']} | Unchanged: {counts['unchanged']}"
+        )
+        for row in result["changes"]:
+            if row["kind"] in ("regressed", "less_reliable", "unassessed", "removed"):
+                print(f"  {row['kind']}: {row['case_id']} / {row['check']}")
+        if result["current_incomplete"]:
+            print("The current run is incomplete; the gate fails.")
+        if args.output:
+            print(f"Report: {args.output / 'index.html'}")
+    return 0 if result["gate_passed"] else 1
 
 
 def _error(args: argparse.Namespace, event: str, message: str) -> None:

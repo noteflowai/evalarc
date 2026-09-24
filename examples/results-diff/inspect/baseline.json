@@ -1,0 +1,4211 @@
+{
+  "version": 2,
+  "status": "success",
+  "eval": {
+    "eval_id": "PkWzgzAtcSd6mZmWHMR3Eg",
+    "run_id": "mm4LYJKX9McnhMZNBuSoAj",
+    "created": "2026-09-24T23:27:23+00:00",
+    "task": "refund_policy",
+    "task_id": "U3LnrypbzTEdLLQ4SgeTvm",
+    "task_version": 0,
+    "task_file": "refund_task.py",
+    "task_display_name": "refund_policy",
+    "task_registry_name": "refund_policy",
+    "task_attribs": {},
+    "task_args": {
+      "revision": "baseline"
+    },
+    "task_args_passed": {
+      "revision": "baseline"
+    },
+    "dataset": {
+      "samples": 8,
+      "sample_ids": [
+        "refund-small",
+        "refund-large",
+        "refund-duplicate",
+        "status-open",
+        "status-missing",
+        "cancel-shipped",
+        "cancel-pending",
+        "address-change"
+      ],
+      "shuffled": false
+    },
+    "model": "mockllm/model",
+    "model_generate_config": {},
+    "model_args": {},
+    "config": {
+      "epochs": 2,
+      "fail_on_error": true,
+      "continue_on_fail": false,
+      "score_on_error": false,
+      "sandbox_cleanup": true,
+      "sandbox_prebuilt": false,
+      "log_samples": true,
+      "log_realtime": true,
+      "log_images": true,
+      "log_shared": 0,
+      "score_display": true
+    },
+    "packages": {
+      "inspect_ai": "0.3.268"
+    },
+    "scorers": [
+      {
+        "name": "match",
+        "options": {
+          "location": "exact"
+        },
+        "metrics": [
+          {
+            "name": "inspect_ai/accuracy",
+            "options": {}
+          },
+          {
+            "name": "inspect_ai/stderr",
+            "options": {}
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "name": "includes",
+        "options": {},
+        "metrics": [
+          {
+            "name": "inspect_ai/accuracy",
+            "options": {}
+          },
+          {
+            "name": "inspect_ai/stderr",
+            "options": {}
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "plan": {
+    "name": "plan",
+    "steps": [
+      {
+        "solver": "scripted_agent",
+        "params": {
+          "revision": "baseline"
+        },
+        "params_passed": {
+          "revision": "baseline"
+        }
+      }
+    ],
+    "config": {}
+  },
+  "results": {
+    "total_samples": 16,
+    "completed_samples": 16,
+    "scores": [
+      {
+        "name": "match",
+        "scorer": "match",
+        "scored_samples": 8,
+        "unscored_samples": 0,
+        "params": {
+          "location": "exact"
+        },
+        "metrics": {
+          "accuracy": {
+            "name": "accuracy",
+            "value": 0.625,
+            "params": {}
+          },
+          "stderr": {
+            "name": "stderr",
+            "value": 0.18298126367784995,
+            "params": {}
+          }
+        }
+      },
+      {
+        "name": "includes",
+        "scorer": "includes",
+        "scored_samples": 8,
+        "unscored_samples": 0,
+        "params": {},
+        "metrics": {
+          "accuracy": {
+            "name": "accuracy",
+            "value": 0.625,
+            "params": {}
+          },
+          "stderr": {
+            "name": "stderr",
+            "value": 0.18298126367784995,
+            "params": {}
+          }
+        }
+      }
+    ],
+    "headline": {
+      "scorer": "match",
+      "score": "match",
+      "metric": "accuracy"
+    }
+  },
+  "stats": {
+    "started_at": "2026-09-24T23:27:23+00:00",
+    "completed_at": "2026-09-24T23:27:24+00:00",
+    "model_usage": {},
+    "role_usage": {},
+    "connection_limit_history": []
+  },
+  "invalidated": false,
+  "tags": [],
+  "metadata": {},
+  "samples": [
+    {
+      "id": "address-change",
+      "epoch": 1,
+      "input": "Change the address on order 1007",
+      "target": "address:1007",
+      "messages": [
+        {
+          "id": "HLPUMmTSLF54ZYoxXXmvn4",
+          "content": "Change the address on order 1007",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "address:1007"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "PmjAfuj3AeB77wDLaofn6C",
+          "span_id": "gHLcDkzpfdAJ4tJ83s3g7x",
+          "timestamp": "2026-09-24T23:27:24.029176+00:00",
+          "working_start": 1003681.936539324,
+          "event": "span_begin",
+          "id": "gHLcDkzpfdAJ4tJ83s3g7x",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "bPzGYFqJzCKM4NJHbRu56u",
+          "span_id": "gHLcDkzpfdAJ4tJ83s3g7x",
+          "timestamp": "2026-09-24T23:27:24.029756+00:00",
+          "working_start": 1003681.937119459,
+          "event": "sample_init",
+          "sample": {
+            "input": "Change the address on order 1007",
+            "target": "address:1007",
+            "id": "address-change"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "HLPUMmTSLF54ZYoxXXmvn4",
+                "content": "Change the address on order 1007",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "feCFMaeFqLxF4oBfic2HiL",
+          "span_id": "gHLcDkzpfdAJ4tJ83s3g7x",
+          "timestamp": "2026-09-24T23:27:24.030021+00:00",
+          "working_start": 1003681.93738412,
+          "event": "span_end",
+          "id": "gHLcDkzpfdAJ4tJ83s3g7x"
+        },
+        {
+          "uuid": "aKZLefMyFnJpiM6dyqmJSh",
+          "span_id": "dqsKorRHLCvihnog2baLac",
+          "timestamp": "2026-09-24T23:27:24.054190+00:00",
+          "working_start": 0.023965736967511475,
+          "event": "span_begin",
+          "id": "dqsKorRHLCvihnog2baLac",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "mdwuYKyZaRkwBrGo7NykDQ",
+          "span_id": "aViHQgEWQiSJbeyZAjpc3m",
+          "timestamp": "2026-09-24T23:27:24.054369+00:00",
+          "working_start": 0.02414559095632285,
+          "event": "span_begin",
+          "id": "aViHQgEWQiSJbeyZAjpc3m",
+          "parent_id": "dqsKorRHLCvihnog2baLac",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "FMwgTZmrCzoYDU3aWeu6BX",
+          "span_id": "aViHQgEWQiSJbeyZAjpc3m",
+          "timestamp": "2026-09-24T23:27:24.054618+00:00",
+          "working_start": 0.024394199950620532,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "address:1007",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "MYvhjNRRnTqXaMWZmQgN3Q",
+          "span_id": "aViHQgEWQiSJbeyZAjpc3m",
+          "timestamp": "2026-09-24T23:27:24.054815+00:00",
+          "working_start": 0.024591985973529518,
+          "event": "span_end",
+          "id": "aViHQgEWQiSJbeyZAjpc3m"
+        },
+        {
+          "uuid": "ST5pHvi8czdo2pLPcUNnjC",
+          "span_id": "dqsKorRHLCvihnog2baLac",
+          "timestamp": "2026-09-24T23:27:24.054978+00:00",
+          "working_start": 0.024754407932050526,
+          "event": "span_end",
+          "id": "dqsKorRHLCvihnog2baLac"
+        },
+        {
+          "uuid": "Az3NiPjPhGn8KkUnqaayNB",
+          "span_id": "oVsW5J49maBNofKJcnpiGj",
+          "timestamp": "2026-09-24T23:27:24.076356+00:00",
+          "working_start": 0.046132693998515606,
+          "event": "span_begin",
+          "id": "oVsW5J49maBNofKJcnpiGj",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "RAUG2sCyfRdYTYD8krg4wg",
+          "span_id": "RH93ghDSS4ue5Y2acNKgyY",
+          "timestamp": "2026-09-24T23:27:24.076508+00:00",
+          "working_start": 0.0462843959685415,
+          "event": "span_begin",
+          "id": "RH93ghDSS4ue5Y2acNKgyY",
+          "parent_id": "oVsW5J49maBNofKJcnpiGj",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "8b4nwVyKjoJMps46kfqi6Q",
+          "span_id": "RH93ghDSS4ue5Y2acNKgyY",
+          "timestamp": "2026-09-24T23:27:24.076708+00:00",
+          "working_start": 0.04648430098313838,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "address:1007",
+            "explanation": "address:1007",
+            "history": []
+          },
+          "target": "address:1007",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "8xmSfR2tJgzbe5AgXG8nLD",
+          "span_id": "RH93ghDSS4ue5Y2acNKgyY",
+          "timestamp": "2026-09-24T23:27:24.076883+00:00",
+          "working_start": 0.04665973491501063,
+          "event": "span_end",
+          "id": "RH93ghDSS4ue5Y2acNKgyY"
+        },
+        {
+          "uuid": "8x6Qxq5mK2CcANVefE54ZS",
+          "span_id": "49rCMxc9AKnyqR2MzVSbtd",
+          "timestamp": "2026-09-24T23:27:24.077053+00:00",
+          "working_start": 0.04682967800181359,
+          "event": "span_begin",
+          "id": "49rCMxc9AKnyqR2MzVSbtd",
+          "parent_id": "oVsW5J49maBNofKJcnpiGj",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "bvS4QqfnE8ELhfhGhh29SB",
+          "span_id": "49rCMxc9AKnyqR2MzVSbtd",
+          "timestamp": "2026-09-24T23:27:24.077193+00:00",
+          "working_start": 0.046969018992967904,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "address:1007",
+            "explanation": "address:1007",
+            "history": []
+          },
+          "target": "address:1007",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "U2wtmUXHWbko3bUZFuPzmK",
+          "span_id": "49rCMxc9AKnyqR2MzVSbtd",
+          "timestamp": "2026-09-24T23:27:24.077338+00:00",
+          "working_start": 0.04711405001580715,
+          "event": "span_end",
+          "id": "49rCMxc9AKnyqR2MzVSbtd"
+        },
+        {
+          "uuid": "ZcdeT5m2nd5C9FFkNmwaQn",
+          "span_id": "oVsW5J49maBNofKJcnpiGj",
+          "timestamp": "2026-09-24T23:27:24.077476+00:00",
+          "working_start": 0.047252210904844105,
+          "event": "span_end",
+          "id": "oVsW5J49maBNofKJcnpiGj"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.030226+00:00",
+      "completed_at": "2026-09-24T23:27:24.095787+00:00",
+      "total_time": 0.066,
+      "working_time": 0.066,
+      "uuid": "oWHjtamArNPB9CoqYf4goU",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "cancel-pending",
+      "epoch": 1,
+      "input": "Cancel order 1006",
+      "target": "cancel:1006",
+      "messages": [
+        {
+          "id": "CV3WWi7PohSfXQFhx3rfgc",
+          "content": "Cancel order 1006",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "cancel:1006"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "iioWLB9xKDiorkhEWFmMGA",
+          "span_id": "hf98yqMQSrTrEK6WBD4yba",
+          "timestamp": "2026-09-24T23:27:24.027458+00:00",
+          "working_start": 1003681.93482108,
+          "event": "span_begin",
+          "id": "hf98yqMQSrTrEK6WBD4yba",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "dUKWX7sDku2Cny5swixA7q",
+          "span_id": "hf98yqMQSrTrEK6WBD4yba",
+          "timestamp": "2026-09-24T23:27:24.028035+00:00",
+          "working_start": 1003681.935398685,
+          "event": "sample_init",
+          "sample": {
+            "input": "Cancel order 1006",
+            "target": "cancel:1006",
+            "id": "cancel-pending"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "CV3WWi7PohSfXQFhx3rfgc",
+                "content": "Cancel order 1006",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "MUATdxM3ZnCPjZmc4FtBs7",
+          "span_id": "hf98yqMQSrTrEK6WBD4yba",
+          "timestamp": "2026-09-24T23:27:24.028300+00:00",
+          "working_start": 1003681.935663756,
+          "event": "span_end",
+          "id": "hf98yqMQSrTrEK6WBD4yba"
+        },
+        {
+          "uuid": "XkA4DWUp4NUFGTkQKa5oGw",
+          "span_id": "6uSB3XUk6h9vZQrRoHAg8E",
+          "timestamp": "2026-09-24T23:27:24.053140+00:00",
+          "working_start": 0.024640389950945973,
+          "event": "span_begin",
+          "id": "6uSB3XUk6h9vZQrRoHAg8E",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "8FnUt7ggD2NTkDieMimRF5",
+          "span_id": "Fp4fdxRjz7mhj9G2huwnQA",
+          "timestamp": "2026-09-24T23:27:24.053329+00:00",
+          "working_start": 0.024829605012200773,
+          "event": "span_begin",
+          "id": "Fp4fdxRjz7mhj9G2huwnQA",
+          "parent_id": "6uSB3XUk6h9vZQrRoHAg8E",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "StkXLiN8SDt2BaxPWtT559",
+          "span_id": "Fp4fdxRjz7mhj9G2huwnQA",
+          "timestamp": "2026-09-24T23:27:24.053571+00:00",
+          "working_start": 0.025071533978916705,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "cancel:1006",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "G7veTA6ttBUopYkuEvdkLQ",
+          "span_id": "Fp4fdxRjz7mhj9G2huwnQA",
+          "timestamp": "2026-09-24T23:27:24.053759+00:00",
+          "working_start": 0.025259637972339988,
+          "event": "span_end",
+          "id": "Fp4fdxRjz7mhj9G2huwnQA"
+        },
+        {
+          "uuid": "myFWT2mzgdsW6LDaaHAi3F",
+          "span_id": "6uSB3XUk6h9vZQrRoHAg8E",
+          "timestamp": "2026-09-24T23:27:24.053940+00:00",
+          "working_start": 0.025440061930567026,
+          "event": "span_end",
+          "id": "6uSB3XUk6h9vZQrRoHAg8E"
+        },
+        {
+          "uuid": "W5bSHxNGcBco9UhqiT6GVn",
+          "span_id": "ix9BXFv85X5NhAyDoSNeF6",
+          "timestamp": "2026-09-24T23:27:24.074688+00:00",
+          "working_start": 0.04618851898703724,
+          "event": "span_begin",
+          "id": "ix9BXFv85X5NhAyDoSNeF6",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "MJC3iSgpnTFfmQRXYTxvnA",
+          "span_id": "KQYkTa2ZY5YazirqvStLjZ",
+          "timestamp": "2026-09-24T23:27:24.075159+00:00",
+          "working_start": 0.046659905929118395,
+          "event": "span_begin",
+          "id": "KQYkTa2ZY5YazirqvStLjZ",
+          "parent_id": "ix9BXFv85X5NhAyDoSNeF6",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "Er4oHuvrRpt5UZyXzVGf6x",
+          "span_id": "KQYkTa2ZY5YazirqvStLjZ",
+          "timestamp": "2026-09-24T23:27:24.075321+00:00",
+          "working_start": 0.046821907977573574,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "cancel:1006",
+            "explanation": "cancel:1006",
+            "history": []
+          },
+          "target": "cancel:1006",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "86R2tb4VTZVvNTqt9WQYx6",
+          "span_id": "KQYkTa2ZY5YazirqvStLjZ",
+          "timestamp": "2026-09-24T23:27:24.075474+00:00",
+          "working_start": 0.04697485000360757,
+          "event": "span_end",
+          "id": "KQYkTa2ZY5YazirqvStLjZ"
+        },
+        {
+          "uuid": "gus9ZGp4S8VWWXtG9rMz7G",
+          "span_id": "fX54wmDF7VWHCF5TsPsD3z",
+          "timestamp": "2026-09-24T23:27:24.075622+00:00",
+          "working_start": 0.04712194192688912,
+          "event": "span_begin",
+          "id": "fX54wmDF7VWHCF5TsPsD3z",
+          "parent_id": "ix9BXFv85X5NhAyDoSNeF6",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "ktBsdnWFPqQyJcfvrXf33h",
+          "span_id": "fX54wmDF7VWHCF5TsPsD3z",
+          "timestamp": "2026-09-24T23:27:24.075796+00:00",
+          "working_start": 0.047296924982219934,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "cancel:1006",
+            "explanation": "cancel:1006",
+            "history": []
+          },
+          "target": "cancel:1006",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "bj5Rrdx9iVeYWF7p5YhTCu",
+          "span_id": "fX54wmDF7VWHCF5TsPsD3z",
+          "timestamp": "2026-09-24T23:27:24.075940+00:00",
+          "working_start": 0.047440827009268105,
+          "event": "span_end",
+          "id": "fX54wmDF7VWHCF5TsPsD3z"
+        },
+        {
+          "uuid": "Ag9HmRLu5Cb4QUstckiMxq",
+          "span_id": "ix9BXFv85X5NhAyDoSNeF6",
+          "timestamp": "2026-09-24T23:27:24.076112+00:00",
+          "working_start": 0.047612749971449375,
+          "event": "span_end",
+          "id": "ix9BXFv85X5NhAyDoSNeF6"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.028502+00:00",
+      "completed_at": "2026-09-24T23:27:24.095070+00:00",
+      "total_time": 0.067,
+      "working_time": 0.067,
+      "uuid": "Zwa2t8HUr6Ubwfpj7iZW7G",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "cancel-shipped",
+      "epoch": 1,
+      "input": "Cancel order 1005",
+      "target": "reject:1005",
+      "messages": [
+        {
+          "id": "G83TFHbEPZB88kSJo2CyGz",
+          "content": "Cancel order 1005",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "cancel:1005"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "7aFGb6aysVNU8iyYHcohDH",
+          "span_id": "UPrnA7zQanxBY7QM4ffSGd",
+          "timestamp": "2026-09-24T23:27:24.025742+00:00",
+          "working_start": 1003681.933105657,
+          "event": "span_begin",
+          "id": "UPrnA7zQanxBY7QM4ffSGd",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "FfbTmKtGLN2CE3SaAZUCzk",
+          "span_id": "UPrnA7zQanxBY7QM4ffSGd",
+          "timestamp": "2026-09-24T23:27:24.026296+00:00",
+          "working_start": 1003681.93365979,
+          "event": "sample_init",
+          "sample": {
+            "input": "Cancel order 1005",
+            "target": "reject:1005",
+            "id": "cancel-shipped"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "G83TFHbEPZB88kSJo2CyGz",
+                "content": "Cancel order 1005",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "N5oA4XgMeDmzNNVDP6zYuN",
+          "span_id": "UPrnA7zQanxBY7QM4ffSGd",
+          "timestamp": "2026-09-24T23:27:24.026571+00:00",
+          "working_start": 1003681.933934301,
+          "event": "span_end",
+          "id": "UPrnA7zQanxBY7QM4ffSGd"
+        },
+        {
+          "uuid": "kvirStX4s4t2xZrokCayC3",
+          "span_id": "dRctVkqfMaDAEvnX38oho9",
+          "timestamp": "2026-09-24T23:27:24.052049+00:00",
+          "working_start": 0.025249777012504637,
+          "event": "span_begin",
+          "id": "dRctVkqfMaDAEvnX38oho9",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "DLNgTDUfVnV7MGXAn97TXp",
+          "span_id": "8QAE3Qnggc7jcD49bGhC7p",
+          "timestamp": "2026-09-24T23:27:24.052224+00:00",
+          "working_start": 0.025424731080420315,
+          "event": "span_begin",
+          "id": "8QAE3Qnggc7jcD49bGhC7p",
+          "parent_id": "dRctVkqfMaDAEvnX38oho9",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "NY7SJ2wwKJgXTG87r9NrWR",
+          "span_id": "8QAE3Qnggc7jcD49bGhC7p",
+          "timestamp": "2026-09-24T23:27:24.052466+00:00",
+          "working_start": 0.02566724002826959,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "cancel:1005",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "6LsmcZcBQEmueeT4ViuhXw",
+          "span_id": "8QAE3Qnggc7jcD49bGhC7p",
+          "timestamp": "2026-09-24T23:27:24.052685+00:00",
+          "working_start": 0.02588568697683513,
+          "event": "span_end",
+          "id": "8QAE3Qnggc7jcD49bGhC7p"
+        },
+        {
+          "uuid": "NF88eUiftR6zTa8C9AkXUh",
+          "span_id": "dRctVkqfMaDAEvnX38oho9",
+          "timestamp": "2026-09-24T23:27:24.052873+00:00",
+          "working_start": 0.026074410998262465,
+          "event": "span_end",
+          "id": "dRctVkqfMaDAEvnX38oho9"
+        },
+        {
+          "uuid": "Qf7t2879KTbuRxTFvZYLiY",
+          "span_id": "B7UZMVDCycmAaJNdXnuNW7",
+          "timestamp": "2026-09-24T23:27:24.073171+00:00",
+          "working_start": 0.046371733071282506,
+          "event": "span_begin",
+          "id": "B7UZMVDCycmAaJNdXnuNW7",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "7zSZMeF3nkMVLwHNtoH82A",
+          "span_id": "NfJBLYMMQX3H3TWQJ4wjfT",
+          "timestamp": "2026-09-24T23:27:24.073350+00:00",
+          "working_start": 0.04655144701246172,
+          "event": "span_begin",
+          "id": "NfJBLYMMQX3H3TWQJ4wjfT",
+          "parent_id": "B7UZMVDCycmAaJNdXnuNW7",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "R2ZJQVN4pMTM6zyjuzntwX",
+          "span_id": "NfJBLYMMQX3H3TWQJ4wjfT",
+          "timestamp": "2026-09-24T23:27:24.073508+00:00",
+          "working_start": 0.04670904902741313,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "cancel:1005",
+            "explanation": "cancel:1005",
+            "history": []
+          },
+          "target": "reject:1005",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "NwQAMoxJpFxW4P9mGAomBG",
+          "span_id": "NfJBLYMMQX3H3TWQJ4wjfT",
+          "timestamp": "2026-09-24T23:27:24.073707+00:00",
+          "working_start": 0.04690808407031,
+          "event": "span_end",
+          "id": "NfJBLYMMQX3H3TWQJ4wjfT"
+        },
+        {
+          "uuid": "JiyeeVfq7ScbzTT2TwVqHw",
+          "span_id": "hinMsHbZSdWZc37RNojakb",
+          "timestamp": "2026-09-24T23:27:24.073885+00:00",
+          "working_start": 0.04708619799930602,
+          "event": "span_begin",
+          "id": "hinMsHbZSdWZc37RNojakb",
+          "parent_id": "B7UZMVDCycmAaJNdXnuNW7",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "9v4C5qofKLDKjVkRzsacnk",
+          "span_id": "hinMsHbZSdWZc37RNojakb",
+          "timestamp": "2026-09-24T23:27:24.074041+00:00",
+          "working_start": 0.04724194097798318,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "cancel:1005",
+            "explanation": "cancel:1005",
+            "history": []
+          },
+          "target": "reject:1005",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "ReZK325HWv9mp2aeRik3wy",
+          "span_id": "hinMsHbZSdWZc37RNojakb",
+          "timestamp": "2026-09-24T23:27:24.074229+00:00",
+          "working_start": 0.04742998501751572,
+          "event": "span_end",
+          "id": "hinMsHbZSdWZc37RNojakb"
+        },
+        {
+          "uuid": "Zd6vFqugn2gP5pPVbKSq6r",
+          "span_id": "B7UZMVDCycmAaJNdXnuNW7",
+          "timestamp": "2026-09-24T23:27:24.074399+00:00",
+          "working_start": 0.04760020901449025,
+          "event": "span_end",
+          "id": "B7UZMVDCycmAaJNdXnuNW7"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.026801+00:00",
+      "completed_at": "2026-09-24T23:27:24.094371+00:00",
+      "total_time": 0.068,
+      "working_time": 0.068,
+      "uuid": "QB7hmMkxPRvpF5rg8YsRGK",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-duplicate",
+      "epoch": 1,
+      "input": "Refund order 1003 again",
+      "target": "reject:1003",
+      "messages": [
+        {
+          "id": "kigwJMQXtzQUxa44tgLjaW",
+          "content": "Refund order 1003 again",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "reject:1003"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "3nKnRKvZnzCLHNH48PKf9p",
+          "span_id": "9dvsKPh4jpNgpJZYDQVpLL",
+          "timestamp": "2026-09-24T23:27:24.013825+00:00",
+          "working_start": 1003681.921187868,
+          "event": "span_begin",
+          "id": "9dvsKPh4jpNgpJZYDQVpLL",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "6LaPcKVVFDr2eqc8UnmcDS",
+          "span_id": "9dvsKPh4jpNgpJZYDQVpLL",
+          "timestamp": "2026-09-24T23:27:24.014468+00:00",
+          "working_start": 1003681.921832788,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1003 again",
+            "target": "reject:1003",
+            "id": "refund-duplicate"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "kigwJMQXtzQUxa44tgLjaW",
+                "content": "Refund order 1003 again",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "4yLM7rayN72xsyix5nWNec",
+          "span_id": "9dvsKPh4jpNgpJZYDQVpLL",
+          "timestamp": "2026-09-24T23:27:24.014813+00:00",
+          "working_start": 1003681.922176485,
+          "event": "span_end",
+          "id": "9dvsKPh4jpNgpJZYDQVpLL"
+        },
+        {
+          "uuid": "2C3Utid7Bo6NauEvRarzZS",
+          "span_id": "dFmb2FtuYE2GgdrCnDC9ot",
+          "timestamp": "2026-09-24T23:27:24.048831+00:00",
+          "working_start": 0.033823585021309555,
+          "event": "span_begin",
+          "id": "dFmb2FtuYE2GgdrCnDC9ot",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "KVMuixqGuMLUrQK6cNBDPt",
+          "span_id": "jBr9K47wKNhpQeeatarU4A",
+          "timestamp": "2026-09-24T23:27:24.049043+00:00",
+          "working_start": 0.03403664205688983,
+          "event": "span_begin",
+          "id": "jBr9K47wKNhpQeeatarU4A",
+          "parent_id": "dFmb2FtuYE2GgdrCnDC9ot",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "ewUhQbGs5kVigD3oYNQArr",
+          "span_id": "jBr9K47wKNhpQeeatarU4A",
+          "timestamp": "2026-09-24T23:27:24.049301+00:00",
+          "working_start": 0.034294562065042555,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "reject:1003",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "NQ4BtEdpLL855idjP65Lrb",
+          "span_id": "jBr9K47wKNhpQeeatarU4A",
+          "timestamp": "2026-09-24T23:27:24.049472+00:00",
+          "working_start": 0.034465115051716566,
+          "event": "span_end",
+          "id": "jBr9K47wKNhpQeeatarU4A"
+        },
+        {
+          "uuid": "GtBGjaRTHndiaaxrM6UcXS",
+          "span_id": "dFmb2FtuYE2GgdrCnDC9ot",
+          "timestamp": "2026-09-24T23:27:24.049634+00:00",
+          "working_start": 0.03462681802920997,
+          "event": "span_end",
+          "id": "dFmb2FtuYE2GgdrCnDC9ot"
+        },
+        {
+          "uuid": "fLJewJhyUP6CodThgxgN26",
+          "span_id": "ejxL7Dkypu2NnHZ3bCSud6",
+          "timestamp": "2026-09-24T23:27:24.068433+00:00",
+          "working_start": 0.05342588305938989,
+          "event": "span_begin",
+          "id": "ejxL7Dkypu2NnHZ3bCSud6",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "hzhudWL26KT8UD8CuKcB2c",
+          "span_id": "bLh3fB5syvk7yfbFvsPHnS",
+          "timestamp": "2026-09-24T23:27:24.068687+00:00",
+          "working_start": 0.053680603043176234,
+          "event": "span_begin",
+          "id": "bLh3fB5syvk7yfbFvsPHnS",
+          "parent_id": "ejxL7Dkypu2NnHZ3bCSud6",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "PPeoyNvg2fnD6MK4cCeC3V",
+          "span_id": "bLh3fB5syvk7yfbFvsPHnS",
+          "timestamp": "2026-09-24T23:27:24.068865+00:00",
+          "working_start": 0.05385865597054362,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "reject:1003",
+            "explanation": "reject:1003",
+            "history": []
+          },
+          "target": "reject:1003",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "UrMqwwsjXHAY8Ngk89XfRN",
+          "span_id": "bLh3fB5syvk7yfbFvsPHnS",
+          "timestamp": "2026-09-24T23:27:24.069029+00:00",
+          "working_start": 0.0540226090233773,
+          "event": "span_end",
+          "id": "bLh3fB5syvk7yfbFvsPHnS"
+        },
+        {
+          "uuid": "UoT8e4rYpWJHFVgN5CNVUZ",
+          "span_id": "dRWrpwFa7U8kDsfKsQGZaq",
+          "timestamp": "2026-09-24T23:27:24.069192+00:00",
+          "working_start": 0.054185552056878805,
+          "event": "span_begin",
+          "id": "dRWrpwFa7U8kDsfKsQGZaq",
+          "parent_id": "ejxL7Dkypu2NnHZ3bCSud6",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "aK2gztXxgpHZcjufohnsUK",
+          "span_id": "dRWrpwFa7U8kDsfKsQGZaq",
+          "timestamp": "2026-09-24T23:27:24.069349+00:00",
+          "working_start": 0.05434256396256387,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "reject:1003",
+            "explanation": "reject:1003",
+            "history": []
+          },
+          "target": "reject:1003",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "kkTktsMWhELCdGKD3bXSrW",
+          "span_id": "dRWrpwFa7U8kDsfKsQGZaq",
+          "timestamp": "2026-09-24T23:27:24.069510+00:00",
+          "working_start": 0.05450370698235929,
+          "event": "span_end",
+          "id": "dRWrpwFa7U8kDsfKsQGZaq"
+        },
+        {
+          "uuid": "KTMUBH4nDYHMFZPqC4z9BF",
+          "span_id": "ejxL7Dkypu2NnHZ3bCSud6",
+          "timestamp": "2026-09-24T23:27:24.069683+00:00",
+          "working_start": 0.05467608000617474,
+          "event": "span_end",
+          "id": "ejxL7Dkypu2NnHZ3bCSud6"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.015009+00:00",
+      "completed_at": "2026-09-24T23:27:24.092070+00:00",
+      "total_time": 0.077,
+      "working_time": 0.077,
+      "uuid": "W82DKWXgMHKMiwzWs7GK9Y",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-large",
+      "epoch": 1,
+      "input": "Refund order 1002 for $900",
+      "target": "escalate:1002",
+      "messages": [
+        {
+          "id": "a3dvWcLPJG9HiEuFBrMCnu",
+          "content": "Refund order 1002 for $900",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "refund:1002:900"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "PMTAP22M4ZNZDLuNKfjEYv",
+          "span_id": "PD8yCqfmEw2ZCgioKe2xYV",
+          "timestamp": "2026-09-24T23:27:24.008746+00:00",
+          "working_start": 1003681.916109852,
+          "event": "span_begin",
+          "id": "PD8yCqfmEw2ZCgioKe2xYV",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "ZBH5dieYo4WVpcDayktX2P",
+          "span_id": "PD8yCqfmEw2ZCgioKe2xYV",
+          "timestamp": "2026-09-24T23:27:24.009378+00:00",
+          "working_start": 1003681.916742112,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1002 for $900",
+            "target": "escalate:1002",
+            "id": "refund-large"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "a3dvWcLPJG9HiEuFBrMCnu",
+                "content": "Refund order 1002 for $900",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "6kUUFn4JGVwckq5RiEY8a8",
+          "span_id": "PD8yCqfmEw2ZCgioKe2xYV",
+          "timestamp": "2026-09-24T23:27:24.009731+00:00",
+          "working_start": 1003681.917095679,
+          "event": "span_end",
+          "id": "PD8yCqfmEw2ZCgioKe2xYV"
+        },
+        {
+          "uuid": "jrUoQgn3qsyX4zNRV3H4Rw",
+          "span_id": "RrH6ac7bEjEtCA8HLT694c",
+          "timestamp": "2026-09-24T23:27:24.047711+00:00",
+          "working_start": 0.037739520077593625,
+          "event": "span_begin",
+          "id": "RrH6ac7bEjEtCA8HLT694c",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "jeqZDgiuP7KFahu8fw5eJe",
+          "span_id": "kFiPJvV88jmb9ayeoPLM2z",
+          "timestamp": "2026-09-24T23:27:24.047917+00:00",
+          "working_start": 0.037945955991744995,
+          "event": "span_begin",
+          "id": "kFiPJvV88jmb9ayeoPLM2z",
+          "parent_id": "RrH6ac7bEjEtCA8HLT694c",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "V4yx8B2cP4Gk2FXTrYfnJz",
+          "span_id": "kFiPJvV88jmb9ayeoPLM2z",
+          "timestamp": "2026-09-24T23:27:24.048171+00:00",
+          "working_start": 0.03819992602802813,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "refund:1002:900",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "4Ltbn9Rf4mQtbDaLTHSUxR",
+          "span_id": "kFiPJvV88jmb9ayeoPLM2z",
+          "timestamp": "2026-09-24T23:27:24.048350+00:00",
+          "working_start": 0.03837938001379371,
+          "event": "span_end",
+          "id": "kFiPJvV88jmb9ayeoPLM2z"
+        },
+        {
+          "uuid": "Z8SeTD7p4XTua5vp5aNtiy",
+          "span_id": "RrH6ac7bEjEtCA8HLT694c",
+          "timestamp": "2026-09-24T23:27:24.048534+00:00",
+          "working_start": 0.03856289410032332,
+          "event": "span_end",
+          "id": "RrH6ac7bEjEtCA8HLT694c"
+        },
+        {
+          "uuid": "SPemmH6aRm6PzsEMXqYHrc",
+          "span_id": "cvimdCkqzcYrev34x7Q4HS",
+          "timestamp": "2026-09-24T23:27:24.066858+00:00",
+          "working_start": 0.05688742210622877,
+          "event": "span_begin",
+          "id": "cvimdCkqzcYrev34x7Q4HS",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "Khdu2HxNQnwdpjZBoL54WV",
+          "span_id": "Tr6oJJskviKiFS2VWttt8q",
+          "timestamp": "2026-09-24T23:27:24.067091+00:00",
+          "working_start": 0.05712039000354707,
+          "event": "span_begin",
+          "id": "Tr6oJJskviKiFS2VWttt8q",
+          "parent_id": "cvimdCkqzcYrev34x7Q4HS",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "J7kFBK7MbeqST49hjzunNW",
+          "span_id": "Tr6oJJskviKiFS2VWttt8q",
+          "timestamp": "2026-09-24T23:27:24.067265+00:00",
+          "working_start": 0.05729393404908478,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "refund:1002:900",
+            "explanation": "refund:1002:900",
+            "history": []
+          },
+          "target": "escalate:1002",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "g66RnNCbVv2vZDE4RcfPjf",
+          "span_id": "Tr6oJJskviKiFS2VWttt8q",
+          "timestamp": "2026-09-24T23:27:24.067442+00:00",
+          "working_start": 0.05747071804944426,
+          "event": "span_end",
+          "id": "Tr6oJJskviKiFS2VWttt8q"
+        },
+        {
+          "uuid": "RXMSkekLyuxu7n8nzXftGH",
+          "span_id": "HUb3KR9wtrjMtTkuXYXvCk",
+          "timestamp": "2026-09-24T23:27:24.067669+00:00",
+          "working_start": 0.05769856506958604,
+          "event": "span_begin",
+          "id": "HUb3KR9wtrjMtTkuXYXvCk",
+          "parent_id": "cvimdCkqzcYrev34x7Q4HS",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "JGcxe3zarx3tQ86y3FUTAP",
+          "span_id": "HUb3KR9wtrjMtTkuXYXvCk",
+          "timestamp": "2026-09-24T23:27:24.067839+00:00",
+          "working_start": 0.057867628056555986,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "refund:1002:900",
+            "explanation": "refund:1002:900",
+            "history": []
+          },
+          "target": "escalate:1002",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "PeczqeqbAB6H6NfVCEb5ts",
+          "span_id": "HUb3KR9wtrjMtTkuXYXvCk",
+          "timestamp": "2026-09-24T23:27:24.068016+00:00",
+          "working_start": 0.05804533208720386,
+          "event": "span_end",
+          "id": "HUb3KR9wtrjMtTkuXYXvCk"
+        },
+        {
+          "uuid": "32SmJMz2mVVFBwg8mgiFrb",
+          "span_id": "cvimdCkqzcYrev34x7Q4HS",
+          "timestamp": "2026-09-24T23:27:24.068172+00:00",
+          "working_start": 0.05820105399470776,
+          "event": "span_end",
+          "id": "cvimdCkqzcYrev34x7Q4HS"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.009974+00:00",
+      "completed_at": "2026-09-24T23:27:24.091304+00:00",
+      "total_time": 0.081,
+      "working_time": 0.081,
+      "uuid": "EVdEgUpZZBDanAtCLEABAE",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-small",
+      "epoch": 1,
+      "input": "Refund order 1001 for $12",
+      "target": "refund:1001:12",
+      "messages": [
+        {
+          "id": "f6s35CVCNswoZnbzowAXpY",
+          "content": "Refund order 1001 for $12",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "refund:1001:12"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "bZjqyBNVRLKNw8FYqsHkTK",
+          "span_id": "fcddUuvXqCKgXtg8PVKi5K",
+          "timestamp": "2026-09-24T23:27:24.002871+00:00",
+          "working_start": 1003681.910236985,
+          "event": "span_begin",
+          "id": "fcddUuvXqCKgXtg8PVKi5K",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "3zoXUsB2jfX5n4DC7SGMBY",
+          "span_id": "fcddUuvXqCKgXtg8PVKi5K",
+          "timestamp": "2026-09-24T23:27:24.003974+00:00",
+          "working_start": 1003681.911339361,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1001 for $12",
+            "target": "refund:1001:12",
+            "id": "refund-small"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "f6s35CVCNswoZnbzowAXpY",
+                "content": "Refund order 1001 for $12",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "8abuAwRnVLjRoiwZoGmt8e",
+          "span_id": "fcddUuvXqCKgXtg8PVKi5K",
+          "timestamp": "2026-09-24T23:27:24.004377+00:00",
+          "working_start": 1003681.911741232,
+          "event": "span_end",
+          "id": "fcddUuvXqCKgXtg8PVKi5K"
+        },
+        {
+          "uuid": "MRka3GKHPtKk7bAyNJuSFt",
+          "span_id": "jH9fPUgKasCE6Y53vbkFfG",
+          "timestamp": "2026-09-24T23:27:24.045355+00:00",
+          "working_start": 0.037616161047481,
+          "event": "span_begin",
+          "id": "jH9fPUgKasCE6Y53vbkFfG",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "Mk6rJ9qZLgjeWP9PFiJ5pc",
+          "span_id": "CcwVRtnCWBUKipcgKau7Q9",
+          "timestamp": "2026-09-24T23:27:24.045761+00:00",
+          "working_start": 0.03802210197318345,
+          "event": "span_begin",
+          "id": "CcwVRtnCWBUKipcgKau7Q9",
+          "parent_id": "jH9fPUgKasCE6Y53vbkFfG",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "MZjaR9dcp3p8z5LqQ6tCtp",
+          "span_id": "CcwVRtnCWBUKipcgKau7Q9",
+          "timestamp": "2026-09-24T23:27:24.046231+00:00",
+          "working_start": 0.038492689025588334,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "refund:1001:12",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "Q4CngUmuPPM6fg8iojPteh",
+          "span_id": "CcwVRtnCWBUKipcgKau7Q9",
+          "timestamp": "2026-09-24T23:27:24.046509+00:00",
+          "working_start": 0.03877097100485116,
+          "event": "span_end",
+          "id": "CcwVRtnCWBUKipcgKau7Q9"
+        },
+        {
+          "uuid": "LAxyYgFiS3b4SNBKLuxBvX",
+          "span_id": "jH9fPUgKasCE6Y53vbkFfG",
+          "timestamp": "2026-09-24T23:27:24.046729+00:00",
+          "working_start": 0.038990758010186255,
+          "event": "span_end",
+          "id": "jH9fPUgKasCE6Y53vbkFfG"
+        },
+        {
+          "uuid": "42BikvGNjM5YmTFXMA36s7",
+          "span_id": "7Jad8ZCbQAJtLD9444enRj",
+          "timestamp": "2026-09-24T23:27:24.064816+00:00",
+          "working_start": 0.05707778700161725,
+          "event": "span_begin",
+          "id": "7Jad8ZCbQAJtLD9444enRj",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "4c2MKXyS8BhAprxRj4tKJE",
+          "span_id": "CaPQMgUXrwidy6AC6btCzS",
+          "timestamp": "2026-09-24T23:27:24.065004+00:00",
+          "working_start": 0.05726588098332286,
+          "event": "span_begin",
+          "id": "CaPQMgUXrwidy6AC6btCzS",
+          "parent_id": "7Jad8ZCbQAJtLD9444enRj",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "npS4pqkp59y92ZccD2kc78",
+          "span_id": "CaPQMgUXrwidy6AC6btCzS",
+          "timestamp": "2026-09-24T23:27:24.065191+00:00",
+          "working_start": 0.05745238601230085,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "refund:1001:12",
+            "explanation": "refund:1001:12",
+            "history": []
+          },
+          "target": "refund:1001:12",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "DmN6wKqHtWcfSJdij3uXDX",
+          "span_id": "CaPQMgUXrwidy6AC6btCzS",
+          "timestamp": "2026-09-24T23:27:24.065484+00:00",
+          "working_start": 0.05774587905034423,
+          "event": "span_end",
+          "id": "CaPQMgUXrwidy6AC6btCzS"
+        },
+        {
+          "uuid": "GyMNNMr7sS7yiUkewWjGUR",
+          "span_id": "7V94Xag62zMfvtDjyErbnq",
+          "timestamp": "2026-09-24T23:27:24.065735+00:00",
+          "working_start": 0.05799728899728507,
+          "event": "span_begin",
+          "id": "7V94Xag62zMfvtDjyErbnq",
+          "parent_id": "7Jad8ZCbQAJtLD9444enRj",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "P5DTdxwfWZZcqznnEB7kbm",
+          "span_id": "7V94Xag62zMfvtDjyErbnq",
+          "timestamp": "2026-09-24T23:27:24.065967+00:00",
+          "working_start": 0.05822883697692305,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "refund:1001:12",
+            "explanation": "refund:1001:12",
+            "history": []
+          },
+          "target": "refund:1001:12",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "TsCG6Fe2z3QHQ8HmQpziax",
+          "span_id": "7V94Xag62zMfvtDjyErbnq",
+          "timestamp": "2026-09-24T23:27:24.066193+00:00",
+          "working_start": 0.058455234044231474,
+          "event": "span_end",
+          "id": "7V94Xag62zMfvtDjyErbnq"
+        },
+        {
+          "uuid": "BaNtNygR9yroC6MpQyaKti",
+          "span_id": "7Jad8ZCbQAJtLD9444enRj",
+          "timestamp": "2026-09-24T23:27:24.066436+00:00",
+          "working_start": 0.05869790306314826,
+          "event": "span_end",
+          "id": "7Jad8ZCbQAJtLD9444enRj"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.007742+00:00",
+      "completed_at": "2026-09-24T23:27:24.090043+00:00",
+      "total_time": 0.082,
+      "working_time": 0.082,
+      "uuid": "6Mwrs3CdKDWHbLTxGzUBxf",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "status-missing",
+      "epoch": 1,
+      "input": "What is the status of order 9999?",
+      "target": "status:9999:unknown",
+      "messages": [
+        {
+          "id": "VUXpPo9shRjsD38rfDyT3x",
+          "content": "What is the status of order 9999?",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "status:9999:open"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "dhqs5fWs6AaUxosAcGVuSz",
+          "span_id": "TyWgH98ytvzCBRYAnqoaxa",
+          "timestamp": "2026-09-24T23:27:24.020579+00:00",
+          "working_start": 1003681.927942004,
+          "event": "span_begin",
+          "id": "TyWgH98ytvzCBRYAnqoaxa",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "XgmiT6YWkj9bi5FLnXuEnA",
+          "span_id": "TyWgH98ytvzCBRYAnqoaxa",
+          "timestamp": "2026-09-24T23:27:24.021409+00:00",
+          "working_start": 1003681.928773369,
+          "event": "sample_init",
+          "sample": {
+            "input": "What is the status of order 9999?",
+            "target": "status:9999:unknown",
+            "id": "status-missing"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "VUXpPo9shRjsD38rfDyT3x",
+                "content": "What is the status of order 9999?",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "QZVi3BjxxVPeacyZcFNLQb",
+          "span_id": "TyWgH98ytvzCBRYAnqoaxa",
+          "timestamp": "2026-09-24T23:27:24.021709+00:00",
+          "working_start": 1003681.929072332,
+          "event": "span_end",
+          "id": "TyWgH98ytvzCBRYAnqoaxa"
+        },
+        {
+          "uuid": "GGichssopyCZKBRhzwukL8",
+          "span_id": "7hRs6Q57Wz5zqECjz2Taqn",
+          "timestamp": "2026-09-24T23:27:24.050997+00:00",
+          "working_start": 0.02908518596086651,
+          "event": "span_begin",
+          "id": "7hRs6Q57Wz5zqECjz2Taqn",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "gHMWsRrzYQWYSPi2qgTMGy",
+          "span_id": "N9TkVWE8t5KV8UAwkaojM6",
+          "timestamp": "2026-09-24T23:27:24.051174+00:00",
+          "working_start": 0.029263479984365404,
+          "event": "span_begin",
+          "id": "N9TkVWE8t5KV8UAwkaojM6",
+          "parent_id": "7hRs6Q57Wz5zqECjz2Taqn",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "k3Z3TQuDphXKugBRULE7YT",
+          "span_id": "N9TkVWE8t5KV8UAwkaojM6",
+          "timestamp": "2026-09-24T23:27:24.051431+00:00",
+          "working_start": 0.029520559939555824,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "status:9999:open",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "UEMeAbtPYebpWszz2wvBCn",
+          "span_id": "N9TkVWE8t5KV8UAwkaojM6",
+          "timestamp": "2026-09-24T23:27:24.051603+00:00",
+          "working_start": 0.029692192911170423,
+          "event": "span_end",
+          "id": "N9TkVWE8t5KV8UAwkaojM6"
+        },
+        {
+          "uuid": "gpbodVgWM3qUsUBnJrYiyP",
+          "span_id": "7hRs6Q57Wz5zqECjz2Taqn",
+          "timestamp": "2026-09-24T23:27:24.051795+00:00",
+          "working_start": 0.02988434792496264,
+          "event": "span_end",
+          "id": "7hRs6Q57Wz5zqECjz2Taqn"
+        },
+        {
+          "uuid": "GpQLk626dhFhBFpoBi5bvY",
+          "span_id": "RLy5EmCWsQXL5HT2LjMWtg",
+          "timestamp": "2026-09-24T23:27:24.071448+00:00",
+          "working_start": 0.04953722993377596,
+          "event": "span_begin",
+          "id": "RLy5EmCWsQXL5HT2LjMWtg",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "NXx38cUohWg4cptgCLrhKU",
+          "span_id": "5rBXuptRffHR2kntFpNTBV",
+          "timestamp": "2026-09-24T23:27:24.071633+00:00",
+          "working_start": 0.0497222839621827,
+          "event": "span_begin",
+          "id": "5rBXuptRffHR2kntFpNTBV",
+          "parent_id": "RLy5EmCWsQXL5HT2LjMWtg",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "jyGAtBZqhEXvemiUw8qDAn",
+          "span_id": "5rBXuptRffHR2kntFpNTBV",
+          "timestamp": "2026-09-24T23:27:24.071991+00:00",
+          "working_start": 0.05008041195105761,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "status:9999:open",
+            "explanation": "status:9999:open",
+            "history": []
+          },
+          "target": "status:9999:unknown",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "Y3c2c6xVTk8C2yMtshcNBB",
+          "span_id": "5rBXuptRffHR2kntFpNTBV",
+          "timestamp": "2026-09-24T23:27:24.072189+00:00",
+          "working_start": 0.05027873697690666,
+          "event": "span_end",
+          "id": "5rBXuptRffHR2kntFpNTBV"
+        },
+        {
+          "uuid": "n4txvTJ7c5jcfeCumQQh6o",
+          "span_id": "4w7Lz27vYCwXQ5i5PUYhN8",
+          "timestamp": "2026-09-24T23:27:24.072372+00:00",
+          "working_start": 0.05046095093712211,
+          "event": "span_begin",
+          "id": "4w7Lz27vYCwXQ5i5PUYhN8",
+          "parent_id": "RLy5EmCWsQXL5HT2LjMWtg",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "YTD6t4rDUN6eXvnEvWXzPk",
+          "span_id": "4w7Lz27vYCwXQ5i5PUYhN8",
+          "timestamp": "2026-09-24T23:27:24.072531+00:00",
+          "working_start": 0.05062030395492911,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "status:9999:open",
+            "explanation": "status:9999:open",
+            "history": []
+          },
+          "target": "status:9999:unknown",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "ay88SpvWeKB5hfojqX6qwj",
+          "span_id": "4w7Lz27vYCwXQ5i5PUYhN8",
+          "timestamp": "2026-09-24T23:27:24.072732+00:00",
+          "working_start": 0.050821229931898415,
+          "event": "span_end",
+          "id": "4w7Lz27vYCwXQ5i5PUYhN8"
+        },
+        {
+          "uuid": "9MErhVgudMhtJsUQPDLdjG",
+          "span_id": "RLy5EmCWsQXL5HT2LjMWtg",
+          "timestamp": "2026-09-24T23:27:24.072896+00:00",
+          "working_start": 0.050985021982342005,
+          "event": "span_end",
+          "id": "RLy5EmCWsQXL5HT2LjMWtg"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.021914+00:00",
+      "completed_at": "2026-09-24T23:27:24.093665+00:00",
+      "total_time": 0.072,
+      "working_time": 0.072,
+      "uuid": "T23QBGDWxffm8Kgecwscdo",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "status-open",
+      "epoch": 1,
+      "input": "What is the status of order 1004?",
+      "target": "status:1004:open",
+      "messages": [
+        {
+          "id": "gpiLyE6wSNnr8JCvvgnJqk",
+          "content": "What is the status of order 1004?",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "status:1004:open"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "fRA2RjAVw2Y4EtJuoBL2Mr",
+          "span_id": "MLNhbTKegN7DPR97qHmk9U",
+          "timestamp": "2026-09-24T23:27:24.015813+00:00",
+          "working_start": 1003681.923176193,
+          "event": "span_begin",
+          "id": "MLNhbTKegN7DPR97qHmk9U",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "PyECFQFCarQ9gupuGWLP9w",
+          "span_id": "MLNhbTKegN7DPR97qHmk9U",
+          "timestamp": "2026-09-24T23:27:24.016397+00:00",
+          "working_start": 1003681.923760639,
+          "event": "sample_init",
+          "sample": {
+            "input": "What is the status of order 1004?",
+            "target": "status:1004:open",
+            "id": "status-open"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "gpiLyE6wSNnr8JCvvgnJqk",
+                "content": "What is the status of order 1004?",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "DM7C5ATDXxJVo9PMnMJVuu",
+          "span_id": "MLNhbTKegN7DPR97qHmk9U",
+          "timestamp": "2026-09-24T23:27:24.019697+00:00",
+          "working_start": 1003681.927061526,
+          "event": "span_end",
+          "id": "MLNhbTKegN7DPR97qHmk9U"
+        },
+        {
+          "uuid": "KuWYu73Dx8zX5udY2yPyQF",
+          "span_id": "nqELnhEtrRkwiyJA9PzHfe",
+          "timestamp": "2026-09-24T23:27:24.049922+00:00",
+          "working_start": 0.030015187920071185,
+          "event": "span_begin",
+          "id": "nqELnhEtrRkwiyJA9PzHfe",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "ba9PsfW5a5WRdBcHQNwQHJ",
+          "span_id": "FWqPHhbCYp35ePxnNXAvRj",
+          "timestamp": "2026-09-24T23:27:24.050106+00:00",
+          "working_start": 0.03019962296821177,
+          "event": "span_begin",
+          "id": "FWqPHhbCYp35ePxnNXAvRj",
+          "parent_id": "nqELnhEtrRkwiyJA9PzHfe",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "g7DDCYgrJuKZhCgsTYooEF",
+          "span_id": "FWqPHhbCYp35ePxnNXAvRj",
+          "timestamp": "2026-09-24T23:27:24.050370+00:00",
+          "working_start": 0.030464113922789693,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "status:1004:open",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "NpzPAqmJAY8bJY5FST3DVf",
+          "span_id": "FWqPHhbCYp35ePxnNXAvRj",
+          "timestamp": "2026-09-24T23:27:24.050540+00:00",
+          "working_start": 0.03063337691128254,
+          "event": "span_end",
+          "id": "FWqPHhbCYp35ePxnNXAvRj"
+        },
+        {
+          "uuid": "YHGMLtEHa367TwHihXDEMz",
+          "span_id": "nqELnhEtrRkwiyJA9PzHfe",
+          "timestamp": "2026-09-24T23:27:24.050728+00:00",
+          "working_start": 0.030821340973488986,
+          "event": "span_end",
+          "id": "nqELnhEtrRkwiyJA9PzHfe"
+        },
+        {
+          "uuid": "5pp86CHNRUtfNXZ6LnmZgf",
+          "span_id": "TggfcL6SXRxDZT6HMuFAV9",
+          "timestamp": "2026-09-24T23:27:24.069948+00:00",
+          "working_start": 0.05004127894062549,
+          "event": "span_begin",
+          "id": "TggfcL6SXRxDZT6HMuFAV9",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "HdFHUfCwHdiVqJ4zDKkRvj",
+          "span_id": "cWcx3JPCXGXwfpFrDAnR24",
+          "timestamp": "2026-09-24T23:27:24.070151+00:00",
+          "working_start": 0.05024467490147799,
+          "event": "span_begin",
+          "id": "cWcx3JPCXGXwfpFrDAnR24",
+          "parent_id": "TggfcL6SXRxDZT6HMuFAV9",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "NzBnSxhD7hKBTkn2LSt5oQ",
+          "span_id": "cWcx3JPCXGXwfpFrDAnR24",
+          "timestamp": "2026-09-24T23:27:24.070320+00:00",
+          "working_start": 0.0504136779345572,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "status:1004:open",
+            "explanation": "status:1004:open",
+            "history": []
+          },
+          "target": "status:1004:open",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "DqrmTtxncc44F8JTat5UJk",
+          "span_id": "cWcx3JPCXGXwfpFrDAnR24",
+          "timestamp": "2026-09-24T23:27:24.070491+00:00",
+          "working_start": 0.05058466095943004,
+          "event": "span_end",
+          "id": "cWcx3JPCXGXwfpFrDAnR24"
+        },
+        {
+          "uuid": "iVz9RfaeXwyuthvVsTdsZJ",
+          "span_id": "P2KyWyqVk2bmZCotBN9ebe",
+          "timestamp": "2026-09-24T23:27:24.070709+00:00",
+          "working_start": 0.05080291791819036,
+          "event": "span_begin",
+          "id": "P2KyWyqVk2bmZCotBN9ebe",
+          "parent_id": "TggfcL6SXRxDZT6HMuFAV9",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "7wXkrA6wBf8wjrF3YEoA9X",
+          "span_id": "P2KyWyqVk2bmZCotBN9ebe",
+          "timestamp": "2026-09-24T23:27:24.070874+00:00",
+          "working_start": 0.05096729099750519,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "status:1004:open",
+            "explanation": "status:1004:open",
+            "history": []
+          },
+          "target": "status:1004:open",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "MmCx2KqNGcwdNkHqyESDzG",
+          "span_id": "P2KyWyqVk2bmZCotBN9ebe",
+          "timestamp": "2026-09-24T23:27:24.071040+00:00",
+          "working_start": 0.05113406397867948,
+          "event": "span_end",
+          "id": "P2KyWyqVk2bmZCotBN9ebe"
+        },
+        {
+          "uuid": "i7Z8feAu3RgE6o5d6Lzv2E",
+          "span_id": "TggfcL6SXRxDZT6HMuFAV9",
+          "timestamp": "2026-09-24T23:27:24.071194+00:00",
+          "working_start": 0.051287395996041596,
+          "event": "span_end",
+          "id": "TggfcL6SXRxDZT6HMuFAV9"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.019909+00:00",
+      "completed_at": "2026-09-24T23:27:24.092806+00:00",
+      "total_time": 0.073,
+      "working_time": 0.073,
+      "uuid": "JXweHRcHFrm6tYYiAMhANx",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "address-change",
+      "epoch": 2,
+      "input": "Change the address on order 1007",
+      "target": "address:1007",
+      "messages": [
+        {
+          "id": "ain3MfhVPvbBWGuGei4rZB",
+          "content": "Change the address on order 1007",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "address:1007"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "epoHHQSrwBs23mQ8V5AkK5",
+          "span_id": "GABxUpBsuEd9cdNTheifen",
+          "timestamp": "2026-09-24T23:27:24.044207+00:00",
+          "working_start": 1003681.951570235,
+          "event": "span_begin",
+          "id": "GABxUpBsuEd9cdNTheifen",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "FroKZ9tmRQL4diQJ3zwKb7",
+          "span_id": "GABxUpBsuEd9cdNTheifen",
+          "timestamp": "2026-09-24T23:27:24.044668+00:00",
+          "working_start": 1003681.952031471,
+          "event": "sample_init",
+          "sample": {
+            "input": "Change the address on order 1007",
+            "target": "address:1007",
+            "id": "address-change"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "ain3MfhVPvbBWGuGei4rZB",
+                "content": "Change the address on order 1007",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "BzYz2uqmmZB96omZ9Fziss",
+          "span_id": "GABxUpBsuEd9cdNTheifen",
+          "timestamp": "2026-09-24T23:27:24.044887+00:00",
+          "working_start": 1003681.952250678,
+          "event": "span_end",
+          "id": "GABxUpBsuEd9cdNTheifen"
+        },
+        {
+          "uuid": "eD83RnMeqY3nfujpWoSX63",
+          "span_id": "YWYfDzjgbnvXxJqajL3Apb",
+          "timestamp": "2026-09-24T23:27:24.063047+00:00",
+          "working_start": 0.018016172922216356,
+          "event": "span_begin",
+          "id": "YWYfDzjgbnvXxJqajL3Apb",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "M2cRAtjGbCZFh4KUUERC6X",
+          "span_id": "7sHbuZpBQCPEgfaqfiBurU",
+          "timestamp": "2026-09-24T23:27:24.063233+00:00",
+          "working_start": 0.01820187794510275,
+          "event": "span_begin",
+          "id": "7sHbuZpBQCPEgfaqfiBurU",
+          "parent_id": "YWYfDzjgbnvXxJqajL3Apb",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "F8iECsB9t9Y2675REaZ79D",
+          "span_id": "7sHbuZpBQCPEgfaqfiBurU",
+          "timestamp": "2026-09-24T23:27:24.063471+00:00",
+          "working_start": 0.018440855899825692,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "address:1007",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "k2TrRjsWjBr5by8WhcJqD5",
+          "span_id": "7sHbuZpBQCPEgfaqfiBurU",
+          "timestamp": "2026-09-24T23:27:24.063630+00:00",
+          "working_start": 0.01859911798965186,
+          "event": "span_end",
+          "id": "7sHbuZpBQCPEgfaqfiBurU"
+        },
+        {
+          "uuid": "cqkwAV3uMWLX9EkSiDVexL",
+          "span_id": "YWYfDzjgbnvXxJqajL3Apb",
+          "timestamp": "2026-09-24T23:27:24.063822+00:00",
+          "working_start": 0.018791102920658886,
+          "event": "span_end",
+          "id": "YWYfDzjgbnvXxJqajL3Apb"
+        },
+        {
+          "uuid": "SWSbekXqhcTXU4dDYxP9J6",
+          "span_id": "YK9b3EyVVBADKPpVHG8BEG",
+          "timestamp": "2026-09-24T23:27:24.088579+00:00",
+          "working_start": 0.04354884196072817,
+          "event": "span_begin",
+          "id": "YK9b3EyVVBADKPpVHG8BEG",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "d5TaYoz7LbhDF7PwbSHZx3",
+          "span_id": "SYEgG8JP28zYrNrZXZAGyF",
+          "timestamp": "2026-09-24T23:27:24.088757+00:00",
+          "working_start": 0.04372631595470011,
+          "event": "span_begin",
+          "id": "SYEgG8JP28zYrNrZXZAGyF",
+          "parent_id": "YK9b3EyVVBADKPpVHG8BEG",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "4iuM5WSaSmxLJNKREvwYhp",
+          "span_id": "SYEgG8JP28zYrNrZXZAGyF",
+          "timestamp": "2026-09-24T23:27:24.088914+00:00",
+          "working_start": 0.043882927973754704,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "address:1007",
+            "explanation": "address:1007",
+            "history": []
+          },
+          "target": "address:1007",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "59vJLqjdcfwjYCRS6FNPdr",
+          "span_id": "SYEgG8JP28zYrNrZXZAGyF",
+          "timestamp": "2026-09-24T23:27:24.089058+00:00",
+          "working_start": 0.044027349911630154,
+          "event": "span_end",
+          "id": "SYEgG8JP28zYrNrZXZAGyF"
+        },
+        {
+          "uuid": "hzXKZLqTwQGubCQFRF6BiM",
+          "span_id": "7K4BUquhxqupGyGK42KZfi",
+          "timestamp": "2026-09-24T23:27:24.089222+00:00",
+          "working_start": 0.04419102193787694,
+          "event": "span_begin",
+          "id": "7K4BUquhxqupGyGK42KZfi",
+          "parent_id": "YK9b3EyVVBADKPpVHG8BEG",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "k6VzVQ7S3atRr7NB73hENS",
+          "span_id": "7K4BUquhxqupGyGK42KZfi",
+          "timestamp": "2026-09-24T23:27:24.089358+00:00",
+          "working_start": 0.044327552895992994,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "address:1007",
+            "explanation": "address:1007",
+            "history": []
+          },
+          "target": "address:1007",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "57cwuiUiaYSKhTX3FWXqrg",
+          "span_id": "7K4BUquhxqupGyGK42KZfi",
+          "timestamp": "2026-09-24T23:27:24.089534+00:00",
+          "working_start": 0.044503606972284615,
+          "event": "span_end",
+          "id": "7K4BUquhxqupGyGK42KZfi"
+        },
+        {
+          "uuid": "cpGDvwDswRU5iyoAjqcXwY",
+          "span_id": "YK9b3EyVVBADKPpVHG8BEG",
+          "timestamp": "2026-09-24T23:27:24.089710+00:00",
+          "working_start": 0.04467994999140501,
+          "event": "span_end",
+          "id": "YK9b3EyVVBADKPpVHG8BEG"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.045033+00:00",
+      "completed_at": "2026-09-24T23:27:24.101638+00:00",
+      "total_time": 0.057,
+      "working_time": 0.057,
+      "uuid": "ksV6dWHWPEYBdDnfv7RA4b",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "cancel-pending",
+      "epoch": 2,
+      "input": "Cancel order 1006",
+      "target": "cancel:1006",
+      "messages": [
+        {
+          "id": "k3YiMiCGZi9vvgrTPLqgkj",
+          "content": "Cancel order 1006",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "cancel:1006"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "oHhV7Z9qdTvD3DcVYrE6RG",
+          "span_id": "7fZDTosVeKk6mxcXznzrsi",
+          "timestamp": "2026-09-24T23:27:24.042348+00:00",
+          "working_start": 1003681.94971139,
+          "event": "span_begin",
+          "id": "7fZDTosVeKk6mxcXznzrsi",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "P6UVhnMYHevQGyCu6ounYG",
+          "span_id": "7fZDTosVeKk6mxcXznzrsi",
+          "timestamp": "2026-09-24T23:27:24.042946+00:00",
+          "working_start": 1003681.950309597,
+          "event": "sample_init",
+          "sample": {
+            "input": "Cancel order 1006",
+            "target": "cancel:1006",
+            "id": "cancel-pending"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "k3YiMiCGZi9vvgrTPLqgkj",
+                "content": "Cancel order 1006",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "bhNEUMRrfNv6gWDwRcsVKQ",
+          "span_id": "7fZDTosVeKk6mxcXznzrsi",
+          "timestamp": "2026-09-24T23:27:24.043224+00:00",
+          "working_start": 1003681.950587579,
+          "event": "span_end",
+          "id": "7fZDTosVeKk6mxcXznzrsi"
+        },
+        {
+          "uuid": "2EgRPf6ZMGLm6RsTSiscMt",
+          "span_id": "6rbYf5WrfTkEkzYk7gEGeW",
+          "timestamp": "2026-09-24T23:27:24.061886+00:00",
+          "working_start": 0.01846810895949602,
+          "event": "span_begin",
+          "id": "6rbYf5WrfTkEkzYk7gEGeW",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "BrZs8WYMsq7bwZe78snYxf",
+          "span_id": "KAhTxJHXTxvy5hVNXBvpSg",
+          "timestamp": "2026-09-24T23:27:24.062158+00:00",
+          "working_start": 0.01874056993983686,
+          "event": "span_begin",
+          "id": "KAhTxJHXTxvy5hVNXBvpSg",
+          "parent_id": "6rbYf5WrfTkEkzYk7gEGeW",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "HjTcNL2bMKvfn3EXf4QkPi",
+          "span_id": "KAhTxJHXTxvy5hVNXBvpSg",
+          "timestamp": "2026-09-24T23:27:24.062404+00:00",
+          "working_start": 0.018985759001225233,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "cancel:1006",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "fhMh2mLB7M7U7mbFVAmj7r",
+          "span_id": "KAhTxJHXTxvy5hVNXBvpSg",
+          "timestamp": "2026-09-24T23:27:24.062567+00:00",
+          "working_start": 0.019148901919834316,
+          "event": "span_end",
+          "id": "KAhTxJHXTxvy5hVNXBvpSg"
+        },
+        {
+          "uuid": "TDhp3yKy48tJen85fUEDPi",
+          "span_id": "6rbYf5WrfTkEkzYk7gEGeW",
+          "timestamp": "2026-09-24T23:27:24.062779+00:00",
+          "working_start": 0.01936113799456507,
+          "event": "span_end",
+          "id": "6rbYf5WrfTkEkzYk7gEGeW"
+        },
+        {
+          "uuid": "E4pMrrM8yzrfk3opJ5yyxj",
+          "span_id": "49xuUXbkUZbTvvFgTj8DR3",
+          "timestamp": "2026-09-24T23:27:24.087242+00:00",
+          "working_start": 0.04382418398745358,
+          "event": "span_begin",
+          "id": "49xuUXbkUZbTvvFgTj8DR3",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "edsFdJAZ7zKCBVZiLfVKS8",
+          "span_id": "XZbM4QHNFy7KasbiFFyY4j",
+          "timestamp": "2026-09-24T23:27:24.087400+00:00",
+          "working_start": 0.043981565977446735,
+          "event": "span_begin",
+          "id": "XZbM4QHNFy7KasbiFFyY4j",
+          "parent_id": "49xuUXbkUZbTvvFgTj8DR3",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "LiZAQX3itKbm2bR63BaXPc",
+          "span_id": "XZbM4QHNFy7KasbiFFyY4j",
+          "timestamp": "2026-09-24T23:27:24.087540+00:00",
+          "working_start": 0.04412194690667093,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "cancel:1006",
+            "explanation": "cancel:1006",
+            "history": []
+          },
+          "target": "cancel:1006",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "GAYoowuwyiww6WtLwUvQRw",
+          "span_id": "XZbM4QHNFy7KasbiFFyY4j",
+          "timestamp": "2026-09-24T23:27:24.087748+00:00",
+          "working_start": 0.04433022392913699,
+          "event": "span_end",
+          "id": "XZbM4QHNFy7KasbiFFyY4j"
+        },
+        {
+          "uuid": "7emnhaZanEkq6XEZvUsYtA",
+          "span_id": "SEKEUPsSYu29UP5s2QRcEi",
+          "timestamp": "2026-09-24T23:27:24.087898+00:00",
+          "working_start": 0.044480214943178,
+          "event": "span_begin",
+          "id": "SEKEUPsSYu29UP5s2QRcEi",
+          "parent_id": "49xuUXbkUZbTvvFgTj8DR3",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "SSxBUbepmHDMtpvUjJFD79",
+          "span_id": "SEKEUPsSYu29UP5s2QRcEi",
+          "timestamp": "2026-09-24T23:27:24.088035+00:00",
+          "working_start": 0.044616865925490856,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "cancel:1006",
+            "explanation": "cancel:1006",
+            "history": []
+          },
+          "target": "cancel:1006",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "HcvXQnwpyHwMWGFFPWBkjg",
+          "span_id": "SEKEUPsSYu29UP5s2QRcEi",
+          "timestamp": "2026-09-24T23:27:24.088183+00:00",
+          "working_start": 0.04476503690239042,
+          "event": "span_end",
+          "id": "SEKEUPsSYu29UP5s2QRcEi"
+        },
+        {
+          "uuid": "FNR63H6ybJj5URDePsmyBe",
+          "span_id": "49xuUXbkUZbTvvFgTj8DR3",
+          "timestamp": "2026-09-24T23:27:24.088333+00:00",
+          "working_start": 0.044915188918821514,
+          "event": "span_end",
+          "id": "49xuUXbkUZbTvvFgTj8DR3"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.043420+00:00",
+      "completed_at": "2026-09-24T23:27:24.100842+00:00",
+      "total_time": 0.057,
+      "working_time": 0.057,
+      "uuid": "HNUnmyPWjrXdGK4Q3eiLLY",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "cancel-shipped",
+      "epoch": 2,
+      "input": "Cancel order 1005",
+      "target": "reject:1005",
+      "messages": [
+        {
+          "id": "EtqBtiNBfr8ms2kfqLoYhM",
+          "content": "Cancel order 1005",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "cancel:1005"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "nkPUUg7fVeZyaNgQ9XHDR7",
+          "span_id": "iQDxcAojY5ZGyLMf7QErYT",
+          "timestamp": "2026-09-24T23:27:24.040447+00:00",
+          "working_start": 1003681.947810562,
+          "event": "span_begin",
+          "id": "iQDxcAojY5ZGyLMf7QErYT",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "cScFFNPoz6itLxAzmcm7u7",
+          "span_id": "iQDxcAojY5ZGyLMf7QErYT",
+          "timestamp": "2026-09-24T23:27:24.041078+00:00",
+          "working_start": 1003681.948441902,
+          "event": "sample_init",
+          "sample": {
+            "input": "Cancel order 1005",
+            "target": "reject:1005",
+            "id": "cancel-shipped"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "EtqBtiNBfr8ms2kfqLoYhM",
+                "content": "Cancel order 1005",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "5BMhPt9pLTcFznQ25sgBu9",
+          "span_id": "iQDxcAojY5ZGyLMf7QErYT",
+          "timestamp": "2026-09-24T23:27:24.041353+00:00",
+          "working_start": 1003681.948716673,
+          "event": "span_end",
+          "id": "iQDxcAojY5ZGyLMf7QErYT"
+        },
+        {
+          "uuid": "3BxkN6A7JMcZfFQq8i4ngw",
+          "span_id": "8bBXDAXbpV8uec5gTkxh2g",
+          "timestamp": "2026-09-24T23:27:24.060699+00:00",
+          "working_start": 0.019140610937029123,
+          "event": "span_begin",
+          "id": "8bBXDAXbpV8uec5gTkxh2g",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "KnP3VGKuaX2REePdvH4ipU",
+          "span_id": "2SjKX5MsY2a2S7KxRyX9Xp",
+          "timestamp": "2026-09-24T23:27:24.060880+00:00",
+          "working_start": 0.01932212500832975,
+          "event": "span_begin",
+          "id": "2SjKX5MsY2a2S7KxRyX9Xp",
+          "parent_id": "8bBXDAXbpV8uec5gTkxh2g",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "Qs8DnodBC6TG59KRVzhd45",
+          "span_id": "2SjKX5MsY2a2S7KxRyX9Xp",
+          "timestamp": "2026-09-24T23:27:24.061139+00:00",
+          "working_start": 0.01958128495607525,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "cancel:1005",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "GNta56JhvTG3eiw4KZz5Lg",
+          "span_id": "2SjKX5MsY2a2S7KxRyX9Xp",
+          "timestamp": "2026-09-24T23:27:24.061385+00:00",
+          "working_start": 0.019827454932965338,
+          "event": "span_end",
+          "id": "2SjKX5MsY2a2S7KxRyX9Xp"
+        },
+        {
+          "uuid": "cq7xykLVWWp8GaCDivUPpS",
+          "span_id": "8bBXDAXbpV8uec5gTkxh2g",
+          "timestamp": "2026-09-24T23:27:24.061584+00:00",
+          "working_start": 0.020025930018164217,
+          "event": "span_end",
+          "id": "8bBXDAXbpV8uec5gTkxh2g"
+        },
+        {
+          "uuid": "Vuyo4Gj8Q2RYQXvCo7oJHi",
+          "span_id": "b3WzU55CfawFsbczDWF8mw",
+          "timestamp": "2026-09-24T23:27:24.085912+00:00",
+          "working_start": 0.04435428592842072,
+          "event": "span_begin",
+          "id": "b3WzU55CfawFsbczDWF8mw",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "X6qnAmiYBQ23dMYzW3MDoi",
+          "span_id": "WPAoFytannus5c3yugxJZY",
+          "timestamp": "2026-09-24T23:27:24.086068+00:00",
+          "working_start": 0.04450979793909937,
+          "event": "span_begin",
+          "id": "WPAoFytannus5c3yugxJZY",
+          "parent_id": "b3WzU55CfawFsbczDWF8mw",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "MzUesyWg2ZNvXmRFakMTkd",
+          "span_id": "WPAoFytannus5c3yugxJZY",
+          "timestamp": "2026-09-24T23:27:24.086210+00:00",
+          "working_start": 0.04465198901016265,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "cancel:1005",
+            "explanation": "cancel:1005",
+            "history": []
+          },
+          "target": "reject:1005",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "2GVqWQnSGDw6RpeMqZiyKW",
+          "span_id": "WPAoFytannus5c3yugxJZY",
+          "timestamp": "2026-09-24T23:27:24.086356+00:00",
+          "working_start": 0.04479796998202801,
+          "event": "span_end",
+          "id": "WPAoFytannus5c3yugxJZY"
+        },
+        {
+          "uuid": "9tzrnztm4Y5FtfyTW6evCr",
+          "span_id": "DmMGuoQst6Xua4x8VymHai",
+          "timestamp": "2026-09-24T23:27:24.086503+00:00",
+          "working_start": 0.044944701017811894,
+          "event": "span_begin",
+          "id": "DmMGuoQst6Xua4x8VymHai",
+          "parent_id": "b3WzU55CfawFsbczDWF8mw",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "Sr4Y7FCruwscn7rBVfCdC9",
+          "span_id": "DmMGuoQst6Xua4x8VymHai",
+          "timestamp": "2026-09-24T23:27:24.086671+00:00",
+          "working_start": 0.04511291498783976,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "cancel:1005",
+            "explanation": "cancel:1005",
+            "history": []
+          },
+          "target": "reject:1005",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "Td4uPyPYdK7Hgq2mj8YzQg",
+          "span_id": "DmMGuoQst6Xua4x8VymHai",
+          "timestamp": "2026-09-24T23:27:24.086836+00:00",
+          "working_start": 0.04527769796550274,
+          "event": "span_end",
+          "id": "DmMGuoQst6Xua4x8VymHai"
+        },
+        {
+          "uuid": "jwsyMwvjRTDwNs5oSH9w6p",
+          "span_id": "b3WzU55CfawFsbczDWF8mw",
+          "timestamp": "2026-09-24T23:27:24.086982+00:00",
+          "working_start": 0.0454237189842388,
+          "event": "span_end",
+          "id": "b3WzU55CfawFsbczDWF8mw"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.041560+00:00",
+      "completed_at": "2026-09-24T23:27:24.100136+00:00",
+      "total_time": 0.059,
+      "working_time": 0.059,
+      "uuid": "oMUQWRvpiii3xxB48yQeCn",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-duplicate",
+      "epoch": 2,
+      "input": "Refund order 1003 again",
+      "target": "reject:1003",
+      "messages": [
+        {
+          "id": "46mmPHVtvUKTtkAAsCPuLM",
+          "content": "Refund order 1003 again",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "reject:1003"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "C5RmiTx4zNdVLo9fePwzG3",
+          "span_id": "AcZa8Ut3ufZzamZg6CZ42u",
+          "timestamp": "2026-09-24T23:27:24.034763+00:00",
+          "working_start": 1003681.942125939,
+          "event": "span_begin",
+          "id": "AcZa8Ut3ufZzamZg6CZ42u",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "gb2V4EmUrWyvDKRHDfCbDf",
+          "span_id": "AcZa8Ut3ufZzamZg6CZ42u",
+          "timestamp": "2026-09-24T23:27:24.035398+00:00",
+          "working_start": 1003681.942762339,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1003 again",
+            "target": "reject:1003",
+            "id": "refund-duplicate"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "46mmPHVtvUKTtkAAsCPuLM",
+                "content": "Refund order 1003 again",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "QZFRWnRpUZFg4LQdhxP23R",
+          "span_id": "AcZa8Ut3ufZzamZg6CZ42u",
+          "timestamp": "2026-09-24T23:27:24.035714+00:00",
+          "working_start": 1003681.943077764,
+          "event": "span_end",
+          "id": "AcZa8Ut3ufZzamZg6CZ42u"
+        },
+        {
+          "uuid": "ekXCGQabtRPkk3HzceaitE",
+          "span_id": "TetTyqCJkjCXRHMpSMoni4",
+          "timestamp": "2026-09-24T23:27:24.057543+00:00",
+          "working_start": 0.02159235207363963,
+          "event": "span_begin",
+          "id": "TetTyqCJkjCXRHMpSMoni4",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "ephsBiWXAqioANTySZZJqo",
+          "span_id": "6LgjoDhcpaQjQiwaT8YHqn",
+          "timestamp": "2026-09-24T23:27:24.057748+00:00",
+          "working_start": 0.021798318019136786,
+          "event": "span_begin",
+          "id": "6LgjoDhcpaQjQiwaT8YHqn",
+          "parent_id": "TetTyqCJkjCXRHMpSMoni4",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "d86j8xqygzAFWZD3mZAyE5",
+          "span_id": "6LgjoDhcpaQjQiwaT8YHqn",
+          "timestamp": "2026-09-24T23:27:24.057988+00:00",
+          "working_start": 0.022037987015210092,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "reject:1003",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "fTkFB9rgwuBXWV5g42CD6Q",
+          "span_id": "6LgjoDhcpaQjQiwaT8YHqn",
+          "timestamp": "2026-09-24T23:27:24.058148+00:00",
+          "working_start": 0.022197639103978872,
+          "event": "span_end",
+          "id": "6LgjoDhcpaQjQiwaT8YHqn"
+        },
+        {
+          "uuid": "BkupSoZME8MAqySMRK3mgH",
+          "span_id": "TetTyqCJkjCXRHMpSMoni4",
+          "timestamp": "2026-09-24T23:27:24.058307+00:00",
+          "working_start": 0.022356712026521564,
+          "event": "span_end",
+          "id": "TetTyqCJkjCXRHMpSMoni4"
+        },
+        {
+          "uuid": "YfEPYU4frY8gK9ubqQEAxv",
+          "span_id": "DyNqQrKrchAZj8rrWsUmBe",
+          "timestamp": "2026-09-24T23:27:24.081077+00:00",
+          "working_start": 0.04512744606472552,
+          "event": "span_begin",
+          "id": "DyNqQrKrchAZj8rrWsUmBe",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "StkaZLmdZMnp3pEgPdY7RR",
+          "span_id": "8CoToeFpdQNswkcZ2to4sK",
+          "timestamp": "2026-09-24T23:27:24.081297+00:00",
+          "working_start": 0.04534726310521364,
+          "event": "span_begin",
+          "id": "8CoToeFpdQNswkcZ2to4sK",
+          "parent_id": "DyNqQrKrchAZj8rrWsUmBe",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "5nFBARKMLvUoLZ4oM8Lqaz",
+          "span_id": "8CoToeFpdQNswkcZ2to4sK",
+          "timestamp": "2026-09-24T23:27:24.081479+00:00",
+          "working_start": 0.0455298270098865,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "reject:1003",
+            "explanation": "reject:1003",
+            "history": []
+          },
+          "target": "reject:1003",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "jbnMDKQ6LswSmqr63ifSp6",
+          "span_id": "8CoToeFpdQNswkcZ2to4sK",
+          "timestamp": "2026-09-24T23:27:24.081686+00:00",
+          "working_start": 0.04573699308093637,
+          "event": "span_end",
+          "id": "8CoToeFpdQNswkcZ2to4sK"
+        },
+        {
+          "uuid": "Jvf5cpFzyUHdyHGUFUnxUt",
+          "span_id": "SMvVo4CDTUxYvUJ589uYBw",
+          "timestamp": "2026-09-24T23:27:24.081876+00:00",
+          "working_start": 0.045926088001579046,
+          "event": "span_begin",
+          "id": "SMvVo4CDTUxYvUJ589uYBw",
+          "parent_id": "DyNqQrKrchAZj8rrWsUmBe",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "Naq5hZNNy3Ls29dGQBwjT4",
+          "span_id": "SMvVo4CDTUxYvUJ589uYBw",
+          "timestamp": "2026-09-24T23:27:24.082054+00:00",
+          "working_start": 0.046103812055662274,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "reject:1003",
+            "explanation": "reject:1003",
+            "history": []
+          },
+          "target": "reject:1003",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "PrPztwdKyeYNss97adZ3Rk",
+          "span_id": "SMvVo4CDTUxYvUJ589uYBw",
+          "timestamp": "2026-09-24T23:27:24.082245+00:00",
+          "working_start": 0.0462945670587942,
+          "event": "span_end",
+          "id": "SMvVo4CDTUxYvUJ589uYBw"
+        },
+        {
+          "uuid": "Kh4Nnh3j9neGuHBhWcapPv",
+          "span_id": "DyNqQrKrchAZj8rrWsUmBe",
+          "timestamp": "2026-09-24T23:27:24.082428+00:00",
+          "working_start": 0.046478691045194864,
+          "event": "span_end",
+          "id": "DyNqQrKrchAZj8rrWsUmBe"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.035952+00:00",
+      "completed_at": "2026-09-24T23:27:24.098031+00:00",
+      "total_time": 0.062,
+      "working_time": 0.062,
+      "uuid": "3Bu3K6qNw7vJbPbhwqQyC4",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-large",
+      "epoch": 2,
+      "input": "Refund order 1002 for $900",
+      "target": "escalate:1002",
+      "messages": [
+        {
+          "id": "QJSxSoGS8Lkd4g5VRjMjpy",
+          "content": "Refund order 1002 for $900",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "refund:1002:900"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "i9RqVfVPpJBQ3ZrAak6vCL",
+          "span_id": "jF2cijVYqctF5RCfXmFeMd",
+          "timestamp": "2026-09-24T23:27:24.032788+00:00",
+          "working_start": 1003681.940151436,
+          "event": "span_begin",
+          "id": "jF2cijVYqctF5RCfXmFeMd",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "crLZRvkSzBZNMHZgND7Jhw",
+          "span_id": "jF2cijVYqctF5RCfXmFeMd",
+          "timestamp": "2026-09-24T23:27:24.033381+00:00",
+          "working_start": 1003681.940745092,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1002 for $900",
+            "target": "escalate:1002",
+            "id": "refund-large"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "QJSxSoGS8Lkd4g5VRjMjpy",
+                "content": "Refund order 1002 for $900",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "X9JXSiC6TPoDnzb5dBCycy",
+          "span_id": "jF2cijVYqctF5RCfXmFeMd",
+          "timestamp": "2026-09-24T23:27:24.033691+00:00",
+          "working_start": 1003681.941055246,
+          "event": "span_end",
+          "id": "jF2cijVYqctF5RCfXmFeMd"
+        },
+        {
+          "uuid": "5MwYtVuoQcayJuXrDUK3JZ",
+          "span_id": "kTueXKB8bWdaKu7evNtaKj",
+          "timestamp": "2026-09-24T23:27:24.056476+00:00",
+          "working_start": 0.022561748046427965,
+          "event": "span_begin",
+          "id": "kTueXKB8bWdaKu7evNtaKj",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "h5db3goHZTAMxC8NQrfieX",
+          "span_id": "FkPmaxvg4SaFmue6GRLXkS",
+          "timestamp": "2026-09-24T23:27:24.056678+00:00",
+          "working_start": 0.02276347402948886,
+          "event": "span_begin",
+          "id": "FkPmaxvg4SaFmue6GRLXkS",
+          "parent_id": "kTueXKB8bWdaKu7evNtaKj",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "T2PFRSWyTb58upGGyD3mUy",
+          "span_id": "FkPmaxvg4SaFmue6GRLXkS",
+          "timestamp": "2026-09-24T23:27:24.056959+00:00",
+          "working_start": 0.023045195965096354,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "refund:1002:900",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "dxM8ApUkcTYLZ6MuaB7B9K",
+          "span_id": "FkPmaxvg4SaFmue6GRLXkS",
+          "timestamp": "2026-09-24T23:27:24.057127+00:00",
+          "working_start": 0.023212098982185125,
+          "event": "span_end",
+          "id": "FkPmaxvg4SaFmue6GRLXkS"
+        },
+        {
+          "uuid": "J7o3acfHj4nU3rfWzAZ4Eo",
+          "span_id": "kTueXKB8bWdaKu7evNtaKj",
+          "timestamp": "2026-09-24T23:27:24.057292+00:00",
+          "working_start": 0.023377211997285485,
+          "event": "span_end",
+          "id": "kTueXKB8bWdaKu7evNtaKj"
+        },
+        {
+          "uuid": "Hc7PJK7ETrJAWNRzHFfgpc",
+          "span_id": "X4dKd3c7Mujgco6L7os92p",
+          "timestamp": "2026-09-24T23:27:24.079432+00:00",
+          "working_start": 0.04551865695975721,
+          "event": "span_begin",
+          "id": "X4dKd3c7Mujgco6L7os92p",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "R6W6wKneG5Qk7s4xkUTqKP",
+          "span_id": "5kdcAFyQhfBZETmwp5BY27",
+          "timestamp": "2026-09-24T23:27:24.079625+00:00",
+          "working_start": 0.04571038205176592,
+          "event": "span_begin",
+          "id": "5kdcAFyQhfBZETmwp5BY27",
+          "parent_id": "X4dKd3c7Mujgco6L7os92p",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "RByd3RRVFtsnsoZgMYXTbp",
+          "span_id": "5kdcAFyQhfBZETmwp5BY27",
+          "timestamp": "2026-09-24T23:27:24.079838+00:00",
+          "working_start": 0.04592340800445527,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "refund:1002:900",
+            "explanation": "refund:1002:900",
+            "history": []
+          },
+          "target": "escalate:1002",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "NQmGW2AWwzoKi34oh2UZZL",
+          "span_id": "5kdcAFyQhfBZETmwp5BY27",
+          "timestamp": "2026-09-24T23:27:24.080028+00:00",
+          "working_start": 0.04611414298415184,
+          "event": "span_end",
+          "id": "5kdcAFyQhfBZETmwp5BY27"
+        },
+        {
+          "uuid": "LYtCZ4vEes9AqvqVbTB5bX",
+          "span_id": "JJtAsiz3nUyyciiYWA7rR8",
+          "timestamp": "2026-09-24T23:27:24.080215+00:00",
+          "working_start": 0.04630100796930492,
+          "event": "span_begin",
+          "id": "JJtAsiz3nUyyciiYWA7rR8",
+          "parent_id": "X4dKd3c7Mujgco6L7os92p",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "eLJioCXnPjoAzim3CTpgGi",
+          "span_id": "JJtAsiz3nUyyciiYWA7rR8",
+          "timestamp": "2026-09-24T23:27:24.080391+00:00",
+          "working_start": 0.046477350988425314,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "refund:1002:900",
+            "explanation": "refund:1002:900",
+            "history": []
+          },
+          "target": "escalate:1002",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "CdZPoVRmwYG7WfgL4kFCfn",
+          "span_id": "JJtAsiz3nUyyciiYWA7rR8",
+          "timestamp": "2026-09-24T23:27:24.080577+00:00",
+          "working_start": 0.0466634159674868,
+          "event": "span_end",
+          "id": "JJtAsiz3nUyyciiYWA7rR8"
+        },
+        {
+          "uuid": "FKDoiUfNPn7YBVoQ54UwZ3",
+          "span_id": "X4dKd3c7Mujgco6L7os92p",
+          "timestamp": "2026-09-24T23:27:24.080781+00:00",
+          "working_start": 0.046867161989212036,
+          "event": "span_end",
+          "id": "X4dKd3c7Mujgco6L7os92p"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.033917+00:00",
+      "completed_at": "2026-09-24T23:27:24.097286+00:00",
+      "total_time": 0.063,
+      "working_time": 0.063,
+      "uuid": "9xABT5WmcQc47NkYcwpAu3",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "refund-small",
+      "epoch": 2,
+      "input": "Refund order 1001 for $12",
+      "target": "refund:1001:12",
+      "messages": [
+        {
+          "id": "D8FaeFSyfEj8zxyiaFPzTK",
+          "content": "Refund order 1001 for $12",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "refund:1001:12"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "K8Vt2BH84wkDYAyGtTiuo9",
+          "span_id": "9U2kK9hGEqdVQuyTsNit4f",
+          "timestamp": "2026-09-24T23:27:24.030991+00:00",
+          "working_start": 1003681.938354156,
+          "event": "span_begin",
+          "id": "9U2kK9hGEqdVQuyTsNit4f",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "gFWqdN9AQo8RYC8RBuycum",
+          "span_id": "9U2kK9hGEqdVQuyTsNit4f",
+          "timestamp": "2026-09-24T23:27:24.031532+00:00",
+          "working_start": 1003681.938896458,
+          "event": "sample_init",
+          "sample": {
+            "input": "Refund order 1001 for $12",
+            "target": "refund:1001:12",
+            "id": "refund-small"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "D8FaeFSyfEj8zxyiaFPzTK",
+                "content": "Refund order 1001 for $12",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "gG6XVECmd6XsVYkgVcznD2",
+          "span_id": "9U2kK9hGEqdVQuyTsNit4f",
+          "timestamp": "2026-09-24T23:27:24.031822+00:00",
+          "working_start": 1003681.93918592,
+          "event": "span_end",
+          "id": "9U2kK9hGEqdVQuyTsNit4f"
+        },
+        {
+          "uuid": "cyURwk4d6qjgeakNS3QS3G",
+          "span_id": "JapvoNRN97jRXP58GVNheu",
+          "timestamp": "2026-09-24T23:27:24.055263+00:00",
+          "working_start": 0.02325056109111756,
+          "event": "span_begin",
+          "id": "JapvoNRN97jRXP58GVNheu",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "KNiVC5ccHtzrQQt7UVSd2u",
+          "span_id": "YkoSqfyf2Jd2736oZtmS7x",
+          "timestamp": "2026-09-24T23:27:24.055517+00:00",
+          "working_start": 0.02350517106242478,
+          "event": "span_begin",
+          "id": "YkoSqfyf2Jd2736oZtmS7x",
+          "parent_id": "JapvoNRN97jRXP58GVNheu",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "X5BKZwXDqMeunyqQVpFRu6",
+          "span_id": "YkoSqfyf2Jd2736oZtmS7x",
+          "timestamp": "2026-09-24T23:27:24.055773+00:00",
+          "working_start": 0.02376121107954532,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "refund:1001:12",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "FZWNijDbcAWx6BMUUA4cAU",
+          "span_id": "YkoSqfyf2Jd2736oZtmS7x",
+          "timestamp": "2026-09-24T23:27:24.055962+00:00",
+          "working_start": 0.02395070600323379,
+          "event": "span_end",
+          "id": "YkoSqfyf2Jd2736oZtmS7x"
+        },
+        {
+          "uuid": "Jojb8K3Hzwvh2SpfJNFj2L",
+          "span_id": "JapvoNRN97jRXP58GVNheu",
+          "timestamp": "2026-09-24T23:27:24.056159+00:00",
+          "working_start": 0.02414776210207492,
+          "event": "span_end",
+          "id": "JapvoNRN97jRXP58GVNheu"
+        },
+        {
+          "uuid": "WtSAegufBsP4izFgBTqbfe",
+          "span_id": "VWwjxoqekip793MNc9x94P",
+          "timestamp": "2026-09-24T23:27:24.077765+00:00",
+          "working_start": 0.04575279506389052,
+          "event": "span_begin",
+          "id": "VWwjxoqekip793MNc9x94P",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "JSAXhobi3BkPCbe7ygdhzn",
+          "span_id": "Afzeu55V5PhJsHnBPhLd2i",
+          "timestamp": "2026-09-24T23:27:24.077933+00:00",
+          "working_start": 0.04592094803228974,
+          "event": "span_begin",
+          "id": "Afzeu55V5PhJsHnBPhLd2i",
+          "parent_id": "VWwjxoqekip793MNc9x94P",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "KowDKSjrRa6QakDeiojqW8",
+          "span_id": "Afzeu55V5PhJsHnBPhLd2i",
+          "timestamp": "2026-09-24T23:27:24.078108+00:00",
+          "working_start": 0.04609705205075443,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "refund:1001:12",
+            "explanation": "refund:1001:12",
+            "history": []
+          },
+          "target": "refund:1001:12",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "fQxwvn8C35fh9NjvRkmJY5",
+          "span_id": "Afzeu55V5PhJsHnBPhLd2i",
+          "timestamp": "2026-09-24T23:27:24.078315+00:00",
+          "working_start": 0.04630393802653998,
+          "event": "span_end",
+          "id": "Afzeu55V5PhJsHnBPhLd2i"
+        },
+        {
+          "uuid": "6f8RVKYXjU246fTLj8jkPs",
+          "span_id": "CsctCpnsf5ibiufYeFNNpw",
+          "timestamp": "2026-09-24T23:27:24.078524+00:00",
+          "working_start": 0.04651266406290233,
+          "event": "span_begin",
+          "id": "CsctCpnsf5ibiufYeFNNpw",
+          "parent_id": "VWwjxoqekip793MNc9x94P",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "oGh9cz6RRtW7KQyupqsPuX",
+          "span_id": "CsctCpnsf5ibiufYeFNNpw",
+          "timestamp": "2026-09-24T23:27:24.078747+00:00",
+          "working_start": 0.04673546110279858,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "refund:1001:12",
+            "explanation": "refund:1001:12",
+            "history": []
+          },
+          "target": "refund:1001:12",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "emKNd4PD3cy3hLMEUgZ7Hq",
+          "span_id": "CsctCpnsf5ibiufYeFNNpw",
+          "timestamp": "2026-09-24T23:27:24.078946+00:00",
+          "working_start": 0.04693394701462239,
+          "event": "span_end",
+          "id": "CsctCpnsf5ibiufYeFNNpw"
+        },
+        {
+          "uuid": "YmY4akVn9M6EaxxAbY7EAi",
+          "span_id": "VWwjxoqekip793MNc9x94P",
+          "timestamp": "2026-09-24T23:27:24.079126+00:00",
+          "working_start": 0.04711476108059287,
+          "event": "span_end",
+          "id": "VWwjxoqekip793MNc9x94P"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.032014+00:00",
+      "completed_at": "2026-09-24T23:27:24.096509+00:00",
+      "total_time": 0.064,
+      "working_time": 0.064,
+      "uuid": "oF6phq2r5h99wXcBMWUXXt",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "status-missing",
+      "epoch": 2,
+      "input": "What is the status of order 9999?",
+      "target": "status:9999:unknown",
+      "messages": [
+        {
+          "id": "gpDZVEQPtp7qyzRi6S48bs",
+          "content": "What is the status of order 9999?",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "status:9999:open"
+      },
+      "scores": {
+        "match": {
+          "value": "I",
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": []
+        },
+        "includes": {
+          "value": "I",
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "C8cx2QC37cRnNT5fohSpcZ",
+          "span_id": "bGyhrShamBzZqKrpMeJT25",
+          "timestamp": "2026-09-24T23:27:24.038538+00:00",
+          "working_start": 1003681.945901824,
+          "event": "span_begin",
+          "id": "bGyhrShamBzZqKrpMeJT25",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "o3vXL7y28B6VxhL2Y5eAAt",
+          "span_id": "bGyhrShamBzZqKrpMeJT25",
+          "timestamp": "2026-09-24T23:27:24.039139+00:00",
+          "working_start": 1003681.94650265,
+          "event": "sample_init",
+          "sample": {
+            "input": "What is the status of order 9999?",
+            "target": "status:9999:unknown",
+            "id": "status-missing"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "gpDZVEQPtp7qyzRi6S48bs",
+                "content": "What is the status of order 9999?",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "5egfPUVW4KG6peCBuW4zzu",
+          "span_id": "bGyhrShamBzZqKrpMeJT25",
+          "timestamp": "2026-09-24T23:27:24.039434+00:00",
+          "working_start": 1003681.946797383,
+          "event": "span_end",
+          "id": "bGyhrShamBzZqKrpMeJT25"
+        },
+        {
+          "uuid": "AGi8NDZV9sq2UvmZZViWsd",
+          "span_id": "kEEoc2ZtDKi4pmNEeZZcNW",
+          "timestamp": "2026-09-24T23:27:24.059671+00:00",
+          "working_start": 0.020009109051898122,
+          "event": "span_begin",
+          "id": "kEEoc2ZtDKi4pmNEeZZcNW",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "3Vw7CTNLuUzyzsswodXTJH",
+          "span_id": "Wde93awFrnzrPdGS8g7iZM",
+          "timestamp": "2026-09-24T23:27:24.059855+00:00",
+          "working_start": 0.020192743046209216,
+          "event": "span_begin",
+          "id": "Wde93awFrnzrPdGS8g7iZM",
+          "parent_id": "kEEoc2ZtDKi4pmNEeZZcNW",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "RH4gb9vkboBgpESLvz7x5r",
+          "span_id": "Wde93awFrnzrPdGS8g7iZM",
+          "timestamp": "2026-09-24T23:27:24.060086+00:00",
+          "working_start": 0.020424250978976488,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "status:9999:open",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "Nvgsx7fuHhFwZiqDFiabLB",
+          "span_id": "Wde93awFrnzrPdGS8g7iZM",
+          "timestamp": "2026-09-24T23:27:24.060246+00:00",
+          "working_start": 0.02058349398430437,
+          "event": "span_end",
+          "id": "Wde93awFrnzrPdGS8g7iZM"
+        },
+        {
+          "uuid": "NY5rFJbEhv3ptWxYawuaJz",
+          "span_id": "kEEoc2ZtDKi4pmNEeZZcNW",
+          "timestamp": "2026-09-24T23:27:24.060409+00:00",
+          "working_start": 0.020747456001117826,
+          "event": "span_end",
+          "id": "kEEoc2ZtDKi4pmNEeZZcNW"
+        },
+        {
+          "uuid": "SixY5NGKxPTKFghAsKdEw8",
+          "span_id": "XvPmTAoKCTzW8SPMFYhDrZ",
+          "timestamp": "2026-09-24T23:27:24.084412+00:00",
+          "working_start": 0.04475024598650634,
+          "event": "span_begin",
+          "id": "XvPmTAoKCTzW8SPMFYhDrZ",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "78SBEVLMrVEN9FFj6RBzKx",
+          "span_id": "ASzQkbSb9c7PuFn8ZtkixT",
+          "timestamp": "2026-09-24T23:27:24.084577+00:00",
+          "working_start": 0.04491478903219104,
+          "event": "span_begin",
+          "id": "ASzQkbSb9c7PuFn8ZtkixT",
+          "parent_id": "XvPmTAoKCTzW8SPMFYhDrZ",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "MqqZN8q9PtXfLCKxctQXk7",
+          "span_id": "ASzQkbSb9c7PuFn8ZtkixT",
+          "timestamp": "2026-09-24T23:27:24.084758+00:00",
+          "working_start": 0.045096243964508176,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "status:9999:open",
+            "explanation": "status:9999:open",
+            "history": []
+          },
+          "target": "status:9999:unknown",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "ad8fkQXgbt5e4ai5VmkyBs",
+          "span_id": "ASzQkbSb9c7PuFn8ZtkixT",
+          "timestamp": "2026-09-24T23:27:24.084916+00:00",
+          "working_start": 0.04525343596469611,
+          "event": "span_end",
+          "id": "ASzQkbSb9c7PuFn8ZtkixT"
+        },
+        {
+          "uuid": "cE9G8i4MFtGkMHDNhf4Qvz",
+          "span_id": "DKST7FZCxofEKxAMjwsDqD",
+          "timestamp": "2026-09-24T23:27:24.085164+00:00",
+          "working_start": 0.04550205497071147,
+          "event": "span_begin",
+          "id": "DKST7FZCxofEKxAMjwsDqD",
+          "parent_id": "XvPmTAoKCTzW8SPMFYhDrZ",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "VZQ6tBkj3HeszjTF8DjP6h",
+          "span_id": "DKST7FZCxofEKxAMjwsDqD",
+          "timestamp": "2026-09-24T23:27:24.085323+00:00",
+          "working_start": 0.045660836971364915,
+          "event": "score",
+          "score": {
+            "value": "I",
+            "answer": "status:9999:open",
+            "explanation": "status:9999:open",
+            "history": []
+          },
+          "target": "status:9999:unknown",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "aEGeQAL5DKFkxkWv3zpn3S",
+          "span_id": "DKST7FZCxofEKxAMjwsDqD",
+          "timestamp": "2026-09-24T23:27:24.085475+00:00",
+          "working_start": 0.04581268900074065,
+          "event": "span_end",
+          "id": "DKST7FZCxofEKxAMjwsDqD"
+        },
+        {
+          "uuid": "iY2he6qJQdhXRu8wyaTY2c",
+          "span_id": "XvPmTAoKCTzW8SPMFYhDrZ",
+          "timestamp": "2026-09-24T23:27:24.085626+00:00",
+          "working_start": 0.04596410098019987,
+          "event": "span_end",
+          "id": "XvPmTAoKCTzW8SPMFYhDrZ"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.039665+00:00",
+      "completed_at": "2026-09-24T23:27:24.099431+00:00",
+      "total_time": 0.06,
+      "working_time": 0.06,
+      "uuid": "9yQk2GjCiMGTGKC3RQeFHs",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    },
+    {
+      "id": "status-open",
+      "epoch": 2,
+      "input": "What is the status of order 1004?",
+      "target": "status:1004:open",
+      "messages": [
+        {
+          "id": "BAN6qvxFfe6ChukDzgBTNW",
+          "content": "What is the status of order 1004?",
+          "source": "input",
+          "role": "user"
+        }
+      ],
+      "output": {
+        "model": "mockllm/model",
+        "choices": [],
+        "completion": "status:1004:open"
+      },
+      "scores": {
+        "match": {
+          "value": "C",
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": []
+        },
+        "includes": {
+          "value": "C",
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": []
+        }
+      },
+      "metadata": {},
+      "store": {},
+      "events": [
+        {
+          "uuid": "hh69VaFrpk7S7f3QUPXPPq",
+          "span_id": "F5AfZbg59QoDUhw8N5zjc2",
+          "timestamp": "2026-09-24T23:27:24.036679+00:00",
+          "working_start": 1003681.944041979,
+          "event": "span_begin",
+          "id": "F5AfZbg59QoDUhw8N5zjc2",
+          "type": "init",
+          "name": "init"
+        },
+        {
+          "uuid": "8XVV5rvMXm8NjLWyEq3WHG",
+          "span_id": "F5AfZbg59QoDUhw8N5zjc2",
+          "timestamp": "2026-09-24T23:27:24.037260+00:00",
+          "working_start": 1003681.944623734,
+          "event": "sample_init",
+          "sample": {
+            "input": "What is the status of order 1004?",
+            "target": "status:1004:open",
+            "id": "status-open"
+          },
+          "state": {
+            "messages": [
+              {
+                "id": "BAN6qvxFfe6ChukDzgBTNW",
+                "content": "What is the status of order 1004?",
+                "source": "input",
+                "role": "user"
+              }
+            ],
+            "tools": [],
+            "tool_choice": null,
+            "store": {},
+            "output": {
+              "model": "mockllm/model",
+              "choices": [],
+              "completion": ""
+            },
+            "completed": false,
+            "metadata": {}
+          }
+        },
+        {
+          "uuid": "3AfriaWfaoiycEnESapxPH",
+          "span_id": "F5AfZbg59QoDUhw8N5zjc2",
+          "timestamp": "2026-09-24T23:27:24.037535+00:00",
+          "working_start": 1003681.944898695,
+          "event": "span_end",
+          "id": "F5AfZbg59QoDUhw8N5zjc2"
+        },
+        {
+          "uuid": "DGNVMPv2PK9fX97vkaRasZ",
+          "span_id": "bQb3ewv3BxbtcET37e4wan",
+          "timestamp": "2026-09-24T23:27:24.058558+00:00",
+          "working_start": 0.02079980995040387,
+          "event": "span_begin",
+          "id": "bQb3ewv3BxbtcET37e4wan",
+          "type": "solvers",
+          "name": "solvers"
+        },
+        {
+          "uuid": "jzZza4SxsmqwjNaARvdWsn",
+          "span_id": "o4A6PSwefJVnG9dgQm9zsu",
+          "timestamp": "2026-09-24T23:27:24.058768+00:00",
+          "working_start": 0.02100978698581457,
+          "event": "span_begin",
+          "id": "o4A6PSwefJVnG9dgQm9zsu",
+          "parent_id": "bQb3ewv3BxbtcET37e4wan",
+          "type": "solver",
+          "name": "scripted_agent"
+        },
+        {
+          "uuid": "BStFwnyHJqBjntvCYZudeo",
+          "span_id": "o4A6PSwefJVnG9dgQm9zsu",
+          "timestamp": "2026-09-24T23:27:24.059011+00:00",
+          "working_start": 0.02125278499443084,
+          "event": "state",
+          "changes": [
+            {
+              "op": "replace",
+              "path": "/output/completion",
+              "value": "status:1004:open",
+              "replaced": ""
+            }
+          ]
+        },
+        {
+          "uuid": "hdR5RytfLzyMhkm6DRoxQC",
+          "span_id": "o4A6PSwefJVnG9dgQm9zsu",
+          "timestamp": "2026-09-24T23:27:24.059211+00:00",
+          "working_start": 0.021453051012940705,
+          "event": "span_end",
+          "id": "o4A6PSwefJVnG9dgQm9zsu"
+        },
+        {
+          "uuid": "FeSk7foXBUzkEZsGiPFxBB",
+          "span_id": "bQb3ewv3BxbtcET37e4wan",
+          "timestamp": "2026-09-24T23:27:24.059395+00:00",
+          "working_start": 0.021636495017446578,
+          "event": "span_end",
+          "id": "bQb3ewv3BxbtcET37e4wan"
+        },
+        {
+          "uuid": "TTpC4R3VDiEfwWsusEVcH3",
+          "span_id": "CKAesmrQNHkeD7jGShfHaL",
+          "timestamp": "2026-09-24T23:27:24.082766+00:00",
+          "working_start": 0.045008076005615294,
+          "event": "span_begin",
+          "id": "CKAesmrQNHkeD7jGShfHaL",
+          "type": "scorers",
+          "name": "scorers"
+        },
+        {
+          "uuid": "nTmW3yjVHHk5KxRTF3ptBu",
+          "span_id": "HM9vERJXx2wApuuMVTwLPu",
+          "timestamp": "2026-09-24T23:27:24.082961+00:00",
+          "working_start": 0.04520311101805419,
+          "event": "span_begin",
+          "id": "HM9vERJXx2wApuuMVTwLPu",
+          "parent_id": "CKAesmrQNHkeD7jGShfHaL",
+          "type": "scorer",
+          "name": "match"
+        },
+        {
+          "uuid": "Nj4mfdnnvq4Kkwyq88WAiK",
+          "span_id": "HM9vERJXx2wApuuMVTwLPu",
+          "timestamp": "2026-09-24T23:27:24.083163+00:00",
+          "working_start": 0.045405806973576546,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "status:1004:open",
+            "explanation": "status:1004:open",
+            "history": []
+          },
+          "target": "status:1004:open",
+          "intermediate": false,
+          "scorer": "match",
+          "scorer_args": {
+            "location": "exact"
+          }
+        },
+        {
+          "uuid": "6Z7rHRaX7tA3YTBN28Fixw",
+          "span_id": "HM9vERJXx2wApuuMVTwLPu",
+          "timestamp": "2026-09-24T23:27:24.083347+00:00",
+          "working_start": 0.045589051907882094,
+          "event": "span_end",
+          "id": "HM9vERJXx2wApuuMVTwLPu"
+        },
+        {
+          "uuid": "QmDxd55rhhS9d2QDZkcMZq",
+          "span_id": "JrgxhFcebXYKQQbYMihJ7Y",
+          "timestamp": "2026-09-24T23:27:24.083544+00:00",
+          "working_start": 0.04578583699185401,
+          "event": "span_begin",
+          "id": "JrgxhFcebXYKQQbYMihJ7Y",
+          "parent_id": "CKAesmrQNHkeD7jGShfHaL",
+          "type": "scorer",
+          "name": "includes"
+        },
+        {
+          "uuid": "aizuhvr9XjEWQJRRM4AoMc",
+          "span_id": "JrgxhFcebXYKQQbYMihJ7Y",
+          "timestamp": "2026-09-24T23:27:24.083769+00:00",
+          "working_start": 0.046011513913981616,
+          "event": "score",
+          "score": {
+            "value": "C",
+            "answer": "status:1004:open",
+            "explanation": "status:1004:open",
+            "history": []
+          },
+          "target": "status:1004:open",
+          "intermediate": false,
+          "scorer": "includes",
+          "scorer_args": {}
+        },
+        {
+          "uuid": "6LvoucUSm5V3J9saBhhB9z",
+          "span_id": "JrgxhFcebXYKQQbYMihJ7Y",
+          "timestamp": "2026-09-24T23:27:24.083980+00:00",
+          "working_start": 0.04622231097891927,
+          "event": "span_end",
+          "id": "JrgxhFcebXYKQQbYMihJ7Y"
+        },
+        {
+          "uuid": "6y4gP6S7HjGJMWm4XMkFCi",
+          "span_id": "CKAesmrQNHkeD7jGShfHaL",
+          "timestamp": "2026-09-24T23:27:24.084158+00:00",
+          "working_start": 0.04639972501900047,
+          "event": "span_end",
+          "id": "CKAesmrQNHkeD7jGShfHaL"
+        }
+      ],
+      "model_usage": {},
+      "role_usage": {},
+      "started_at": "2026-09-24T23:27:24.037761+00:00",
+      "completed_at": "2026-09-24T23:27:24.098757+00:00",
+      "total_time": 0.061,
+      "working_time": 0.061,
+      "uuid": "Qk7fTd2GTvZ3CmC3GcdNpb",
+      "error_retries": [],
+      "attachments": {},
+      "events_data": {
+        "messages": [],
+        "calls": []
+      },
+      "turn_count": 0
+    }
+  ],
+  "reductions": [
+    {
+      "scorer": "match",
+      "samples": [
+        {
+          "value": 1.0,
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": [],
+          "sample_id": "refund-small"
+        },
+        {
+          "value": 0.0,
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": [],
+          "sample_id": "refund-large"
+        },
+        {
+          "value": 1.0,
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": [],
+          "sample_id": "refund-duplicate"
+        },
+        {
+          "value": 1.0,
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": [],
+          "sample_id": "status-open"
+        },
+        {
+          "value": 0.0,
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": [],
+          "sample_id": "status-missing"
+        },
+        {
+          "value": 0.0,
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": [],
+          "sample_id": "cancel-shipped"
+        },
+        {
+          "value": 1.0,
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": [],
+          "sample_id": "cancel-pending"
+        },
+        {
+          "value": 1.0,
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": [],
+          "sample_id": "address-change"
+        }
+      ]
+    },
+    {
+      "scorer": "includes",
+      "samples": [
+        {
+          "value": 1.0,
+          "answer": "refund:1001:12",
+          "explanation": "refund:1001:12",
+          "history": [],
+          "sample_id": "refund-small"
+        },
+        {
+          "value": 0.0,
+          "answer": "refund:1002:900",
+          "explanation": "refund:1002:900",
+          "history": [],
+          "sample_id": "refund-large"
+        },
+        {
+          "value": 1.0,
+          "answer": "reject:1003",
+          "explanation": "reject:1003",
+          "history": [],
+          "sample_id": "refund-duplicate"
+        },
+        {
+          "value": 1.0,
+          "answer": "status:1004:open",
+          "explanation": "status:1004:open",
+          "history": [],
+          "sample_id": "status-open"
+        },
+        {
+          "value": 0.0,
+          "answer": "status:9999:open",
+          "explanation": "status:9999:open",
+          "history": [],
+          "sample_id": "status-missing"
+        },
+        {
+          "value": 0.0,
+          "answer": "cancel:1005",
+          "explanation": "cancel:1005",
+          "history": [],
+          "sample_id": "cancel-shipped"
+        },
+        {
+          "value": 1.0,
+          "answer": "cancel:1006",
+          "explanation": "cancel:1006",
+          "history": [],
+          "sample_id": "cancel-pending"
+        },
+        {
+          "value": 1.0,
+          "answer": "address:1007",
+          "explanation": "address:1007",
+          "history": [],
+          "sample_id": "address-change"
+        }
+      ]
+    }
+  ]
+}

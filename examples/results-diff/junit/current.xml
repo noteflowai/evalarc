@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="1" tests="8" time="0.417" timestamp="2026-09-25T07:41:18.182620+08:00" hostname="redacted"><testcase classname="refund_checks" name="test_policy_outcome[refund-duplicate]" time="0.001"><failure message="AssertionError: assert 'already refunded' in 'Refund approved for order 1003.'">case = 'refund-duplicate'
+
+    @pytest.mark.parametrize("case", sorted(EXPECTED))
+    def test_policy_outcome(case):
+&gt;       assert EXPECTED[case] in REPLIES[REVISION][case]
+E       AssertionError: assert 'already refunded' in 'Refund approved for order 1003.'
+
+refund_checks.py:37: AssertionError</failure></testcase><testcase classname="refund_checks" name="test_policy_outcome[refund-large]" time="0.000" /><testcase classname="refund_checks" name="test_policy_outcome[refund-small]" time="0.000" /><testcase classname="refund_checks" name="test_policy_outcome[status-open]" time="0.000" /><testcase classname="refund_checks" name="test_names_the_order[refund-duplicate]" time="0.000" /><testcase classname="refund_checks" name="test_names_the_order[refund-large]" time="0.000" /><testcase classname="refund_checks" name="test_names_the_order[refund-small]" time="0.000" /><testcase classname="refund_checks" name="test_names_the_order[status-open]" time="0.000"><skipped type="pytest.skip" message="order lookup service unavailable">/tmp/evalarc-results-diff/junit/refund_checks.py:43: order lookup service unavailable</skipped></testcase></testsuite></testsuites>

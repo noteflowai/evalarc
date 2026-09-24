@@ -1,0 +1,773 @@
+{
+  "evalId": "eval-eHU-2026-09-24T23:31:35",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-09-24T23:31:35.917Z",
+    "prompts": [
+      {
+        "raw": "{% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+        "label": "current.txt: {% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+        "id": "d1783ef95d2d316a469bc6cf2f2ae5b39cc5c29736508d68af9eff36f84d8804",
+        "provider": "echo",
+        "metrics": {
+          "score": 3,
+          "testPassCount": 3,
+          "testFailCount": 1,
+          "testErrorCount": 0,
+          "assertPassCount": 5,
+          "assertFailCount": 2,
+          "totalLatencyMs": 15,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 4,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {},
+          "namedScoresCount": {},
+          "namedScoreWeights": {},
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "icontains",
+                "value": "refund approved"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "not-icontains",
+                "value": "escalate"
+              }
+            }
+          ]
+        },
+        "id": "373aa983-7d5e-4479-901e-47a3c12b07f1",
+        "latencyMs": 5,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Order 1001: refund approved for $12.",
+          "label": "current.txt: {% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+          "config": {}
+        },
+        "promptId": "d1783ef95d2d316a469bc6cf2f2ae5b39cc5c29736508d68af9eff36f84d8804",
+        "promptIdx": 0,
+        "provider": {
+          "id": "echo",
+          "label": ""
+        },
+        "response": {
+          "output": "Order 1001: refund approved for $12.",
+          "raw": "Order 1001: refund approved for $12.",
+          "cost": 0,
+          "cached": false,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "isRefusal": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "small refund is approved",
+          "vars": {
+            "order": "1001",
+            "amount": "12",
+            "kind": "small"
+          },
+          "assert": [
+            {
+              "type": "icontains",
+              "value": "refund approved"
+            },
+            {
+              "type": "not-icontains",
+              "value": "escalate"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "order": "1001",
+          "amount": "12",
+          "kind": "small"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "icontains",
+                "value": "escalate"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "not-icontains",
+                "value": "refund approved"
+              }
+            }
+          ]
+        },
+        "id": "c7e9a656-8060-4eb3-b9fd-260539dc7179",
+        "latencyMs": 4,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Order 1002: we will escalate this $900 request.",
+          "label": "current.txt: {% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+          "config": {}
+        },
+        "promptId": "d1783ef95d2d316a469bc6cf2f2ae5b39cc5c29736508d68af9eff36f84d8804",
+        "promptIdx": 0,
+        "provider": {
+          "id": "echo",
+          "label": ""
+        },
+        "response": {
+          "output": "Order 1002: we will escalate this $900 request.",
+          "raw": "Order 1002: we will escalate this $900 request.",
+          "cost": 0,
+          "cached": false,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "isRefusal": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "large refund is escalated",
+          "vars": {
+            "order": "1002",
+            "amount": "900",
+            "kind": "large"
+          },
+          "assert": [
+            {
+              "type": "icontains",
+              "value": "escalate"
+            },
+            {
+              "type": "not-icontains",
+              "value": "refund approved"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "order": "1002",
+          "amount": "900",
+          "kind": "large"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "error": "Expected output to not contain \"refund approved\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0,
+          "reason": "Expected output to not contain \"refund approved\"",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output to contain \"already refunded\"",
+              "assertion": {
+                "type": "icontains",
+                "value": "already refunded"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output to not contain \"refund approved\"",
+              "assertion": {
+                "type": "not-icontains",
+                "value": "refund approved"
+              }
+            }
+          ]
+        },
+        "id": "2f4a5b34-6009-4246-8f1f-0e228e008ce6",
+        "latencyMs": 3,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Order 1003: refund approved for $12.",
+          "label": "current.txt: {% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+          "config": {}
+        },
+        "promptId": "d1783ef95d2d316a469bc6cf2f2ae5b39cc5c29736508d68af9eff36f84d8804",
+        "promptIdx": 0,
+        "provider": {
+          "id": "echo",
+          "label": ""
+        },
+        "response": {
+          "output": "Order 1003: refund approved for $12.",
+          "raw": "Order 1003: refund approved for $12.",
+          "cost": 0,
+          "cached": false,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "isRefusal": false,
+          "metadata": {}
+        },
+        "score": 0,
+        "success": false,
+        "testCase": {
+          "description": "duplicate refund is rejected",
+          "vars": {
+            "order": "1003",
+            "amount": "12",
+            "kind": "duplicate"
+          },
+          "assert": [
+            {
+              "type": "icontains",
+              "value": "already refunded"
+            },
+            {
+              "type": "not-icontains",
+              "value": "refund approved"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "order": "1003",
+          "amount": "12",
+          "kind": "duplicate"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "output.includes(context.vars.order)"
+              }
+            }
+          ]
+        },
+        "id": "aa819f05-4dbe-472d-8c6b-0be90f2cc180",
+        "latencyMs": 3,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Order 1004: refund approved for $30.",
+          "label": "current.txt: {% if kind == \"large\" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}",
+          "config": {}
+        },
+        "promptId": "d1783ef95d2d316a469bc6cf2f2ae5b39cc5c29736508d68af9eff36f84d8804",
+        "promptIdx": 0,
+        "provider": {
+          "id": "echo",
+          "label": ""
+        },
+        "response": {
+          "output": "Order 1004: refund approved for $30.",
+          "raw": "Order 1004: refund approved for $30.",
+          "cost": 0,
+          "cached": false,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "isRefusal": false,
+          "metadata": {}
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "reply names the order",
+          "vars": {
+            "order": "1004",
+            "amount": "30",
+            "kind": "small"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "output.includes(context.vars.order)"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "order": "1004",
+          "amount": "30",
+          "kind": "small"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 3,
+      "failures": 1,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 4,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 64,
+      "evaluationDurationMs": 64
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "Refund policy replies",
+    "prompts": [
+      "current.txt"
+    ],
+    "providers": [
+      "echo"
+    ],
+    "tests": [
+      {
+        "description": "small refund is approved",
+        "vars": {
+          "order": "1001",
+          "amount": "12",
+          "kind": "small"
+        },
+        "assert": [
+          {
+            "type": "icontains",
+            "value": "refund approved"
+          },
+          {
+            "type": "not-icontains",
+            "value": "escalate"
+          }
+        ]
+      },
+      {
+        "description": "large refund is escalated",
+        "vars": {
+          "order": "1002",
+          "amount": "900",
+          "kind": "large"
+        },
+        "assert": [
+          {
+            "type": "icontains",
+            "value": "escalate"
+          },
+          {
+            "type": "not-icontains",
+            "value": "refund approved"
+          }
+        ]
+      },
+      {
+        "description": "duplicate refund is rejected",
+        "vars": {
+          "order": "1003",
+          "amount": "12",
+          "kind": "duplicate"
+        },
+        "assert": [
+          {
+            "type": "icontains",
+            "value": "already refunded"
+          },
+          {
+            "type": "not-icontains",
+            "value": "refund approved"
+          }
+        ]
+      },
+      {
+        "description": "reply names the order",
+        "vars": {
+          "order": "1004",
+          "amount": "30",
+          "kind": "small"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "output.includes(context.vars.order)"
+          }
+        ]
+      }
+    ],
+    "env": {},
+    "outputPath": [
+      "current.json"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {}
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.123.1",
+    "nodeVersion": "v22.23.3",
+    "platform": "linux",
+    "arch": "x64",
+    "exportedAt": "2026-09-24T23:31:36.066Z",
+    "evaluationCreatedAt": "2026-09-24T23:31:35.917Z"
+  },
+  "vars": [
+    "order",
+    "amount",
+    "kind"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "showProgressBar": false,
+    "repeat": 1,
+    "maxConcurrency": 4,
+    "cache": false
+  }
+}

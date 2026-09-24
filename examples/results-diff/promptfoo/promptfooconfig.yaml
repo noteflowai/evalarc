@@ -1,0 +1,34 @@
+# Deterministic promptfoo run: the echo provider returns the rendered prompt,
+# so each prompt file stands in for one revision of an agent's reply.
+description: Refund policy replies
+prompts:
+  - file://baseline.txt
+providers:
+  - echo
+tests:
+  - description: small refund is approved
+    vars: {order: "1001", amount: "12", kind: small}
+    assert:
+      - type: icontains
+        value: "refund approved"
+      - type: not-icontains
+        value: "escalate"
+  - description: large refund is escalated
+    vars: {order: "1002", amount: "900", kind: large}
+    assert:
+      - type: icontains
+        value: "escalate"
+      - type: not-icontains
+        value: "refund approved"
+  - description: duplicate refund is rejected
+    vars: {order: "1003", amount: "12", kind: duplicate}
+    assert:
+      - type: icontains
+        value: "already refunded"
+      - type: not-icontains
+        value: "refund approved"
+  - description: reply names the order
+    vars: {order: "1004", amount: "30", kind: small}
+    assert:
+      - type: javascript
+        value: output.includes(context.vars.order)

@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased
+
+### Results diff for existing evaluation tools
+
+- Add `evalarc diff BASELINE CURRENT` for Inspect AI logs (JSON, or `.eval`
+  on Python 3.14+), promptfoo `--output` JSON and JUnit XML. It pairs every
+  case and check across all recorded attempts and exits 1 when a check
+  regressed, became less reliable, became unassessed or was removed, even
+  when the headline score improved. `--output` writes `diff.json`,
+  `summary.md`, an offline `index.html` and hashed copies of both inputs;
+  `--markdown` appends the summary to a file such as `$GITHUB_STEP_SUMMARY`.
+- Add a composite GitHub Action (`action.yml`) that runs the diff, writes the
+  job summary, annotates blocking checks and exposes `gate-passed`,
+  `blocking-changes` and `report` outputs. CI exercises it on the recorded
+  examples.
+- Add recorded Inspect AI 0.3.268, promptfoo 0.123.1 and pytest 8.4.2 results
+  under `examples/results-diff/`, with the commands that produced them.
+  Previously `evalarc compare` accepted only EvalArc's own run format.
+
+### Packaging
+
+- Add a manually triggered workflow that republishes the verified GitHub
+  release wheel and sdist to TestPyPI or PyPI through trusted publishing,
+  after checking their digests against the release. It does not rebuild.
+- Describe the package, add classifiers and keywords, and link the first-use
+  guide and changelog from the project metadata.
+
 ## 0.13.1 — 2026-09-25
 
 The `evalarc` package and its CLI are unchanged from 0.13.0; this release
