@@ -4,8 +4,8 @@ title: "EvalArc: Auditable Evaluations for AI Agents"
 type: software
 authors:
   - name: EvalArc contributors
-version: 0.7.1
-date-released: 2026-09-14
+version: 0.13.1
+date-released: 2026-09-25
 license: MIT
 repository-code: "https://github.com/noteflowai/evalarc"
 url: "https://noteflowai.github.io/evalarc/"

@@ -19,6 +19,9 @@ EvalArc 把这次退步展开给你看，帮助判断分数提高是否满足发
   <img src="docs/assets/first-review.gif" alt="已记录案例的操作演示：分数提高，重试导致重复备注，严格验收规则拒绝结果。" width="960">
 </picture></a>
 
+EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已保存的运行结果，
+按明确的验收规则判定，并生成他人可从原始记录重新计算的报告。
+
 演示回放的是脚本对照在 Docker 中运行后保存的记录，无需安装、账号或模型密钥。
 研究预览 · MIT · Python 3.11+ · 本地流程使用 Linux · Python 包无第三方运行时依赖。
 
@@ -31,7 +34,7 @@ EvalArc 把这次退步展开给你看，帮助判断分数提高是否满足发
 3. **本地复算。** [首次复核指南](docs/first-review.zh-CN.md)使用发布的 wheel 和原始记录重建报告；
    复核退出 0 表示一致，对照退出 1 表示发现退步。
 
-在新的虚拟环境安装已发布的复核工具：
+在新的虚拟环境安装已发布的复核工具。EvalArc 未发布到 PyPI，以下命令安装固定 SHA-256 的 GitHub 发布版 wheel：
 
 ```bash
 python3 -m venv .venv

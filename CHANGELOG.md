@@ -1,6 +1,36 @@
 # Changelog
 
-## Publication verification — 2026-09-20
+## 0.13.1 — 2026-09-25
+
+The `evalarc` package and its CLI are unchanged from 0.13.0; this release
+publishes new experiment evidence, first-use documentation and stricter
+publication checks. Existing 0.13.0 installations need no upgrade to review
+the new records.
+
+### Release checks
+
+- Rerender the independent SWE report page, offline review page and methods
+  when verifying the bundle. Previously a changed page with a resealed manifest
+  still passed; it now fails the site build and dataset publication.
+- Require the published SWE dataset methods to match the source methods, and
+  verify the SWE report templates in the source distribution.
+- Identify EvalArc as a command-line reviewer at the top of both READMEs and
+  state that the release wheel is installed from GitHub, not PyPI. Update the
+  citation metadata, which still named 0.7.1.
+
+### Independent-source SWE review — 2026-09-20
+
+- Publish all 36 Qwen3-8B attempts comparing four fixed workflows on three public
+  SWE-bench Verified tasks. 31 have assessable native reports and five remain
+  uncertain because of upstream infrastructure flags; none is accepted. Eight
+  attempts produced nonempty patches.
+- Retain actual MCP preloads, every failed operation, six native upstream defect
+  and fix controls, and a complete offline archive. Publish the attempt rows as a
+  separate Hugging Face dataset checked against the native records.
+- Show how a declared 95% aggregate rule can accept an unresolved required
+  defect. No general skill benefit is claimed.
+
+### Publication verification — 2026-09-20
 
 - Use up to four concurrent anonymous downloads when checking a published Space
   or dataset. Every file, including the manifest, must still match the uploaded
@@ -9,7 +39,7 @@
   receipts. A failed download or checksum cancels queued work and fails publication.
 - Stream file checksums to bound memory use during large evidence downloads.
 
-## First local review — 2026-09-20
+### First local review — 2026-09-20
 
 - Update the English/Chinese installation paths to the released 0.13.0 wheel,
   including its verified SHA-256, so new users can run `behavior-review`.
@@ -19,12 +49,12 @@
   archive: distinguish valid evidence, correct files, completed submissions and
   authorized behavior, including the expected rejection exit code.
 
-## Pinned skill handoff — 2026-09-19
+### Pinned skill handoff — 2026-09-19
 
 - Continue an explicitly selected public session with its original instruction and bundle hashes, using actual MCP preloads. Reject changed skill versions before starting a new provider session.
 - Publish all six Qwen3-4B continuations with separate delivery, retrieval and task outcomes: six successful workflow preloads, six retrieved results, unchanged programs and 0/6 full acceptance. The report includes original receipts, independent grades and a complete offline archive.
 - Bind future recorder invocations to their own source checkout. Preserve the recorded cohort’s during-run and post-run package observations with their original timing.
-- Include both handoff evidence trees and report templates in source distributions, and verify their recorded bytes before publication. The Python API version remains 0.13.0.
+- Include both handoff evidence trees and report templates in source distributions, and verify their recorded bytes before publication.
 
 ## 0.13.0 — 2026-09-19
 

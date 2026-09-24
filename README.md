@@ -20,6 +20,10 @@ average score settle the review.
   <img src="docs/assets/first-review.gif" alt="Recorded walkthrough: the score rises, a retry duplicates a note, and the strict acceptance gate rejects the policy." width="960">
 </picture></a>
 
+EvalArc is a Python command-line reviewer for agent evaluations. It compares
+saved runs check by check, applies explicit acceptance gates, and writes reports
+that someone else can recompute from the original records.
+
 The demonstration replays saved Docker runs of scripted controls. No installation,
 account or model key is needed to explore it. **Research preview** · MIT ·
 Python 3.11+ · Linux for local workflows · no third-party Python runtime dependencies.
@@ -34,7 +38,8 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer in a fresh virtual environment:
+Install the released reviewer in a fresh virtual environment. EvalArc is not on
+PyPI; the command below installs the GitHub release wheel with a pinned SHA-256:
 
 ```bash
 python3 -m venv .venv
