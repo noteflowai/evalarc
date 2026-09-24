@@ -40,6 +40,10 @@ def check(folder):
         manifest["config_sha256"] != verified["config_sha256"]
         or (folder / "data/attempts.jsonl").read_bytes() != (source / "data.jsonl").read_bytes()
         or digest((folder / ARCHIVE).read_bytes()) != digest((source / ARCHIVE).read_bytes())
+        or any(
+            (folder / f"METHODS{suffix}").read_bytes() != (source / f"README{suffix}").read_bytes()
+            for suffix in (".md", ".zh-CN.md")
+        )
     ):
         raise ValueError("dataset projections differ from the verified native evidence")
     return manifest

@@ -1,6 +1,11 @@
+import hashlib
+import json
+import shutil
+import tempfile
 import unittest
+from pathlib import Path
 
-from scripts.build_swe_report import grade_view, page
+from scripts.build_swe_report import ROOT, grade_view, page, verify
 
 
 class SWENativeInterpretationTests(unittest.TestCase):
@@ -49,6 +54,24 @@ class SWENativeInterpretationTests(unittest.TestCase):
         document = page({}, [], {"text": "</script><img src=x onerror=alert(1)>"})
         self.assertNotIn("</script><img", document)
         self.assertIn("\\u003c/script>", document)
+
+
+class SWEPresentedReportTests(unittest.TestCase):
+    def test_resealed_page_or_methods_cannot_contradict_the_records(self):
+        for name in ("index.html", "README.md"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temporary:
+                folder = Path(temporary) / "independent-swe"
+                shutil.copytree(ROOT / "examples/independent-swe", folder)
+                data = (folder / name).read_bytes() + b"\n31 attempts were accepted.\n"
+                (folder / name).write_bytes(data)
+                manifest = json.loads((folder / "manifest.json").read_text())
+                manifest["files"][name] = {
+                    "sha256": hashlib.sha256(data).hexdigest(),
+                    "bytes": len(data),
+                }
+                (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+                with self.assertRaisesRegex(ValueError, "presented report differs"):
+                    verify(folder)
 
 
 if __name__ == "__main__":

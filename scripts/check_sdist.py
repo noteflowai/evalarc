@@ -14,8 +14,10 @@ def check(source: Path, archive: Path) -> dict:
     folders = ("behavior-audit", "funes-handoff", "skill-handoff", "independent-swe")
     expected = {}
     files = [path for folder in folders for path in (source / "examples" / folder).rglob("*")]
-    templates = sorted((source / "scripts").glob("*handoff*.html")) + sorted(
-        (source / "scripts").glob("skill_handoff_README*.md")
+    templates = sorted(
+        path
+        for pattern in ("*handoff*.html", "skill_handoff_README*.md", "swe_report_*")
+        for path in (source / "scripts").glob(pattern)
     )
     for path in files + templates:
         if path.is_symlink():
