@@ -312,6 +312,20 @@ def verify(folder):
     for name, value in traces.items():
         if read(folder / name) != value:
             raise ValueError("public trace differs from its raw records")
+    # Manifests only fingerprint these files; rerender them so the visible report
+    # and methods stay bound to the recomputed results.
+    presented = {
+        "index.html": page(summary, rows, {}).encode(),
+        "review/index.html": page(summary, rows, traces).encode(),
+        "review/data.jsonl": (folder / "data.jsonl").read_bytes(),
+    }
+    for name in ("README.md", "README.zh-CN.md"):
+        template = (ROOT / "scripts" / ("swe_report_" + name)).read_bytes()
+        presented[name] = presented["review/" + name] = template
+    for name, value in presented.items():
+        actual = files[name] if name.startswith("review/") else (folder / name).read_bytes()
+        if actual != value:
+            raise ValueError("presented report differs from its raw records: " + name)
     return summary
 
 
