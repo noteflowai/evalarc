@@ -10,6 +10,8 @@ const { checkHandoff } = require("./check_handoff_browser.cjs");
 const { checkBehavior } = require("./check_behavior_browser.cjs");
 const { checkSWE } = require("./check_swe_browser.cjs");
 
+const { checkAIWalkthrough } = require("./check_ai_walkthrough.cjs");
+
 async function main() {
   const root = path.resolve(process.env.SITE_DIR || "dist/site");
   let server;
@@ -42,11 +44,13 @@ async function main() {
       await page.addInitScript(() => {
         Object.defineProperty(navigator, "clipboard", {configurable:true, value:{writeText:async () => { throw new Error("Clipboard denied"); }}});
       });
-      const errors = [];
+      const errors = [], requests = [];
+      page.on("request", request => requests.push(request.url()));
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(base, {waitUntil:"networkidle", timeout:60000});
       const app = process.env.SITE_HUB === "1" ? page.frameLocator('iframe[src*="hf.space"]') : page;
       await app.locator("#workspace").waitFor({state:"visible"});
+      await checkAIWalkthrough(app, requests);
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await app.locator("#repeat-workspace").waitFor({state:"visible"});
       await app.locator("#suite-workspace").waitFor({state:"visible"});

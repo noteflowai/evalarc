@@ -1,0 +1,67 @@
+{
+  "kind": "Four annotated screenshots of actual UI states",
+  "duration_seconds": 30,
+  "source_files": {
+    "model-upgrade/review.json": "554b1a21269e73504459e52d452177d4a2bcac37b9fde6cbbe365aed5dce9c69",
+    "model-upgrade/protocol.json": "fe0d301d853df0ee4de7e38e63e9b09a3b76f0e4570898427f7a0f2f0f13edee",
+    "model-upgrade/reports/comparison.json": "d674c8c9c97ca7120b41f6b649f5465316760867684840880d5bb6c1d2222d7c",
+    "model-upgrade/reports/baseline.xml": "e48a42aac5adce32676b0a1f97c7cc8c925e038eb9552a50c29ba9c9cdce0547",
+    "model-upgrade/reports/current.xml": "f06add8f7bedba17b6d86f71a8f2ccc4350b5e9b27c53f2656fe1b1e3ec99ffc",
+    "model-upgrade/index.html": "58e5d6ee544dd694999447970cde42fbbe56717d91d94c8469cadb1b41d22434",
+    "model-upgrade/reports/index.html": "6130f6895eed0a7204a94f7bb817728feac79efc5d71182aaaaad5db3a2be18a"
+  },
+  "frames": [
+    {
+      "title": "Two configurations. All 48 original answers.",
+      "detail": "Qwen3-8B BF16 and Qwen3.8-27B FP8; three fresh answers per public development case.",
+      "selectors": [
+        ".intro",
+        ".scope"
+      ]
+    },
+    {
+      "title": "The total improves. The upgrade is blocked.",
+      "detail": "Complete plans: 15/24 \u2192 19/24. Ten named checks still lose passes.",
+      "selectors": [
+        ".cards",
+        "#gate"
+      ]
+    },
+    {
+      "title": "Inspect a regression, not just the total.",
+      "detail": "already-closed \u00b7 seed 17: the current answer omits the required actions key.",
+      "selectors": [
+        ".controls",
+        ".outputs"
+      ]
+    },
+    {
+      "title": "Reproduce the decision from native results.",
+      "detail": "Compare the downloaded JUnit files with evalarc==0.15.0. Expected gate exit: 1.",
+      "selectors": [
+        ".cards",
+        "table thead",
+        "table tbody tr:first-child"
+      ]
+    }
+  ],
+  "files": {
+    "ai-first-review.png": {
+      "bytes": 133768,
+      "sha256": "8ce38057a0c5d862d1a0994e7c9d96770c41d7f8bf149e8a575d952fd1500c0d"
+    },
+    "ai-first-review.gif": {
+      "bytes": 205010,
+      "sha256": "7c0eb2217bb0f42d4bf4084674f0ab65aa5bdfa7a1f7eaf975abfca8e276de75"
+    },
+    "ai-first-review.mp4": {
+      "bytes": 207292,
+      "sha256": "0b2a65d4ed04b588797449830af650961b4888cc0f30967edefa5f2f24e9f88a"
+    },
+    "ai-first-review.vtt": {
+      "bytes": 617,
+      "sha256": "5b58dcf73e0d1fc6764ad9bad39a8829cfbe53161229ad897760992aa4a10917"
+    }
+  },
+  "scope": "Selected public support-planning cases. Plans are not executed; configurations differ in size, architecture and quantization. No new inference."
+}

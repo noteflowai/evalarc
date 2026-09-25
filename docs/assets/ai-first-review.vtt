@@ -1,0 +1,17 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.500
+Two configurations. All 48 original answers.
+Qwen3-8B BF16 and Qwen3.8-27B FP8; three fresh answers per public development case.
+
+00:00:07.500 --> 00:00:15.000
+The total improves. The upgrade is blocked.
+Complete plans: 15/24 → 19/24. Ten named checks still lose passes.
+
+00:00:15.000 --> 00:00:22.500
+Inspect a regression, not just the total.
+already-closed · seed 17: the current answer omits the required actions key.
+
+00:00:22.500 --> 00:00:30.000
+Reproduce the decision from native results.
+Compare the downloaded JUnit files with evalarc==0.15.0. Expected gate exit: 1.
