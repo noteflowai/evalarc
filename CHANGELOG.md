@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0 — 2026-09-25
+
+- Publish a reproducible Qwen3-8B BF16 / Qwen3.8-27B FP8 configuration comparison with fresh generations, native pytest/JUnit checks and every original answer.
+- Add an offline model-upgrade review with case and seed selection, explicit scope, pinned inputs and strict checkpoint-loading diagnostics.
+- Retain the mixed result: complete plans match in 15/24 baseline and 19/24 current answers, while ten dependent named checks lose passes and block the upgrade gate.
+- Regrade the preserved answers without a model call; retain native JUnit outcomes and declare hostname/report-directory redactions with before/after digests.
+
 ## Unreleased
 
 ## 0.14.0 — 2026-09-25

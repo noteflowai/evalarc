@@ -32,6 +32,15 @@ No account, installation or model key is needed to explore the saved records.
 The featured comparison contains scripted Docker controls, not customer data
 or a model leaderboard.
 
+## Actual model configuration comparison
+
+[Review Qwen3-8B and Qwen3.8-27B-FP8](https://glayguo-evalarc.static.hf.space/model-upgrade/):
+eight public support-planning cases, three fresh generations per configuration,
+all 48 original outputs and native pytest checks. Download and regrade offline.
+Plans were not executed; model sizes and quantization differ.
+Complete plans improve **15/24 → 19/24**, but **10 named checks lose passes**:
+the upgrade gate fails. These checks share two format/schema failures.
+
 ## Start with one review
 
 1. Compare the two revisions and select `retry-after-commit`.

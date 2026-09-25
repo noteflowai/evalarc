@@ -30,6 +30,33 @@ def check(source: Path) -> dict:
         folder = Path(temporary)
         environment = {**os.environ, "PATH": "", "PYTHONPATH": "", "PYTHONNOUSERSITE": "1"}
         entry = str(Path(sys.executable).with_name("evalarc"))
+        model_reports = source / "examples/model-upgrade/reports"
+        expected_diff = json.loads((model_reports / "comparison.json").read_text())
+        diff_output = folder / "model-diff"
+        model_diff = subprocess.run(
+            [
+                entry,
+                "diff",
+                str(model_reports / "baseline.xml"),
+                str(model_reports / "current.xml"),
+                "--output",
+                str(diff_output),
+            ],
+            cwd=folder,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if model_diff.returncode != (0 if expected_diff["gate_passed"] else 1):
+            raise ValueError("Installed model diff returned the wrong gate result")
+        actual_diff = json.loads((diff_output / "diff.json").read_text())
+        if actual_diff["counts"] != expected_diff["counts"]:
+            raise ValueError("Installed model diff changed the recorded check counts")
+        results["model_configuration_diff"] = {
+            "counts": actual_diff["counts"],
+            "gate_passed": actual_diff["gate_passed"],
+        }
 
         def run(path: Path, code: int, *extra: str) -> dict:
             process = subprocess.run(

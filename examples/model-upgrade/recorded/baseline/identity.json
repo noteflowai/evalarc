@@ -1,0 +1,24 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "transformers": "5.17.0",
+    "tokenizers": "0.23.2",
+    "kernels": "0.16.0",
+    "flash-linear-attention": "0.5.2",
+    "triton": "3.6.0"
+  },
+  "gpu": "NVIDIA L40S",
+  "dtype": "bfloat16",
+  "quantization": null,
+  "runtime_adjustments": [],
+  "loading_info": {
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "mismatched_keys": [],
+    "error_msgs": []
+  },
+  "recorder_sha256": "056ff5b7b7808a64e71e77de115948c23eff18d0e958e672141c592a3ccd8df5",
+  "protocol_sha256": "fe0d301d853df0ee4de7e38e63e9b09a3b76f0e4570898427f7a0f2f0f13edee"
+}

@@ -35,6 +35,16 @@ The demonstration replays saved Docker runs of scripted controls. No installatio
 account or model key is needed to explore it. **Research preview** · MIT ·
 Python 3.11+ · Linux for local workflows · no third-party Python runtime dependencies.
 
+## Review a real model upgrade
+
+[Compare Qwen3-8B and Qwen3.8-27B-FP8](https://noteflowai.github.io/evalarc/model-upgrade/):
+8 public support-planning cases, 3 fresh generations per configuration, all 48
+original answers and native pytest checks. Download the comparison or regrade it
+offline. Plans are not executed; model size and quantization differ.
+Complete plans improve **15/24 → 19/24**, while **10 named checks lose passes**
+and the upgrade gate fails. These checks share two format/schema failures.
+[Protocol and reproduction](examples/model-upgrade/README.md).
+
 ## Start with one review
 
 1. **See the regression.** [Compare the two revisions](https://noteflowai.github.io/evalarc/#regression),
@@ -45,13 +55,13 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.14.0/)
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.15.0/)
 in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.14.0
+python -m pip install evalarc==0.15.0
 evalarc --version
 ```
 
@@ -91,7 +101,7 @@ offline report with copies of both inputs. In the
 0.625 to 0.8125 while three checks lose passes.
 
 ```yaml
-- uses: noteflowai/evalarc@v0.14.0 # or a full commit SHA
+- uses: noteflowai/evalarc@v0.15.0 # or a full commit SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json

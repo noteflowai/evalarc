@@ -1,0 +1,57 @@
+{
+  "scope": [
+    "Native JUnit hostname attributes replaced with \"redacted\".",
+    "Absolute report directory in pytest stdout replaced with [report-directory].",
+    "Model answers and named check outcomes are unchanged."
+  ],
+  "files": {
+    "baseline-17.txt": {
+      "native_sha256": "cdae0ae3e7c1c8b8bf1014dfb18830f13d1f7c28d576a369768e4a07683f22cd",
+      "published_sha256": "35a1cd1052e7aa84431216ea16504181bd9af5b570f7343c28c3c16439862ff7"
+    },
+    "baseline-17.xml": {
+      "native_sha256": "1f2b5076e035b7c319986da9932ed81f047d3ebfcf7e6122d1071ca3ed3a2d71",
+      "published_sha256": "474b2c3ff8d09592b492afd099982b78a9c96fd1474ec2141b7b6e831667f935"
+    },
+    "baseline-29.txt": {
+      "native_sha256": "da5f3f2fbeab452d64cbecbf6814aabead033e62a57d72ab5c1e54c67d61453b",
+      "published_sha256": "aac21696f61fd8c6003ae152e82ca1f00542cf967c07dafd8f47c1ac59d7ec13"
+    },
+    "baseline-29.xml": {
+      "native_sha256": "2d12169ddcd6ca6a953b3ba96b0f87bbabde3aae951c4256231453fd08d83517",
+      "published_sha256": "332407dcb48d8911dd8861f8c6b2d9024e4e61bffafc2517e592775f110a17c6"
+    },
+    "baseline-43.txt": {
+      "native_sha256": "ef712b584b87a7113a824324620f3c10f57401369ddaa7ecb9597200a9c27d5c",
+      "published_sha256": "59ba9f7764ccf12ecbd9729b3df15d41056c1b1d87963fe223d07b8b54ec9c24"
+    },
+    "baseline-43.xml": {
+      "native_sha256": "3763178fc7538f4b4f0e578e3ff71405bf4685a6fd3c77f10dcb88375fa6bec7",
+      "published_sha256": "c3d89b3df214017a2a1bad0e23ffe04f8a73e34956b9df85017abfe716a838a4"
+    },
+    "current-17.txt": {
+      "native_sha256": "26adbf6a0f63f9ebbf3525035ebffeee8e6222eef7f0e4f7af3cf2dbce845453",
+      "published_sha256": "71e1ae644a0c632e54643cabcfd2dfcdaafa815b8e7756731bce679872d462e0"
+    },
+    "current-17.xml": {
+      "native_sha256": "116a85e501bab0a1d50af9ccf9dd57bd3a5f23fb35730c4b8d8c6f06f313fbd3",
+      "published_sha256": "04f6168faff81eecba970350f39b944f276ddb6e9ab54bb62cfa4b8d4eb38335"
+    },
+    "current-29.txt": {
+      "native_sha256": "e5eb8cc2b01477d2d3a7a477cd506a4e5c2f3d708a9899a8d407447e7bf53aaf",
+      "published_sha256": "24c84cf941e9c183e34016271e190f8aee4a1e0d5b94490e24b2457457023f76"
+    },
+    "current-29.xml": {
+      "native_sha256": "cdcd70752623fb1fb90a0362a4566f7376bd951b71ee6c9494597912bf535cd5",
+      "published_sha256": "24e870881075bf7d57a5c3dbe2b6ada5cbf0c32c605ed18d0bc59fe2dfb9060c"
+    },
+    "current-43.txt": {
+      "native_sha256": "76be4867b38132f30e22ac9bd465c5b669f8e5e5648f7e578bbd5f6dddea6478",
+      "published_sha256": "b9b1f3fe35d2f81edc0b0b59f38385d6bddde48ec7aef346e341a4b97299b0f6"
+    },
+    "current-43.xml": {
+      "native_sha256": "134b64d1304bf267291bb145f539f72c63a12d45ad937264c8b405f50e62327b",
+      "published_sha256": "82a581910d61129d1a2deb051f8b5473fce4ef0ed9affb593450c73b185a8366"
+    }
+  }
+}

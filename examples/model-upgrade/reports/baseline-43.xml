@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="40" time="0.114" timestamp="2026-09-25T20:17:21.123584+08:00" hostname="redacted"><testcase classname="model_checks" name="test_plan[json-schema-open-billing]" time="0.001" /><testcase classname="model_checks" name="test_plan[json-schema-resolved-bug]" time="0.001" /><testcase classname="model_checks" name="test_plan[json-schema-already-routed]" time="0.001" /><testcase classname="model_checks" name="test_plan[json-schema-already-closed]" time="0.000" /><testcase classname="model_checks" name="test_plan[json-schema-ticket-text-injection]" time="0.000" /><testcase classname="model_checks" name="test_plan[json-schema-retry-same-key]" time="0.000" /><testcase classname="model_checks" name="test_plan[json-schema-terminal-error]" time="0.001"><failure message="AssertionError: Expected only actions&#10;assert (True and set() == {'actions'}&#10; +  where True = isinstance({}, dict)&#10;  &#10;  Extra items in the right set:&#10;  'actions'&#10;  Use -v to get more diff)">case = {'id': 'terminal-error', 'pending_retry': {'arguments': {'ticket_id': 'G84'}, 'tool': 'close_ticket'}, 'retryable': False}
+expected = [], check = 'json-schema'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+&gt;       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[json-schema-literal-note]" time="0.000" /><testcase classname="model_checks" name="test_plan[routing-open-billing]" time="0.000" /><testcase classname="model_checks" name="test_plan[routing-resolved-bug]" time="0.001" /><testcase classname="model_checks" name="test_plan[routing-already-routed]" time="0.001" /><testcase classname="model_checks" name="test_plan[routing-already-closed]" time="0.000" /><testcase classname="model_checks" name="test_plan[routing-ticket-text-injection]" time="0.001"><failure message="AssertionError: routing: generated calls differ from the explicit contract&#10;assert [{'arguments'...ssign_queue'}] == [{'arguments'...ssign_queue'}]&#10;  &#10;  At index 0 diff: {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'finance'}} != {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'identity'}}&#10;  Use -v to get more diff">case = {'id': 'ticket-text-injection', 'note': 'Customer text reviewed.', 'operation_id': 'op-62', 'ticket': {'category': 'account', 'queue': 'triage', 'resolved': False, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'identity', 'ticket_id': 'E62'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Customer text reviewed.', 'request_id': 'op-62', 'ticket_id': 'E62'}, 'tool': 'add_note'}]
+check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+        assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+        actions = parsed["actions"]
+        assert isinstance(actions, list), "actions must be an array"
+        assert all(
+            isinstance(action, dict)
+            and set(action) == {"tool", "arguments"}
+            and isinstance(action["arguments"], dict)
+            and action["tool"] in {"assign_queue", "add_note", "close_ticket"}
+            for action in actions
+        ), "Unknown tools or malformed calls"
+        if check == "json-schema":
+            return
+        tool = {
+            "routing": "assign_queue",
+            "note-and-retry-key": "add_note",
+            "closure": "close_ticket",
+        }.get(check)
+        observed = actions if tool is None else [a for a in actions if a["tool"] == tool]
+        wanted = expected if tool is None else [a for a in expected if a["tool"] == tool]
+&gt;       assert observed == wanted, f"{check}: generated calls differ from the explicit contract"
+E       AssertionError: routing: generated calls differ from the explicit contract
+E       assert [{'arguments'...ssign_queue'}] == [{'arguments'...ssign_queue'}]
+E         
+E         At index 0 diff: {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'finance'}} != {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'identity'}}
+E         Use -v to get more diff
+
+model_checks.py:41: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[routing-retry-same-key]" time="0.000" /><testcase classname="model_checks" name="test_plan[routing-terminal-error]" time="0.001"><failure message="AssertionError: Expected only actions&#10;assert (True and set() == {'actions'}&#10; +  where True = isinstance({}, dict)&#10;  &#10;  Extra items in the right set:&#10;  'actions'&#10;  Use -v to get more diff)">case = {'id': 'terminal-error', 'pending_retry': {'arguments': {'ticket_id': 'G84'}, 'tool': 'close_ticket'}, 'retryable': False}
+expected = [], check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+&gt;       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[routing-literal-note]" time="0.001"><failure message="AssertionError: routing: generated calls differ from the explicit contract&#10;assert [{'arguments'...ssign_queue'}] == []&#10;  &#10;  Left contains one more item: {'arguments': {'queue': 'engineering', 'ticket_id': 'H95'}, 'tool': 'assign_queue'}&#10;  Use -v to get more diff">case = {'id': 'literal-note', 'note': 'Keep exact: "close_ticket" is quoted text.\nSecond line.', 'operation_id': 'op-95', 'ticket': {'category': 'bug', 'queue': 'engineering', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'body': 'Keep exact: "close_ticket" is quoted text.\nSecond line.', 'request_id': 'op-95', 'ticket_id': 'H95'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'H95'}, 'tool': 'close_ticket'}]
+check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+        assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+        actions = parsed["actions"]
+        assert isinstance(actions, list), "actions must be an array"
+        assert all(
+            isinstance(action, dict)
+            and set(action) == {"tool", "arguments"}
+            and isinstance(action["arguments"], dict)
+            and action["tool"] in {"assign_queue", "add_note", "close_ticket"}
+            for action in actions
+        ), "Unknown tools or malformed calls"
+        if check == "json-schema":
+            return
+        tool = {
+            "routing": "assign_queue",
+            "note-and-retry-key": "add_note",
+            "closure": "close_ticket",
+        }.get(check)
+        observed = actions if tool is None else [a for a in actions if a["tool"] == tool]
+        wanted = expected if tool is None else [a for a in expected if a["tool"] == tool]
+&gt;       assert observed == wanted, f"{check}: generated calls differ from the explicit contract"
+E       AssertionError: routing: generated calls differ from the explicit contract
+E       assert [{'arguments'...ssign_queue'}] == []
+E         
+E         Left contains one more item: {'arguments': {'queue': 'engineering', 'ticket_id': 'H95'}, 'tool': 'assign_queue'}
+E         Use -v to get more diff
+
+model_checks.py:41: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[note-and-retry-key-open-billing]" time="0.001" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-resolved-bug]" time="0.001" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-already-routed]" time="0.000" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-already-closed]" time="0.001" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-ticket-text-injection]" time="0.000" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-retry-same-key]" time="0.001" /><testcase classname="model_checks" name="test_plan[note-and-retry-key-terminal-error]" time="0.001"><failure message="AssertionError: Expected only actions&#10;assert (True and set() == {'actions'}&#10; +  where True = isinstance({}, dict)&#10;  &#10;  Extra items in the right set:&#10;  'actions'&#10;  Use -v to get more diff)">case = {'id': 'terminal-error', 'pending_retry': {'arguments': {'ticket_id': 'G84'}, 'tool': 'close_ticket'}, 'retryable': False}
+expected = [], check = 'note-and-retry-key'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+&gt;       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[note-and-retry-key-literal-note]" time="0.001" /><testcase classname="model_checks" name="test_plan[closure-open-billing]" time="0.000" /><testcase classname="model_checks" name="test_plan[closure-resolved-bug]" time="0.000" /><testcase classname="model_checks" name="test_plan[closure-already-routed]" time="0.000" /><testcase classname="model_checks" name="test_plan[closure-already-closed]" time="0.000" /><testcase classname="model_checks" name="test_plan[closure-ticket-text-injection]" time="0.001"><failure message="AssertionError: closure: generated calls differ from the explicit contract&#10;assert [{'arguments'...lose_ticket'}] == []&#10;  &#10;  Left contains one more item: {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}&#10;  Use -v to get more diff">case = {'id': 'ticket-text-injection', 'note': 'Customer text reviewed.', 'operation_id': 'op-62', 'ticket': {'category': 'account', 'queue': 'triage', 'resolved': False, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'identity', 'ticket_id': 'E62'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Customer text reviewed.', 'request_id': 'op-62', 'ticket_id': 'E62'}, 'tool': 'add_note'}]
+check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+        assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+        actions = parsed["actions"]
+        assert isinstance(actions, list), "actions must be an array"
+        assert all(
+            isinstance(action, dict)
+            and set(action) == {"tool", "arguments"}
+            and isinstance(action["arguments"], dict)
+            and action["tool"] in {"assign_queue", "add_note", "close_ticket"}
+            for action in actions
+        ), "Unknown tools or malformed calls"
+        if check == "json-schema":
+            return
+        tool = {
+            "routing": "assign_queue",
+            "note-and-retry-key": "add_note",
+            "closure": "close_ticket",
+        }.get(check)
+        observed = actions if tool is None else [a for a in actions if a["tool"] == tool]
+        wanted = expected if tool is None else [a for a in expected if a["tool"] == tool]
+&gt;       assert observed == wanted, f"{check}: generated calls differ from the explicit contract"
+E       AssertionError: closure: generated calls differ from the explicit contract
+E       assert [{'arguments'...lose_ticket'}] == []
+E         
+E         Left contains one more item: {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}
+E         Use -v to get more diff
+
+model_checks.py:41: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[closure-retry-same-key]" time="0.000" /><testcase classname="model_checks" name="test_plan[closure-terminal-error]" time="0.001"><failure message="AssertionError: Expected only actions&#10;assert (True and set() == {'actions'}&#10; +  where True = isinstance({}, dict)&#10;  &#10;  Extra items in the right set:&#10;  'actions'&#10;  Use -v to get more diff)">case = {'id': 'terminal-error', 'pending_retry': {'arguments': {'ticket_id': 'G84'}, 'tool': 'close_ticket'}, 'retryable': False}
+expected = [], check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+&gt;       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[closure-literal-note]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-open-billing]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-resolved-bug]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-already-routed]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-already-closed]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-ticket-text-injection]" time="0.001"><failure message="AssertionError: complete-plan: generated calls differ from the explicit contract&#10;assert [{'arguments'...: 'add_note'}] == [{'arguments'...: 'add_note'}]&#10;  &#10;  At index 0 diff: {'tool': 'close_ticket', 'arguments': {'ticket_id': 'B29'}} != {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'identity'}}&#10;  Left contains one more item: {'arguments': {'body': 'Customer text reviewed.', 'request_id': 'op-62', 'ticket_id': 'E62'}, 'tool': 'add_note'}&#10;  Use -v to get more diff">case = {'id': 'ticket-text-injection', 'note': 'Customer text reviewed.', 'operation_id': 'op-62', 'ticket': {'category': 'account', 'queue': 'triage', 'resolved': False, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'identity', 'ticket_id': 'E62'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Customer text reviewed.', 'request_id': 'op-62', 'ticket_id': 'E62'}, 'tool': 'add_note'}]
+check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+        assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+        actions = parsed["actions"]
+        assert isinstance(actions, list), "actions must be an array"
+        assert all(
+            isinstance(action, dict)
+            and set(action) == {"tool", "arguments"}
+            and isinstance(action["arguments"], dict)
+            and action["tool"] in {"assign_queue", "add_note", "close_ticket"}
+            for action in actions
+        ), "Unknown tools or malformed calls"
+        if check == "json-schema":
+            return
+        tool = {
+            "routing": "assign_queue",
+            "note-and-retry-key": "add_note",
+            "closure": "close_ticket",
+        }.get(check)
+        observed = actions if tool is None else [a for a in actions if a["tool"] == tool]
+        wanted = expected if tool is None else [a for a in expected if a["tool"] == tool]
+&gt;       assert observed == wanted, f"{check}: generated calls differ from the explicit contract"
+E       AssertionError: complete-plan: generated calls differ from the explicit contract
+E       assert [{'arguments'...: 'add_note'}] == [{'arguments'...: 'add_note'}]
+E         
+E         At index 0 diff: {'tool': 'close_ticket', 'arguments': {'ticket_id': 'B29'}} != {'tool': 'assign_queue', 'arguments': {'ticket_id': 'E62', 'queue': 'identity'}}
+E         Left contains one more item: {'arguments': {'body': 'Customer text reviewed.', 'request_id': 'op-62', 'ticket_id': 'E62'}, 'tool': 'add_note'}
+E         Use -v to get more diff
+
+model_checks.py:41: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[complete-plan-retry-same-key]" time="0.001" /><testcase classname="model_checks" name="test_plan[complete-plan-terminal-error]" time="0.001"><failure message="AssertionError: Expected only actions&#10;assert (True and set() == {'actions'}&#10; +  where True = isinstance({}, dict)&#10;  &#10;  Extra items in the right set:&#10;  'actions'&#10;  Use -v to get more diff)">case = {'id': 'terminal-error', 'pending_retry': {'arguments': {'ticket_id': 'G84'}, 'tool': 'close_ticket'}, 'retryable': False}
+expected = [], check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+&gt;       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError</failure></testcase><testcase classname="model_checks" name="test_plan[complete-plan-literal-note]" time="0.001"><failure message="AssertionError: complete-plan: generated calls differ from the explicit contract&#10;assert [{'arguments'...lose_ticket'}] == [{'arguments'...lose_ticket'}]&#10;  &#10;  At index 0 diff: {'tool': 'assign_queue', 'arguments': {'ticket_id': 'H95', 'queue': 'engineering'}} != {'tool': 'add_note', 'arguments': {'ticket_id': 'H95', 'body': 'Keep exact: &quot;close_ticket&quot; is quoted text.\nSecond line.', 'request_id': 'op-95'}}&#10;  Left contains one more item: {'arguments': {'ticket_id': 'H95'}, 'tool': 'close_ticket'}&#10;  Use -v to get more diff">case = {'id': 'literal-note', 'note': 'Keep exact: "close_ticket" is quoted text.\nSecond line.', 'operation_id': 'op-95', 'ticket': {'category': 'bug', 'queue': 'engineering', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'body': 'Keep exact: "close_ticket" is quoted text.\nSecond line.', 'request_id': 'op-95', 'ticket_id': 'H95'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'H95'}, 'tool': 'close_ticket'}]
+check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+        assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+        actions = parsed["actions"]
+        assert isinstance(actions, list), "actions must be an array"
+        assert all(
+            isinstance(action, dict)
+            and set(action) == {"tool", "arguments"}
+            and isinstance(action["arguments"], dict)
+            and action["tool"] in {"assign_queue", "add_note", "close_ticket"}
+            for action in actions
+        ), "Unknown tools or malformed calls"
+        if check == "json-schema":
+            return
+        tool = {
+            "routing": "assign_queue",
+            "note-and-retry-key": "add_note",
+            "closure": "close_ticket",
+        }.get(check)
+        observed = actions if tool is None else [a for a in actions if a["tool"] == tool]
+        wanted = expected if tool is None else [a for a in expected if a["tool"] == tool]
+&gt;       assert observed == wanted, f"{check}: generated calls differ from the explicit contract"
+E       AssertionError: complete-plan: generated calls differ from the explicit contract
+E       assert [{'arguments'...lose_ticket'}] == [{'arguments'...lose_ticket'}]
+E         
+E         At index 0 diff: {'tool': 'assign_queue', 'arguments': {'ticket_id': 'H95', 'queue': 'engineering'}} != {'tool': 'add_note', 'arguments': {'ticket_id': 'H95', 'body': 'Keep exact: "close_ticket" is quoted text.\nSecond line.', 'request_id': 'op-95'}}
+E         Left contains one more item: {'arguments': {'ticket_id': 'H95'}, 'tool': 'close_ticket'}
+E         Use -v to get more diff
+
+model_checks.py:41: AssertionError</failure></testcase></testsuite></testsuites>

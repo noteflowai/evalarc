@@ -1,0 +1,21 @@
+{
+  "schema": "local-runtime-initialization-notes-1",
+  "attempts": [
+    {
+      "kind": "generation smoke",
+      "issue": "Missing kernels package; no task outputs produced."
+    },
+    {
+      "kind": "first task initialization",
+      "issue": "Process exited 143 before ready; no task outputs produced."
+    },
+    {
+      "kind": "task initialization with kernels",
+      "issue": "Transformers 5.17.0 discarded 64 dense gate_proj FP8 scales because mlp.gate exclusions matched the gate_proj prefix. Stopped before any completed task output. Workaround removes nonexistent MoE router exclusions in memory and requires empty missing/unexpected/mismatched loading keys."
+    },
+    {
+      "kind": "corrected checkpoint initialization",
+      "issue": "All checkpoint keys accounted for. JSON serialization rejected empty sets in loading_info before inference; fixed by serializing sets as lists. No task outputs produced."
+    }
+  ]
+}

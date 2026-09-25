@@ -365,6 +365,9 @@ def build(destination: Path) -> dict:
     from scripts.strands_page import build_strands
 
     build_strands(ROOT, destination / "strands")
+    from scripts.model_upgrade_page import build_model_upgrade
+
+    build_model_upgrade(ROOT, destination / "model-upgrade")
     for suffix in ("png", "gif", "mp4", "vtt"):
         name = f"first-review.{suffix}"
         shutil.copyfile(ROOT / "docs" / "assets" / name, destination / name)

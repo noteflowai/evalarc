@@ -25,6 +25,15 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 演示回放的是脚本对照在 Docker 中运行后保存的记录，无需安装、账号或模型密钥。
 研究预览 · MIT · Python 3.11+ · 本地流程使用 Linux · Python 包无第三方运行时依赖。
 
+## 复核一次真实模型升级
+
+[对照 Qwen3-8B 与 Qwen3.8-27B-FP8](https://noteflowai.github.io/evalarc/model-upgrade/)：
+8 个公开支持任务规划用例，每个配置新生成 3 次，保留全部 48 个原始回答和 pytest
+检查结果。可下载并离线重算比较。计划未执行；模型大小和量化方式不同。
+完整计划匹配 **15/24 → 19/24**，但 **10 个具名检查失去通过记录**，升级门禁失败；
+这些检查对应两个用例的格式或结构错误。
+[实验协议与复现](examples/model-upgrade/README.md)。
+
 ## 从一次复核开始
 
 1. **看退步。** [对照两个版本](https://noteflowai.github.io/evalarc/#regression)，
@@ -34,13 +43,13 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 3. **本地复算。** [首次复核指南](docs/first-review.zh-CN.md)使用发布的 wheel 和原始记录重建报告；
    复核退出 0 表示一致，对照退出 1 表示发现退步。
 
-在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.14.0/)
+在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.15.0/)
 安装已发布的复核工具：
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.14.0
+python -m pip install evalarc==0.15.0
 evalarc --version
 ```
 
@@ -76,7 +85,7 @@ PyPI 与 GitHub Releases 提供相同的 wheel 和源码包，也支持
 准确率从 0.625 升至 0.8125，同时有三个检查项丢失通过。
 
 ```yaml
-- uses: noteflowai/evalarc@v0.14.0 # 或完整的提交 SHA
+- uses: noteflowai/evalarc@v0.15.0 # 或完整的提交 SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json
