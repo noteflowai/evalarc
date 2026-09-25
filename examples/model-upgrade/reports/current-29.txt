@@ -1,0 +1,590 @@
+.F.F.....F.F.....F.F.....F.F.....F.F....                                 [100%]
+=================================== FAILURES ===================================
+_____________________ test_plan[json-schema-resolved-bug] ______________________
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'json-schema'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+>           parsed = json.loads(record["text"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model_checks.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x73c07d4d70b0>
+s = '```json\n{\n  "actions": [\n    {\n      "tool": "assign_queue",\n      "arguments": {\n        "ticket_id": "B29",\n...,\n    {\n      "tool": "close_ticket",\n      "arguments": {\n        "ticket_id": "B29"\n      }\n    }\n  ]\n}\n```'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.12/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'json-schema'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+>           pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+E           Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)
+E           Raw output: ```json
+E           {
+E             "actions": [
+E               {
+E                 "tool": "assign_queue",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "queue": "engineering"
+E                 }
+E               },
+E               {
+E                 "tool": "add_note",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "body": "Fix verified.",
+E                   "request_id": "op-29"
+E                 }
+E               },
+E               {
+E                 "tool": "close_ticket",
+E                 "arguments": {
+E                   "ticket_id": "B29"
+E                 }
+E               }
+E             ]
+E           }
+E           ```
+
+model_checks.py:21: Failed
+____________________ test_plan[json-schema-already-closed] _____________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'json-schema'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+_______________________ test_plan[routing-resolved-bug] ________________________
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+>           parsed = json.loads(record["text"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model_checks.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x73c07d4d70b0>
+s = '```json\n{\n  "actions": [\n    {\n      "tool": "assign_queue",\n      "arguments": {\n        "ticket_id": "B29",\n...,\n    {\n      "tool": "close_ticket",\n      "arguments": {\n        "ticket_id": "B29"\n      }\n    }\n  ]\n}\n```'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.12/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+>           pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+E           Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)
+E           Raw output: ```json
+E           {
+E             "actions": [
+E               {
+E                 "tool": "assign_queue",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "queue": "engineering"
+E                 }
+E               },
+E               {
+E                 "tool": "add_note",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "body": "Fix verified.",
+E                   "request_id": "op-29"
+E                 }
+E               },
+E               {
+E                 "tool": "close_ticket",
+E                 "arguments": {
+E                   "ticket_id": "B29"
+E                 }
+E               }
+E             ]
+E           }
+E           ```
+
+model_checks.py:21: Failed
+______________________ test_plan[routing-already-closed] _______________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+__________________ test_plan[note-and-retry-key-resolved-bug] __________________
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'note-and-retry-key'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+>           parsed = json.loads(record["text"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model_checks.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x73c07d4d70b0>
+s = '```json\n{\n  "actions": [\n    {\n      "tool": "assign_queue",\n      "arguments": {\n        "ticket_id": "B29",\n...,\n    {\n      "tool": "close_ticket",\n      "arguments": {\n        "ticket_id": "B29"\n      }\n    }\n  ]\n}\n```'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.12/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'note-and-retry-key'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+>           pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+E           Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)
+E           Raw output: ```json
+E           {
+E             "actions": [
+E               {
+E                 "tool": "assign_queue",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "queue": "engineering"
+E                 }
+E               },
+E               {
+E                 "tool": "add_note",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "body": "Fix verified.",
+E                   "request_id": "op-29"
+E                 }
+E               },
+E               {
+E                 "tool": "close_ticket",
+E                 "arguments": {
+E                   "ticket_id": "B29"
+E                 }
+E               }
+E             ]
+E           }
+E           ```
+
+model_checks.py:21: Failed
+_________________ test_plan[note-and-retry-key-already-closed] _________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'note-and-retry-key'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+_______________________ test_plan[closure-resolved-bug] ________________________
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+>           parsed = json.loads(record["text"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model_checks.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x73c07d4d70b0>
+s = '```json\n{\n  "actions": [\n    {\n      "tool": "assign_queue",\n      "arguments": {\n        "ticket_id": "B29",\n...,\n    {\n      "tool": "close_ticket",\n      "arguments": {\n        "ticket_id": "B29"\n      }\n    }\n  ]\n}\n```'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.12/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+>           pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+E           Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)
+E           Raw output: ```json
+E           {
+E             "actions": [
+E               {
+E                 "tool": "assign_queue",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "queue": "engineering"
+E                 }
+E               },
+E               {
+E                 "tool": "add_note",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "body": "Fix verified.",
+E                   "request_id": "op-29"
+E                 }
+E               },
+E               {
+E                 "tool": "close_ticket",
+E                 "arguments": {
+E                   "ticket_id": "B29"
+E                 }
+E               }
+E             ]
+E           }
+E           ```
+
+model_checks.py:21: Failed
+______________________ test_plan[closure-already-closed] _______________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+____________________ test_plan[complete-plan-resolved-bug] _____________________
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+>           parsed = json.loads(record["text"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model_checks.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x73c07d4d70b0>
+s = '```json\n{\n  "actions": [\n    {\n      "tool": "assign_queue",\n      "arguments": {\n        "ticket_id": "B29",\n...,\n    {\n      "tool": "close_ticket",\n      "arguments": {\n        "ticket_id": "B29"\n      }\n    }\n  ]\n}\n```'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/lib/python3.12/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+case = {'id': 'resolved-bug', 'note': 'Fix verified.', 'operation_id': 'op-29', 'ticket': {'category': 'bug', 'queue': 'triage', 'resolved': True, 'status': 'open', ...}}
+expected = [{'arguments': {'queue': 'engineering', 'ticket_id': 'B29'}, 'tool': 'assign_queue'}, {'arguments': {'body': 'Fix veri...st_id': 'op-29', 'ticket_id': 'B29'}, 'tool': 'add_note'}, {'arguments': {'ticket_id': 'B29'}, 'tool': 'close_ticket'}]
+check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+>           pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+E           Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)
+E           Raw output: ```json
+E           {
+E             "actions": [
+E               {
+E                 "tool": "assign_queue",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "queue": "engineering"
+E                 }
+E               },
+E               {
+E                 "tool": "add_note",
+E                 "arguments": {
+E                   "ticket_id": "B29",
+E                   "body": "Fix verified.",
+E                   "request_id": "op-29"
+E                 }
+E               },
+E               {
+E                 "tool": "close_ticket",
+E                 "arguments": {
+E                   "ticket_id": "B29"
+E                 }
+E               }
+E             ]
+E           }
+E           ```
+
+model_checks.py:21: Failed
+___________________ test_plan[complete-plan-already-closed] ____________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+- generated xml file: [report-directory]/current-29.xml -
+=========================== short test summary info ============================
+FAILED model_checks.py::test_plan[json-schema-resolved-bug] - Failed: Output ...
+FAILED model_checks.py::test_plan[json-schema-already-closed] - AssertionErro...
+FAILED model_checks.py::test_plan[routing-resolved-bug] - Failed: Output is n...
+FAILED model_checks.py::test_plan[routing-already-closed] - AssertionError: E...
+FAILED model_checks.py::test_plan[note-and-retry-key-resolved-bug] - Failed: ...
+FAILED model_checks.py::test_plan[note-and-retry-key-already-closed] - Assert...
+FAILED model_checks.py::test_plan[closure-resolved-bug] - Failed: Output is n...
+FAILED model_checks.py::test_plan[closure-already-closed] - AssertionError: E...
+FAILED model_checks.py::test_plan[complete-plan-resolved-bug] - Failed: Outpu...
+FAILED model_checks.py::test_plan[complete-plan-already-closed] - AssertionEr...
+10 failed, 30 passed in 0.15s

@@ -1,0 +1,130 @@
+...F.......F.......F.......F.......F....                                 [100%]
+=================================== FAILURES ===================================
+____________________ test_plan[json-schema-already-closed] _____________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'json-schema'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+______________________ test_plan[routing-already-closed] _______________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'routing'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+_________________ test_plan[note-and-retry-key-already-closed] _________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'note-and-retry-key'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+______________________ test_plan[closure-already-closed] _______________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'closure'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+___________________ test_plan[complete-plan-already-closed] ____________________
+
+case = {'id': 'already-closed', 'note': 'Do not duplicate.', 'operation_id': 'op-51', 'ticket': {'category': 'billing', 'queue': 'finance', 'resolved': True, 'status': 'closed', ...}}
+expected = [], check = 'complete-plan'
+
+    @pytest.mark.parametrize("case,expected", zip(CASES, EXPECTED), ids=[c["id"] for c in CASES])
+    @pytest.mark.parametrize("check", CHECKS)
+    def test_plan(case, expected, check):
+        source = Path(os.environ["MODEL_RECORD"])
+        record = json.loads((source / f"{case['id']}-{os.environ['MODEL_SEED']}.json").read_text())
+        try:
+            parsed = json.loads(record["text"])
+        except (ValueError, TypeError) as error:
+            pytest.fail(f"Output is not JSON: {error}\nRaw output: {record['text']}")
+>       assert isinstance(parsed, dict) and set(parsed) == {"actions"}, "Expected only actions"
+E       AssertionError: Expected only actions
+E       assert (True and set() == {'actions'}
+E        +  where True = isinstance({}, dict)
+E         
+E         Extra items in the right set:
+E         'actions'
+E         Use -v to get more diff)
+
+model_checks.py:22: AssertionError
+- generated xml file: [report-directory]/current-17.xml -
+=========================== short test summary info ============================
+FAILED model_checks.py::test_plan[json-schema-already-closed] - AssertionErro...
+FAILED model_checks.py::test_plan[routing-already-closed] - AssertionError: E...
+FAILED model_checks.py::test_plan[note-and-retry-key-already-closed] - Assert...
+FAILED model_checks.py::test_plan[closure-already-closed] - AssertionError: E...
+FAILED model_checks.py::test_plan[complete-plan-already-closed] - AssertionEr...
+5 failed, 35 passed in 0.09s
