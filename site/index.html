@@ -40,7 +40,7 @@
     <section class="start-path" aria-label="Your first review">
       <a href="#regression"><span class="eyebrow">01 / SEE THE CHANGE</span><strong>90% → 93.75%. One regression.</strong><span>Compare the checks behind the improved score.</span></a>
       <a href="#explorer"><span class="eyebrow">02 / FOLLOW THE RETRY</span><strong>The note was already written.</strong><span>Step through the recorded action and changed state.</span></a>
-      <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md" target="_blank" rel="noopener"><span class="eyebrow">03 / CHECK IT LOCALLY</span><strong>Keep the evidence and the rules.</strong><span>Install the wheel and rebuild the report. No Docker needed.</span></a>
+      <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md" target="_blank" rel="noopener"><span class="eyebrow">03 / CHECK IT LOCALLY</span><strong>Keep the evidence and the rules.</strong><span>Install from PyPI and rebuild the report. No Docker needed.</span></a>
     </section>
     <details class="tour">
       <summary>Watch the 30-second walkthrough</summary>
@@ -209,7 +209,7 @@
     <section class="suite" aria-label="Runtime behavior review"><p class="eyebrow">FINAL FILE · ACTUAL OPERATIONS</p><h2>The file is correct. Inspect how it was made.</h2><p>A temporary public file can be written and deleted before the final snapshot. Follow file access and actual service receipts to check the execution against its authorization contract.</p><div class="comparison-links"><a href="behavior-audit/index.html">Inspect runtime behavior &#8599;</a><a href="behavior-audit/behavior-evidence.zip?download=true" download>Download all controls and attempts</a></div><details><summary>Experiment method and results</summary><p>32 authored native controls cover file operations and service requests. A separate 12-attempt Qwen3-8B pilot on L40S has no fully accepted task; one attempt has incomplete HTTP evidence. Inspect all outcomes and the fixed source records. These results do not establish a skill composition effect.</p></details></section>
 
     <section class="reproduce" aria-label="Verify a received report">
-      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Download the evidence.<br>Check every gate.</h2><p>Recompute the original suite configuration, plan, five attempts, acceptance decisions and JUnit without executing a candidate.</p><p><a href="suite-evidence.zip?download=true" download>Download suite evidence (ZIP)</a> &middot; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md">Install and verify locally &#8599;</a></p></div>
+      <div><p class="eyebrow">HAND OFF EVIDENCE</p><h2>Download the evidence.<br>Check every gate.</h2><p>Recompute the original suite configuration, plan, five attempts, acceptance decisions and JUnit without executing a candidate.</p><p><a href="suite-evidence.zip?download=true" download>Download suite evidence (ZIP)</a> &middot; <a href="https://pypi.org/project/evalarc/">CLI on PyPI</a> &middot; <a href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md">Install and verify locally &#8599;</a></p></div>
       <div class="terminal"><div>EVALARC 0.8+ / READ-ONLY</div><pre><code># Unzip the downloaded archive first.
 evalarc verify suite-evidence --json
 

@@ -25,6 +25,7 @@ acceptance rule before trusting the higher score.
 
 [**Try the revision comparison →**](https://glayguo-evalarc.static.hf.space/#regression)
 · [First local review](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md)
+· [PyPI package](https://pypi.org/project/evalarc/)
 · [中文](https://github.com/noteflowai/evalarc/blob/main/README.zh-CN.md)
 
 No account, installation or model key is needed to explore the saved records.
@@ -37,7 +38,7 @@ or a model leaderboard.
 2. Step through the action that duplicates the note in the case explorer.
 3. Compare the permissive gate with the strict notes gate. The score stays
    93.75%; acceptance changes with the declared rule.
-4. [Install the published wheel and recompute the report](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md).
+4. [Install from PyPI and recompute the report](https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md).
    The local review needs Python 3.11+, with no Docker, Node, GPU or model call.
 
 ## Bring your own evidence

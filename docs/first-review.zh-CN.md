@@ -23,12 +23,13 @@ mkdir evalarc-first-review
 cd evalarc-first-review
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
+python -m pip install evalarc==0.14.0
 evalarc --version
 ```
 
-预期输出 `EvalArc 0.14.0`。安装地址固定了发布版本及 SHA-256，
-包本身没有第三方运行时依赖；不依赖 PyPI 存在同名包。
+预期输出 `EvalArc 0.14.0`。此命令从 PyPI 安装固定版本，
+包本身没有第三方运行时依赖。GitHub Releases 提供相同的 wheel，
+也支持[固定 SHA-256 的安装方式](publication.md#python-distributions)。
 
 ## 3. 复算这次退步
 

@@ -50,8 +50,41 @@ files owned by the previous manifest and preserves unrelated remote files.
 Every uploaded file is read back from the immutable Hub revision without
 authentication and compared with the tested artifact.
 
-GitHub releases distribute the Python wheel and source archive. A GitHub
-release does not mean a package has been published to PyPI.
+## Python distributions
+
+EvalArc **0.14.0** is available from
+[PyPI](https://pypi.org/project/evalarc/0.14.0/) and
+[GitHub Releases](https://github.com/noteflowai/evalarc/releases/tag/v0.14.0):
+
+```bash
+python -m pip install evalarc==0.14.0
+```
+
+Both channels serve the same wheel and source archive. Their public files were
+downloaded and checked against the GitHub release SHA-256 digests after the
+first PyPI publication on September 25, 2026. A fresh Python 3.12 environment
+installed the public package, passed `pip check`, and verified the recorded
+evaluation example.
+
+For an installation that pins the wheel's checksum explicitly:
+
+```bash
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
+```
+
+The `publish-pypi.yml` workflow publishes an existing GitHub release using the
+PyPI trusted publisher for owner `noteflowai`, repository `evalarc` and
+environment `pypi`. It downloads the release distributions, checks their hashes,
+metadata, source archive and installed wheel, then uploads those same files.
+Run it from `main` with the intended release tag:
+
+```bash
+gh workflow run publish-pypi.yml --repo noteflowai/evalarc --ref main \
+  -f tag=vX.Y.Z -f repository=pypi
+```
+
+Recorded evidence bundles remain separate GitHub release downloads. Their
+versions and checksums can stay fixed while the reviewer receives updates.
 
 ## Outreach
 
