@@ -34,7 +34,7 @@ or a model leaderboard.
 
 ## Actual model configuration comparison
 
-[Review Qwen3-8B and Qwen3.8-27B-FP8](https://glayguo-evalarc.static.hf.space/model-upgrade/):
+[Review Qwen3-8B and Qwen3.8-27B-FP8](https://glayguo-evalarc.static.hf.space/model-upgrade/index.html):
 eight public support-planning cases, three fresh generations per configuration,
 all 48 original outputs and native pytest checks. Download and regrade offline.
 Plans were not executed; model sizes and quantization differ.
