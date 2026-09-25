@@ -1,7 +1,7 @@
 # Your first EvalArc review
 
 Start with a recorded failure, check it on your machine, then use the same
-workflow with your own evidence. The steps below use the published **0.13.0**
+workflow with your own evidence. The steps below use the published **0.13.1**
 reviewer with the original **0.12.1** evidence snapshot. The two versions are
 pinned separately so the tool can advance while the recorded inputs stay fixed.
 You need Python 3.11+ on Linux and `curl` for downloads.
@@ -25,11 +25,11 @@ mkdir evalarc-first-review
 cd evalarc-first-review
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.0/evalarc-0.13.0-py3-none-any.whl#sha256=1a3845cb92b594364f83a50307ad6c3b96c4504033a41d41900b9d1390ca803b"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.1/evalarc-0.13.1-py3-none-any.whl#sha256=2368c634dfe10906c90e94bc5dc1984cdc993a777a43fb724e3db2cf430243fe"
 evalarc --version
 ```
 
-Expected: `EvalArc 0.13.0`. This installs the released wheel, which has no
+Expected: `EvalArc 0.13.1`. This installs the released wheel, which has no
 third-party runtime dependencies. The URL includes its SHA-256. It does not
 require a package named `evalarc` to exist on PyPI.
 

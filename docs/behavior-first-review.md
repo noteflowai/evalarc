@@ -4,7 +4,7 @@ A final report can be correct even when the operations that produced it violated
 the task's policy. This walkthrough rechecks a published control that wrote a
 temporary public file and then deleted it.
 
-Use the [released 0.13.0 reviewer](first-review.md#2-install-the-reviewer).
+Use the [released 0.13.1 reviewer](first-review.md#2-install-the-reviewer).
 The commands need Linux, Python 3.11+, `curl` and `sha256sum`. They read saved
 evidence without executing candidates, running Docker or calling a model.
 Version 0.12.1 does not include `behavior-review`.

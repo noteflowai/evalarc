@@ -5,7 +5,7 @@ review process. It starts with published controls, then explains which pieces
 to replace with actual records. It does not deploy a cloud agent or collect
 AWS data for you.
 
-**Validation scope:** the first half is verified with the released 0.13.0
+**Validation scope:** the first half is verified with the released 0.13.1
 reviewer and unchanged 0.12.1 evidence snapshot. The five scored controls are
 synthetic API-shaped inputs. A separate
 record contains actual local MCP delivery and no evaluator scores. A live
