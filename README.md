@@ -45,16 +45,18 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer in a fresh virtual environment. EvalArc is not on
-PyPI; the command below installs the GitHub release wheel with a pinned SHA-256:
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.14.0/)
+in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
+python -m pip install evalarc==0.14.0
 evalarc --version
 ```
 
+PyPI and GitHub Releases provide the same wheel and source archive.
+[Checksum-pinned installation](docs/publication.md#python-distributions) is also available.
 The offline review needs no Docker, Node, GPU or model API. Follow the
 [download and comparison commands](docs/first-review.md#3-recompute-the-recorded-regression)
 to produce your first HTML report without cloning the source.

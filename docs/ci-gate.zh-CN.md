@@ -6,10 +6,10 @@
 的 DeepEval 及多数测试运行器）。它不会重新运行评测，也不调用模型。
 [English](ci-gate.md)。
 
-`evalarc diff` 与 GitHub Action 随 0.14.0 发布。如需在 Action 之外运行，请安装固定 SHA-256 的发布版 wheel：
+`evalarc diff` 与 GitHub Action 随 0.14.0 发布。如需在 Action 之外运行，请从 PyPI 安装固定版本：
 
 ```bash
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
+python -m pip install evalarc==0.14.0
 ```
 
 ## 用已记录的结果试一试
