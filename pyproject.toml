@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evalarc"
-version = "0.13.1"
+version = "0.14.0"
 description = "Find agent regressions behind better scores: compare changed checks, review recorded tool actions and verify evidence offline."
 readme = "README.md"
 requires-python = ">=3.11"

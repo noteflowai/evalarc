@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.14.0 — 2026-09-25
+
 ### Results diff for existing evaluation tools
 
 - Add `evalarc diff BASELINE CURRENT` for Inspect AI logs (JSON, or `.eval`
