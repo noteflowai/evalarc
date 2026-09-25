@@ -1,0 +1,1 @@
+{% if kind == "large" %}Order {{order}}: we will escalate this ${{amount}} request.{% else %}Order {{order}}: refund approved for ${{amount}}.{% endif %}

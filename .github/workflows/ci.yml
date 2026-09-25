@@ -93,6 +93,52 @@ jobs:
         with:
           name: independent-swe-dataset
           path: dist/independent-swe-dataset/
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: A higher headline score with regressed checks fails the action
+        id: regressed
+        continue-on-error: true
+        uses: ./
+        with:
+          baseline: examples/results-diff/inspect/baseline.json
+          current: examples/results-diff/inspect/current.json
+          output: runs/action-regressed
+      - name: Identical promptfoo results pass the action
+        id: unchanged
+        uses: ./
+        with:
+          baseline: examples/results-diff/promptfoo/current.json
+          current: examples/results-diff/promptfoo/current.json
+          output: runs/action-unchanged
+      - name: Unusable input fails even when regressions are allowed
+        id: unusable
+        continue-on-error: true
+        uses: ./
+        with:
+          baseline: examples/results-diff/promptfoo/current.json
+          current: examples/results-diff/junit/current.xml
+          output: runs/action-unusable
+          fail-on-regression: "false"
+      - name: Check the reported outcomes
+        env:
+          REGRESSED: ${{ steps.regressed.outcome }}
+          BLOCKING: ${{ steps.regressed.outputs.blocking-changes }}
+          GATE: ${{ steps.regressed.outputs.gate-passed }}
+          UNCHANGED: ${{ steps.unchanged.outputs.gate-passed }}
+          UNUSABLE: ${{ steps.unusable.outcome }}
+        run: |
+          test "$REGRESSED" = failure
+          test "$BLOCKING" = 3
+          test "$GATE" = false
+          test "$UNCHANGED" = true
+          test "$UNUSABLE" = failure
+          test -f runs/action-regressed/index.html
+          cmp runs/action-regressed/current.json examples/results-diff/inspect/current.json
   strands-recipe:
     runs-on: ubuntu-latest
     steps:

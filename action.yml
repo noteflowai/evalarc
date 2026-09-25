@@ -1,0 +1,92 @@
+name: EvalArc results diff
+description: >-
+  Fail a pull request when an Inspect AI, promptfoo or JUnit check that passed
+  on the baseline loses passes, even if the headline score improves.
+author: EvalArc contributors
+branding:
+  icon: git-pull-request
+  color: green
+inputs:
+  baseline:
+    description: Earlier result file (Inspect JSON/.eval log, promptfoo --output JSON or JUnit XML).
+    required: true
+  current:
+    description: Later result file in the same format.
+    required: true
+  format:
+    description: auto, inspect, promptfoo or junit.
+    default: auto
+  threshold:
+    description: Numeric Inspect scores at or above this value pass.
+    default: "1.0"
+  output:
+    description: New folder for diff.json, summary.md, index.html and copies of both inputs.
+    default: evalarc-diff
+  fail-on-regression:
+    description: Fail this step when a check lost passes or coverage. Unusable input always fails.
+    default: "true"
+  python:
+    description: Python 3.11+ interpreter used to create the action's virtual environment.
+    default: python3
+outputs:
+  gate-passed:
+    description: '"true" when no check lost passes or coverage and the current run is complete.'
+    value: ${{ steps.diff.outputs.gate-passed }}
+  blocking-changes:
+    description: Number of regressed, less reliable, unassessed and removed checks.
+    value: ${{ steps.diff.outputs.blocking-changes }}
+  report:
+    description: Folder containing the offline report and preserved inputs.
+    value: ${{ steps.diff.outputs.report }}
+runs:
+  using: composite
+  steps:
+    - name: Install EvalArc from the action's own revision
+      shell: bash
+      env:
+        PYTHON: ${{ inputs.python }}
+      run: |
+        "$PYTHON" -m venv "$RUNNER_TEMP/evalarc-action"
+        "$RUNNER_TEMP/evalarc-action/bin/python" -m pip install --quiet \
+          --disable-pip-version-check "$GITHUB_ACTION_PATH"
+        "$RUNNER_TEMP/evalarc-action/bin/evalarc" --version
+    - name: Compare checks
+      id: diff
+      shell: bash
+      env:
+        BASELINE: ${{ inputs.baseline }}
+        CURRENT: ${{ inputs.current }}
+        FORMAT: ${{ inputs.format }}
+        THRESHOLD: ${{ inputs.threshold }}
+        OUTPUT: ${{ inputs.output }}
+        FAIL_ON_REGRESSION: ${{ inputs.fail-on-regression }}
+      run: |
+        bin="$RUNNER_TEMP/evalarc-action/bin"
+        set +e
+        "$bin/evalarc" diff "$BASELINE" "$CURRENT" --format "$FORMAT" \
+          --threshold "$THRESHOLD" --output "$OUTPUT" --markdown "$GITHUB_STEP_SUMMARY"
+        code=$?
+        set -e
+        if [ "$code" -eq 2 ]; then
+          echo "::error title=EvalArc::The result files could not be compared; see the log above."
+          exit 2
+        fi
+        "$bin/python" - "$OUTPUT/diff.json" <<'PY'
+        import json, os, sys
+
+        result = json.load(open(sys.argv[1], encoding="utf-8"))
+        with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+            output.write(f"gate-passed={str(result['gate_passed']).lower()}\n")
+            output.write(f"blocking-changes={result['blocking_changes']}\n")
+            output.write(f"report={os.environ['OUTPUT']}\n")
+        blocking = [row for row in result["changes"] if row["kind"] in (
+            "regressed", "less_reliable", "unassessed", "removed")]
+        clean = lambda text: str(text).replace("%", "%25").replace("\r", "").replace("\n", " ")
+        for row in blocking[:10]:
+            print(f"::warning title=EvalArc {row['kind'].replace('_', ' ')}::"
+                  f"{clean(row['case_id'])} / {clean(row['check'])}")
+        PY
+        if [ "$code" -eq 1 ] && [ "$FAIL_ON_REGRESSION" = "true" ]; then
+          echo "::error title=EvalArc::A check lost passes or coverage. Report: $OUTPUT/index.html"
+          exit 1
+        fi

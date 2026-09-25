@@ -51,6 +51,7 @@ evalarc --version
 | 已有材料 | 可以检查什么 | 入口 |
 | --- | --- | --- |
 | 变更前后的 Agent 评测 | 匹配条件下哪些检查退步 | [运行与对照](docs/workflow.md) |
+| 变更前后的 Inspect AI、promptfoo 或 JUnit 结果 | 总分上升时仍列出丢失通过的检查项，并让拉取请求失败 | [CI 门禁与 GitHub Action](docs/ci-gate.zh-CN.md) |
 | Strands Evals 任务的观测状态 | 用原生 SDK 报告复核备注、关闭状态及逐项回归 | [免安装交互报告](https://noteflowai.github.io/evalarc/strands/index.html) · [运行示例](examples/strands-state-review/README.zh-CN.md) |
 | AgentCore Evaluate 结果与 spans | 有效零分、跳过、缺失以及技能交付 | [导出到审阅](docs/agentcore-first-review.md) |
 | 同一记录上的多次评判 | 分数变化、通过/拒绝翻转及未评判情况 | [中文指南](docs/judge-stability.zh-CN.md) |
@@ -63,6 +64,22 @@ evalarc --version
 
 尝试自己的记录后，欢迎[反馈首次使用的卡点或发现](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml)。
 最小脱敏样例即可；安装失败同样有价值。
+
+### 用已有结果为拉取请求设门禁
+
+`evalarc diff` 逐个配对两份 Inspect AI 日志、promptfoo `--output` 文件或 JUnit XML 中的
+用例与检查项。基线中通过的检查项一旦失败、通过率下降、被跳过或消失，命令即退出 1，
+并写出带两份输入副本的离线报告。在[已记录的 Inspect 示例](examples/results-diff/README.md)中，
+准确率从 0.625 升至 0.8125，同时有三个检查项丢失通过。
+
+```yaml
+- uses: noteflowai/evalarc@v0.14.0 # 或完整的提交 SHA
+  with:
+    baseline: evals/baseline.json
+    current: results/current.json
+```
+
+格式映射、基线来源与拉取请求评论见 [CI 门禁指南](docs/ci-gate.zh-CN.md)。0.14.0 起提供，发布前请从 `main` 安装。
 
 ## 原始证据覆盖什么
 

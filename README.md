@@ -10,6 +10,13 @@ Review changed checks, follow the recorded actions, and hand off evidence someon
   <a href="README.zh-CN.md">简体中文</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/noteflowai/evalarc/actions/workflows/ci.yml"><img src="https://github.com/noteflowai/evalarc/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://github.com/noteflowai/evalarc/releases/latest"><img src="https://img.shields.io/github/v/release/noteflowai/evalarc" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/noteflowai/evalarc" alt="MIT license"></a>
+</p>
+
 **90% → 93.75%. Two checks improve. One previously passing check fails.**
 A tool commits a note but returns an error. Retrying with a new key writes the
 note again. EvalArc exposes that regression instead of letting the higher
@@ -57,6 +64,7 @@ to produce your first HTML report without cloning the source.
 | What you need to review | Use EvalArc to | Start here |
 | --- | --- | --- |
 | A changed agent implementation | Compare matching evaluations and inspect regressed checks | [Run and compare](docs/workflow.md) |
+| Inspect AI, promptfoo or JUnit results before and after a change | List the checks that lost passes, even when the headline improves; fail the pull request | [CI gate and GitHub Action](docs/ci-gate.md) |
 | A Strands Evals task with observed state | Recheck notes and closure using native SDK reports and case/rule identities | [Interactive review](https://noteflowai.github.io/evalarc/strands/index.html) · [Run the example](examples/strands-state-review/README.md) |
 | Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
 | Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
@@ -70,6 +78,25 @@ actual local delivery with no evaluator scores. No live AgentCore evaluation is 
 
 Trying your own records? [Tell us where the first review helped or got stuck](https://github.com/noteflowai/evalarc/issues/new?template=first-use.yml).
 A minimal redacted example is enough; a failed setup is useful feedback too.
+
+### Gate a pull request on the results you already have
+
+`evalarc diff` pairs every case and check in two Inspect AI logs, promptfoo
+`--output` files or JUnit XML reports. It exits 1 when a check that passed on
+the baseline fails, passes less often, is skipped or disappears, and writes an
+offline report with copies of both inputs. In the
+[recorded Inspect example](examples/results-diff/README.md), accuracy rises from
+0.625 to 0.8125 while three checks lose passes.
+
+```yaml
+- uses: noteflowai/evalarc@v0.14.0 # or a full commit SHA
+  with:
+    baseline: evals/baseline.json
+    current: results/current.json
+```
+
+See [the CI gate guide](docs/ci-gate.md) for format mapping, baseline patterns and
+pull request comments. Available from 0.14.0; until then install from `main`.
 
 ## What the recorded evidence covers
 
