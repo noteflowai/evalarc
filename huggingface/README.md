@@ -41,6 +41,10 @@ Plans were not executed; model sizes and quantization differ.
 Complete plans improve **15/24 → 19/24**, but **10 named checks lose passes**:
 the upgrade gate fails. These checks share two format/schema failures.
 
+[First review with the published CLI](https://github.com/noteflowai/evalarc/blob/main/docs/first-model-review.md): Install the released CLI, download the fixed records, and reproduce the failed model-upgrade gate.
+The 30-second walkthrough uses four annotated views of the actual interface,
+with captions and source hashes. No GPU or model-service account is needed.
+
 ## Start with one review
 
 1. Compare the two revisions and select `retry-after-commit`.

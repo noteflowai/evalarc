@@ -368,6 +368,13 @@ def build(destination: Path) -> dict:
     from scripts.model_upgrade_page import build_model_upgrade
 
     build_model_upgrade(ROOT, destination / "model-upgrade")
+    for name in (
+        "ai-first-review.png",
+        "ai-first-review.mp4",
+        "ai-first-review.vtt",
+        "ai-first-review-media.json",
+    ):
+        shutil.copyfile(ROOT / "docs" / "assets" / name, destination / name)
     for suffix in ("png", "gif", "mp4", "vtt"):
         name = f"first-review.{suffix}"
         shutil.copyfile(ROOT / "docs" / "assets" / name, destination / name)

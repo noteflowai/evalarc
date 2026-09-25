@@ -45,6 +45,13 @@ Complete plans improve **15/24 → 19/24**, while **10 named checks lose passes*
 and the upgrade gate fails. These checks share two format/schema failures.
 [Protocol and reproduction](examples/model-upgrade/README.md).
 
+**[First review, no clone required](docs/first-model-review.md)** — Install the released CLI, download the fixed records, and reproduce the failed model-upgrade gate.
+
+<a href="docs/first-model-review.md"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/ai-first-review.png">
+  <img src="docs/assets/ai-first-review.gif" width="960" alt="Install the released CLI, download the fixed records, and reproduce the failed model-upgrade gate.">
+</picture></a>
+
 ## Start with one review
 
 1. **See the regression.** [Compare the two revisions](https://noteflowai.github.io/evalarc/#regression),

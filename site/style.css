@@ -59,3 +59,5 @@ button:disabled{opacity:.5;cursor:default}
 .strands-entry{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:24px;margin-top:40px;background:var(--panel)}
 .strands-entry h2{font-size:28px;margin:12px 0}.strands-entry p{font-size:14px}.strands-entry .caption{font-size:12px}
 @media(max-width:750px){.strands-entry{grid-template-columns:minmax(0,1fr);gap:10px;padding:20px}.strands-entry .primary{font-size:14px;gap:8px}}
+
+.ai-tour{margin:24px 0;padding:18px;border:1px solid #48625e;border-radius:14px;background:#101b24;color:#edf5f2}.ai-tour summary{cursor:pointer;font-weight:650}.ai-tour video{display:block;width:100%;max-width:1000px;height:auto;margin:18px auto 0;background:#101618}.ai-tour p{font-size:14px;line-height:1.6}.ai-tour a{color:#80e6cf}

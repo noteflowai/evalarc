@@ -34,6 +34,13 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 这些检查对应两个用例的格式或结构错误。
 [实验协议与复现](examples/model-upgrade/README.md)。
 
+**[首次复核，无需克隆仓库](docs/first-model-review.md)** — 安装已发布的 CLI，下载固定版本记录，重现模型升级门禁失败。
+
+<a href="docs/first-model-review.md"><picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/ai-first-review.png">
+  <img src="docs/assets/ai-first-review.gif" width="960" alt="安装已发布的 CLI，下载固定版本记录，重现模型升级门禁失败。">
+</picture></a>
+
 ## 从一次复核开始
 
 1. **看退步。** [对照两个版本](https://noteflowai.github.io/evalarc/#regression)，
