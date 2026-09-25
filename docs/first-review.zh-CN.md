@@ -1,7 +1,7 @@
 # 第一次用 EvalArc 复核
 
 先看一个已记录的失败，在本机复算，再换成自己的证据。下列流程使用已发布的
-**0.13.1 复核工具**与原始 **0.12.1 证据快照**。工具和证据分别固定版本，
+**0.14.0 复核工具**与原始 **0.12.1 证据快照**。工具和证据分别固定版本，
 更新工具时保留记录输入。需要 Linux、Python 3.11+ 和用于下载的 `curl`。
 审阅不需要克隆源码、Docker、Node、GPU 或模型密钥。
 
@@ -23,11 +23,11 @@ mkdir evalarc-first-review
 cd evalarc-first-review
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.1/evalarc-0.13.1-py3-none-any.whl#sha256=2368c634dfe10906c90e94bc5dc1984cdc993a777a43fb724e3db2cf430243fe"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
 evalarc --version
 ```
 
-预期输出 `EvalArc 0.13.1`。安装地址固定了发布版本及 SHA-256，
+预期输出 `EvalArc 0.14.0`。安装地址固定了发布版本及 SHA-256，
 包本身没有第三方运行时依赖；不依赖 PyPI 存在同名包。
 
 ## 3. 复算这次退步

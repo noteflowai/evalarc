@@ -51,7 +51,7 @@ PyPI; the command below installs the GitHub release wheel with a pinned SHA-256:
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.13.1/evalarc-0.13.1-py3-none-any.whl#sha256=2368c634dfe10906c90e94bc5dc1984cdc993a777a43fb724e3db2cf430243fe"
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
 evalarc --version
 ```
 
@@ -96,7 +96,7 @@ offline report with copies of both inputs. In the
 ```
 
 See [the CI gate guide](docs/ci-gate.md) for format mapping, baseline patterns and
-pull request comments. Available from 0.14.0; until then install from `main`.
+pull request comments.
 
 ## What the recorded evidence covers
 

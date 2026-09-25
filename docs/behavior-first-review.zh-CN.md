@@ -3,7 +3,7 @@
 最终报告正确，生成它的过程仍可能违反任务规则。这个流程复核一项已发布对照：
 候选程序写入临时公开文件，随后将其删除。
 
-先安装[已发布的 0.13.1 复核工具](first-review.zh-CN.md#2-安装复核工具)。
+先安装[已发布的 0.14.0 复核工具](first-review.zh-CN.md#2-安装复核工具)。
 命令需要 Linux、Python 3.11+、`curl` 和 `sha256sum`，只读取已保存的证据，
 不执行候选程序、不启动 Docker、不调用模型。0.12.1 不包含 `behavior-review`。
 [English](behavior-first-review.md)。

@@ -7,9 +7,12 @@ reads Inspect AI logs, promptfoo `--output` JSON and JUnit XML (pytest,
 DeepEval via pytest, and most test runners). It does not rerun the evaluation or
 call a model. [中文](ci-gate.zh-CN.md).
 
-> `evalarc diff` and the GitHub Action are available from **0.14.0**. Until
-> that release, install from the main branch:
-> `python -m pip install "evalarc @ git+https://github.com/noteflowai/evalarc@main"`.
+`evalarc diff` and the GitHub Action ship in 0.14.0. To run the diff outside
+the Action, install the release wheel with its pinned SHA-256:
+
+```bash
+python -m pip install "https://github.com/noteflowai/evalarc/releases/download/v0.14.0/evalarc-0.14.0-py3-none-any.whl#sha256=d1000d2d258f0bef968c3e043ec03b792aebcf7110011820b779ba44a0bdd259"
+```
 
 ## Try it on recorded results
 
