@@ -9,5 +9,7 @@ for(const seed of data.protocol.seeds){const option=document.createElement('opti
 for(const label of ['baseline','current'])el(label+'-count').textContent=data.complete_plans[label]+' / 24';
 el('gate').textContent=data.comparison.blocking_changes+' named checks lost passes or coverage; '+data.comparison.counts.improved+' improved. Open the full diff to inspect each change.';
 function show(){const key=el('case').value+'-'+el('seed').value;for(const label of ['baseline','current']){const selected=data.records[label][key];el(label+'-text').textContent=selected.record.text;el(label+'-status').textContent=selected.complete_plan?'Complete plan matches':'Complete plan differs';el(label+'-status').className=selected.complete_plan?'pass':'fail';el(label+'-download').href='recorded/'+label+'/'+key+'.json'}const record=data.records.current[key].record;el('prompt').textContent=JSON.stringify({messages:record.messages,generation:record.generation,seed:record.seed},null,2)}
-el('case').addEventListener('change',show);el('seed').addEventListener('change',show);show();
+function restore(){const params=new URLSearchParams(location.hash.slice(1));if(data.protocol.cases.some(c=>c.id===params.get('case')))el('case').value=params.get('case');if(data.protocol.seeds.map(String).includes(params.get('seed')))el('seed').value=params.get('seed');show()}
+function select(){history.replaceState(null,'','#'+new URLSearchParams({case:el('case').value,seed:el('seed').value}));show()}
+el('case').addEventListener('change',select);el('seed').addEventListener('change',select);window.addEventListener('hashchange',restore);restore();
 </script></body></html>

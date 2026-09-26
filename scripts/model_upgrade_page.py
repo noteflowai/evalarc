@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import runpy
 import shutil
@@ -87,3 +88,90 @@ def build_model_upgrade(root: Path, destination: Path) -> None:
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.external_attr = 0o100644 << 16
                 archive.writestr(info, path.read_bytes())
+
+
+def homepage_proof(root: Path) -> str:
+    """Render the entry point from the same verified records as the full review."""
+    data = evidence(root)
+    seeds = data["protocol"]["seeds"]
+    total = len(data["protocol"]["cases"]) * len(seeds)
+    before, after = (data["complete_plans"][label] for label in ("baseline", "current"))
+    first = f"already-closed-{seeds[0]}"
+    outputs = {
+        str(seed): {
+            label: data["records"][label][f"already-closed-{seed}"]["record"]["text"]
+            for label in ("baseline", "current")
+        }
+        for seed in seeds
+    }
+    payload = json.dumps(
+        {
+            "before": before,
+            "after": after,
+            "total": total,
+            "blocking": data["comparison"]["blocking_changes"],
+            "outputs": outputs,
+        },
+        ensure_ascii=True,
+    ).replace("<", "\\u003c")
+    buttons = "".join(
+        f'<button type="button" data-model-seed="{seed}" '
+        f'aria-pressed="{str(index == 0).lower()}">{seed}</button>'
+        for index, seed in enumerate(seeds)
+    )
+    baseline = html.escape(data["records"]["baseline"][first]["record"]["text"])
+    current = html.escape(data["records"]["current"][first]["record"]["text"])
+    return f"""
+<div class="model-proof" aria-labelledby="proof-title">
+  <div class="proof-top">
+<span id="proof-title">QWEN / RECORDED MODEL UPGRADE</span>
+<span class="badge fail">GATE FAILED</span>
+</div>
+  <div class="model-scores">
+<div>
+<span>Qwen3-8B · BF16</span>
+<strong>{before}<small>/{total}</small>
+</strong>
+</div>
+<span class="model-arrow" aria-hidden="true">→</span>
+<div>
+<span>Qwen3.8-27B · FP8</span>
+<strong>{after}<small>/{total}</small>
+</strong>
+</div>
+</div>
+  <p class="caption">Complete plans matching the contract · 8 cases × 3 generations</p>
+  <div class="model-blockers">
+<strong>{data["comparison"]["blocking_changes"]}</strong>
+<span>named checks lost passes or coverage<br>Two shared format/schema failure causes</span>
+</div>
+  <div class="model-case">
+<div class="model-case-heading">
+<span>CASE / already-closed</span>
+<div role="group" aria-label="Recorded generation seed">
+<span>Seed</span>{buttons}</div>
+</div>
+    <div class="model-output">
+<div>
+<span>Before</span>
+<pre id="proof-before">{baseline}</pre>
+</div>
+<div>
+<span>After</span>
+<pre id="proof-after">{current}</pre>
+</div>
+</div>
+    <p id="proof-caption" class="caption" aria-live="polite">Seed {seeds[0]} ·
+The required actions field is missing.</p>
+  </div>
+  <div class="model-proof-actions">
+<a id="proof-open"
+ href="model-upgrade/index.html#case=already-closed&amp;seed={seeds[0]}">Inspect this output →</a>
+<button id="proof-image" type="button" hidden>Save result image</button>
+</div>
+  <p class="caption model-scope">Selected public cases; plans not executed.
+Model size and quantization differ.</p>
+  <p id="proof-image-status" class="caption" role="status">
+</p>
+</div>
+<script id="model-proof-data" type="application/json">{payload}</script>"""

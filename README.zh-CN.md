@@ -25,6 +25,8 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 演示回放的是脚本对照在 Docker 中运行后保存的记录，无需安装、账号或模型密钥。
 研究预览 · MIT · Python 3.11+ · 本地流程使用 Linux · Python 包无第三方运行时依赖。
 
+[首页](https://noteflowai.github.io/evalarc/)先呈现已记录的模型升级比较：切换生成种子、打开对应原始输出，或保存注明适用范围的结果图。完整复核页面的链接会保留所选案例与种子。
+
 ## 复核一次真实模型升级
 
 [对照 Qwen3-8B 与 Qwen3.8-27B-FP8](https://noteflowai.github.io/evalarc/model-upgrade/)：

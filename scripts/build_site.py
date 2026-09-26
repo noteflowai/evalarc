@@ -349,6 +349,9 @@ def build(destination: Path) -> dict:
     verify_repetitions()
     verify_suite()
     destination.mkdir(parents=True)
+    from scripts.model_upgrade_page import homepage_proof
+
+    model_proof = homepage_proof(ROOT)
     for path in (ROOT / "site").iterdir():
         if path.is_file():
             if path.name == "index.html":
@@ -359,6 +362,7 @@ def build(destination: Path) -> dict:
                     .replace("__AUDIT_COVERAGE__", coverage_cards(audits))
                     .replace("__TASK_PACK_COUNT__", str(len(audits)))
                     .replace("__FAULT_COUNT__", str(sum(a["total"] for a in audits.values())))
+                    .replace("__MODEL_HERO__", model_proof)
                 )
             else:
                 shutil.copyfile(path, destination / path.name)

@@ -5,7 +5,7 @@ const path = require("node:path");
 const { chromium } = require("playwright");
 
 (async () => {
-  const root = path.resolve("dist/site/model-upgrade");
+  const root = path.resolve(process.env.SITE_DIR || "dist/site", "model-upgrade");
   const data = JSON.parse(await fs.readFile(path.join(root, "review.json"), "utf8"));
   const browser = await chromium.launch({ headless: true });
   const errors = [];
@@ -30,6 +30,13 @@ const { chromium } = require("playwright");
         }
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      await page.goto("file://" + path.join(root, "index.html") + "#case=already-closed&seed=29");
+      assert.equal(await page.locator("#case").inputValue(), "already-closed");
+      assert.equal(await page.locator("#seed").inputValue(), "29");
+      await page.locator("#seed").selectOption("43");
+      await page.reload();
+      assert.equal(await page.locator("#seed").inputValue(), "43");
+      assert.equal((await page.locator("#current-text").innerText()).trim(), "{}");
       assert(requests.every(url => url.startsWith("file:")), "Offline review made a network request");
       await page.screenshot({ path: `artifacts/model-upgrade-browser/${width}.png`, fullPage: true });
       await page.close();
