@@ -6,9 +6,14 @@
   <meta name="description" content="Find the agent regression behind a better score. Compare changed checks, follow the recorded retry, and verify the evidence locally with EvalArc.">
   <meta name="theme-color" content="#101618">
   <title>EvalArc | Look past the score.</title>
+  <meta property="og:title" content="EvalArc | More passing plans. A failed gate.">
+  <meta property="og:description" content="Compare real Qwen generations and the checks behind a model upgrade. Original outputs, explicit scope, offline evidence.">
+  <meta property="og:image" content="https://noteflowai.github.io/evalarc/model-upgrade-social.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
+  <script src="model-proof.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#explorer">Skip to evidence explorer</a>
@@ -21,22 +26,16 @@
       <div>
         <p class="eyebrow"><span class="dot"></span> OPEN SOURCE &nbsp; / &nbsp; RESEARCH PREVIEW __EVALARC_VERSION__</p>
         <h1>Look past<br>the <em>score.</em></h1>
-        <p class="intro">A tool returned an error. The write already happened.<br>A retry added the same note twice.</p>
-        <p class="muted">Review an agent change before you accept it. Compare failed checks, follow the recorded actions, and keep the evidence behind your decision.</p>
-        <a class="primary" href="#regression">Find the regression <span>&#8600;</span></a>
-        <p class="caption">Interactive recorded example · no account, install or model key</p>
-        <a class="hero-secondary" href="https://github.com/noteflowai/evalarc/blob/main/docs/first-review.md" target="_blank" rel="noopener">Run your first local review &#8599;</a>
+        <p class="intro">More passing plans.<br>Still a failed upgrade.</p>
+        <p class="muted">See what improved, what broke, and the original answer behind each check. Start with 48 real model generations.</p>
+        <a class="primary" href="model-upgrade/index.html#case=already-closed&amp;seed=17">Review the model upgrade <span>&#8594;</span></a>
+        <p class="caption">Recorded outputs · no account, install or model key</p>
+
       </div>
-      <a class="hero-proof" href="#explorer" aria-label="Inspect why a 93.75 percent score fails acceptance">
-        <div class="proof-top"><span>RECORDED CONTROL / 01</span><span class="badge fail">NOT RESOLVED</span></div>
-        <div class="hero-score">93.75<span>%</span></div>
-        <p>Partial score. Duplicated write.</p>
-        <div class="spark" aria-hidden="true"><i></i><i></i><i></i><i class="broken"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="receipt"><span>add_note</span><b>committed</b><span>response</span><b class="coral">transient error</b><span>retry with new key</span><b class="coral">duplicate note</b></div>
-        <p class="caption">Scripted negative control &middot; public seed 17<br>No model call or live customer data.</p>
-      </a>
+      __MODEL_HERO__
     </section>
 
+    <a class="hero-secondary" href="#regression">Find the regression in a scripted retry &#8595;</a>
     <section class="strands-entry" aria-labelledby="model-upgrade-title">
       <div><p class="eyebrow">QWEN3.8 / ACTUAL MODEL GENERATIONS</p><h2 id="model-upgrade-title">Review a model upgrade, case by case.</h2><p>Qwen3-8B BF16 and Qwen3.8-27B FP8. Eight support-planning cases, three fresh generations each. Inspect every original answer, native pytest check and recorded difference.</p><p class="caption">Selected public development cases; plans are not executed. Model size and quantization differ.</p></div>
       <div><a class="primary" href="model-upgrade/index.html">Review the actual model outputs &#8594;</a><p class="caption">48 original generations · offline comparison · reproducible checks</p></div>

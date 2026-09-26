@@ -35,6 +35,8 @@ The demonstration replays saved Docker runs of scripted controls. No installatio
 account or model key is needed to explore it. **Research preview** · MIT ·
 Python 3.11+ · Linux for local workflows · no third-party Python runtime dependencies.
 
+The [homepage](https://noteflowai.github.io/evalarc/) compares the recorded model upgrade before you enter the full lab. Switch generation seeds, open that exact output, or save a result image with the comparison scope. The full model review keeps the selected case and seed in its URL.
+
 ## Review a real model upgrade
 
 [Compare Qwen3-8B and Qwen3.8-27B-FP8](https://noteflowai.github.io/evalarc/model-upgrade/):

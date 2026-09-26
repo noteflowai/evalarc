@@ -50,6 +50,16 @@ async function main() {
       await page.goto(base, {waitUntil:"networkidle", timeout:60000});
       const app = process.env.SITE_HUB === "1" ? page.frameLocator('iframe[src*="hf.space"]') : page;
       await app.locator("#workspace").waitFor({state:"visible"});
+      await app.locator('[data-model-seed="29"]').click();
+      assert.equal(await app.locator('[data-model-seed="29"]').getAttribute("aria-pressed"), "true");
+      assert.match(await app.locator("#proof-open").getAttribute("href"), /case=already-closed&seed=29$/);
+      assert.equal((await app.locator("#proof-after").innerText()).trim(), "{}");
+      const imageDownload = page.waitForEvent("download");
+      await app.locator("#proof-image").click();
+      const imageBytes = fs.readFileSync(await (await imageDownload).path());
+      assert.equal(imageBytes.readUInt32BE(16), 1200);
+      assert.equal(imageBytes.readUInt32BE(20), 630);
+      assert(imageBytes.length > 15000, "The result image must contain a rendered comparison");
       await checkAIWalkthrough(app, requests);
       await app.locator("#comparison-workspace").waitFor({state:"visible"});
       await app.locator("#repeat-workspace").waitFor({state:"visible"});
@@ -58,7 +68,7 @@ async function main() {
       assert.equal(await app.locator("body").evaluate(() => location.hash), "#regression");
       const comparisonHeading = await app.locator("#regression h2").boundingBox();
       assert(comparisonHeading && comparisonHeading.y >= 0 && comparisonHeading.y < 1000,
-        "The primary action must expose the recorded regression");
+        "The scripted retry entry must expose the recorded regression");
       if (width === 1440) {
         await app.locator(".tour summary").click();
         const video = app.getByLabel("Recorded regression walkthrough");
