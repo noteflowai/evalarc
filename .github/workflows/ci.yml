@@ -35,6 +35,16 @@ jobs:
           cd "$RUNNER_TEMP"
           PYTHONPATH="" "$RUNNER_TEMP/installed/bin/python" \
             "$GITHUB_WORKSPACE/scripts/check_installed.py" --source "$GITHUB_WORKSPACE"
+      - name: Retain the installed and verified release distributions
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: release-distributions
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+          if-no-files-found: error
+          retention-days: 30
   docker-audit:
     runs-on: ubuntu-latest
     strategy:
