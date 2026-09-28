@@ -122,9 +122,7 @@ def _unique_object(pairs: list) -> dict:
 
 
 def _no_constant(name: str) -> None:
-    raise ValueError(
-        f"invalid decision records: {name} is not valid JSON; use finite numbers"
-    )
+    raise ValueError(f"invalid decision records: {name} is not valid JSON; use finite numbers")
 
 
 def load(path: Path) -> tuple:
@@ -141,9 +139,7 @@ def load(path: Path) -> tuple:
     except UnicodeDecodeError:
         raise ValueError("invalid decision records: the file must be UTF-8 JSON") from None
     try:
-        document = json.loads(
-            text, object_pairs_hook=_unique_object, parse_constant=_no_constant
-        )
+        document = json.loads(text, object_pairs_hook=_unique_object, parse_constant=_no_constant)
     except json.JSONDecodeError as error:
         raise ValueError(f"invalid decision records: not valid JSON ({error})") from None
     return document, data
@@ -322,8 +318,7 @@ def headline(state: str, row: dict, max_error: float | None) -> str:
     target = _fixed(max_error)
     if state == "no_threshold":
         return (
-            f"No calibration threshold reaches error {target}; "
-            "records classified at baseline t=0"
+            f"No calibration threshold reaches error {target}; records classified at baseline t=0"
         )
     threshold = _fixed(row["threshold"])
     if state == "no_heldout_answers":
@@ -498,13 +493,13 @@ def render(result: dict, target: Path) -> None:
             f'<tr data-threshold="{row["threshold"]!r}"{css}>'
             f'<td data-label="Threshold t">{_fixed(row["threshold"])} {markers}</td>'
             f'<td data-label="Calibration answered">{cal["answered"]}/{cal["total"]}'
-            f'<small>{_pct(cal["coverage"])} coverage</small></td>'
+            f"<small>{_pct(cal['coverage'])} coverage</small></td>"
             f'<td data-label="Calibration selective error">{_error_cell(cal)}</td>'
             f'<td data-label="Held-out coverage">{_pct(held["coverage"])}'
-            f'<small>{held["answered"]}/{held["total"]} answered</small></td>'
+            f"<small>{held['answered']}/{held['total']} answered</small></td>"
             f'<td data-label="Held-out selective error">{_error_cell(held)}</td>'
             f'<td data-label="Held-out wrong, all records">{held["wrong_rate_all"]:.3f}'
-            f'<small>{held["wrong"]} wrong of {held["total"]}</small></td></tr>'
+            f"<small>{held['wrong']} wrong of {held['total']}</small></td></tr>"
         )
     ordered = sorted(result["records"], key=lambda row: OUTCOME_ORDER.index(row["outcome"]))
     rendered = ordered[:MAX_RECORD_ROWS]
@@ -599,7 +594,7 @@ def render(result: dict, target: Path) -> None:
         f"<h1>{escape(result['headline'])}</h1>"
         f"<p>{escape(provenance['description'])}</p>"
         f'<p class="muted">Model {escape(model["id"])} · revision {escape(model["revision"])}'
-        f' · input SHA-256 <code>{result["source"]["sha256"]}</code></p>'
+        f" · input SHA-256 <code>{result['source']['sha256']}</code></p>"
         f'<p class="scope">{escape(result["scope"])}</p>'
         f'<div class="stats">{stats}</div>'
         f"<p>{escape(target_text)} {escape(baseline_text)} Invalid responses lower coverage "
