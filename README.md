@@ -64,13 +64,13 @@ and the upgrade gate fails. These checks share two format/schema failures.
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.15.0/)
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.16.0/)
 in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.15.0
+python -m pip install evalarc==0.16.0
 evalarc --version
 ```
 
@@ -89,6 +89,7 @@ to produce your first HTML report without cloning the source.
 | A Strands Evals task with observed state | Recheck notes and closure using native SDK reports and case/rule identities | [Interactive review](https://noteflowai.github.io/evalarc/strands/index.html) · [Run the example](examples/strands-state-review/README.md) |
 | Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
 | Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
+| Labelled choice decisions with reported probabilities | Choose an abstention threshold on calibration records, then check held-out error, coverage and invalid responses | [Decision Coverage](docs/decision-coverage.md) |
 | A report received from another developer | Recompute summaries, configured gates and JUnit from original inputs | [Offline verification](docs/verification.md) |
 | A correct file with questionable execution | Inspect temporary writes, file access and actual service submissions | [Runtime behavior review](https://noteflowai.github.io/evalarc/behavior-audit/index.html) · [Local review without cloning](docs/behavior-first-review.md) |
 | A grader or candidate you want to execute | Run a reference and deliberate faults against a task contract | [Run an audit](#run-an-audit) |
@@ -110,7 +111,7 @@ offline report with copies of both inputs. In the
 0.625 to 0.8125 while three checks lose passes.
 
 ```yaml
-- uses: noteflowai/evalarc@v0.15.0 # or a full commit SHA
+- uses: noteflowai/evalarc@v0.16.0 # or a full commit SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json

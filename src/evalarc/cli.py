@@ -96,6 +96,36 @@ def parser() -> argparse.ArgumentParser:
         "trace-stability-verify", help="recompute judge agreement from preserved input files"
     )
     stability_verify.add_argument("directory", type=Path)
+    decision_coverage = commands.add_parser(
+        "decision-coverage",
+        help="held-out error versus coverage for recorded choice decisions at a threshold",
+        description=(
+            "Choose an abstention threshold on calibration records and report held-out "
+            "selective error, coverage and invalid responses. Offline; no provider calls."
+        ),
+        epilog=(
+            "exit codes:\n"
+            "  0  target met, or no --max-error given (state no_target)\n"
+            "  1  held-out target exceeded, no calibration threshold qualifies,\n"
+            "     or the chosen threshold answers no held-out record\n"
+            "  2  unreadable or invalid records file, invalid --max-error, or existing output"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    decision_coverage.add_argument(
+        "records", type=Path, help="evalarc.decision-records.v1 JSON (max 4 MiB, 10000 records)"
+    )
+    decision_coverage.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="new directory for input.json, its SHA-256, decisions.json and index.html",
+    )
+    decision_coverage.add_argument(
+        "--max-error",
+        metavar="E",
+        help="held-out selective error target from 0 to 1; t is chosen on calibration only",
+    )
     for name, help_text in (
         ("evaluate", "grade a candidate directory"),
         ("audit", "evaluate a task's reference and behavioral negative controls"),
@@ -204,6 +234,10 @@ def parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if args.command == "decision-coverage":
+        from evalarc.decision_coverage import command as decision_coverage
+
+        return decision_coverage(args.records, args.output, args.max_error)
     if args.command == "behavior-review":
         from evalarc.behavior_review import review as review_behavior
 
