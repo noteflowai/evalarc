@@ -1,0 +1,28 @@
+{
+  "schema_version": "evalarc.decision-records.v1",
+  "provenance": {
+    "kind": "synthetic",
+    "description": "Authored synthetic grasp and next-action decisions for the decision-coverage walkthrough; not provider output."
+  },
+  "model": {"id": "synthetic-choice-component", "revision": "fixture-1"},
+  "questions": {
+    "grasp": {"type": "choice", "options": ["top", "side", "pinch"]},
+    "next_action": {"type": "choice", "options": ["continue", "stop"]}
+  },
+  "records": [
+    {"id": "cal-01", "question": "grasp", "split": "calibration", "label": "top", "response": {"distribution": {"top": 0.92, "side": 0.05, "pinch": 0.03}}},
+    {"id": "cal-02", "question": "grasp", "split": "calibration", "label": "side", "response": {"distribution": {"side": 0.81, "top": 0.19}}},
+    {"id": "cal-03", "question": "grasp", "split": "calibration", "label": "pinch", "response": {"distribution": {"top": 0.66, "pinch": 0.34}}},
+    {"id": "cal-04", "question": "next_action", "split": "calibration", "label": "continue", "response": {"distribution": {"continue": 0.88, "stop": 0.12}}},
+    {"id": "cal-05", "question": "next_action", "split": "calibration", "label": "stop", "response": {"distribution": {"continue": 0.55, "stop": 0.45}}},
+    {"id": "cal-06", "question": "next_action", "split": "calibration", "label": "stop", "response": {"distribution": {"stop": 0.74, "continue": 0.26}}},
+    {"id": "cal-07", "question": "grasp", "split": "calibration", "label": "top", "response": {"distribution": {"top": 0.5, "side": 0.5}}},
+    {"id": "cal-08", "question": "next_action", "split": "calibration", "label": "continue", "response": {"error": "provider timeout after 30 s"}},
+    {"id": "ho-01", "question": "grasp", "split": "held_out", "label": "side", "response": {"distribution": {"side": 0.9, "top": 0.1}}},
+    {"id": "ho-02", "question": "grasp", "split": "held_out", "label": "top", "response": {"distribution": {"top": 0.7, "pinch": 0.3}}},
+    {"id": "ho-03", "question": "next_action", "split": "held_out", "label": "stop", "response": {"distribution": {"continue": 0.68, "stop": 0.32}}},
+    {"id": "ho-04", "question": "next_action", "split": "held_out", "label": "continue", "response": {"distribution": {"continue": 0.6, "stop": 0.4}}},
+    {"id": "ho-05", "question": "grasp", "split": "held_out", "label": "pinch", "response": {"distribution": {"pinch": 0.84, "side": 0.16}}},
+    {"id": "ho-06", "question": "next_action", "split": "held_out", "label": "stop", "response": {"distribution": {"stop": "0.9", "continue": 0.1}}}
+  ]
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0 — 2026-09-28
+
+- review held-out error versus coverage for recorded choice decisions at an abstention threshold. EvalArc has a new offline command, evalarc decision-coverage. It reads one evalarc.decision-records.v1 file of labelled choice decisions, split into calibration and held_out records, each with a probability distribution or a recorded error. It reports held-out error versus coverage at an abstention threshold. Confidence is the largest probability, and ties go to the option declared first. The command tries every distinct calibration confidence plus the baseline t=0. With --max-error E, it picks the smallest threshold whose calibration error is at or below E, using calibration data only, and checks it on held-out data. The result is one of four states: met (exit 0), exceeded, no_threshold or no_heldout_answers (exit 1). Without a target the state is no_target (exit 0), and records are classified at t=0. Malformed responses become invalid rows with a stated reason. They are never counted as wrong but lower coverage. Malformed files exit 2 and write nothing. The new output directory holds a byte-identical input copy with its sha256, a decisions.json with the full sweep, and an escaped, self-contained index.html.
+
 ## 0.15.0 — 2026-09-25
 
 - Publish a reproducible Qwen3-8B BF16 / Qwen3.8-27B FP8 configuration comparison with fresh generations, native pytest/JUnit checks and every original answer.
