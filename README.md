@@ -238,6 +238,8 @@ and case fingerprints, runtime limits, seeds, and resolved container image ID.
 ```bash
 evalarc init workspace/durable-kv
 # Give this workspace and its TASK.md to your coding agent.
+
+Product direction and acceptance milestones: [Roadmap](ROADMAP.md).
 # After it edits main.py:
 evalarc evaluate workspace/durable-kv --seeds 17 41 97 --output runs/candidate
 ```
