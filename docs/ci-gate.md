@@ -53,11 +53,15 @@ epochs, promptfoo repeats, repeated JUnit cases).
 | `regressed` | Passed before; no current attempt passes | yes |
 | `less_reliable` | Pass rate fell but some attempts still pass | yes |
 | `unassessed` | Passed before; now only errors or skips | yes |
+| `less_covered` | Fewer attempts were assessed than in the baseline, so the pass rate cannot count as unchanged or improved | yes |
 | `removed` | The check or case is missing from the current run | yes |
 | `improved` | Pass rate rose | no |
 | `added` | New in the current run | no |
 
 A current Inspect log whose status is not `success` also fails the gate.
+A rerun with fewer epochs or with lost samples fails the gate as `less_covered`
+until the attempt counts match or a new baseline is committed; a falling pass
+rate is still reported as `regressed` or `less_reliable` first.
 Removing a failing check fails too: deleting it would otherwise turn a red gate
 green.
 

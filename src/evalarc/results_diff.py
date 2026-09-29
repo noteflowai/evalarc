@@ -21,7 +21,7 @@ SCHEMA = "evalarc.results-diff.v1"
 FORMATS = ("auto", "inspect", "promptfoo", "junit")
 MAX_INPUT_BYTES = 512 * 1024 * 1024
 # Kinds that fail the gate, in the order they are reported.
-BLOCKING = ("regressed", "less_reliable", "unassessed", "removed")
+BLOCKING = ("regressed", "less_reliable", "unassessed", "less_covered", "removed")
 KINDS = (*BLOCKING, "improved", "added")
 INTERPRETATION = (
     "Compares recorded check outcomes only. A check counts as passed when the source tool "
@@ -86,10 +86,12 @@ def diff(baseline: dict, current: dict) -> dict:
             changes.append(row)
     order = {kind: index for index, kind in enumerate(KINDS)}
     changes.sort(key=lambda row: (order[row["kind"]], row["case_id"], row["check"]))
-    counts = {kind: 0 for kind in KINDS}
-    counts.update(Counter(row["kind"] for row in changes))
+    found = Counter(row["kind"] for row in changes)
+    # less_covered is an additive schema-v1 value: it is listed only when present, so
+    # comparisons with equal coverage keep exactly the counts earlier releases recorded.
+    counts = {kind: found[kind] for kind in KINDS if kind != "less_covered" or found[kind]}
     counts["unchanged"] = unchanged
-    blocking = sum(counts[kind] for kind in BLOCKING)
+    blocking = sum(found[kind] for kind in BLOCKING)
     incomplete = current["incomplete"]
     return {
         "schema_version": SCHEMA,
@@ -131,9 +133,9 @@ def render_markdown(result: dict, limit: int = 50) -> str:
     lines += [
         "",
         " · ".join(
-            f"**{counts[kind]}** {kind.replace('_', ' ')}"
+            f"**{counts.get(kind, 0)}** {kind.replace('_', ' ')}"
             for kind in (*KINDS, "unchanged")
-            if counts[kind] or kind in ("regressed", "unchanged")
+            if counts.get(kind, 0) or kind in ("regressed", "unchanged")
         ),
         "",
     ]
@@ -492,6 +494,10 @@ def _classify(before: dict | None, after: dict | None) -> str | None:
     old, new = rate(before), rate(after)
     if new < old:
         return "regressed" if after["passed"] == 0 else "less_reliable"
+    # A smaller assessed sample cannot count as unchanged or improved: missing
+    # evidence must never look like progress. More attempts are never penalized.
+    if after["assessed"] < before["assessed"]:
+        return "less_covered"
     if new > old:
         return "improved"
     return None

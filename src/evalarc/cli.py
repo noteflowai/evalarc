@@ -560,7 +560,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _results_diff(args: argparse.Namespace) -> int:
-    from evalarc.results_diff import diff, load_results, render_html, render_markdown
+    from evalarc.results_diff import BLOCKING, diff, load_results, render_html, render_markdown
 
     try:
         runs = [
@@ -601,7 +601,7 @@ def _results_diff(args: argparse.Namespace) -> int:
             f"Improved: {counts['improved']} | Unchanged: {counts['unchanged']}"
         )
         for row in result["changes"]:
-            if row["kind"] in ("regressed", "less_reliable", "unassessed", "removed"):
+            if row["kind"] in BLOCKING:
                 print(f"  {row['kind']}: {row['case_id']} / {row['check']}")
         if result["current_incomplete"]:
             print("The current run is incomplete; the gate fails.")
