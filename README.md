@@ -37,6 +37,8 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
 
 The [homepage](https://noteflowai.github.io/evalarc/) compares the recorded model upgrade before you enter the full lab. Switch generation seeds, open that exact output, or save a result image with the comparison scope. The full model review keeps the selected case and seed in its URL.
 
+Product direction and acceptance milestones: [Roadmap](ROADMAP.md).
+
 ## Review a real model upgrade
 
 [Compare Qwen3-8B and Qwen3.8-27B-FP8](https://noteflowai.github.io/evalarc/model-upgrade/):
@@ -239,7 +241,6 @@ and case fingerprints, runtime limits, seeds, and resolved container image ID.
 evalarc init workspace/durable-kv
 # Give this workspace and its TASK.md to your coding agent.
 
-Product direction and acceptance milestones: [Roadmap](ROADMAP.md).
 # After it edits main.py:
 evalarc evaluate workspace/durable-kv --seeds 17 41 97 --output runs/candidate
 ```
