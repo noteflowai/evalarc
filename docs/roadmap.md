@@ -1,3 +1,5 @@
+> Current priorities and delivery criteria: [Roadmap](../ROADMAP.md). This earlier plan is retained as background; its dates and completion claims are historical.
+
 # Research and development roadmap
 
 EvalArc targets auditable evaluations across software agents. The first
