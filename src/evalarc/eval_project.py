@@ -286,9 +286,17 @@ def review(cases: list[dict], source: dict) -> dict:
 
 
 def render_html(result: dict, cases: list[dict], destination: Path) -> None:
-    from evalarc.report import _card, _esc, _page
+    from evalarc.report import _card, _esc, _findings, _page, _verdict
 
-    body = (
+    body = _verdict(
+        result["clean"],
+        "Inputs ready to run" if result["clean"] else f"{result['warnings']} warning(s) to fix",
+        "Read every case below before the first run.",
+        "Run the baseline: python evaluate.py OUTPUT.json --epochs 3"
+        if result["clean"]
+        else "Fix the warnings in cases.jsonl, then rerun review-inputs.",
+    )
+    body += (
         '<div class="cards">'
         + _card(result["cases"], "cases")
         + _card(result["held_out"], "held out")
@@ -299,12 +307,8 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
         + _esc(", ".join(f"{k} {v}" for k, v in result["checks"].items()))
         + "</p>"
     )
-    for finding in result["findings"]:
-        tone = "failed" if finding["severity"] == "warning" else "passed"
-        body += (
-            f'<p><span class="{tone}">{_esc(finding["severity"])}</span> · '
-            f"<code>{_esc(finding['id'])}</code>: {_esc(finding['message'])}</p>"
-        )
+    if result["findings"]:
+        body += _findings([(f["severity"], f["id"], f["message"]) for f in result["findings"]])
     body += (
         "<h2>Cases</h2><p>Read every case. Would two domain experts grade it the same way? "
         "Is every condition the grader checks stated in the input?</p>"

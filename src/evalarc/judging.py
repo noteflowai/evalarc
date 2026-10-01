@@ -465,10 +465,11 @@ def render_sheet(packet: dict) -> str:
         "<title>EvalArc judging sheet</title><style>body{font:15px/1.5 system-ui,sans-serif;"
         "max-width:60rem;margin:2rem auto;padding:0 1rem}pre{white-space:pre-wrap;"
         "background:#f5f5f5;padding:.6rem;border-radius:4px}section{border-top:1px solid #ccc;"
-        f"margin-top:1.5rem}}</style></head><body><h1>Judging sheet · {esc(packet['mode'])}</h1>"
+        "margin-top:1.5rem}</style></head><body><main>"
+        f"<h1>Judging sheet · {esc(packet['mode'])}</h1>"
         f"<p>{esc(packet['instructions'])}</p><p>Allowed answers: "
         f"{esc(', '.join(packet['allowed_verdicts']))}. Record them in "
-        "<code>verdicts.template.json</code>.</p>" + "".join(blocks) + "</body></html>"
+        "<code>verdicts.template.json</code>.</p>" + "".join(blocks) + "</main></body></html>"
     )
 
 
@@ -543,25 +544,118 @@ def render_markdown(result: dict) -> str:
 
 
 def render_html(result: dict, destination: Path) -> None:
-    from evalarc.report import _esc, _page
+    from evalarc.report import _card, _esc, _page, _table, _tone, _verdict
 
-    text = render_markdown(result)
-    body = "".join(
-        f"<p>{_esc(line)}</p>" for line in text.splitlines() if line and not line.startswith("|")
-    )
-    if result["mode"] == "grader" and result["disagreements"]:
-        body += (
-            '<h2>Disagreements</h2><div class="scroll"><table><thead><tr><th>Item</th>'
-            "<th>Case</th><th>Check</th><th>Grader</th><th>Judge</th><th>Output</th></tr>"
-            "</thead><tbody>"
+    judge = result["judge"]
+    who = judge.get("kind", "") + (f" {judge['model']}" if judge.get("model") else "")
+    gate = result.get("gate")
+    problems = []
+    if result["missing"]:
+        problems.append(f"{len(result['missing'])} item(s) unanswered")
+    if result["self_judged"]:
+        problems.append("the judge is a model under evaluation")
+    if result["mode"] == "grader":
+        c = result["confusion"]
+        wrong = c["false_accept"] + c["false_reject"]
+        ok = (gate or {}).get("passed", not problems and not wrong)
+        title = (
+            f"Grader agrees with the judge on {_pct(result['agreement'])} of decided items"
+            if result["agreement"] is not None
+            else "No decided items"
         )
-        for row in result["disagreements"]:
-            body += (
-                f"<tr><td>{_esc(row['item_id'])}</td><td><code>{_esc(row['case_id'])}</code></td>"
-                f"<td>{_esc(row['check'])}</td><td>{_esc(row['grader'])}</td>"
-                f"<td>{_esc(row['judge'])}</td><td>{_esc(row['output'])}</td></tr>"
+        detail = (
+            f"{c['false_accept']} false accept(s), {c['false_reject']} false reject(s)"
+            + (f"; {'; '.join(problems)}" if problems else "")
+            + "."
+        )
+        body = _verdict(
+            ok,
+            title,
+            detail,
+            "Read each disagreement and fix the grader or the task wording." if wrong else "",
+        )
+        body += (
+            '<div class="cards">'
+            + _card(
+                _pct(result["agreement"]),
+                "agreement (" + _interval(result["agreement_interval_95"]) + ")",
             )
-        body += "</tbody></table></div>"
+            + _card(_num(result["cohen_kappa"]), "Cohen's kappa")
+            + _card(c["false_accept"], "false accepts", alert=bool(c["false_accept"]))
+            + _card(c["false_reject"], "false rejects", alert=bool(c["false_reject"]))
+            + "</div>"
+        )
+        body += "<h2>Grader versus judge</h2>" + _table(
+            "Confusion table",
+            ["", "Judge pass", "Judge fail"],
+            [
+                ["Grader pass", str(c["agree_pass"]), f"{c['false_accept']} (false accept)"],
+                ["Grader fail", f"{c['false_reject']} (false reject)", str(c["agree_fail"])],
+            ],
+        )
+        if result["disagreements"]:
+            body += "<h2>Disagreements</h2>" + _table(
+                "Disagreements",
+                ["Item", "Case", "Check", "Grader", "Judge", "Output"],
+                [
+                    [
+                        _esc(row["item_id"]),
+                        f"<code>{_esc(row['case_id'])}</code>",
+                        _esc(row["check"]),
+                        _tone(row["grader"], "ok" if row["grader"] == "pass" else "bad"),
+                        _tone(row["judge"], "ok" if row["judge"] == "pass" else "bad"),
+                        _esc(row["output"]),
+                    ]
+                    for row in result["disagreements"]
+                ],
+            )
+    else:
+        state = result["state"]
+        if result["position_bias"]:
+            problems.append("the judge favors one position")
+        ok = (gate or {}).get("passed", state == "current_preferred" and not problems)
+        body = _verdict(
+            ok,
+            {
+                "current_preferred": "Current output preferred over the baseline",
+                "baseline_preferred": "Baseline output preferred over the current",
+                "no_clear_preference": "No clear preference between baseline and current",
+            }[state],
+            f"Current wins {result['current_wins']}, baseline wins {result['baseline_wins']}, "
+            f"ties {result['ties']}" + (f"; {'; '.join(problems)}" if problems else "") + ".",
+            "" if ok else "Add items or a second judge before concluding.",
+        )
+        body += (
+            '<div class="cards">'
+            + _card(
+                _pct(result["current_win_rate"]),
+                "current win rate (" + _interval(result["current_win_rate_interval_95"]) + ")",
+            )
+            + _card(
+                _pct(result["position_a_rate"]), "chose position A", alert=result["position_bias"]
+            )
+            + "</div>"
+        )
+        body += "<h2>Per case</h2>" + _table(
+            "Per-case preference",
+            ["Case", "Current wins", "Baseline wins", "Ties"],
+            [
+                [f"<code>{_esc(case)}</code>", str(v["wins"]), str(v["losses"]), str(v["ties"])]
+                for case, v in sorted(result["per_case"].items())
+            ],
+        )
+    consistency = result.get("judge_consistency")
+    if consistency:
+        body += (
+            f"<h2>Judge consistency</h2><p>{_pct(consistency['stable_share'])} of items got the "
+            f"same answer in all {consistency['rounds']} rounds "
+            f"({_esc(_interval(consistency['stable_interval_95']))}).</p>"
+        )
+    body += (
+        f'<p class="metadata">Judge: {_esc(who)} · {result["items"] - len(result["missing"])}/'
+        f"{result['items']} items answered · packet SHA-256 {_esc(result['packet_sha256'])}</p>"
+        f"<footer>{_esc(result['scope'])}</footer>"
+    )
     _page("Judge score", f"Blind {result['mode']} judging.", body, destination)
 
 

@@ -458,12 +458,26 @@ def render_markdown(result: dict) -> str:
 
 
 def render_html(result: dict, destination: Path) -> None:
-    from evalarc.report import _card, _esc, _page
+    from evalarc.report import _card, _esc, _page, _tone, _verdict
 
     final, base = result["final"], result["baseline"]
-    body = (
-        f"<p><strong>{_esc(result['recommendation'])}</strong>: "
-        f'{_esc(result["recommendation_text"])}</p><div class="cards">'
+    body = _verdict(
+        result["merge_recommended"],
+        result["recommendation_text"].split(":")[0] + f" ({result['recommendation']})",
+        result["recommendation_text"].split(":", 1)[-1].strip()[:1].upper()
+        + result["recommendation_text"].split(":", 1)[-1].strip()[1:],
+        {
+            "merge": "Review final.diff or the kept step, then merge.",
+            "merge_cost": "Review the kept configuration change, then merge.",
+            "no_change_kept": "Triage the remaining tuning failures before proposing again.",
+            "do_not_merge_regression": "Inspect the held-out checks that got worse.",
+            "do_not_merge_within_noise": "Add held-out cases or repetitions and rerun.",
+            "do_not_merge_cost": "Look for cheaper configurations at equal quality.",
+            "do_not_merge_leakage": "Remove held-out case text from the harness and rerun.",
+        }[result["recommendation"]],
+    )
+    body += (
+        '<div class="cards">'
         + _card(_pct(base["held_out"]["pass_rate"]), "baseline held-out pass rate")
         + _card(_pct(final["held_out"]["pass_rate"]), f"final held-out ({final['label']})")
         + _card(
@@ -483,14 +497,14 @@ def render_html(result: dict, destination: Path) -> None:
         "<th>Decision</th><th>Reason</th></tr></thead><tbody>"
     )
     for step in result["steps"]:
-        tone = "passed" if step["decision"] == "keep" else "failed"
+        tone = "ok" if step["decision"] == "keep" else "bad"
         body += (
             f"<tr><td>{step['index']}</td><td><code>{_esc(step['label'])}</code></td>"
             f"<td><code>{_esc(step['compared_with'])}</code></td>"
             f"<td>{_esc(_pp(step['tuning']['delta']))}</td>"
             f"<td>{_esc(_pp(step['held_out']['delta']))}</td>"
             f"<td>{_esc(_ratio(step['cost']))}</td>"
-            f'<td class="{tone}">{_esc(step["decision"])}'
+            f"<td>{_tone(step['decision'], tone)}"
             f"{' · stalled' if step.get('stalled') else ''}</td>"
             f"<td>{_esc(step['reason'])}</td></tr>"
         )

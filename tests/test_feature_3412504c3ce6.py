@@ -129,7 +129,8 @@ def test_report_folder_shows_the_missing_evidence(tmp_path):
     summary = (output / "summary.md").read_text()
     assert "| less covered | `cancel-pending` | `match` | 2/2 | 1/1 |" in summary
     html = (output / "index.html").read_text()
-    row = '<td class="failed">less covered</td><td><code>cancel-pending</code></td>'
+    row = '<td><span class="tone bad">✗ less covered</span></td>'
+    row += "<td><code>cancel-pending</code></td>"
     assert row + "<td>match</td>" in html
 
 
