@@ -3,7 +3,9 @@
 Install with `python -m pip install -e ".[dev]"`, then run `pytest -q`,
 `ruff check .`, and `ruff format --check .`. Install Node.js to exercise the
 independent JavaScript support policy; that test is skipped if Node is absent.
-CI explicitly provisions Node. See [task authoring](docs/task-authoring.md) for
+CI explicitly provisions Node. Report browser code is TypeScript in `frontend/`:
+after editing it, run `npm ci`, `npm run build:frontend` and `npm run test:reports`,
+and commit the regenerated `src/evalarc/assets/report_enhance.js`. See [task authoring](docs/task-authoring.md) for
 the current built-in registry and evidence contract.
 
 The [workflow guide](docs/workflow.md) covers readiness checks and comparisons.

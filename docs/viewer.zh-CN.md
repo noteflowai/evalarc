@@ -20,6 +20,11 @@ evalarc view runs --write-index site/index.html   # 为 CI 产物或 Pages 生�
 的 Host（防 DNS 重绑定）、路径穿越、指向目录外的符号链接和目录列表；只读、无 API。远程机器请用
 `ssh -L 7576:127.0.0.1:7576 user@remote` 转发端口，不要直接暴露。
 
+**架构：** 核心（解析、门禁、复核、查看器服务）是零运行时依赖的 Python，与 Inspect AI 相同；浏览器端
+代码是 `frontend/` 下的 TypeScript，严格模式类型检查后编译为 `src/evalarc/assets/report_enhance.js`。
+编译产物随仓库提交，因此 `pip install evalarc` 不需要 Node；若它与重新编译的结果不一致，CI 中的
+`npm run check:frontend` 会失败。修改 `frontend/*.ts` 后请运行 `npm run build:frontend` 并提交两者。
+
 **报告页面：** 先给结论（结果、原因、下一步），支持深浅色、手机、400% 缩放、打印和禁用 JavaScript。
 启用 JavaScript 时，表头变为排序按钮（WAI-ARIA APG 可排序表格模式），8 行以上的表格带筛选框。
 脚本内联并由页面 CSP 中的 SHA-256 哈希放行，不允许其他脚本、网络请求或远程资源。

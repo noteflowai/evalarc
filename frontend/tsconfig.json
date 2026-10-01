@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "preserve",
+    "moduleDetection": "legacy",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "removeComments": false,
+    "newLine": "lf",
+    "outDir": "../src/evalarc/assets",
+    "rootDir": "."
+  },
+  "files": ["report_enhance.ts"]
+}

@@ -37,6 +37,16 @@ machine, forward the port over SSH instead of exposing it:
 ssh -L 7576:127.0.0.1:7576 user@remote   # then run evalarc view there
 ```
 
+## Architecture
+
+The core (parsing, gates, verification, the viewer server) is Python with no
+runtime dependencies, like Inspect AI. The browser code is TypeScript in
+`frontend/`, type-checked in strict mode and compiled to
+`src/evalarc/assets/report_enhance.js`. The compiled file is committed so
+`pip install evalarc` never needs Node; `npm run check:frontend` fails in CI if
+it differs from a fresh compile. After editing `frontend/*.ts`, run
+`npm run build:frontend` and commit both files.
+
 ## Report pages
 
 Reports open with the decision (verdict, reason, next step) and work in light
