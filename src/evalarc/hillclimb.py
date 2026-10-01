@@ -18,7 +18,6 @@ intervals to recommend whether to merge. Nothing is rerun and no model is called
 
 from __future__ import annotations
 
-import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -534,51 +533,62 @@ def render_html(result: dict, destination: Path) -> None:
     _page("Hillclimb review", "Which changes to keep, and whether to merge.", body, destination)
 
 
+def write_hillclimb_report(output: Path, result: dict) -> None:
+    from evalarc.evaluate import write_json
+
+    write_json(output / "hillclimb.json", result)
+    write_json(
+        output / "tuning-failures.json",
+        {
+            "schema_version": "evalarc.tuning-failures.v1",
+            "kept": result["final"]["label"],
+            "held_out_excluded": True,
+            "failures": result["tuning_failures"],
+        },
+    )
+    (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
+    render_html(result, output / "index.html")
+
+
 def command(args) -> int:
     """`evalarc hillclimb-review`: exit 0 merge recommended, 1 not, 2 unusable input."""
     from evalarc.artifacts import new_run
-    from evalarc.evaluate import write_json
 
     paths = [args.baseline, *args.steps]
     try:
         if len(set(map(Path.resolve, paths))) != len(paths):
             raise ValueError("each result file may appear once")
         runs = [load_results(path, args.format, args.threshold) for path in paths]
-        split_bytes = args.held_out.read_bytes()
+        from evalarc import evidence
+
         split = load_split(args.held_out)
-        result = review(
-            runs,
-            split,
-            args.objective,
-            args.cost_metric,
-            args.max_cost_ratio,
-            args.stall_after,
-            args.min_effect,
-            args.harness,
-        )
+        params = {
+            "format": args.format,
+            "threshold": args.threshold,
+            "objective": args.objective,
+            "cost_metric": args.cost_metric,
+            "max_cost_ratio": args.max_cost_ratio,
+            "stall_after": args.stall_after,
+            "min_effect": args.min_effect,
+            "labels": [path.name for path in paths],
+            "min_steps": 1,
+        }
+        result = evidence.compute_hillclimb(runs, params, split, args.harness)
         if args.output:
             with new_run(args.output) as output:
-                (output / "inputs").mkdir()
+                inputs = []
                 for index, (path, run) in enumerate(zip(paths, runs)):
-                    data = path.read_bytes()
-                    if hashlib.sha256(data).hexdigest() != run["source"]["sha256"]:
-                        raise ValueError(f"{path} changed while it was being read")
-                    (output / "inputs" / f"{index:02d}-{path.name}").write_bytes(data)
-                if hashlib.sha256(split_bytes).hexdigest() != split["source"]["sha256"]:
-                    raise ValueError(f"{args.held_out} changed while it was being read")
-                (output / "split.json").write_bytes(split_bytes)
-                write_json(output / "hillclimb.json", result)
-                write_json(
-                    output / "tuning-failures.json",
-                    {
-                        "schema_version": "evalarc.tuning-failures.v1",
-                        "kept": result["final"]["label"],
-                        "held_out_excluded": True,
-                        "failures": result["tuning_failures"],
-                    },
+                    name = f"inputs/{index:02d}-{path.name}"
+                    evidence.copy_input(path, run["source"]["sha256"], output / name)
+                    inputs.append({"file": name})
+                evidence.copy_input(args.held_out, split["source"]["sha256"], output / "split.json")
+                harness = evidence.copy_harness(args.harness, output) if args.harness else []
+                evidence.write_params(
+                    output,
+                    "hillclimb-review",
+                    {**params, "inputs": inputs, "split": "split.json", "harness": harness},
                 )
-                (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
-                render_html(result, output / "index.html")
+                write_hillclimb_report(output, result)
         if args.markdown:
             with args.markdown.open("a", encoding="utf-8") as summary:
                 summary.write(render_markdown(result))

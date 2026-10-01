@@ -169,7 +169,7 @@ def review_split(baseline: dict, current: dict, result: dict, split: dict) -> di
 
 
 def scan_harness(
-    paths: list[Path],
+    paths: list[Path] | list[tuple[Path, str]],
     runs: list[dict],
     held_out: set[str] | None = None,
     min_chars: int = DEFAULT_MIN_LEAK_CHARS,
@@ -189,7 +189,7 @@ def scan_harness(
                 if entry not in bucket:
                     bucket.append(entry)
     files, total = [], 0
-    for path, label in _harness_files(paths):
+    for path, label in harness_files(paths):
         data = path.read_bytes()
         total += len(data)
         if total > MAX_HARNESS_BYTES:
@@ -384,7 +384,15 @@ def _overlap(passed_a: int, assessed_a: int, passed_b: int, assessed_b: int) -> 
     return low_a <= high_b and low_b <= high_a
 
 
-def _harness_files(paths: list[Path]):
+def harness_files(paths):
+    """Yield (path, label) for scanned files; `paths` may already be (path, label) pairs.
+
+    Pairs are used when verifying a saved report: the copies under harness/ are
+    scanned under the labels the original scan reported.
+    """
+    if paths and isinstance(paths[0], tuple):
+        yield from paths
+        return
     seen, count = set(), 0
     for root in paths:
         if root.is_symlink():

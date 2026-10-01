@@ -35,6 +35,18 @@ not rewrite reports. JUnit counts, testcase identities, failure versus error,
 gate payloads and recorded observations must match the recomputed suite.
 XML indentation and attribute order may differ.
 
+
+## diff, eval-health and hillclimb-review folders
+
+Folders written with `--output` by `evalarc diff`, `eval-health`,
+`hillclimb-review` and `hillclimb-run` are self-contained: byte copies of every
+input (result files, `split.json`, `cases.json`, and scanned harness files under
+`harness/`) plus `params.json` with every option. `evalarc verify FOLDER` reruns
+the same computation and fails (exit 2) if the saved report, an input copy, a
+harness copy or a recorded option was changed. `--require-accepted` additionally
+exits 1 unless the diff gate passed, eval health had no warnings, or a merge was
+recommended. The folders can be moved or archived; paths are relative.
+
 ## Consistency, acceptance and resolution
 
 Default exit **0** means records are internally consistent, even if a gate

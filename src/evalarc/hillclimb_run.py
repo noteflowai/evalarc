@@ -28,9 +28,6 @@ from evalarc.hillclimb import (
     _rate,
     _stall,
     hillclimb_triage,
-    render_html,
-    render_markdown,
-    review,
 )
 from evalarc.results_diff import FORMATS, diff, load_results
 
@@ -449,21 +446,39 @@ def run_loop(config: dict, output: Path) -> dict:
 
         restore(workspace, allow, kept_files)
         runs = [run for _, run in evaluated]
-        final = review(
-            runs,
-            config["split"],
-            config["objective"],
-            config["cost_metric"],
-            config["max_cost_ratio"],
-            config["stall_after"],
-            config["min_effect"],
-            [workspace / name for name in kept_files] or None,
-            labels=[path.name for path, _ in evaluated],
-            min_steps=0,  # every proposal may have been rejected before evaluation
+        from evalarc import evidence
+        from evalarc.hillclimb import write_hillclimb_report
+
+        params = {
+            "format": config["format"],
+            "threshold": config["threshold"],
+            "objective": config["objective"],
+            "cost_metric": config["cost_metric"],
+            "max_cost_ratio": config["max_cost_ratio"],
+            "stall_after": config["stall_after"],
+            "min_effect": config["min_effect"],
+            "labels": [path.name for path, _ in evaluated],
+            "min_steps": 0,  # every proposal may have been rejected before evaluation
+        }
+        harness = (
+            evidence.copy_harness([(workspace / name, name) for name in sorted(kept_files)], output)
+            if kept_files
+            else []
         )
-        write_json(output / "hillclimb.json", final)
-        (output / "summary.md").write_text(render_markdown(final), encoding="utf-8")
-        render_html(final, output / "index.html")
+        final = evidence.compute_hillclimb(
+            runs, params, config["split"], [(output / e["file"], e["label"]) for e in harness]
+        )
+        evidence.write_params(
+            output,
+            "hillclimb-review",
+            {
+                **params,
+                "inputs": [{"file": f"results/{path.name}"} for path, _ in evaluated],
+                "split": "split.json",
+                "harness": harness,
+            },
+        )
+        write_hillclimb_report(output, final)
         (output / "final.diff").write_text(patch_text(original, kept_files), encoding="utf-8")
         state |= {
             "status": "complete",

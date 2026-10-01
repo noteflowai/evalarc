@@ -10,7 +10,6 @@ stronger configurations, scores that do not fall as capability rises. Offline on
 
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import sys
@@ -625,31 +624,38 @@ def command(args) -> int:
             from evalarc.provenance import load as load_manifest
 
             manifest = load_manifest(args.cases)
-        result = health(runs, args.saturation, args.min_effect, args.ordered, manifest)
-        if args.plan_attempts is not None or args.plan_configs is not None:
-            size = result["size"]
-            result["plan"] = plan(
-                size,
-                size["attempts_per_case"] if args.plan_attempts is None else args.plan_attempts,
-                size["configurations"] if args.plan_configs is None else args.plan_configs,
-            )
+        from evalarc import evidence
+
+        params = {
+            "format": args.format,
+            "threshold": args.threshold,
+            "saturation": args.saturation,
+            "min_effect": args.min_effect,
+            "ordered": args.ordered,
+            "plan_attempts": args.plan_attempts,
+            "plan_configs": args.plan_configs,
+        }
+        result = evidence.compute_health(runs, params, manifest)
         if args.output:
             with new_run(args.output) as output:
+                inputs = []
                 for index, (path, run) in enumerate(zip(args.results, runs), start=1):
-                    data = path.read_bytes()
-                    if hashlib.sha256(data).hexdigest() != run["source"]["sha256"]:
-                        raise ValueError(f"{path} changed while it was being read")
-                    (output / "inputs").mkdir(exist_ok=True)
-                    (output / "inputs" / f"{index:02d}{path.suffix or '.json'}").write_bytes(data)
+                    name = f"inputs/{index:02d}{path.suffix or '.json'}"
+                    evidence.copy_input(path, run["source"]["sha256"], output / name)
+                    inputs.append({"file": name})
                 if manifest is not None:
-                    data = args.cases.read_bytes()
-                    if hashlib.sha256(data).hexdigest() != manifest["source"]["sha256"]:
-                        raise ValueError(f"{args.cases} changed while it was being read")
-                    (output / "cases.json").write_bytes(data)
+                    evidence.copy_input(
+                        args.cases, manifest["source"]["sha256"], output / "cases.json"
+                    )
+                evidence.write_params(
+                    output,
+                    "eval-health",
+                    {**params, "inputs": inputs, "cases": "cases.json" if manifest else None},
+                )
                 write_json(output / "health.json", result)
                 (output / "cases.jsonl").write_text(case_lines(runs), encoding="utf-8")
-                (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
                 render_html({**result, "_cases_html": cases_html(runs[-1])}, output / "index.html")
+                (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
         if args.markdown:
             with args.markdown.open("a", encoding="utf-8") as summary:
                 summary.write(render_markdown(result))
