@@ -9,6 +9,10 @@
   All report pages gain a `main` landmark, a skip link, scoped table headers,
   keyboard-focusable scroll regions, two-column summary cards on phones and a
   print style. `scripts/check_reports_browser.cjs` checks these in CI.
+- The audit, evaluation, comparison, repetition and suite reports also open
+  with a verdict banner and share the landmark, skip link and table
+  accessibility. The browser check now covers all ten report kinds and fails on
+  text below WCAG 2.2 AA contrast.
 - `evalarc verify` now recomputes folders written by `diff`, `eval-health`,
   `hillclimb-review` and `hillclimb-run`. Each folder adds `params.json` (every
   option) and copies scanned harness files to `harness/`, so leakage scans can
