@@ -531,10 +531,19 @@ def render_markdown(result: dict) -> str:
 
 
 def render_html(result: dict, destination: Path) -> None:
-    from evalarc.report import _card, _esc, _page
+    from evalarc.report import _card, _esc, _page, _tone, _verdict
 
     best = max((run["pass_rate"] or 0 for run in result["runs"]), default=0)
-    body = (
+    first = next((f for f in result["findings"] if f["severity"] == "warning"), None)
+    body = _verdict(
+        result["healthy"],
+        "Ready to tune against: no warnings"
+        if result["healthy"]
+        else f"Fix {result['warnings']} warning(s) before tuning",
+        "" if first is None else f"First: {first['id']} — {first['message']}",
+        "" if result["healthy"] else "Work through the findings below, then rerun eval-health.",
+    )
+    body += (
         '<div class="cards">'
         + _card(result["warnings"], "warnings", alert=not result["healthy"])
         + _card(f"{best:.1%}", "best pass rate")
@@ -580,9 +589,9 @@ def render_html(result: dict, destination: Path) -> None:
     if not result["findings"]:
         body += "<p>No findings.</p>"
     for finding in result["findings"]:
-        tone = "failed" if finding["severity"] == "warning" else "passed"
+        tone = "bad" if finding["severity"] == "warning" else "info"
         body += (
-            f'<h3><span class="{tone}">{_esc(finding["severity"])}</span> · '
+            f"<h3>{_tone(finding['severity'], tone)} · "
             f"<code>{_esc(finding['id'])}</code></h3><p>{_esc(finding['message'])}</p>"
         )
         items = finding.get("items") or []

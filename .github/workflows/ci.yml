@@ -91,6 +91,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:site
       - run: node scripts/check_model_upgrade.cjs
+      - name: Offline reports lead with the verdict and pass accessibility checks
+        run: |
+          python -m pip install --quiet .
+          node scripts/check_reports_browser.cjs
       - uses: actions/upload-artifact@v4
         with:
           name: evidence-site

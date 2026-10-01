@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Offline HTML reports for `diff`, `eval-health`, `hillclimb-review`,
+  `judge-score` and `review-inputs` open with a verdict banner: the decision,
+  the reason and the next step, marked with a symbol as well as color. The
+  `judge-score` page no longer shows raw Markdown and adds the confusion table.
+  All report pages gain a `main` landmark, a skip link, scoped table headers,
+  keyboard-focusable scroll regions, two-column summary cards on phones and a
+  print style. `scripts/check_reports_browser.cjs` checks these in CI.
 - `evalarc verify` now recomputes folders written by `diff`, `eval-health`,
   `hillclimb-review` and `hillclimb-run`. Each folder adds `params.json` (every
   option) and copies scanned harness files to `harness/`, so leakage scans can

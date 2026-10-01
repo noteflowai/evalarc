@@ -245,10 +245,42 @@ def render_markdown(result: dict, limit: int = 50) -> str:
 
 
 def render_html(result: dict, destination: Path) -> None:
-    from evalarc.report import _card, _esc, _page
+    from evalarc.report import _card, _esc, _page, _tone, _verdict
 
     before, after = result["baseline"], result["current"]
-    body = (
+    passed = (
+        result["gate_passed"]
+        and result.get("generalization_passed", True)
+        and (result.get("cost_gate") or {}).get("passed", True)
+    )
+    reasons = []
+    if result["blocking_changes"]:
+        reasons.append(f"{result['blocking_changes']} check(s) lost passes or coverage")
+    if result["current_incomplete"]:
+        reasons.append("the current run is incomplete")
+    if result.get("generalization_required") and not result.get("generalization_passed"):
+        reasons.append("generalization was required and not shown")
+    if result.get("cost_gate") and not result["cost_gate"]["passed"]:
+        reasons.append("the cost gate failed")
+    within = result.get("blocking_changes_within_sampling_noise") or 0
+    body = _verdict(
+        passed,
+        "Gate passed: no check lost passes" if passed else "Gate failed",
+        "; ".join(reasons).capitalize() + "." if reasons else "",
+        (
+            "Read the blocking rows below and their evidence"
+            + (
+                f"; {within} {'is' if within == 1 else 'are'} within sampling noise, so record "
+                "more attempts"
+                if within
+                else ""
+            )
+            + "."
+        )
+        if not passed
+        else "",
+    )
+    body += (
         f"<p>{_esc(result['format'])} results · {_esc(before['source']['name'])} → "
         f'{_esc(after["source"]["name"])}</p><div class="cards">'
         + _card(_value(before["headline"]), f"baseline {_metric_name(before)}")
@@ -270,14 +302,14 @@ def render_html(result: dict, destination: Path) -> None:
         for row in result["changes"]:
             detail = row.get("current_detail") or row.get("baseline_detail") or []
             evidence = "; ".join(dict.fromkeys(i["evidence"] for i in detail if i.get("evidence")))
-            tone = "failed" if row["kind"] in BLOCKING else "passed"
+            tone = "bad" if row["kind"] in BLOCKING else "ok"
             change_label = row["kind"].replace("_", " ")
             if row.get("within_sampling_noise") is True:
                 change_label += " · within noise"
             if row.get("same_output_different_verdict"):
                 change_label += " · same output, new verdict"
             body += (
-                f'<tr><td class="{tone}">{_esc(change_label)}</td>'
+                f"<tr><td>{_tone(change_label, tone)}</td>"
                 f"<td><code>{_esc(row['case_id'])}</code></td><td>{_esc(row['check'])}</td>"
                 f"<td>{_esc(_fraction(row['baseline']))}</td>"
                 f"<td>{_esc(_fraction(row['current']))}</td>"

@@ -36,7 +36,70 @@ a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
 .change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
 .change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
 @media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
+.verdict{border:1px solid #33463d;border-left:6px solid #96e8b9;border-radius:12px;
+padding:18px 24px;margin:28px 0;background:#152019}
+.verdict.fail{border-left-color:#edb68d;background:#211b16}.verdict.warn{border-left-color:#e6d48a}
+.verdict h2{margin:0;font-size:22px}.verdict p{margin:8px 0 0;color:#d2ded8}
+.verdict .next{color:#e0ece7}.tone{white-space:nowrap}
+.tone.ok{color:#96e8b9}.tone.bad{color:#edb68d}.tone.warn{color:#e6d48a}.tone.info{color:#acbeb5}
+.findings{list-style:none;padding:0;display:grid;gap:12px;max-width:900px}
+.findings li{border:1px solid #33463d;border-radius:10px;padding:12px 16px}
+.findings code{color:#cfe3d9}.skip{position:absolute;left:-200vw}
+.skip:focus{left:24px;top:12px;background:#101618;padding:8px}
+.scroll:focus-visible{outline:3px solid #96e8b9;outline-offset:2px}
+td code{overflow-wrap:anywhere}
+@media(max-width:640px){.scroll table{min-width:560px}td,th{padding:10px}
+main .cards .card{flex-basis:calc(50% - 6px);padding:12px 14px}main .number{font-size:26px}}
+@media print{:root{color-scheme:light;background:#fff;color:#111}body{margin:0;max-width:none}
+p,.label,.verdict p,.verdict .next,.tone.info{color:#222}th,a,.number,.eyebrow,.tone.ok{color:#064}
+.tone.bad,.tone.warn,.failed{color:#8a3b00}
+.verdict,.card,.findings li{background:#fff;break-inside:avoid}
+pre{background:#f4f4f4;max-height:none}.scroll{overflow:visible}.skip{display:none}}
 """
+
+TONES = {"ok": "✓", "bad": "✗", "warn": "!", "info": "·"}
+
+
+def _tone(text: object, tone: str) -> str:
+    """Status text that carries a symbol as well as a color."""
+    return f'<span class="tone {tone}">{TONES[tone]} {_esc(text)}</span>'
+
+
+def _verdict(passed: bool | None, title: str, detail: str = "", next_step: str = "") -> str:
+    """The decision first: one banner per report, announced to assistive technology."""
+    tone = "pass" if passed else ("warn" if passed is None else "fail")
+    symbol = {"pass": "✓", "warn": "!", "fail": "✗"}[tone]
+    return (
+        f'<section class="verdict {tone}" role="status" aria-label="Result">'
+        f"<h2>{symbol} {_esc(title)}</h2>"
+        + (f"<p>{_esc(detail)}</p>" if detail else "")
+        + (f'<p class="next"><strong>Next:</strong> {_esc(next_step)}</p>' if next_step else "")
+        + "</section>"
+    )
+
+
+def _table(label: str, headers: list[str], rows: list[list[str]]) -> str:
+    """A keyboard-scrollable table; cells are pre-escaped HTML."""
+    head = "".join(f'<th scope="col">{_esc(h)}</th>' for h in headers)
+    body = "".join("<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows)
+    return (
+        f'<div class="scroll" tabindex="0" role="region" aria-label="{_esc(label)}">'
+        f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
+    )
+
+
+def _findings(items: list[tuple[str, str, str]]) -> str:
+    """(severity, id, message) as a list; severity is spelled out, not color-only."""
+    tone = {"warning": "bad", "info": "info", "pass": "ok"}
+    return (
+        '<ul class="findings">'
+        + "".join(
+            f"<li>{_tone(severity, tone.get(severity, 'info'))} · <code>{_esc(key)}</code>"
+            f"<br>{_esc(message)}</li>"
+            for severity, key, message in items
+        )
+        + "</ul>"
+    )
 
 
 def render_audit(data: dict, destination: Path) -> None:
@@ -194,14 +257,20 @@ def _card(value: object, label: str, *, alert: bool = False) -> str:
 
 
 def _page(kind: str, title: str, body: str, destination: Path) -> None:
+    # Every table: column headers scoped, scroll regions reachable by keyboard.
+    body = body.replace("<th>", '<th scope="col">').replace(
+        '<div class="scroll">',
+        '<div class="scroll" tabindex="0" role="region" aria-label="Scrollable table">',
+    )
     document = (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; '
         "style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'\">"
         f"<title>EvalArc · {_esc(kind)}</title><style>{STYLE}</style></head><body>"
-        f'<div class="eyebrow">EVALARC / {_esc(kind.upper())}</div>'
-        f"<h1>{_esc(title)}</h1>{body}</body></html>"
+        '<a class="skip" href="#main">Skip to content</a>'
+        f'<main id="main"><div class="eyebrow">EVALARC / {_esc(kind.upper())}</div>'
+        f"<h1>{_esc(title)}</h1>{body}</main></body></html>"
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(document, encoding="utf-8")
