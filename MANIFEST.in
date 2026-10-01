@@ -16,3 +16,4 @@ recursive-include site *.html *.css *.js *.svg
 recursive-include scripts *.py *.cjs *.html *.md
 recursive-include huggingface *.md
 include package.json package-lock.json
+recursive-include frontend *.ts *.json

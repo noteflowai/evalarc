@@ -16,6 +16,11 @@
   verdict on the first screen, skip link, keyboard sorting, filtering, 320 px
   reflow, no-JavaScript, print, and browsing from the viewer index.
   `@axe-core/playwright` 4.13.0 is a pinned dev dependency.
+- The report front end is now TypeScript (`frontend/report_enhance.ts`, strict
+  mode), compiled to the packaged `report_enhance.js`. The compiled file is
+  committed, so installing EvalArc still needs no Node; CI fails when it is
+  stale. TypeScript 7.0.2 is a pinned dev dependency. The Python core is
+  unchanged.
 
 ## 0.17.3 — 2026-10-01
 

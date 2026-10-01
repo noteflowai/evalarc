@@ -2,12 +2,16 @@
   "name": "evalarc-evidence-site",
   "version": "0.17.3",
   "private": true,
-  "description": "Browser checks for the static EvalArc evidence explorer",
+  "description": "Browser checks and the TypeScript report front end for EvalArc",
   "scripts": {
-    "test:site": "node scripts/check_site.cjs"
+    "build:frontend": "tsc -p frontend/tsconfig.json",
+    "check:frontend": "node scripts/check_frontend_build.cjs",
+    "test:site": "node scripts/check_site.cjs",
+    "test:reports": "node scripts/check_reports_browser.cjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
-    "playwright": "1.63.0"
+    "playwright": "1.63.0",
+    "typescript": "7.0.2"
   }
 }
