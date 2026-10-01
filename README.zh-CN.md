@@ -52,13 +52,13 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 3. **本地复算。** [首次复核指南](docs/first-review.zh-CN.md)使用发布的 wheel 和原始记录重建报告；
    复核退出 0 表示一致，对照退出 1 表示发现退步。
 
-在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.17.0/)
+在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.17.1/)
 安装已发布的复核工具：
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.17.0
+python -m pip install evalarc==0.17.1
 evalarc --version
 ```
 
@@ -101,7 +101,7 @@ PyPI 与 GitHub Releases 提供相同的 wheel 和源码包，也支持
 准确率从 0.625 升至 0.8125，同时有三个检查项丢失通过。
 
 ```yaml
-- uses: noteflowai/evalarc@v0.17.0 # 或完整的提交 SHA
+- uses: noteflowai/evalarc@v0.17.1 # 或完整的提交 SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json
