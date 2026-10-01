@@ -26,7 +26,7 @@ from pathlib import Path
 
 from evalarc.eval_health import TRIAGE_NEXT, _noise, _triage
 from evalarc.generalization import load_split, partition, review_split, scan_harness
-from evalarc.results_diff import _cell, _tally, diff, load_results, wilson
+from evalarc.results_diff import BLOCKING, _cell, _tally, diff, load_results, wilson
 from evalarc.usage import cost_gate
 
 SCHEMA = "evalarc.hillclimb-review.v1"
@@ -137,8 +137,7 @@ def review(
             "held_out_blocking_changes": [
                 {"case_id": row["case_id"], "check": row["check"], "kind": row["kind"]}
                 for row in result["changes"]
-                if row["case_id"] in held_out
-                and row["kind"] in ("regressed", "less_reliable", "unassessed", "removed")
+                if row["case_id"] in held_out and row["kind"] in BLOCKING
             ],
             "changes_with_same_output_different_verdict": result[
                 "changes_with_same_output_different_verdict"

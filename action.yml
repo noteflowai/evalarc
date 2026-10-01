@@ -138,7 +138,7 @@ runs:
             gate = result.get("cost_gate")
             output.write(f"cost-ratio={'' if gate is None else round(gate['ratio'], 6)}\n")
         blocking = [row for row in result["changes"] if row["kind"] in (
-            "regressed", "less_reliable", "unassessed", "removed")]
+            "regressed", "less_reliable", "unassessed", "less_covered", "removed")]
         clean = lambda text: str(text).replace("%", "%25").replace("\r", "").replace("\n", " ")
         # Property values (file=, line=) also need ":" and "," escaped.
         prop = lambda text: clean(text).replace(":", "%3A").replace(",", "%2C")

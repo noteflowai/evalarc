@@ -121,6 +121,17 @@ def test_held_out_regression_rolls_back_even_when_tuning_improves(tmp_path):
     assert result["recommendation"] == "no_change_kept"
 
 
+def test_held_out_loss_of_coverage_rolls_back(tmp_path):
+    # Same pass rate on fewer assessed attempts is less_covered, which blocks the gate.
+    base = inspect_log(tmp_path / "0.json", case_map(OFF, OFF, ON, ON))
+    step = inspect_log(tmp_path / "1.json", case_map(ON, ON, [True] * 4, ON))
+    result = review([base, step], split(tmp_path))
+    assert result["steps"][0]["decision"] == "rollback_regression"
+    assert result["steps"][0]["held_out_blocking_changes"] == [
+        {"case_id": "h1", "check": "check", "kind": "less_covered"}
+    ]
+
+
 def test_quality_merge_requires_held_out_gain_beyond_noise(tmp_path):
     base = inspect_log(tmp_path / "0.json", case_map(OFF, OFF, OFF, OFF))
     step = inspect_log(tmp_path / "1.json", case_map(ON, ON, ON, ON))
