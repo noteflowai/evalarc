@@ -224,7 +224,7 @@ jobs:
           evalarc eval-health ../baseline.json --cases cases.manifest.json --output ../health
           evalarc judge-packet grader ../baseline.json --sample 6 --output ../spot
           set +e
-          evalarc hillclimb-run hillclimb.toml --output ../climb --trust-local
+          evalarc hillclimb-run hillclimb.toml --output ../project-loop --trust-local
           test $? -eq 1
       - name: Eval health reports noise above the minimum effect
         run: |
