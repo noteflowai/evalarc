@@ -1,0 +1,2103 @@
+{
+ "version": 2,
+ "status": "success",
+ "eval": {
+  "task": "ticket_routing",
+  "model": "anthropic/opus-5.5",
+  "config": {
+   "epochs": 4
+  },
+  "scorers": [
+   {
+    "name": "route",
+    "options": {}
+   }
+  ],
+  "metadata": {
+   "step": "03-opus-5.5-low",
+   "authored_example": true
+  }
+ },
+ "samples": [
+  {
+   "id": "route-01",
+   "epoch": 1,
+   "input": "Ticket route-01: customer message",
+   "target": "route:route-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-01:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-01:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-02",
+   "epoch": 1,
+   "input": "Ticket route-02: customer message",
+   "target": "route:route-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-03",
+   "epoch": 1,
+   "input": "Ticket route-03: customer message",
+   "target": "route:route-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-04",
+   "epoch": 1,
+   "input": "Ticket route-04: customer message",
+   "target": "route:route-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-05",
+   "epoch": 1,
+   "input": "Ticket route-05: customer message",
+   "target": "route:route-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-05:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-05:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-06",
+   "epoch": 1,
+   "input": "Ticket route-06: customer message",
+   "target": "route:route-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-07",
+   "epoch": 1,
+   "input": "Ticket route-07: customer message",
+   "target": "route:route-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-08",
+   "epoch": 1,
+   "input": "Ticket route-08: customer message",
+   "target": "route:route-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-09",
+   "epoch": 1,
+   "input": "Ticket route-09: customer message",
+   "target": "route:route-09:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-09:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-09:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-10",
+   "epoch": 1,
+   "input": "Ticket route-10: customer message",
+   "target": "route:route-10:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-10:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-10:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-11",
+   "epoch": 1,
+   "input": "Ticket route-11: customer message",
+   "target": "route:route-11:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-11:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-11:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-12",
+   "epoch": 1,
+   "input": "Ticket route-12: customer message",
+   "target": "route:route-12:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-12:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-12:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-01",
+   "epoch": 1,
+   "input": "Ticket holdout-01: customer message",
+   "target": "route:holdout-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-01:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-01:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-02",
+   "epoch": 1,
+   "input": "Ticket holdout-02: customer message",
+   "target": "route:holdout-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-03",
+   "epoch": 1,
+   "input": "Ticket holdout-03: customer message",
+   "target": "route:holdout-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-04",
+   "epoch": 1,
+   "input": "Ticket holdout-04: customer message",
+   "target": "route:holdout-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-05",
+   "epoch": 1,
+   "input": "Ticket holdout-05: customer message",
+   "target": "route:holdout-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-05:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-05:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-06",
+   "epoch": 1,
+   "input": "Ticket holdout-06: customer message",
+   "target": "route:holdout-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-07",
+   "epoch": 1,
+   "input": "Ticket holdout-07: customer message",
+   "target": "route:holdout-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-08",
+   "epoch": 1,
+   "input": "Ticket holdout-08: customer message",
+   "target": "route:holdout-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-01",
+   "epoch": 2,
+   "input": "Ticket route-01: customer message",
+   "target": "route:route-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-01:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-01:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-02",
+   "epoch": 2,
+   "input": "Ticket route-02: customer message",
+   "target": "route:route-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-03",
+   "epoch": 2,
+   "input": "Ticket route-03: customer message",
+   "target": "route:route-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-04",
+   "epoch": 2,
+   "input": "Ticket route-04: customer message",
+   "target": "route:route-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-05",
+   "epoch": 2,
+   "input": "Ticket route-05: customer message",
+   "target": "route:route-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-05:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-05:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-06",
+   "epoch": 2,
+   "input": "Ticket route-06: customer message",
+   "target": "route:route-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-07",
+   "epoch": 2,
+   "input": "Ticket route-07: customer message",
+   "target": "route:route-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-08",
+   "epoch": 2,
+   "input": "Ticket route-08: customer message",
+   "target": "route:route-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-09",
+   "epoch": 2,
+   "input": "Ticket route-09: customer message",
+   "target": "route:route-09:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-09:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-09:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-10",
+   "epoch": 2,
+   "input": "Ticket route-10: customer message",
+   "target": "route:route-10:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-10:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-10:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-11",
+   "epoch": 2,
+   "input": "Ticket route-11: customer message",
+   "target": "route:route-11:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-11:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-11:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-12",
+   "epoch": 2,
+   "input": "Ticket route-12: customer message",
+   "target": "route:route-12:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-12:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-12:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-01",
+   "epoch": 2,
+   "input": "Ticket holdout-01: customer message",
+   "target": "route:holdout-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-01:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-01:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-02",
+   "epoch": 2,
+   "input": "Ticket holdout-02: customer message",
+   "target": "route:holdout-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-03",
+   "epoch": 2,
+   "input": "Ticket holdout-03: customer message",
+   "target": "route:holdout-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-04",
+   "epoch": 2,
+   "input": "Ticket holdout-04: customer message",
+   "target": "route:holdout-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-05",
+   "epoch": 2,
+   "input": "Ticket holdout-05: customer message",
+   "target": "route:holdout-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-05:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-05:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-06",
+   "epoch": 2,
+   "input": "Ticket holdout-06: customer message",
+   "target": "route:holdout-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-07",
+   "epoch": 2,
+   "input": "Ticket holdout-07: customer message",
+   "target": "route:holdout-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-08",
+   "epoch": 2,
+   "input": "Ticket holdout-08: customer message",
+   "target": "route:holdout-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-01",
+   "epoch": 3,
+   "input": "Ticket route-01: customer message",
+   "target": "route:route-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-01:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-01:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-02",
+   "epoch": 3,
+   "input": "Ticket route-02: customer message",
+   "target": "route:route-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-03",
+   "epoch": 3,
+   "input": "Ticket route-03: customer message",
+   "target": "route:route-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-04",
+   "epoch": 3,
+   "input": "Ticket route-04: customer message",
+   "target": "route:route-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-05",
+   "epoch": 3,
+   "input": "Ticket route-05: customer message",
+   "target": "route:route-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-05:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-05:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-06",
+   "epoch": 3,
+   "input": "Ticket route-06: customer message",
+   "target": "route:route-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-07",
+   "epoch": 3,
+   "input": "Ticket route-07: customer message",
+   "target": "route:route-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-08",
+   "epoch": 3,
+   "input": "Ticket route-08: customer message",
+   "target": "route:route-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-09",
+   "epoch": 3,
+   "input": "Ticket route-09: customer message",
+   "target": "route:route-09:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-09:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-09:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-10",
+   "epoch": 3,
+   "input": "Ticket route-10: customer message",
+   "target": "route:route-10:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-10:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-10:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-11",
+   "epoch": 3,
+   "input": "Ticket route-11: customer message",
+   "target": "route:route-11:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-11:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-11:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-12",
+   "epoch": 3,
+   "input": "Ticket route-12: customer message",
+   "target": "route:route-12:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-12:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-12:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-01",
+   "epoch": 3,
+   "input": "Ticket holdout-01: customer message",
+   "target": "route:holdout-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-01:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:holdout-01:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-02",
+   "epoch": 3,
+   "input": "Ticket holdout-02: customer message",
+   "target": "route:holdout-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-03",
+   "epoch": 3,
+   "input": "Ticket holdout-03: customer message",
+   "target": "route:holdout-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-04",
+   "epoch": 3,
+   "input": "Ticket holdout-04: customer message",
+   "target": "route:holdout-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-05",
+   "epoch": 3,
+   "input": "Ticket holdout-05: customer message",
+   "target": "route:holdout-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-05:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-05:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-06",
+   "epoch": 3,
+   "input": "Ticket holdout-06: customer message",
+   "target": "route:holdout-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-07",
+   "epoch": 3,
+   "input": "Ticket holdout-07: customer message",
+   "target": "route:holdout-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-08",
+   "epoch": 3,
+   "input": "Ticket holdout-08: customer message",
+   "target": "route:holdout-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-01",
+   "epoch": 4,
+   "input": "Ticket route-01: customer message",
+   "target": "route:route-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-01:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-01:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-02",
+   "epoch": 4,
+   "input": "Ticket route-02: customer message",
+   "target": "route:route-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-02:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-02:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-03",
+   "epoch": 4,
+   "input": "Ticket route-03: customer message",
+   "target": "route:route-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-03:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-03:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-04",
+   "epoch": 4,
+   "input": "Ticket route-04: customer message",
+   "target": "route:route-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-04:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-04:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-05",
+   "epoch": 4,
+   "input": "Ticket route-05: customer message",
+   "target": "route:route-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-05:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:route-05:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-06",
+   "epoch": 4,
+   "input": "Ticket route-06: customer message",
+   "target": "route:route-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-07",
+   "epoch": 4,
+   "input": "Ticket route-07: customer message",
+   "target": "route:route-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-08",
+   "epoch": 4,
+   "input": "Ticket route-08: customer message",
+   "target": "route:route-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-09",
+   "epoch": 4,
+   "input": "Ticket route-09: customer message",
+   "target": "route:route-09:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-09:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-09:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-10",
+   "epoch": 4,
+   "input": "Ticket route-10: customer message",
+   "target": "route:route-10:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-10:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-10:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-11",
+   "epoch": 4,
+   "input": "Ticket route-11: customer message",
+   "target": "route:route-11:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-11:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-11:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "route-12",
+   "epoch": 4,
+   "input": "Ticket route-12: customer message",
+   "target": "route:route-12:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:route-12:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:route-12:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-01",
+   "epoch": 4,
+   "input": "Ticket holdout-01: customer message",
+   "target": "route:holdout-01:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-01:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:holdout-01:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-02",
+   "epoch": 4,
+   "input": "Ticket holdout-02: customer message",
+   "target": "route:holdout-02:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-02:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-02:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-03",
+   "epoch": 4,
+   "input": "Ticket holdout-03: customer message",
+   "target": "route:holdout-03:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-03:general"
+   },
+   "scores": {
+    "route": {
+     "value": "I",
+     "answer": "route:holdout-03:general"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-04",
+   "epoch": 4,
+   "input": "Ticket holdout-04: customer message",
+   "target": "route:holdout-04:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-04:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-04:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-05",
+   "epoch": 4,
+   "input": "Ticket holdout-05: customer message",
+   "target": "route:holdout-05:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-05:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-05:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-06",
+   "epoch": 4,
+   "input": "Ticket holdout-06: customer message",
+   "target": "route:holdout-06:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-06:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-06:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-07",
+   "epoch": 4,
+   "input": "Ticket holdout-07: customer message",
+   "target": "route:holdout-07:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-07:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-07:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  },
+  {
+   "id": "holdout-08",
+   "epoch": 4,
+   "input": "Ticket holdout-08: customer message",
+   "target": "route:holdout-08:billing",
+   "output": {
+    "model": "anthropic/opus-5.5",
+    "choices": [],
+    "completion": "route:holdout-08:billing"
+   },
+   "scores": {
+    "route": {
+     "value": "C",
+     "answer": "route:holdout-08:billing"
+    }
+   },
+   "model_usage": {
+    "anthropic/opus-5.5": {
+     "input_tokens": 1800,
+     "output_tokens": 200,
+     "total_tokens": 2000,
+     "total_cost": 0.019
+    }
+   },
+   "working_time": 1.5
+  }
+ ]
+}

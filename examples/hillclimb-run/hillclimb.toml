@@ -1,0 +1,10 @@
+# evalarc hillclimb-run examples/hillclimb-run/hillclimb.toml --output runs/climb --trust-local
+workspace = "workspace"
+allow = ["rules.md"]
+held_out = "split.json"
+evaluate = ["{python}", "evaluate.py", "{output}"]
+propose = ["{python}", "propose.py", "{iteration}", "{failures}"]
+objective = "quality"
+max_iterations = 5
+stall_after = 2
+timeout_seconds = 60
