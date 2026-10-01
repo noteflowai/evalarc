@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.4 — 2026-10-02
 
 - Add `evalarc view [DIR]`: a read-only, loopback-only local viewer that lists
   every report under a folder with its verdict, following the `inspect view` /
