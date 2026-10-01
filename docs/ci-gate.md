@@ -66,6 +66,22 @@ rate is still reported as `regressed` or `less_reliable` first.
 Removing a failing check fails too: deleting it would otherwise turn a red gate
 green.
 
+**Unfinished baseline.** A baseline Inspect log whose status is not `success`
+(an interrupted or errored run, often missing samples) fails the gate as well.
+Otherwise every check missing from it would appear as `added`, which never
+blocks, and missing evidence would read as new coverage. `diff` exits **1**,
+`diff.json` records `"baseline_incomplete": true` (the key is omitted for a
+finished baseline), `summary.md` and `index.html` say the baseline is
+incomplete, and the terminal prints:
+
+```text
+The baseline run is incomplete (status error); 2 check(s) appear only in the current run and were not compared. Rerun the baseline to completion; the gate fails.
+```
+
+Rerun the baseline to completion (or commit a finished result file) and compare
+again. EvalArc does not reconstruct missing samples. Exports that record no run
+status, such as JUnit, are never marked incomplete.
+
 Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
 no samples, malformed input). Treat 2 as a broken pipeline, not a regression.

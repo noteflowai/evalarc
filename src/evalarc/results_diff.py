@@ -133,6 +133,9 @@ def diff(baseline: dict, current: dict) -> dict:
     counts["unchanged"] = unchanged
     blocking = sum(found[kind] for kind in BLOCKING)
     incomplete = current["incomplete"]
+    # A baseline that did not finish is missing evidence: its absent checks would read as
+    # "added", which never blocks, so an unfinished baseline fails the gate as well.
+    baseline_incomplete = bool(baseline.get("incomplete"))
     # Article principle (low variance / gain must exceed eval noise): a change whose
     # baseline and current pass proportions have overlapping Wilson intervals cannot be
     # told apart from repeat-sampling variation at the recorded attempt count. This is a
@@ -153,8 +156,10 @@ def diff(baseline: dict, current: dict) -> dict:
         "blocking_changes": blocking,
         "blocking_changes_within_sampling_noise": blocking_within_noise,
         "changes_with_same_output_different_verdict": grader_changes,
+        # Additive schema-v1 key, present only when true (the less_covered convention).
+        **({"baseline_incomplete": True} if baseline_incomplete else {}),
         "current_incomplete": incomplete,
-        "gate_passed": blocking == 0 and not incomplete,
+        "gate_passed": blocking == 0 and not incomplete and not baseline_incomplete,
         "changes": changes,
         "interpretation": INTERPRETATION,
         "sampling_noise_note": SAMPLING_NOISE_NOTE,
@@ -170,6 +175,10 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         if result["gate_passed"]
         else f"{result['blocking_changes']} check(s) lost passes or coverage"
         if result["blocking_changes"]
+        else "the baseline and current runs are incomplete"
+        if result.get("baseline_incomplete") and result["current_incomplete"]
+        else "the baseline run is incomplete"
+        if result.get("baseline_incomplete")
         else "the current run is incomplete"
     )
     lines = [f"### EvalArc: {verdict}", ""]
@@ -186,6 +195,22 @@ def render_markdown(result: dict, limit: int = 50) -> str:
     if result["current_incomplete"]:
         status = after["identity"].get("status")
         lines += ["", f"The current run did not finish (status `{status}`); the gate fails."]
+    if result.get("baseline_incomplete"):
+        # Escape the untrusted status like a table cell, then code-format it explicitly
+        # so the line matches the current-run message: (status `error`).
+        status = (
+            str(before["identity"].get("status"))
+            .replace("|", "\\|")
+            .replace("`", "'")
+            .replace("\n", " ")
+        )
+        lines += [
+            "",
+            f"The baseline run did not finish (status `{status}`); the gate fails because "
+            "checks missing from it cannot be compared. "
+            f"{counts.get('added', 0)} check(s) appear only in the current run. "
+            "Rerun the baseline to completion.",
+        ]
     if before["headline"] and before["headline"].get("name"):
         lines += ["", f"Headline metric: `{before['headline']['name']}` from the source tool."]
     graded = result.get("changes_with_same_output_different_verdict") or 0
@@ -258,27 +283,31 @@ def render_html(result: dict, destination: Path) -> None:
         reasons.append(f"{result['blocking_changes']} check(s) lost passes or coverage")
     if result["current_incomplete"]:
         reasons.append("the current run is incomplete")
+    if result.get("baseline_incomplete"):
+        reasons.append("the baseline run is incomplete")
     if result.get("generalization_required") and not result.get("generalization_passed"):
         reasons.append("generalization was required and not shown")
     if result.get("cost_gate") and not result["cost_gate"]["passed"]:
         reasons.append("the cost gate failed")
     within = result.get("blocking_changes_within_sampling_noise") or 0
+    if passed:
+        next_step = ""
+    elif result.get("baseline_incomplete") and not result["blocking_changes"]:
+        # No blocking rows exist to read; the missing evidence is in the baseline.
+        next_step = "Rerun the baseline to completion and compare again."
+    else:
+        next_step = "Read the blocking rows below and their evidence"
+        if within:
+            next_step += (
+                f"; {within} {'is' if within == 1 else 'are'} within sampling noise, so record "
+                "more attempts"
+            )
+        next_step += "."
     body = _verdict(
         passed,
         "Gate passed: no check lost passes" if passed else "Gate failed",
         "; ".join(reasons).capitalize() + "." if reasons else "",
-        (
-            "Read the blocking rows below and their evidence"
-            + (
-                f"; {within} {'is' if within == 1 else 'are'} within sampling noise, so record "
-                "more attempts"
-                if within
-                else ""
-            )
-            + "."
-        )
-        if not passed
-        else "",
+        next_step,
     )
     body += (
         f"<p>{_esc(result['format'])} results · {_esc(before['source']['name'])} → "
