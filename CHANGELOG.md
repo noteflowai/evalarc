@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.2 — 2026-10-01
 
 - Offline HTML reports for `diff`, `eval-health`, `hillclimb-review`,
   `judge-score` and `review-inputs` open with a verdict banner: the decision,
@@ -17,6 +17,12 @@
   `hillclimb-review` and `hillclimb-run`. Each folder adds `params.json` (every
   option) and copies scanned harness files to `harness/`, so leakage scans can
   be rerun. The commands and the verifier share one computation.
+
+## 0.17.1 — 2026-10-01
+
+- `hillclimb-review` rolls a step back when a held-out check keeps its pass
+  rate on fewer assessed attempts (`less_covered`), and the GitHub Action
+  annotates it. The gate uses the shared blocking-kind definition (#56).
 
 ## 0.17.0 — 2026-10-01
 
