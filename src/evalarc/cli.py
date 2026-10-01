@@ -373,6 +373,21 @@ def parser() -> argparse.ArgumentParser:
     climb.add_argument("--output", type=Path)
     climb.add_argument("--markdown", type=Path)
     climb.add_argument("--json", action="store_true")
+    view = commands.add_parser(
+        "view",
+        help="browse every report under a folder in your browser (local only)",
+        description=(
+            "Serve report folders under DIRECTORY on 127.0.0.1 with an index of their "
+            "verdicts, like inspect view or promptfoo view. Read-only; no network access "
+            "beyond loopback. --write-index writes the same index as a static page."
+        ),
+    )
+    view.add_argument("directory", type=Path, nargs="?", default=Path("runs"))
+    view.add_argument("--port", type=int, default=7576)
+    view.add_argument("--no-browser", action="store_true", help="do not open a browser")
+    view.add_argument(
+        "--write-index", type=Path, metavar="FILE", help="write a static index page and exit"
+    )
     project = commands.add_parser(
         "eval-init",
         help="create a runnable evaluation project: cases, app stub, grader, runner, loop config",
@@ -532,6 +547,10 @@ def main(argv: list[str] | None = None) -> int:
         return code
     if args.command == "diff":
         return _results_diff(args)
+    if args.command == "view":
+        from evalarc.viewer import command as view
+
+        return view(args)
     if args.command == "eval-init":
         from evalarc.eval_project import init_command
 

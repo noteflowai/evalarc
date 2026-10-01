@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Add `evalarc view [DIR]`: a read-only, loopback-only local viewer that lists
+  every report under a folder with its verdict, following the `inspect view` /
+  `promptfoo view` pattern with the standard library only. It rejects foreign
+  `Host` headers, path traversal and directory listings. `--write-index` writes
+  the same index as a static page.
+- Report pages: light and dark themes from the system setting, sticky table
+  headers, tabular numbers, sortable columns (WAI-ARIA APG pattern) and a row
+  filter on long tables. The enhancement script is a packaged asset inlined and
+  allowed by CSP hash; pages remain complete without JavaScript.
+- `scripts/check_reports_browser.cjs` now uses axe-core (WCAG 2.2 A/AA, light and
+  dark) instead of a custom contrast check, and runs end-to-end reviewer tasks:
+  verdict on the first screen, skip link, keyboard sorting, filtering, 320 px
+  reflow, no-JavaScript, print, and browsing from the viewer index.
+  `@axe-core/playwright` 4.13.0 is a pinned dev dependency.
+
 ## 0.17.3 — 2026-10-01
 
 - fix: fail the diff gate when the baseline run did not finish. evalarc diff and the GitHub Action now fail the gate (exit 1) when the baseline run did not finish. Before this change, an Inspect baseline log with a status other than success could pass, because checks missing from it were classified as 'added', which never blocks. diff.json now records "baseline_incomplete": true. The key is omitted for a finished baseline, so those reports are unchanged apart from created_at and version. Default stdout prints 'The baseline run is incomplete (status error); N check(s) appear only in the current run and were not compared. Rerun the baseline to completion; the gate fails.' summary.md always includes the line below the table: 'The baseline run did not finish (status `error`); the gate fails because checks missing from it cannot be compared. N check(s) appear only in the current run. Rerun the baseline to completion.' Its heading says 'the baseline run is incomplete' only when there are no blocking changes and the current run finished; otherwise the existing blocking or both-incomplete heading appears. index.html shows 'Gate failed' with the reason 'the baseline run is incomplete'. When no blocking rows exist, it tells you to rerun the baseline. evalarc verify recomputes the same result. docs/ci-gate.md and the README CI-gate paragraph document the rule.

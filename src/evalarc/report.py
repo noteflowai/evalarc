@@ -1,62 +1,102 @@
-"""Offline HTML audit reports with no scripts or remote assets."""
+"""Offline HTML reports: self-contained, no remote assets, one CSP-pinned inline script."""
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import html
 import json
 import re
+from importlib.resources import files
 from pathlib import Path
 
 STYLE = """
-:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#101618;color:#e0ece7}
-body{max-width:1080px;margin:60px auto;padding:0 24px}
-.eyebrow{color:#86dbaf;letter-spacing:.18em;font-size:12px;font-weight:700}
-h1{font-size:clamp(32px,6vw,64px);letter-spacing:-.045em;line-height:1.1;margin:16px 0}
-p{color:#acbeb5;max-width:760px}.cards{display:flex;gap:20px;flex-wrap:wrap;margin:36px 0}
-.card{border:1px solid #33463d;border-radius:12px;padding:18px 26px;flex:1;min-width:150px}
-.number{font-size:38px;color:#96e8b9;font-weight:650}.label{color:#b7c6bf}
-.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}
-td,th{text-align:left;padding:14px;border-bottom:1px solid #33463d}th{color:#86dbaf}
-code{font-family:ui-monospace,monospace}h2{margin-top:42px}
+:root{color-scheme:light dark;--bg:#101618;--surface:#152019;--surface-2:#17221c;
+--text:#e0ece7;--muted:#acbeb5;--border:#33463d;--accent:#96e8b9;--accent-2:#86dbaf;
+--bad:#edb68d;--warn:#e6d48a;--pass-bg:#152019;--fail-bg:#211b16;--warn-bg:#1f1d14;
+--radius:12px;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;
+background:var(--bg);color:var(--text)}
+@media(prefers-color-scheme:light){:root{--bg:#ffffff;--surface:#f3f7f5;--surface-2:#eef3f0;
+--text:#142019;--muted:#46564e;--border:#c9d6cf;--accent:#0b6b43;--accent-2:#0b6b43;
+--bad:#a3420c;--warn:#7a5d00;--pass-bg:#eef8f2;--fail-bg:#fff4ec;--warn-bg:#fffbe6}}
+*,*::before,*::after{box-sizing:border-box}
+body{max-width:1120px;margin:40px auto;padding:0 24px}
+.eyebrow{color:var(--accent-2);letter-spacing:.14em;font-size:12px;font-weight:700}
+h1{font-size:clamp(28px,4vw,44px);letter-spacing:-.03em;line-height:1.15;margin:10px 0 18px}
+h2{margin-top:40px;font-size:22px}h3{font-size:17px}
+p{color:var(--muted);max-width:76ch}.cards{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}
+.card{border:1px solid var(--border);border-radius:var(--radius);padding:16px 22px;flex:1;
+min-width:150px;background:var(--surface)}
+.number{font-size:32px;color:var(--accent);font-weight:650;font-variant-numeric:tabular-nums}
+.label{color:var(--muted)}
+.scroll{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+td,th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--accent-2);background:var(--surface);position:sticky;top:0;z-index:1}
+tbody tr:hover{background:var(--surface-2)}tbody tr:last-child td{border-bottom:0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 .dimension{display:flex;gap:16px;align-items:center;max-width:620px;margin:10px 0}
-.dimension span:first-child{width:150px}meter{flex:1;accent-color:#86dbaf}
-footer{margin-top:48px;border-top:1px solid #33463d;padding-top:20px;font-size:13px}
+.dimension span:first-child{width:150px}meter{flex:1;accent-color:var(--accent)}
+footer{margin-top:48px;border-top:1px solid var(--border);padding-top:20px;font-size:13px;
+color:var(--muted)}
 .metadata{overflow-wrap:anywhere;font-size:13px}
-pre{overflow:auto;padding:18px;background:#17221c;font-size:12px;max-height:480px}
-summary{cursor:pointer;color:#96e8b9}details{margin:16px 0}
+pre{overflow:auto;padding:16px;background:var(--surface-2);font-size:12px;max-height:480px;
+border-radius:8px;white-space:pre-wrap}
+summary{cursor:pointer;color:var(--accent)}details{margin:12px 0}
 summary{min-height:44px;padding:10px 0}
-a:focus-visible,summary:focus-visible{outline:3px solid #96e8b9;outline-offset:4px}
-.audit-control{border:1px solid #33463d;border-radius:12px;padding:12px 18px}
+a:focus-visible,summary:focus-visible,button:focus-visible,input:focus-visible,
+.scroll:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.audit-control{border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px}
 .audit-control summary{overflow-wrap:anywhere}.audit-control p{overflow-wrap:anywhere}
-.audit-coverage{border-left:3px solid #edb68d;padding:12px 20px;background:#17221c}
-@media(max-width:640px){body{margin:28px auto;padding:0 16px}.cards{gap:12px}
-.card{min-width:0;flex-basis:100%}.dimension{flex-wrap:wrap}.audit-control{padding:10px 14px}}
-a{color:#96e8b9}.failed,.agent_error,.environment_error{color:#edb68d}
-.passed{color:#96e8b9}td{overflow-wrap:anywhere}
-.scroll table{min-width:680px}td:first-child{min-width:170px;overflow-wrap:normal}
-.change-cards{display:none}.change-card{border:1px solid #33463d;border-radius:12px;padding:16px}
+.audit-coverage{border-left:3px solid var(--bad);padding:12px 20px;background:var(--surface-2)}
+a{color:var(--accent)}.failed,.agent_error,.environment_error{color:var(--bad)}
+.passed{color:var(--accent)}td{overflow-wrap:anywhere}
+.scroll table{min-width:680px}td:first-child{min-width:150px;overflow-wrap:normal}
+.change-cards{display:none}
+.change-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px}
 .change-card h3{font-size:16px;margin:0;overflow-wrap:anywhere}.change-card p{margin:10px 0 0}
-@media(max-width:640px){.change-table{display:none}.change-cards{display:grid;gap:16px}}
-.verdict{border:1px solid #33463d;border-left:6px solid #96e8b9;border-radius:12px;
-padding:18px 24px;margin:28px 0;background:#152019}
-.verdict.fail{border-left-color:#edb68d;background:#211b16}.verdict.warn{border-left-color:#e6d48a}
-.verdict h2{margin:0;font-size:22px}.verdict p{margin:8px 0 0;color:#d2ded8}
-.verdict .next{color:#e0ece7}.tone{white-space:nowrap}
-.tone.ok{color:#96e8b9}.tone.bad{color:#edb68d}.tone.warn{color:#e6d48a}.tone.info{color:#acbeb5}
-.findings{list-style:none;padding:0;display:grid;gap:12px;max-width:900px}
-.findings li{border:1px solid #33463d;border-radius:10px;padding:12px 16px}
-.findings code{color:#cfe3d9}.skip{position:absolute;left:-200vw}
-.skip:focus{left:24px;top:12px;background:#101618;padding:8px}
-.scroll:focus-visible{outline:3px solid #96e8b9;outline-offset:2px}
+.verdict{border:1px solid var(--border);border-left:6px solid var(--accent);
+border-radius:var(--radius);padding:16px 22px;margin:20px 0 8px;background:var(--pass-bg)}
+.verdict.fail{border-left-color:var(--bad);background:var(--fail-bg)}
+.verdict.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.verdict h2{margin:0;font-size:21px}.verdict p{margin:6px 0 0;color:var(--text)}
+.tone{white-space:nowrap}.tone.ok{color:var(--accent)}.tone.bad{color:var(--bad)}
+.tone.warn{color:var(--warn)}.tone.info{color:var(--muted)}
+.findings{list-style:none;padding:0;display:grid;gap:10px;max-width:900px}
+.findings li{border:1px solid var(--border);border-radius:10px;padding:12px 16px}
+.skip{position:absolute;left:-200vw}
+.skip:focus{left:24px;top:12px;background:var(--bg);padding:8px;z-index:5}
 td code{overflow-wrap:anywhere}
-@media(max-width:640px){.scroll table{min-width:560px}td,th{padding:10px}
-main .cards .card{flex-basis:calc(50% - 6px);padding:12px 14px}main .number{font-size:26px}}
-@media print{:root{color-scheme:light;background:#fff;color:#111}body{margin:0;max-width:none}
-p,.label,.verdict p,.verdict .next,.tone.info{color:#222}th,a,.number,.eyebrow,.tone.ok{color:#064}
-.tone.bad,.tone.warn,.failed{color:#8a3b00}
-.verdict,.card,.findings li{background:#fff;break-inside:avoid}
-pre{background:#f4f4f4;max-height:none}.scroll{overflow:visible}.skip{display:none}}
+.tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.tools input{font:inherit;padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+background:var(--bg);color:var(--text);min-height:44px;min-width:min(320px,100%)}
+th button{all:unset;cursor:pointer;display:inline-flex;gap:6px;align-items:center;
+min-height:32px;color:inherit;font-weight:700}
+th button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+th button span{opacity:.6}[aria-sort] button span{opacity:1}
+.count{font-size:13px;color:var(--muted)}
+@media(max-width:640px){body{margin:24px auto;padding:0 16px}.cards{gap:12px}
+.card{min-width:0;flex-basis:100%}.dimension{flex-wrap:wrap}.audit-control{padding:10px 14px}
+.change-table{display:none}.change-cards{display:grid;gap:16px}
+.scroll table{min-width:560px}td,th{padding:8px 10px}
+main .cards .card{flex-basis:calc(50% - 6px);padding:12px 14px}main .number{font-size:24px}}
+@media print{:root{--bg:#fff;--surface:#fff;--surface-2:#f4f4f4;--text:#111;--muted:#222;
+--border:#bbb;--accent:#064;--accent-2:#064;--bad:#8a3b00;--warn:#6a5000;--pass-bg:#fff;
+--fail-bg:#fff;--warn-bg:#fff}body{margin:0;max-width:none}
+.verdict,.card,.findings li,tr{break-inside:avoid}pre{max-height:none}
+.scroll{overflow:visible;max-height:none;border:0}th{position:static}
+.skip,.tools{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 """
+
+# Progressive enhancement (sortable columns, row filter), inlined from a packaged asset
+# so each report stays one self-contained file; the CSP allows exactly this script.
+ENHANCE = files("evalarc").joinpath("assets", "report_enhance.js").read_text(encoding="utf-8")
+SCRIPT_HASH = base64.b64encode(hashlib.sha256(ENHANCE.encode()).digest()).decode()
+CSP = (
+    "default-src 'none'; style-src 'unsafe-inline'; "
+    f"script-src 'sha256-{SCRIPT_HASH}'; base-uri 'none'; form-action 'none'"
+)
 
 TONES = {"ok": "✓", "bad": "✗", "warn": "!", "info": "·"}
 
@@ -147,11 +187,12 @@ def render_audit(data: dict, destination: Path) -> None:
         f"{len(fragile)} fault(s) depend on a single detecting case." if fragile else "",
         "Add cases that detect the single-case faults independently." if fragile else "",
     )
-    document = """<!doctype html>
+    document = (
+        """<!doctype html>
 <html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy"
- content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="__CSP__">
+<meta name="color-scheme" content="light dark">
 <title>EvalArc · Grader audit</title>
 <style>
 __STYLE__
@@ -161,7 +202,10 @@ __STYLE__
 <h1>Test the grader.<br>Then trust the signal.</h1>
 __VERDICT__<p>Behavioral controls for task-specific agent evaluations. Correct and faulty
 submissions are evaluated against the same externally enforced contract.</p>
-""".replace("__STYLE__", STYLE).replace("__VERDICT__", verdict)
+""".replace("__STYLE__", STYLE)
+        .replace("__VERDICT__", verdict)
+        .replace("__CSP__", CSP)
+    )
     if data.get("valid") is False:
         document += (
             "<p><strong>Invalid audit: environment failure.</strong> "
@@ -246,7 +290,7 @@ submissions are evaluated against the same externally enforced contract.</p>
         "leaderboard. Public seeds are not held-out evaluation data. "
         "Detection rates apply only to the listed fault models. "
         "No human time horizon, model quality, or RL improvement is inferred.</footer>"
-        "</main></html>"
+        f'</main><script data-evalarc="enhance">{ENHANCE}</script></html>'
     )
     document = document.replace("<th>", '<th scope="col">').replace(
         "<th title=", '<th scope="col" title='
@@ -281,12 +325,13 @@ def _page(kind: str, title: str, body: str, destination: Path) -> None:
     document = (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; '
-        "style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'\">"
+        f'<meta http-equiv="Content-Security-Policy" content="{CSP}">'
+        '<meta name="color-scheme" content="light dark">'
         f"<title>EvalArc · {_esc(kind)}</title><style>{STYLE}</style></head><body>"
         '<a class="skip" href="#main">Skip to content</a>'
         f'<main id="main"><div class="eyebrow">EVALARC / {_esc(kind.upper())}</div>'
-        f"<h1>{_esc(title)}</h1>{body}</main></body></html>"
+        f"<h1>{_esc(title)}</h1>{body}</main>"
+        f'<script data-evalarc="enhance">{ENHANCE}</script></body></html>'
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(document, encoding="utf-8")
