@@ -66,13 +66,13 @@ and the upgrade gate fails. These checks share two format/schema failures.
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.17.2/)
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.17.3/)
 in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.17.2
+python -m pip install evalarc==0.17.3
 evalarc --version
 ```
 
@@ -117,10 +117,13 @@ A minimal redacted example is enough; a failed setup is useful feedback too.
 the baseline fails, passes less often, is skipped or disappears, and writes an
 offline report with copies of both inputs. In the
 [recorded Inspect example](examples/results-diff/README.md), accuracy rises from
-0.625 to 0.8125 while three checks lose passes.
+0.625 to 0.8125 while three checks lose passes. An unfinished baseline or current
+run (an Inspect log whose status is not `success`) also fails the gate with exit 1,
+because checks missing from it cannot be compared; rerun that evaluation to
+completion and compare again.
 
 ```yaml
-- uses: noteflowai/evalarc@v0.17.2 # or a full commit SHA
+- uses: noteflowai/evalarc@v0.17.3 # or a full commit SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json

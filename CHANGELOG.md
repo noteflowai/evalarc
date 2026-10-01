@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.3 — 2026-10-01
+
+- fix: fail the diff gate when the baseline run did not finish. evalarc diff and the GitHub Action now fail the gate (exit 1) when the baseline run did not finish. Before this change, an Inspect baseline log with a status other than success could pass, because checks missing from it were classified as 'added', which never blocks. diff.json now records "baseline_incomplete": true. The key is omitted for a finished baseline, so those reports are unchanged apart from created_at and version. Default stdout prints 'The baseline run is incomplete (status error); N check(s) appear only in the current run and were not compared. Rerun the baseline to completion; the gate fails.' summary.md always includes the line below the table: 'The baseline run did not finish (status `error`); the gate fails because checks missing from it cannot be compared. N check(s) appear only in the current run. Rerun the baseline to completion.' Its heading says 'the baseline run is incomplete' only when there are no blocking changes and the current run finished; otherwise the existing blocking or both-incomplete heading appears. index.html shows 'Gate failed' with the reason 'the baseline run is incomplete'. When no blocking rows exist, it tells you to rerun the baseline. evalarc verify recomputes the same result. docs/ci-gate.md and the README CI-gate paragraph document the rule.
+
 ## 0.17.2 — 2026-10-01
 
 - Offline HTML reports for `diff`, `eval-health`, `hillclimb-review`,
