@@ -17,6 +17,183 @@
 
 ## Unreleased
 
+### Evaluation projects
+
+- Add `evalarc eval-init DIR`: a runnable evaluation project with `cases.jsonl`
+  (source, held-out and difficulty per case), an application stub, a
+  programmatic grader (`exact`, `contains`, `label`, `json_keys`), an
+  evaluation runner that writes Inspect-format logs over several epochs, a stub
+  proposer and a `hillclimb.toml` that only lets the loop edit `prompt.md`.
+- Add `evalarc review-inputs cases.jsonl`: validates every case, renders an input
+  review page before any run, reports held-out, duplicate, size,
+  dominant-answer and source findings, and regenerates the split and case
+  manifest from the case file. `--require-clean` exits 1 on warnings.
+- `hillclimb-run` now completes when every proposal is rejected before
+  evaluation, recommending `no_change_kept`.
+
+### Configuration, judge consistency, eval size and cache diagnostics
+
+- Inspect loaders record `model_generate_config` settings (reasoning effort and
+  tokens, max tokens, temperature). `eval-health` reports `config_not_applied`
+  when extended thinking is requested but every attempt records zero reasoning
+  tokens, and lists each file's settings.
+- `eval-health` reports the evaluation size (cases × attempts × files, recorded
+  duration and cost), estimates a planned run with `--plan-attempts` and
+  `--plan-configs`, and with `--output` writes `cases.jsonl` (one line per
+  attempt) and a per-case page linking to recorded outputs.
+- `judge-run --repeat N` asks the judge N times per item; `judge-score` reports
+  judge consistency and the items whose answer changed.
+- `diff` reports `usage.cache_read_share` when input and cache-read tokens are
+  recorded.
+
+### Run the loop and the judge with your own commands
+
+- Add `evalarc hillclimb-run CONFIG --output DIR --trust-local`. A TOML file
+  declares the workspace, the files the loop may edit (`allow`), the held-out
+  split, and `evaluate` and `propose` command arrays. Each iteration writes the
+  tuning failures of the last kept result (never held-out cases) for the propose
+  command, stops if it edits files outside `allow`, rolls back patches that add
+  held-out case text (`rollback_leakage`) or paste tuning case text
+  (`rollback_pasted_case`) before evaluating, then keeps or rolls back with the
+  `hillclimb-review` rules, triages stalls and stops below noise. The workspace
+  ends at the last kept version with `original/`, `final.diff`, per-step
+  patches and the review report. Exit 0 merge recommended, 1 not, 2 failure.
+- Add `evalarc judge-run PACKET --config judge.toml --output verdicts.json
+  --trust-local`: runs a judge command once per packet item from `share/`,
+  validates each verdict and records the declared judge model.
+- `eval-health` adds `model_judge_replaceable` for model-graded checks whose
+  outputs are few or JSON, where a programmatic check would do.
+- Loaders record which checks are model-graded (Inspect `model_graded_*`
+  scorers, promptfoo `llm-rubric`, `factuality`, `g-eval` and similar).
+- Add the scripted `examples/hillclimb-run/` workspace, `docs/hillclimb-run.md`
+  (+ zh-CN), and a `SECURITY.md` note. EvalArc still makes no model calls.
+
+### Blind judging and case provenance
+
+- Add `evalarc judge-packet grader|pairwise` and `evalarc judge-score`. Grader
+  packets sample recorded attempts stratified by verdict and hide the verdict;
+  scoring reports agreement with a 95% interval, Cohen's kappa, false accepts and
+  false rejects. Pairwise packets show baseline and current outputs of the same
+  case and attempt in randomized, hidden A/B order; scoring unblinds and reports
+  the current win rate with an interval, position bias and a
+  `current_preferred`/`baseline_preferred`/`no_clear_preference` state. The
+  judge receives only `share/`; the key stays outside it and is bound to the
+  packet by SHA-256. Model judges matching a model under evaluation are flagged
+  `self_judged`. `--min-agreement` and `--require-current-preferred` exit 1
+  when not met. EvalArc does not call the judge. See `docs/judging.md` (+ zh-CN).
+- Loaders keep each attempt's output text (up to 20,000 characters) and its
+  per-check verdicts for packets; diff output is unchanged.
+- `eval-health --cases MANIFEST` reads an `evalarc.case-manifest.v1` source
+  declaration and reports `adversarial_sampling`, `no_real_cases`,
+  `mostly_synthetic`, `traffic_only` and `provenance_undeclared`. Add an authored
+  `examples/results-diff/inspect/cases.json`.
+
+### `evalarc hillclimb-review`
+
+- New offline command that replays hillclimbing keep/rollback rules over a
+  baseline and the saved result after each proposed change, with a required
+  held-out split. Each step is compared with the last kept result:
+  `rollback_regression` (a held-out check lost passes or a partition fell),
+  `rollback_overfit` (tuning improved, held-out did not), `keep` (quality: both
+  improved; `--objective cost`: recorded cost fell with neither partition
+  falling) or `rollback_no_gain`. After `--stall-after` consecutive rollbacks
+  the remaining tuning failures are triaged, and the report says to stop when
+  the headroom is below the resolvable change. The final kept result is compared
+  with the baseline on held-out cases with 95% intervals: `merge`, `merge_cost`
+  (exit 0), or `no_change_kept`, `do_not_merge_regression`,
+  `do_not_merge_within_noise`, `do_not_merge_cost`, `do_not_merge_leakage`
+  (exit 1); invalid input exits 2. `--output` also writes
+  `tuning-failures.json`, which excludes every held-out case.
+- Add an authored six-step example with recorded costs and its generator,
+  `examples/hillclimb-review/build.py`, and `docs/hillclimb-review.md`
+  (+ zh-CN) with a map from each practice in the article to an EvalArc check.
+
+### Grader consistency, truncation and self-grading
+
+- Loaders record a SHA-256 of each attempt's output, its stop reason and the
+  grader models. `diff` marks a changed check `same_output_different_verdict`
+  when a byte-identical output was graded differently, and reports check pass
+  rates with 95% Wilson intervals.
+- `eval-health` adds `inconsistent_grading`, `truncated_outputs` and
+  `self_graded` findings, intervals, mean duration and cost per run, and a
+  failure triage of the last file (`pipeline`, `truncated`,
+  `grader_inconsistent`, `regressed`, `never_passes`, `variable`,
+  `consistent_failure`).
+- `examples/model-upgrade/reports/` is regenerated from the unchanged JUnit
+  files to include the intervals.
+
+### Held-out split and harness leakage in `evalarc diff`
+
+- Add `--held-out SPLIT`, reading an `evalarc.case-split.v1` file of held-out
+  case IDs or glob patterns. `diff` compares the check-attempt pass rates of the
+  tuning and held-out partitions and reports `generalizes`,
+  `overfitting_signal` (tuning cases improved beyond sampling noise, held-out
+  cases did not), `held_out_regressions`, `held_out_gain_within_noise` or
+  `no_measurable_gain`. The split file is copied to `split.json` with its
+  SHA-256. Every entry must match a recorded case and at least one tuning case
+  must remain.
+- Add `--harness PATH ...` to scan prompt, skill and tool-description files for
+  recorded case inputs and expected answers copied verbatim (case- and
+  whitespace-insensitive, `--leak-min-chars`, default 12). Hits list the file,
+  line, case and partition. Negated and code promptfoo assertions are not
+  treated as answers.
+- Add opt-in `--require-generalization`: exit 1 unless held-out cases improve
+  beyond noise and no held-out case text appears in the harness. Without it the
+  exit code is unchanged.
+- The GitHub Action gains `held-out`, `harness` and `require-generalization`
+  inputs, `generalization-state` and `leakage-hits` outputs, and file/line
+  annotations for leaks. Add an authored split and leaking prompt to
+  `examples/results-diff/inspect/`.
+
+### Cost at equal quality in `evalarc diff`
+
+- `diff.json` gains a `usage` block: mean recorded cost, token and duration
+  usage per attempt over cases present in both runs (Inspect `model_usage` and
+  working time, promptfoo `cost`, `tokenUsage` and `latencyMs`, JUnit test
+  time). Missing values stay unknown and are never counted as zero. Markdown and
+  HTML reports show it when cost or tokens were recorded.
+- Add opt-in `--max-cost-ratio R` with `--cost-metric auto|cost|tokens|duration`:
+  exit 1 unless current mean usage per attempt is at most `R` x baseline, in
+  addition to the unchanged quality gate. A metric that is not recorded on every
+  matched attempt, or a zero baseline, exits 2. EvalArc does not price tokens.
+- The GitHub Action gains `max-cost-ratio` and `cost-metric` inputs and a
+  `cost-ratio` output. `examples/model-upgrade/reports/comparison.json` is
+  regenerated from the unchanged JUnit files to include the `usage` block.
+- `eval-health` now points saturated evaluations to the cost gate.
+
+### `evalarc eval-health`
+
+- New offline command that reads 1–20 saved Inspect AI, promptfoo or JUnit
+  result files of one evaluation and reports `saturated`, `always_failing`,
+  `flaky_checks`, `unassessed_attempts`, `single_attempt`,
+  `noise_exceeds_min_effect` (with `--min-effect`) and `capability_inversion`
+  (with `--ordered`, files from weaker to stronger configuration). `--output`
+  writes `health.json`, `summary.md`, `index.html` and input copies;
+  `--require-healthy` exits 1 on any warning; invalid input exits 2.
+  Documented in `docs/eval-health.md` and `docs/eval-health.zh-CN.md`.
+
+### Sampling-noise annotation in `evalarc diff`
+
+- Annotate each changed check with `within_sampling_noise` when both the
+  baseline and current sides show observed variation and their 95% Wilson
+  intervals overlap, so the recorded number of attempts (Inspect epochs,
+  promptfoo repeats, repeated JUnit cases) cannot separate the change from
+  repeat-sampling variation. `diff.json` gains a top-level
+  `blocking_changes_within_sampling_noise` count and a `sampling_noise_note`.
+- Surface the count in the CLI line, `summary.md`, and `index.html`, and mark
+  flagged rows in both the Markdown and HTML change tables.
+- The flag is descriptive, not a significance test: it never relaxes the gate.
+  A flagged regression still exits 1, and a clean all-pass to all-fail swing is
+  never called noise. It records whether the evidence is strong enough to trust
+  the direction of a change and points reviewers to record more attempts, in
+  the spirit of requiring a gain to exceed evaluation noise before acting on it.
+  Uses the standard library only; no new runtime dependency.
+- Regenerate `examples/model-upgrade/reports/comparison.{json,md}` and
+  `index.html` from the unchanged committed JUnit files. Of the ten blocking
+  checks, the five `resolved-bug` drops (3/3 → 1/3) are within sampling noise and
+  the five `already-closed` drops (3/3 → 0/3) are not; the gate still fails.
+  Document the annotation in `docs/ci-gate.md` and `docs/ci-gate.zh-CN.md`.
+
 ## 0.14.0 — 2026-09-25
 
 ### Results diff for existing evaluation tools
