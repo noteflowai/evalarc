@@ -155,6 +155,7 @@ def test_cli_writes_report_and_honours_require_healthy(tmp_path, capsys):
         "health.json",
         "index.html",
         "inputs",
+        "params.json",
         "summary.md",
     ]
     assert (output / "inputs/01.json").read_bytes() == Path(baseline).read_bytes()

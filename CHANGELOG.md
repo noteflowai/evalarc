@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc verify` now recomputes folders written by `diff`, `eval-health`,
+  `hillclimb-review` and `hillclimb-run`. Each folder adds `params.json` (every
+  option) and copies scanned harness files to `harness/`, so leakage scans can
+  be rerun. The commands and the verifier share one computation.
+
 ## 0.17.0 — 2026-10-01
 
 ### Evaluation projects

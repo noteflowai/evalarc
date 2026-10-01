@@ -244,6 +244,7 @@ def test_cli_writes_report_and_exit_codes(tmp_path, capsys):
         "hillclimb.json",
         "index.html",
         "inputs",
+        "params.json",
         "split.json",
         "summary.md",
         "tuning-failures.json",

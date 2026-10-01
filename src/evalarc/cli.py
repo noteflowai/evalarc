@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 import sys
@@ -480,7 +479,9 @@ def parser() -> argparse.ArgumentParser:
     suite.add_argument("--progress", action="store_true")
     suite.add_argument("--output", type=Path, default=Path("runs/suite"))
     verification = commands.add_parser(
-        "verify", help="check saved evaluation, repetition, comparison or suite evidence"
+        "verify",
+        help="check saved evaluation, repetition, comparison, suite, diff, eval-health or "
+        "hillclimb-review evidence",
     )
     verification.add_argument("evidence", type=Path, help="report JSON or its containing directory")
     verification.add_argument("--json", action="store_true")
@@ -570,8 +571,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.require_resolved:
                 code = 2 if not result["records_valid"] else (0 if result["fully_resolved"] else 1)
             if args.require_accepted:
-                if result["kind"] != "suite":
-                    raise ValueError("--require-accepted requires suite evidence")
+                if result["kind"] not in ("suite", "diff", "eval-health", "hillclimb-review"):
+                    raise ValueError(
+                        "--require-accepted requires suite, diff, eval-health or "
+                        "hillclimb-review evidence"
+                    )
                 code = max(
                     code, 2 if not result["records_valid"] else (0 if result["accepted"] else 1)
                 )
@@ -857,54 +861,55 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _results_diff(args: argparse.Namespace) -> int:
-    from evalarc.results_diff import BLOCKING, diff, load_results, render_html, render_markdown
+    from evalarc.results_diff import BLOCKING, load_results, render_html, render_markdown
 
     try:
+        from evalarc import evidence
+
         if args.require_generalization and not args.held_out:
             raise ValueError("--require-generalization requires --held-out")
         runs = [
             load_results(path, args.format, args.threshold)
             for path in (args.baseline, args.current)
         ]
-        result = diff(*runs)
-        held_out = None
-        split_bytes = None
+        split = None
         if args.held_out:
-            from evalarc.generalization import load_split, review_split
+            from evalarc.generalization import load_split
 
-            split_bytes = args.held_out.read_bytes()
             split = load_split(args.held_out)
-            result["generalization"] = review_split(*runs, result, split)
-            held_out = set(result["generalization"]["split"]["held_out_cases"])
-        if args.harness:
-            from evalarc.generalization import scan_harness
-
-            result["leakage"] = scan_harness(args.harness, runs, held_out, args.leak_min_chars)
-        if args.require_generalization:
-            from evalarc.generalization import generalization_passed
-
-            result["generalization_required"] = True
-            result["generalization_passed"] = generalization_passed(result)
-        if args.max_cost_ratio is not None:
-            from evalarc.usage import cost_gate
-
-            result["cost_gate"] = cost_gate(result["usage"], args.cost_metric, args.max_cost_ratio)
+        params = {
+            "format": args.format,
+            "threshold": args.threshold,
+            "leak_min_chars": args.leak_min_chars,
+            "require_generalization": args.require_generalization,
+            "max_cost_ratio": args.max_cost_ratio,
+            "cost_metric": args.cost_metric,
+        }
+        result = evidence.compute_diff(runs, params, split, args.harness)
         if args.output:
             with new_run(args.output) as output:
+                inputs = []
                 for label, path, run in zip(
                     ("baseline", "current"), (args.baseline, args.current), runs
                 ):
-                    data = path.read_bytes()
-                    if hashlib.sha256(data).hexdigest() != run["source"]["sha256"]:
-                        raise ValueError(f"{path} changed while it was being compared")
-                    (output / f"{label}{path.suffix or '.json'}").write_bytes(data)
-                if split_bytes is not None:
-                    if (
-                        hashlib.sha256(split_bytes).hexdigest()
-                        != result["generalization"]["split"]["source"]["sha256"]
-                    ):
-                        raise ValueError(f"{args.held_out} changed while it was being compared")
-                    (output / "split.json").write_bytes(split_bytes)
+                    name = f"{label}{path.suffix or '.json'}"
+                    evidence.copy_input(path, run["source"]["sha256"], output / name)
+                    inputs.append({"file": name})
+                if split is not None:
+                    evidence.copy_input(
+                        args.held_out, split["source"]["sha256"], output / "split.json"
+                    )
+                harness = evidence.copy_harness(args.harness, output) if args.harness else []
+                evidence.write_params(
+                    output,
+                    "diff",
+                    {
+                        **params,
+                        "inputs": inputs,
+                        "split": "split.json" if split is not None else None,
+                        "harness": harness,
+                    },
+                )
                 write_json(output / "diff.json", result)
                 (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
                 render_html(result, output / "index.html")
@@ -967,12 +972,9 @@ def _results_diff(args: argparse.Namespace) -> int:
             )
         if args.output:
             print(f"Report: {args.output / 'index.html'}")
-    passed = (
-        result["gate_passed"]
-        and result.get("generalization_passed", True)
-        and (result.get("cost_gate") or {}).get("passed", True)
-    )
-    return 0 if passed else 1
+    from evalarc.evidence import diff_passed
+
+    return 0 if diff_passed(result) else 1
 
 
 def _error(args: argparse.Namespace, event: str, message: str) -> None:

@@ -81,6 +81,18 @@ def verify(path: Path) -> dict:
     path = path.absolute()
     if any(item.is_symlink() for item in (path, *path.parents)):
         raise ValueError("choose an evidence path without symlinks")
+    from evalarc import evidence
+
+    folder = path if path.is_dir() else path.parent
+    if path.is_dir() or path.name in evidence.REPORT_FILES.values():
+        if evidence.detect(folder):
+            result = evidence.verify_report(folder)
+            # Map onto the verification fields every caller reads.
+            return result | {
+                "records_valid": True,
+                "fully_resolved": result["passed"],
+                "accepted": result["passed"],
+            }
     if path.is_dir():
         choices = [path / name for name in REPORTS if (path / name).exists()]
         if len(choices) != 1:

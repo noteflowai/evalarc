@@ -197,6 +197,7 @@ def test_cli_writes_a_reviewable_folder_and_appends_markdown(tmp_path, capsys):
         "current.json",
         "diff.json",
         "index.html",
+        "params.json",
         "summary.md",
     ]
     for label in ("baseline", "current"):
