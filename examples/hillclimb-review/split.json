@@ -1,0 +1,7 @@
+{
+  "schema_version": "evalarc.case-split.v1",
+  "description": "holdout-* tickets were never shown to the tuning loop.",
+  "held_out": [
+    "holdout-*"
+  ]
+}

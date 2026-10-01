@@ -1,0 +1,5 @@
+{
+  "schema_version": "evalarc.case-split.v1",
+  "description": "h* tickets are never passed to the propose command.",
+  "held_out": ["h*"]
+}

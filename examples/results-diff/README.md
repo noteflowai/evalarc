@@ -20,6 +20,23 @@ evalarc diff examples/results-diff/junit/baseline.xml examples/results-diff/juni
 
 Each command exits **1** and names the checks that lost passes.
 
+`inspect/split.json` declares the status and address cases as held out from
+tuning, and `inspect/harness/system-prompt.md` is a sample prompt that copies one
+held-out case and its reference answer. Both are authored illustrations, not tool
+output:
+
+```bash
+evalarc diff examples/results-diff/inspect/baseline.json examples/results-diff/inspect/current.json \
+  --held-out examples/results-diff/inspect/split.json --harness examples/results-diff/inspect/harness
+evalarc eval-health examples/results-diff/inspect/baseline.json \
+  examples/results-diff/inspect/current.json --ordered --min-effect 0.05
+```
+
+The held-out gain (8/12 → 12/12 attempts) is within sampling noise, and the scan
+reports the copied `status-missing` input and answer. See
+[held-out split](../../docs/ci-gate.md#held-out-split-did-the-change-generalize)
+and [eval health](../../docs/eval-health.md).
+
 ## How the files were produced
 
 Inspect AI (the solver writes a fixed answer per revision; the current revision

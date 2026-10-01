@@ -199,6 +199,271 @@ def parser() -> argparse.ArgumentParser:
         "--markdown", type=Path, help='append the summary here, e.g. "$GITHUB_STEP_SUMMARY"'
     )
     results_diff.add_argument("--json", action="store_true")
+    results_diff.add_argument(
+        "--held-out",
+        type=Path,
+        metavar="SPLIT",
+        help="evalarc.case-split.v1 JSON naming cases held out from tuning; compares the "
+        "tuning and held-out partitions and reports an overfitting signal",
+    )
+    results_diff.add_argument(
+        "--harness",
+        type=Path,
+        nargs="+",
+        metavar="PATH",
+        help="prompt, skill or tool-description files or folders to scan for recorded case "
+        "inputs and expected answers copied verbatim",
+    )
+    results_diff.add_argument(
+        "--leak-min-chars",
+        type=int,
+        default=12,
+        help="shortest recorded string counted as a leak (default: 12)",
+    )
+    results_diff.add_argument(
+        "--max-cost-ratio",
+        type=float,
+        metavar="R",
+        help="also fail unless current mean usage per attempt is at most R x baseline, "
+        "e.g. 1.0 for no increase or 0.5 to require halving (recorded values only)",
+    )
+    results_diff.add_argument(
+        "--cost-metric",
+        choices=("auto", "cost", "tokens", "duration"),
+        default="auto",
+        help="usage for --max-cost-ratio; auto uses recorded cost, else total tokens",
+    )
+    results_diff.add_argument(
+        "--require-generalization",
+        action="store_true",
+        help="also fail unless held-out cases improve beyond sampling noise and no held-out "
+        "case text appears in the harness (requires --held-out)",
+    )
+    health = commands.add_parser(
+        "eval-health",
+        help="check saved results for saturation, never-passing checks, flakiness, "
+        "unassessed attempts and noise before tuning against them",
+        description=(
+            "Diagnose whether saved Inspect AI, promptfoo or JUnit results can support "
+            "tuning decisions. Offline; nothing is rerun and no model is called."
+        ),
+        epilog=(
+            "exit codes:\n"
+            "  0  report written (or no warnings with --require-healthy)\n"
+            "  1  --require-healthy and at least one warning\n"
+            "  2  unreadable, incomparable or invalid input, or existing output"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    health.add_argument(
+        "results", type=Path, nargs="+", help="1–20 result files of the same evaluation"
+    )
+    health.add_argument("--format", choices=RESULT_FORMATS, default="auto")
+    health.add_argument(
+        "--threshold",
+        type=float,
+        default=1.0,
+        help="numeric Inspect scores at or above this value pass (default: 1.0)",
+    )
+    health.add_argument(
+        "--saturation",
+        type=float,
+        default=0.95,
+        help="warn when the best file passes at least this share of check attempts",
+    )
+    health.add_argument(
+        "--min-effect",
+        type=float,
+        metavar="D",
+        help="smallest pass-rate change you need to detect, e.g. 0.05; warn if noise is larger",
+    )
+    health.add_argument(
+        "--ordered",
+        action="store_true",
+        help="files are ordered from weaker to stronger model or thinking configuration",
+    )
+    health.add_argument(
+        "--cases",
+        type=Path,
+        metavar="MANIFEST",
+        help="evalarc.case-manifest.v1 declaring where each case came from",
+    )
+    health.add_argument(
+        "--plan-attempts",
+        type=int,
+        metavar="K",
+        help="estimate a run with K attempts per case from recorded duration and cost",
+    )
+    health.add_argument(
+        "--plan-configs",
+        type=int,
+        metavar="M",
+        help="estimate a run over M models or configurations",
+    )
+    health.add_argument("--output", type=Path, help="new folder for health.json and reports")
+    health.add_argument("--markdown", type=Path, help="append the summary to this file")
+    health.add_argument("--json", action="store_true")
+    health.add_argument(
+        "--require-healthy", action="store_true", help="exit 1 when any warning is reported"
+    )
+    loop = commands.add_parser(
+        "hillclimb-run",
+        help="drive a hillclimbing loop with your evaluate and propose commands",
+        description=(
+            "Each iteration gives your propose command only the tuning failures of the "
+            "last kept result, lets it edit only the allowed files, rejects patches that "
+            "copy case text, reruns your evaluate command and keeps or rolls back with the "
+            "hillclimb-review rules. EvalArc calls no model; your commands do."
+        ),
+        epilog=(
+            "exit codes:\n  0  merge recommended\n  1  merge not recommended\n"
+            "  2  invalid configuration, a command failed, files outside allow changed,\n"
+            "     or the output folder exists"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    loop.add_argument("config", type=Path, help="hillclimb TOML (paths relative to it)")
+    loop.add_argument("--output", type=Path, required=True)
+    loop.add_argument("--trust-local", action="store_true")
+    climb = commands.add_parser(
+        "hillclimb-review",
+        help="replay keep/rollback rules over saved results of a hillclimbing sequence and "
+        "recommend whether to merge",
+        description=(
+            "Compare each step's saved result with the last kept result on tuning and "
+            "held-out cases, keep or roll back per the objective, triage stalls, and compare "
+            "the final kept result with the baseline. Offline; nothing is rerun."
+        ),
+        epilog=(
+            "exit codes:\n"
+            "  0  merge recommended\n"
+            "  1  not recommended (regression, overfitting, gain within noise, cost not\n"
+            "     reduced, held-out leakage, or no change kept)\n"
+            "  2  unreadable, incomparable or invalid input, or existing output"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    climb.add_argument("baseline", type=Path, help="result before any change")
+    climb.add_argument(
+        "steps", type=Path, nargs="+", help="result after each proposed change, in order"
+    )
+    climb.add_argument(
+        "--held-out", type=Path, required=True, metavar="SPLIT", help="evalarc.case-split.v1"
+    )
+    climb.add_argument("--objective", choices=("quality", "cost"), default="quality")
+    climb.add_argument(
+        "--cost-metric", choices=("auto", "cost", "tokens", "duration"), default="auto"
+    )
+    climb.add_argument(
+        "--max-cost-ratio",
+        type=float,
+        default=1.0,
+        metavar="R",
+        help="cost objective: final/baseline usage must be below 1 and at most R",
+    )
+    climb.add_argument(
+        "--stall-after",
+        type=int,
+        default=2,
+        help="consecutive rollbacks before failures are triaged (default: 2)",
+    )
+    climb.add_argument("--min-effect", type=float, metavar="D")
+    climb.add_argument("--harness", type=Path, nargs="+", metavar="PATH")
+    climb.add_argument("--format", choices=RESULT_FORMATS, default="auto")
+    climb.add_argument("--threshold", type=float, default=1.0)
+    climb.add_argument("--output", type=Path)
+    climb.add_argument("--markdown", type=Path)
+    climb.add_argument("--json", action="store_true")
+    project = commands.add_parser(
+        "eval-init",
+        help="create a runnable evaluation project: cases, app stub, grader, runner, loop config",
+    )
+    project.add_argument("destination", type=Path)
+    inputs = commands.add_parser(
+        "review-inputs",
+        help="review eval cases before running; derive the held-out split and case manifest",
+        epilog=(
+            "exit codes:\n  0  reviewed (or no warnings with --require-clean)\n"
+            "  1  --require-clean and at least one warning\n"
+            "  2  invalid cases file or existing output"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    inputs.add_argument("cases", type=Path, help="cases.jsonl written for eval-init projects")
+    inputs.add_argument("--output", type=Path, help="new folder for review.json and index.html")
+    inputs.add_argument("--write-split", type=Path, metavar="PATH", help="write split.json here")
+    inputs.add_argument(
+        "--write-manifest", type=Path, metavar="PATH", help="write the case manifest here"
+    )
+    inputs.add_argument("--require-clean", action="store_true")
+    packet = commands.add_parser(
+        "judge-packet",
+        help="prepare a blind grader spot check or baseline-vs-current pairwise judging packet",
+        description=(
+            "grader: sample recorded attempts stratified by verdict and hide the verdict. "
+            "pairwise: pair baseline and current outputs per case and attempt in random, "
+            "hidden A/B order. Give the judge only OUTPUT/share/; keep OUTPUT/key.json. "
+            "Offline; no model is called."
+        ),
+    )
+    packet.add_argument("mode", choices=("grader", "pairwise"))
+    packet.add_argument(
+        "results", type=Path, nargs="+", help="grader: one file; pairwise: baseline current"
+    )
+    packet.add_argument("--sample", type=int, default=40, help="items to include (default: 40)")
+    packet.add_argument("--seed", type=int, default=0, help="sampling and A/B order seed")
+    packet.add_argument("--format", choices=RESULT_FORMATS, default="auto")
+    packet.add_argument("--threshold", type=float, default=1.0)
+    packet.add_argument("--output", type=Path, required=True)
+    judge_run = commands.add_parser(
+        "judge-run",
+        help="ask your judge command for each item of a judging packet (no built-in model)",
+        description=(
+            "Run the judge command declared in a TOML file once per packet item. The "
+            "command receives one item as JSON on stdin, runs inside OUTPUT/share/, and "
+            'prints {"verdict": ...} on its last stdout line. It never receives key.json.'
+        ),
+    )
+    judge_run.add_argument("packet", type=Path, help="folder written by judge-packet")
+    judge_run.add_argument(
+        "--config", type=Path, required=True, help='TOML with command = [...] and model = "..."'
+    )
+    judge_run.add_argument("--output", type=Path, required=True, help="new verdicts JSON file")
+    judge_run.add_argument(
+        "--repeat",
+        type=int,
+        default=1,
+        metavar="N",
+        help="ask the judge N times per item (1–10) to measure whether its answers change",
+    )
+    judge_run.add_argument("--trust-local", action="store_true")
+    judged = commands.add_parser(
+        "judge-score",
+        help="unblind judgments recorded for a judging packet",
+        epilog=(
+            "exit codes:\n  0  scored (and any requested gate passed)\n"
+            "  1  --min-agreement or --require-current-preferred gate failed\n"
+            "  2  unreadable, mismatched or invalid packet or verdicts, or existing output"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    judged.add_argument("packet", type=Path, help="folder written by judge-packet")
+    judged.add_argument("verdicts", type=Path, help="evalarc.judge-verdicts.v1 JSON")
+    judged.add_argument(
+        "--min-agreement",
+        type=float,
+        metavar="A",
+        help="grader packets: fail unless every item is answered, the judge is not a model "
+        "under evaluation, and agreement is at least A",
+    )
+    judged.add_argument(
+        "--require-current-preferred",
+        action="store_true",
+        help="pairwise packets: fail unless current is preferred beyond its 95%% interval "
+        "with no position bias and a separate judge",
+    )
+    judged.add_argument("--output", type=Path)
+    judged.add_argument("--json", action="store_true")
     curve = commands.add_parser("trajectory", help="summarize externally recorded checkpoints")
     curve.add_argument("checkpoints", type=Path, help="JSON array of elapsed_seconds + evaluation")
     curve.add_argument("--budget-seconds", type=float, required=True)
@@ -266,6 +531,38 @@ def main(argv: list[str] | None = None) -> int:
         return code
     if args.command == "diff":
         return _results_diff(args)
+    if args.command == "eval-init":
+        from evalarc.eval_project import init_command
+
+        return init_command(args)
+    if args.command == "review-inputs":
+        from evalarc.eval_project import review_command
+
+        return review_command(args)
+    if args.command == "judge-packet":
+        from evalarc.judging import prepare_command
+
+        return prepare_command(args)
+    if args.command == "judge-run":
+        from evalarc.judging import judge_run_command
+
+        return judge_run_command(args)
+    if args.command == "judge-score":
+        from evalarc.judging import score_command
+
+        return score_command(args)
+    if args.command == "hillclimb-run":
+        from evalarc.hillclimb_run import command as hillclimb_run
+
+        return hillclimb_run(args)
+    if args.command == "hillclimb-review":
+        from evalarc.hillclimb import command as hillclimb_review
+
+        return hillclimb_review(args)
+    if args.command == "eval-health":
+        from evalarc.eval_health import command as eval_health
+
+        return eval_health(args)
     if args.command == "verify":
         try:
             result = verify(args.evidence)
@@ -563,11 +860,35 @@ def _results_diff(args: argparse.Namespace) -> int:
     from evalarc.results_diff import BLOCKING, diff, load_results, render_html, render_markdown
 
     try:
+        if args.require_generalization and not args.held_out:
+            raise ValueError("--require-generalization requires --held-out")
         runs = [
             load_results(path, args.format, args.threshold)
             for path in (args.baseline, args.current)
         ]
         result = diff(*runs)
+        held_out = None
+        split_bytes = None
+        if args.held_out:
+            from evalarc.generalization import load_split, review_split
+
+            split_bytes = args.held_out.read_bytes()
+            split = load_split(args.held_out)
+            result["generalization"] = review_split(*runs, result, split)
+            held_out = set(result["generalization"]["split"]["held_out_cases"])
+        if args.harness:
+            from evalarc.generalization import scan_harness
+
+            result["leakage"] = scan_harness(args.harness, runs, held_out, args.leak_min_chars)
+        if args.require_generalization:
+            from evalarc.generalization import generalization_passed
+
+            result["generalization_required"] = True
+            result["generalization_passed"] = generalization_passed(result)
+        if args.max_cost_ratio is not None:
+            from evalarc.usage import cost_gate
+
+            result["cost_gate"] = cost_gate(result["usage"], args.cost_metric, args.max_cost_ratio)
         if args.output:
             with new_run(args.output) as output:
                 for label, path, run in zip(
@@ -577,6 +898,13 @@ def _results_diff(args: argparse.Namespace) -> int:
                     if hashlib.sha256(data).hexdigest() != run["source"]["sha256"]:
                         raise ValueError(f"{path} changed while it was being compared")
                     (output / f"{label}{path.suffix or '.json'}").write_bytes(data)
+                if split_bytes is not None:
+                    if (
+                        hashlib.sha256(split_bytes).hexdigest()
+                        != result["generalization"]["split"]["source"]["sha256"]
+                    ):
+                        raise ValueError(f"{args.held_out} changed while it was being compared")
+                    (output / "split.json").write_bytes(split_bytes)
                 write_json(output / "diff.json", result)
                 (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
                 render_html(result, output / "index.html")
@@ -600,14 +928,51 @@ def _results_diff(args: argparse.Namespace) -> int:
             f"{headline}Checks that lost passes or coverage: {result['blocking_changes']} | "
             f"Improved: {counts['improved']} | Unchanged: {counts['unchanged']}"
         )
+        within = result.get("blocking_changes_within_sampling_noise") or 0
+        if within:
+            print(
+                f"  {within} within sampling noise (record more attempts to separate from "
+                "repeat-sampling variation; the gate still fails)"
+            )
         for row in result["changes"]:
             if row["kind"] in BLOCKING:
                 print(f"  {row['kind']}: {row['case_id']} / {row['check']}")
         if result["current_incomplete"]:
             print("The current run is incomplete; the gate fails.")
+        review = result.get("generalization")
+        if review:
+            parts = review["partitions"]
+            delta = lambda row: "n/a" if row["delta"] is None else f"{row['delta'] * 100:+.1f} pp"  # noqa: E731
+            print(
+                f"Held-out split: {review['state']} | tuning {delta(parts['tuning'])} "
+                f"({parts['tuning']['cases']} cases) | held out {delta(parts['held_out'])} "
+                f"({parts['held_out']['cases']} cases)"
+            )
+        leakage = result.get("leakage")
+        if leakage:
+            print(
+                f"Harness leakage: {len(leakage['hits'])} hit(s) in "
+                f"{len(leakage['files_scanned'])} file(s)"
+                + (f", {leakage['held_out_hits']} from held-out cases" if review else "")
+            )
+            for hit in leakage["hits"][:10]:
+                print(f"  {hit['file']}:{hit['line'] or '?'} {hit['role']} of {hit['case_id']}")
+        if result.get("generalization_required") and not result["generalization_passed"]:
+            print("Generalization is required and was not shown; the gate fails.")
+        gate = result.get("cost_gate")
+        if gate:
+            print(
+                f"Cost gate ({gate['metric']}): current/baseline {gate['ratio']:.3f}, "
+                f"limit {gate['max_ratio']:g} — {'pass' if gate['passed'] else 'fail'}"
+            )
         if args.output:
             print(f"Report: {args.output / 'index.html'}")
-    return 0 if result["gate_passed"] else 1
+    passed = (
+        result["gate_passed"]
+        and result.get("generalization_passed", True)
+        and (result.get("cost_gate") or {}).get("passed", True)
+    )
+    return 0 if passed else 1
 
 
 def _error(args: argparse.Namespace, event: str, message: str) -> None:

@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from xml.etree import ElementTree
 
+from evalarc.usage import compare_usage, inspect_usage, junit_usage, promptfoo_usage
+
 SCHEMA = "evalarc.results-diff.v1"
 FORMATS = ("auto", "inspect", "promptfoo", "junit")
 MAX_INPUT_BYTES = 512 * 1024 * 1024
@@ -28,6 +30,14 @@ INTERPRETATION = (
     "marked it passed or its numeric score met the threshold. No regression does not mean "
     "the task is resolved, and the tool's own grading is not re-executed or authenticated."
 )
+SAMPLING_NOISE_NOTE = (
+    "A change is marked within sampling noise when the baseline and current pass proportions "
+    "have overlapping 95% Wilson intervals, so the recorded number of attempts cannot separate "
+    "it from repeat-sampling variation. This is a descriptive flag, not a significance test, and "
+    "it never relaxes the gate. To resolve a flagged change, record more attempts per check."
+)
+# Standard-normal quantile for a two-sided 95% interval, used only for the Wilson bound.
+_WILSON_Z = 1.959963984540054
 
 
 def load_results(path: Path, fmt: str = "auto", threshold: float = 1.0) -> dict:
@@ -48,6 +58,23 @@ def load_results(path: Path, fmt: str = "auto", threshold: float = 1.0) -> dict:
         run = _promptfoo(_json(raw, path))
     if not run["cases"]:
         raise ValueError(f"{path.name} contains no scored cases")
+    # Recorded inputs and expected answers per case. Used only to scan harness files
+    # for verbatim leakage; never part of the diff output.
+    run.setdefault("material", {})
+    run.setdefault("usage", {})
+    run.setdefault("outputs", {})
+    run.setdefault("samples", {})
+    run.setdefault("generate_config", {})
+    run.setdefault(
+        "graders",
+        {
+            "subject_models": [],
+            "grader_models": [],
+            "self_graded": [],
+            "default_grader_checks": [],
+            "model_graded_checks": [],
+        },
+    )
     run["format"] = detected
     run["threshold"] = threshold
     run["source"] = {"name": path.name, "sha256": hashlib.sha256(raw).hexdigest()}
@@ -83,6 +110,19 @@ def diff(baseline: dict, current: dict) -> dict:
                 row[label] = tally
                 if attempts:
                     row[f"{label}_detail"] = _detail(attempts)
+            noise = _within_sampling_noise(before, after)
+            if noise is not None:
+                row["within_sampling_noise"] = noise
+            conflicts = grading_conflicts(
+                [
+                    (before_checks.get(check), baseline["outputs"].get(case_id, {}).get(check)),
+                    (after_checks.get(check), current["outputs"].get(case_id, {}).get(check)),
+                ]
+            )
+            if conflicts:
+                # The recorded output is byte-identical but the verdict differs, so this
+                # change reflects the grader (nondeterminism or a revision), not the agent.
+                row["same_output_different_verdict"] = conflicts
             changes.append(row)
     order = {kind: index for index, kind in enumerate(KINDS)}
     changes.sort(key=lambda row: (order[row["kind"]], row["case_id"], row["check"]))
@@ -93,6 +133,15 @@ def diff(baseline: dict, current: dict) -> dict:
     counts["unchanged"] = unchanged
     blocking = sum(found[kind] for kind in BLOCKING)
     incomplete = current["incomplete"]
+    # Article principle (low variance / gain must exceed eval noise): a change whose
+    # baseline and current pass proportions have overlapping Wilson intervals cannot be
+    # told apart from repeat-sampling variation at the recorded attempt count. This is a
+    # descriptive annotation for reviewers, not a significance test; it never relaxes the
+    # gate, which stays strict on every blocking change.
+    grader_changes = sum(1 for row in changes if row.get("same_output_different_verdict"))
+    blocking_within_noise = sum(
+        1 for row in changes if row["kind"] in BLOCKING and row.get("within_sampling_noise") is True
+    )
     return {
         "schema_version": SCHEMA,
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -102,10 +151,14 @@ def diff(baseline: dict, current: dict) -> dict:
         "counts": counts,
         "numeric_pass_threshold": current["threshold"],
         "blocking_changes": blocking,
+        "blocking_changes_within_sampling_noise": blocking_within_noise,
+        "changes_with_same_output_different_verdict": grader_changes,
         "current_incomplete": incomplete,
         "gate_passed": blocking == 0 and not incomplete,
         "changes": changes,
         "interpretation": INTERPRETATION,
+        "sampling_noise_note": SAMPLING_NOISE_NOTE,
+        "usage": compare_usage(baseline, current),
     }
 
 
@@ -124,12 +177,33 @@ def render_markdown(result: dict, limit: int = 50) -> str:
     before, after = result["baseline"], result["current"]
     for label, key in (("Headline metric", "headline"), ("Checks passed", "check_pass_rate")):
         lines.append(f"| {label} | {_value(before[key])} | {_value(after[key])} |")
+    if before["check_pass_rate"].get("interval_95") and after["check_pass_rate"].get("interval_95"):
+        lines.append(
+            f"| 95% interval | {_interval(before['check_pass_rate'])} | "
+            f"{_interval(after['check_pass_rate'])} |"
+        )
     lines.append(f"| Cases | {before['cases']} | {after['cases']} |")
     if result["current_incomplete"]:
         status = after["identity"].get("status")
         lines += ["", f"The current run did not finish (status `{status}`); the gate fails."]
     if before["headline"] and before["headline"].get("name"):
         lines += ["", f"Headline metric: `{before['headline']['name']}` from the source tool."]
+    graded = result.get("changes_with_same_output_different_verdict") or 0
+    if graded:
+        lines += [
+            "",
+            f"{graded} change(s) have a byte-identical recorded output graded differently: "
+            "the grader changed or is nondeterministic, not the agent. Check the grader "
+            "before attributing these to the change.",
+        ]
+    within = result.get("blocking_changes_within_sampling_noise") or 0
+    if within:
+        lines += [
+            "",
+            f"{within} of {result['blocking_changes']} blocking change(s) are within sampling "
+            "noise: the recorded attempts cannot separate them from repeat-sampling variation. "
+            "The gate still fails; record more attempts per check to resolve them.",
+        ]
     lines += [
         "",
         " · ".join(
@@ -145,14 +219,27 @@ def render_markdown(result: dict, limit: int = 50) -> str:
             "| --- | --- | --- | ---: | ---: |",
         ]
         for row in result["changes"][:limit]:
+            kind = row["kind"].replace("_", " ")
+            if row.get("within_sampling_noise") is True:
+                kind += " (within noise)"
+            if row.get("same_output_different_verdict"):
+                kind += " (same output, new verdict)"
             lines.append(
-                f"| {row['kind'].replace('_', ' ')} | {_cell(row['case_id'])} | "
+                f"| {kind} | {_cell(row['case_id'])} | "
                 f"{_cell(row['check'])} | {_fraction(row['baseline'])} | "
                 f"{_fraction(row['current'])} |"
             )
         if len(result["changes"]) > limit:
             lines.append(f"\n{len(result['changes']) - limit} more changes are in `diff.json`.")
         lines.append("")
+    if result.get("generalization") or result.get("leakage"):
+        from evalarc.generalization import render_markdown as split_markdown
+
+        lines.append(split_markdown(result))
+    from evalarc import usage as usage_report
+
+    if usage_report.shown(result):
+        lines.append(usage_report.render_markdown(result))
     lines.append(f"<sub>{result['interpretation']}</sub>")
     return "\n".join(lines) + "\n"
 
@@ -184,8 +271,13 @@ def render_html(result: dict, destination: Path) -> None:
             detail = row.get("current_detail") or row.get("baseline_detail") or []
             evidence = "; ".join(dict.fromkeys(i["evidence"] for i in detail if i.get("evidence")))
             tone = "failed" if row["kind"] in BLOCKING else "passed"
+            change_label = row["kind"].replace("_", " ")
+            if row.get("within_sampling_noise") is True:
+                change_label += " · within noise"
+            if row.get("same_output_different_verdict"):
+                change_label += " · same output, new verdict"
             body += (
-                f'<tr><td class="{tone}">{_esc(row["kind"].replace("_", " "))}</td>'
+                f'<tr><td class="{tone}">{_esc(change_label)}</td>'
                 f"<td><code>{_esc(row['case_id'])}</code></td><td>{_esc(row['check'])}</td>"
                 f"<td>{_esc(_fraction(row['baseline']))}</td>"
                 f"<td>{_esc(_fraction(row['current']))}</td>"
@@ -194,6 +286,14 @@ def render_html(result: dict, destination: Path) -> None:
         body += "</tbody></table></div>"
     else:
         body += "<p>Every recorded check has the same pass count.</p>"
+    if result.get("generalization") or result.get("leakage"):
+        from evalarc.generalization import render_html as split_html
+
+        body += split_html(result)
+    from evalarc import usage as usage_report
+
+    if usage_report.shown(result):
+        body += usage_report.render_html(result)
     body += (
         '<h2>Inputs</h2><p class="metadata">'
         + "<br>".join(
@@ -202,7 +302,13 @@ def render_html(result: dict, destination: Path) -> None:
             for label, run in (("Baseline", before), ("Current", after))
         )
         + '</p><p><a href="diff.json">Diff JSON</a> · <a href="summary.md">Markdown summary</a>'
-        f"</p><footer>{_esc(result['interpretation'])}</footer>"
+        f"</p><footer>{_esc(result['interpretation'])}"
+        + (
+            f" {_esc(result['sampling_noise_note'])}"
+            if result.get("blocking_changes_within_sampling_noise")
+            else ""
+        )
+        + "</footer>"
     )
     _page("Results diff", "Changed checks.", body, destination)
 
@@ -268,14 +374,27 @@ def _inspect(document: dict, threshold: float) -> dict:
     if not document["samples"]:
         raise ValueError("Inspect log has no samples; rerun without --no-log-samples")
     cases: dict[str, dict[str, list]] = {}
+    material: dict[str, list] = {}
+    usage: dict[str, list] = {}
+    outputs: dict[str, dict[str, list]] = {}
+    samples_meta: dict[str, list] = {}
     for sample in document["samples"]:
         case_id = str(sample["id"])
         checks = cases.setdefault(case_id, {})
+        _add_material(material, case_id, "input", _message_text(sample.get("input")))
+        usage.setdefault(case_id, []).append(inspect_usage(sample))
+        meta = _inspect_output(sample)
+        samples_meta.setdefault(case_id, []).append(meta)
+        digest = meta["output_sha256"]
+        target = sample.get("target")
+        for item in target if isinstance(target, list) else [target]:
+            _add_material(material, case_id, "expected", item)
         error = sample.get("error")
         scores = sample.get("scores") or {}
         if error and not scores:
             message = error.get("message") if isinstance(error, dict) else str(error)
             checks.setdefault("sample error", []).append(_attempt(None, message))
+            _record(outputs, meta, case_id, "sample error", None, checks)
             continue
         for scorer, score in scores.items():
             value, evidence = score, None
@@ -287,10 +406,12 @@ def _inspect(document: dict, threshold: float) -> dict:
                     checks.setdefault(f"{scorer}/{key}", []).append(
                         _attempt(_inspect_passed(item, threshold), evidence, item)
                     )
+                    _record(outputs, meta, case_id, f"{scorer}/{key}", digest, checks)
             else:
                 checks.setdefault(scorer, []).append(
                     _attempt(_inspect_passed(value, threshold), evidence, value)
                 )
+                _record(outputs, meta, case_id, scorer, digest, checks)
     headline = None
     results = document.get("results") or {}
     marker = results.get("headline") or {}
@@ -313,6 +434,12 @@ def _inspect(document: dict, threshold: float) -> dict:
         },
         "headline": headline,
         "cases": cases,
+        "material": material,
+        "usage": usage,
+        "outputs": outputs,
+        "samples": samples_meta,
+        "graders": _inspect_graders(spec),
+        "generate_config": _generate_config(spec.get("model_generate_config")),
         "incomplete": document.get("status") not in (None, "success"),
     }
 
@@ -342,6 +469,12 @@ def _promptfoo(document: object) -> dict:
     for row in rows:
         variants.setdefault(_test_label(row), set()).add(_vars(row))
     cases: dict[str, dict[str, list]] = {}
+    material: dict[str, list] = {}
+    usage: dict[str, list] = {}
+    outputs: dict[str, dict[str, list]] = {}
+    samples_meta: dict[str, list] = {}
+    grader_models: set[str] = set()
+    model_graded: set[str] = set()
     for row in rows:
         label = _test_label(row)
         if len(variants[label]) > 1 and label != _vars(row):
@@ -353,14 +486,34 @@ def _promptfoo(document: object) -> dict:
         checks = cases.setdefault(label, {})
         grading = row.get("gradingResult") or {}
         components = grading.get("componentResults") or []
+        # Test variables are the case inputs. The rendered prompt is built by the
+        # harness itself, so scanning it would report the template as a leak.
+        for value in (row.get("vars") or {}).values():
+            _add_material(material, label, "input", value)
+        usage.setdefault(label, []).append(promptfoo_usage(row))
+        meta = _promptfoo_output(row)
+        samples_meta.setdefault(label, []).append(meta)
+        digest = meta["output_sha256"]
+        grader_models |= _promptfoo_graders(row, components)
+        declared = (row.get("testCase") or {}).get("assert")
+        assertions = (
+            declared
+            if isinstance(declared, list)
+            else [component.get("assertion") for component in components]
+        )
+        for assertion in assertions:
+            if isinstance(assertion, dict) and _answer_assertion(assertion.get("type")):
+                _add_material(material, label, "expected", assertion.get("value"))
         if row.get("failureReason") == 2 or (row.get("error") and not grading):
             checks.setdefault("provider error", []).append(_attempt(None, row.get("error")))
+            _record(outputs, meta, label, "provider error", None, checks)
             continue
         if not components:
             passed = row.get("success")
             checks.setdefault("success", []).append(
                 _attempt(passed if isinstance(passed, bool) else None, grading.get("reason"))
             )
+            _record(outputs, meta, label, "success", digest, checks)
             continue
         names = Counter()
         for component in components:
@@ -369,6 +522,8 @@ def _promptfoo(document: object) -> dict:
             if names[name] > 1:
                 name = f"{name} #{names[name]}"
             passed = component.get("pass")
+            if str((component.get("assertion") or {}).get("type") or "") in MODEL_ASSERTIONS:
+                model_graded.add(name)
             checks.setdefault(name, []).append(
                 _attempt(
                     passed if isinstance(passed, bool) else None,
@@ -376,6 +531,7 @@ def _promptfoo(document: object) -> dict:
                     component.get("score"),
                 )
             )
+            _record(outputs, meta, label, name, digest, checks)
     stats = summary.get("stats") or {}
     total = sum(stats.get(key) or 0 for key in ("successes", "failures", "errors"))
     headline = (
@@ -391,6 +547,17 @@ def _promptfoo(document: object) -> dict:
         },
         "headline": headline,
         "cases": cases,
+        "material": material,
+        "usage": usage,
+        "outputs": outputs,
+        "samples": samples_meta,
+        "graders": {
+            "subject_models": sorted(providers),
+            "grader_models": sorted(grader_models),
+            "self_graded": sorted(providers & grader_models),
+            "default_grader_checks": [],
+            "model_graded_checks": sorted(model_graded),
+        },
         "incomplete": False,
     }
 
@@ -434,6 +601,7 @@ def _junit(raw: bytes) -> dict:
     if root.tag not in ("testsuites", "testsuite"):
         raise ValueError("not JUnit XML: expected <testsuites> or <testsuite>")
     cases: dict[str, dict[str, list]] = {}
+    usage: dict[str, list] = {}
     suites = [root] if root.tag == "testsuite" else root.iter("testsuite")
     names = set()
     for suite in suites:
@@ -448,6 +616,7 @@ def _junit(raw: bytes) -> dict:
                     outcome = value
                     evidence = f"{tag}: {element.get('message') or (element.text or '').strip()}"
                     break
+            usage.setdefault(case_id, []).append(junit_usage(case))
             cases.setdefault(case_id, {}).setdefault("passed", []).append(
                 _attempt(outcome, evidence)
             )
@@ -455,8 +624,211 @@ def _junit(raw: bytes) -> dict:
         "identity": {"suites": sorted(name for name in names if name)},
         "headline": None,
         "cases": cases,
+        "usage": usage,
         "incomplete": False,
     }
+
+
+# --- recorded outputs and graders -------------------------------------------------
+
+# Stop reasons meaning the output was cut off by a length limit, not finished.
+TRUNCATION_REASONS = {"max_tokens", "length", "model_length", "max_output_tokens"}
+# Inspect scorers that call a model; without a `model` option or a `grader` model
+# role, Inspect grades with the model under evaluation.
+MODEL_GRADED_SCORERS = ("model_graded_qa", "model_graded_fact")
+# promptfoo assertion types graded by a model.
+MODEL_ASSERTIONS = {
+    "llm-rubric",
+    "model-graded-closedqa",
+    "model-graded-factuality",
+    "factuality",
+    "g-eval",
+    "answer-relevance",
+    "context-faithfulness",
+    "context-recall",
+    "context-relevance",
+    "select-best",
+}
+
+
+def _digest(text: object) -> str | None:
+    if text is None:
+        return None
+    if not isinstance(text, str):
+        text = json.dumps(text, sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+MAX_OUTPUT_CHARS = 20_000
+
+
+def _record(
+    outputs: dict, meta: dict, case_id: str, check: str, digest: str | None, checks: dict
+) -> None:
+    """Align an output digest with the attempt just appended, and note its verdict."""
+    outputs.setdefault(case_id, {}).setdefault(check, []).append(digest)
+    meta.setdefault("verdicts", {})[check] = checks[check][-1]["passed"]
+
+
+def _output_text(value: object) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        value = json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
+    return value[:MAX_OUTPUT_CHARS]
+
+
+def _inspect_output(sample: dict) -> dict:
+    output = sample.get("output") if isinstance(sample.get("output"), dict) else {}
+    completion = output.get("completion")
+    stop = output.get("stop_reason")
+    choices = output.get("choices")
+    if stop is None and isinstance(choices, list) and choices and isinstance(choices[0], dict):
+        stop = choices[0].get("stop_reason")
+    limit = sample.get("limit")
+    limit_type = limit.get("type") if isinstance(limit, dict) else None
+    return {
+        "output_sha256": _digest(completion) if isinstance(completion, str) else None,
+        "output_text": _output_text(completion) if isinstance(completion, str) else None,
+        "stop_reason": stop if isinstance(stop, str) else None,
+        "truncated": stop in TRUNCATION_REASONS or limit_type == "token",
+        "limit": limit_type if isinstance(limit_type, str) else None,
+    }
+
+
+GENERATE_KEYS = (
+    "reasoning_effort",
+    "reasoning_tokens",
+    "max_tokens",
+    "temperature",
+    "reasoning_history",
+)
+
+
+def _generate_config(config: object) -> dict:
+    """The generation settings that change behavior and cost, as recorded."""
+    if not isinstance(config, dict):
+        return {}
+    return {key: config[key] for key in GENERATE_KEYS if config.get(key) is not None}
+
+
+def _inspect_graders(spec: dict) -> dict:
+    subject = spec.get("model")
+    roles = spec.get("model_roles") if isinstance(spec.get("model_roles"), dict) else {}
+    graders, default = set(), []
+    role = roles.get("grader")
+    role_model = role.get("model") if isinstance(role, dict) else role
+    for scorer in spec.get("scorers") or []:
+        if not isinstance(scorer, dict):
+            continue
+        name = str(scorer.get("name") or "")
+        if not name.split("/")[-1].startswith(MODEL_GRADED_SCORERS):
+            continue
+        options = scorer.get("options") if isinstance(scorer.get("options"), dict) else {}
+        model = options.get("model")
+        if isinstance(model, list):
+            graders |= {str(item) for item in model}
+        elif model:
+            graders.add(str(model))
+        elif role_model:
+            graders.add(str(role_model))
+        else:
+            default.append(name)
+    subjects = {str(subject)} if subject else set()
+    self_graded = sorted(subjects & graders)
+    if default and subjects:
+        self_graded = sorted(set(self_graded) | subjects)
+    model_graded = sorted(
+        str(scorer.get("name"))
+        for scorer in spec.get("scorers") or []
+        if isinstance(scorer, dict)
+        and str(scorer.get("name") or "").split("/")[-1].startswith(MODEL_GRADED_SCORERS)
+    )
+    return {
+        "subject_models": sorted(subjects),
+        "grader_models": sorted(graders),
+        "self_graded": self_graded,
+        "default_grader_checks": default,
+        "model_graded_checks": model_graded,
+    }
+
+
+def _promptfoo_output(row: dict) -> dict:
+    response = row.get("response") if isinstance(row.get("response"), dict) else {}
+    output = response.get("output")
+    stop = response.get("finishReason") or response.get("finish_reason")
+    return {
+        "output_sha256": _digest(output),
+        "output_text": _output_text(output),
+        "stop_reason": stop if isinstance(stop, str) else None,
+        "truncated": stop in TRUNCATION_REASONS,
+        "limit": None,
+    }
+
+
+def _promptfoo_graders(row: dict, components: list) -> set[str]:
+    found = set()
+    sources = [((row.get("testCase") or {}).get("options") or {}).get("provider")]
+    sources += [
+        (component.get("assertion") or {}).get("provider")
+        for component in components
+        if isinstance(component, dict)
+    ]
+    for provider in sources:
+        if isinstance(provider, str) and provider:
+            found.add(provider)
+        elif isinstance(provider, dict) and (provider.get("id") or provider.get("label")):
+            found.add(str(provider.get("id") or provider.get("label")))
+    return found
+
+
+# --- case material ----------------------------------------------------------------
+
+MAX_MATERIAL_CHARS = 4096
+
+
+def _message_text(value: object) -> str | None:
+    """Inspect input is a string or a list of chat messages with text content."""
+    if isinstance(value, str):
+        return value
+    if not isinstance(value, list):
+        return None
+    parts = []
+    for message in value:
+        if not isinstance(message, dict) or message.get("role") == "system":
+            continue
+        content = message.get("content")
+        if isinstance(content, str):
+            parts.append(content)
+        elif isinstance(content, list):
+            parts += [
+                item["text"]
+                for item in content
+                if isinstance(item, dict) and isinstance(item.get("text"), str)
+            ]
+    return "\n".join(parts) or None
+
+
+_CODE_ASSERTIONS = ("javascript", "python", "webhook", "ruby")
+
+
+def _answer_assertion(kind: object) -> bool:
+    """promptfoo assertions whose value states an expected answer or rubric.
+
+    Negated checks (not-*) name forbidden text, and code assertions hold grader
+    logic; neither is a reference answer that could leak into the harness.
+    """
+    kind = str(kind or "")
+    return not kind.startswith("not-") and kind not in _CODE_ASSERTIONS
+
+
+def _add_material(material: dict, case_id: str, role: str, text: object) -> None:
+    if not isinstance(text, str) or not text.strip():
+        return
+    entry = {"role": role, "text": text[:MAX_MATERIAL_CHARS]}
+    items = material.setdefault(case_id, [])
+    if entry not in items:
+        items.append(entry)
 
 
 # --- comparison helpers -----------------------------------------------------------
@@ -507,6 +879,70 @@ def _detail(attempts: list) -> list:
     return [item for item in attempts if item["passed"] is not True] or attempts[:1]
 
 
+def _wilson_interval(passed: int, assessed: int) -> tuple[float, float]:
+    """95% Wilson score interval for a pass proportion. Pure stdlib, no SciPy."""
+    if assessed <= 0:
+        return (0.0, 1.0)
+    z = _WILSON_Z
+    phat = passed / assessed
+    denom = 1.0 + z * z / assessed
+    center = phat + z * z / (2.0 * assessed)
+    margin = z * math.sqrt(phat * (1.0 - phat) / assessed + z * z / (4.0 * assessed * assessed))
+    low = (center - margin) / denom
+    high = (center + margin) / denom
+    return (max(0.0, low), min(1.0, high))
+
+
+def grading_conflicts(sides: list[tuple[list | None, list | None]]) -> int:
+    """Count recorded outputs graded both passed and failed across the given attempts.
+
+    Each side is (attempts, output digests aligned with attempts). Attempts without a
+    recorded output or without an outcome are ignored.
+    """
+    verdicts: dict[str, set] = {}
+    for attempts, digests in sides:
+        if not attempts or not digests or len(digests) != len(attempts):
+            continue
+        for attempt, digest in zip(attempts, digests):
+            if digest is not None and attempt["passed"] is not None:
+                verdicts.setdefault(digest, set()).add(attempt["passed"])
+    return sum(1 for seen in verdicts.values() if len(seen) > 1)
+
+
+def wilson(passed: int, assessed: int) -> list[float] | None:
+    """Rounded 95% Wilson interval for reports, or None without assessed attempts."""
+    if not assessed:
+        return None
+    low, high = _wilson_interval(passed, assessed)
+    return [round(low, 6), round(high, 6)]
+
+
+def _within_sampling_noise(before: dict | None, after: dict | None) -> bool | None:
+    """True when a change cannot be told apart from repeat-sampling variation.
+
+    The check must show variation we actually observed: at least one side passes on
+    some attempts and fails on others, and the two pass proportions have overlapping
+    95% Wilson intervals at the recorded attempt count. A clean all-pass to all-fail
+    swing is the strongest signal available at that count and is never marked as noise.
+
+    Returns None when the annotation does not apply: either side is absent (added or
+    removed check) or neither side records more than one attempt, so there is no
+    sampling spread to reason about.
+    """
+    if before is None or after is None:
+        return None
+    if before["assessed"] <= 1 and after["assessed"] <= 1:
+        return None
+    observed_flaky = (0 < before["passed"] < before["assessed"]) or (
+        0 < after["passed"] < after["assessed"]
+    )
+    if not observed_flaky:
+        return False
+    low_b, high_b = _wilson_interval(before["passed"], before["assessed"])
+    low_a, high_a = _wilson_interval(after["passed"], after["assessed"])
+    return low_b <= high_a and low_a <= high_b
+
+
 def _summary(run: dict) -> dict:
     tallies = [_tally(attempts) for checks in run["cases"].values() for attempts in checks.values()]
     assessed = sum(item["assessed"] for item in tallies)
@@ -520,8 +956,16 @@ def _summary(run: dict) -> dict:
         "check_pass_rate": {
             "name": "passed check attempts",
             "value": sum(item["passed"] for item in tallies) / assessed if assessed else None,
+            "passed": sum(item["passed"] for item in tallies),
+            "assessed": assessed,
+            "interval_95": wilson(sum(item["passed"] for item in tallies), assessed),
         },
     }
+
+
+def _interval(metric: dict) -> str:
+    low, high = metric["interval_95"]
+    return f"{low:.3f}–{high:.3f}"
 
 
 def _metric_name(run: dict) -> str:

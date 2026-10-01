@@ -1,0 +1,16 @@
+[
+  {"id": "t01", "topic": "refund", "queue": "billing", "text": "Ticket t01: I was charged twice for order 4471"},
+  {"id": "t02", "topic": "refund", "queue": "billing", "text": "Ticket t02: please return my money for the broken lamp"},
+  {"id": "t03", "topic": "outage", "queue": "oncall", "text": "Ticket t03: the dashboard has been down since noon"},
+  {"id": "t04", "topic": "outage", "queue": "oncall", "text": "Ticket t04: API returns 503 for every request"},
+  {"id": "t05", "topic": "invoice", "queue": "billing", "text": "Ticket t05: my invoice PDF is blank"},
+  {"id": "t06", "topic": "password", "queue": "accounts", "text": "Ticket t06: reset link never arrives"},
+  {"id": "t07", "topic": "general", "queue": "general", "text": "Ticket t07: what are your opening hours"},
+  {"id": "t08", "topic": "general", "queue": "general", "text": "Ticket t08: do you ship to Norway"},
+  {"id": "h01", "topic": "refund", "queue": "billing", "text": "Ticket h01: refund the duplicate subscription charge"},
+  {"id": "h02", "topic": "refund", "queue": "billing", "text": "Ticket h02: I returned the chair last week, where is my money"},
+  {"id": "h03", "topic": "outage", "queue": "oncall", "text": "Ticket h03: login page shows a gateway timeout"},
+  {"id": "h04", "topic": "outage", "queue": "oncall", "text": "Ticket h04: webhooks stopped firing an hour ago"},
+  {"id": "h05", "topic": "outage", "queue": "oncall", "text": "Ticket h05: search is returning server errors"},
+  {"id": "h06", "topic": "general", "queue": "general", "text": "Ticket h06: can I change my delivery address"}
+]

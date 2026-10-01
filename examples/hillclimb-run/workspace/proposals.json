@@ -1,0 +1,7 @@
+[
+  {"why": "root cause: refunds have no rule", "append": "route refund -> billing"},
+  {"why": "pastes a failing tuning ticket (rejected before evaluation)", "append": "Ticket t05: my invoice PDF is blank -> billing"},
+  {"why": "case-specific rule that only fits one tuning case (overfits)", "append": "case t06 -> accounts"},
+  {"why": "no idea this round", "append": null},
+  {"why": "root cause: outages have no rule", "append": "route outage -> oncall"}
+]
