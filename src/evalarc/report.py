@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 from pathlib import Path
 
 STYLE = """
@@ -137,6 +138,15 @@ def render_audit(data: dict, destination: Path) -> None:
         + f"<span>{group['passed']}/{group['total']}</span></div>"
         for name, group in reference["dimensions"].items()
     )
+    verdict = _verdict(
+        None if data.get("valid") is False else bool(data.get("passed")),
+        "Audit invalid: environment failure"
+        if data.get("valid") is False
+        else f"{data['killed']} of {data['total']} declared faults detected"
+        + ("" if data.get("passed") else " — audit failed"),
+        f"{len(fragile)} fault(s) depend on a single detecting case." if fragile else "",
+        "Add cases that detect the single-case faults independently." if fragile else "",
+    )
     document = """<!doctype html>
 <html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -146,11 +156,12 @@ def render_audit(data: dict, destination: Path) -> None:
 <style>
 __STYLE__
 </style>
+<a class="skip" href="#main">Skip to content</a><main id="main">
 <div class="eyebrow">EVALARC / DEVELOPMENT AUDIT</div>
 <h1>Test the grader.<br>Then trust the signal.</h1>
-<p>Behavioral controls for task-specific agent evaluations. Correct and faulty
+__VERDICT__<p>Behavioral controls for task-specific agent evaluations. Correct and faulty
 submissions are evaluated against the same externally enforced contract.</p>
-""".replace("__STYLE__", STYLE)
+""".replace("__STYLE__", STYLE).replace("__VERDICT__", verdict)
     if data.get("valid") is False:
         document += (
             "<p><strong>Invalid audit: environment failure.</strong> "
@@ -234,7 +245,11 @@ submissions are evaluated against the same externally enforced contract.</p>
         "<footer><strong>Scope:</strong> This is a scripted grader audit, not an AI "
         "leaderboard. Public seeds are not held-out evaluation data. "
         "Detection rates apply only to the listed fault models. "
-        "No human time horizon, model quality, or RL improvement is inferred.</footer></html>"
+        "No human time horizon, model quality, or RL improvement is inferred.</footer>"
+        "</main></html>"
+    )
+    document = document.replace("<th>", '<th scope="col">').replace(
+        "<th title=", '<th scope="col" title='
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(document)
@@ -258,9 +273,10 @@ def _card(value: object, label: str, *, alert: bool = False) -> str:
 
 def _page(kind: str, title: str, body: str, destination: Path) -> None:
     # Every table: column headers scoped, scroll regions reachable by keyboard.
-    body = body.replace("<th>", '<th scope="col">').replace(
-        '<div class="scroll">',
-        '<div class="scroll" tabindex="0" role="region" aria-label="Scrollable table">',
+    body = re.sub(
+        r'<div class="(scroll(?: [\w-]+)*)">',
+        r'<div class="\1" tabindex="0" role="region" aria-label="Scrollable table">',
+        body.replace("<th>", '<th scope="col">'),
     )
     document = (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -296,7 +312,24 @@ def render_evaluation(data: dict, destination: Path) -> None:
     status = (
         "UNASSESSED" if not data["valid"] else ("RESOLVED" if data["resolved"] else "INCOMPLETE")
     )
-    body = (
+    failing = len(cases) - passed
+    body = _verdict(
+        data["resolved"] if data["valid"] else None,
+        {
+            "RESOLVED": "Resolved: every case passed",
+            "INCOMPLETE": f"Not resolved: {failing} of {len(cases)} case(s) failed",
+            "UNASSESSED": "Unassessed: the environment failed",
+        }[status],
+        "A partial score is not acceptance; full resolution requires every case to pass."
+        if status == "INCOMPLETE"
+        else "",
+        {
+            "RESOLVED": "",
+            "INCOMPLETE": "Open the failing cases below and read their evidence.",
+            "UNASSESSED": "Fix the runtime (see evalarc doctor) and rerun.",
+        }[status],
+    )
+    body += (
         f"<p>{_esc(task['domain'])} · task v{_esc(task['version'])} · {_esc(status)}</p>"
         '<div class="cards">'
         + _card(_score(data["score"]), "weighted score")
@@ -348,7 +381,15 @@ def render_evaluation(data: dict, destination: Path) -> None:
 
 
 def render_comparison(data: dict, destination: Path) -> None:
-    body = (
+    regressed = len(data["regressions"])
+    body = _verdict(
+        not regressed,
+        f"{regressed} check(s) regressed" if regressed else "No check regressed",
+        f"Score change {data['score_delta']:+.4f}; {data['current_failed_cases']} current "
+        "case(s) still fail.",
+        "Inspect the regressed checks before accepting the change." if regressed else "",
+    )
+    body += (
         f"<p>{_esc(data['task']['id'])} · matched task, grader, cases, and runtime</p>"
         '<div class="cards">'
         + _card(_score(data["baseline"]["score"]), "baseline score")
@@ -402,7 +443,17 @@ def render_comparison(data: dict, destination: Path) -> None:
 
 
 def render_repetition(data: dict, destination: Path) -> None:
-    body = (
+    body = _verdict(
+        data["all_attempts_resolved"] if data["valid"] else None,
+        f"{data['resolved_attempts']} of {data['requested_attempts']} attempt(s) resolved",
+        f"{data['variable_checks']} check(s) changed outcome between attempts."
+        if data["variable_checks"]
+        else "Every check had the same outcome in every attempt.",
+        "Read the varying checks: variation is the agent, the task or the environment."
+        if data["variable_checks"]
+        else "",
+    )
+    body += (
         f"<p>{_esc(data['task']['id'])} · {_esc(data['status'].upper())} · "
         "one frozen candidate, fixed cases, fresh state per attempt</p>"
         '<div class="cards">'
@@ -465,7 +516,13 @@ def render_repetition(data: dict, destination: Path) -> None:
 
 
 def render_suite(data: dict, destination: Path) -> None:
-    body = (
+    body = _verdict(
+        data["accepted"] if data["valid"] else None,
+        f"{data['accepted_jobs']} of {data['total_jobs']} job gate(s) accepted",
+        f"{data['invalid_jobs']} invalid job(s)." if data["invalid_jobs"] else "",
+        "" if data["accepted"] else "Open the rejected jobs below to see which rule failed.",
+    )
+    body += (
         f"<p>{_esc(data['name'])} · {_esc(data['status'].upper())}</p>"
         '<div class="cards">'
         + _card(

@@ -30,11 +30,55 @@ fs.writeFileSync(`${out}/verdicts.json`, JSON.stringify(template));
 run("judge-score", `${out}/spot`, `${out}/verdicts.json`, "--output", `${out}/score`);
 run("eval-init", `${out}/proj`);
 run("review-inputs", `${out}/proj/cases.jsonl`, "--output", `${out}/review`);
+// Earlier report kinds, rendered from committed evidence without running candidates.
+const render = (kind, source, target) => execFileSync("python3", ["-c", `
+import json, sys
+from pathlib import Path
+from evalarc import report
+data = json.loads(Path(sys.argv[2]).read_text())
+getattr(report, "render_" + sys.argv[1])(data, Path(sys.argv[3]))`, kind, source, target]);
+render("audit", `${root}/examples/support-audit/audit.json`, `${out}/audit/index.html`);
+render("evaluation", `${root}/examples/evaluation/evaluation.json`, `${out}/evaluation/index.html`);
+render("comparison", `${root}/examples/comparison/comparison.json`, `${out}/comparison/index.html`);
+render("repetition", `${root}/examples/repetition/repetition.json`, `${out}/repetition/index.html`);
+render("suite", `${root}/examples/suite/suite.json`, `${out}/suite/index.html`);
 
 const reports = {
   diff: /Gate failed/, health: /warning\(s\) before tuning|Ready to tune/, climb: /Merge/,
   score: /Grader agrees with the judge/, review: /Inputs ready to run/,
+  audit: /declared faults detected/, evaluation: /Resolved|Not resolved|Unassessed/,
+  comparison: /regressed/, repetition: /attempt\(s\) resolved/, suite: /job gate\(s\) accepted/,
 };
+
+// WCAG 2.2 AA contrast for every visible text node against its effective background.
+function contrastProblems() {
+  const parse = color => (color.match(/[\d.]+/g) || []).map(Number);
+  const lum = ([r, g, b]) => {
+    const f = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  };
+  const background = element => {
+    for (let node = element; node; node = node.parentElement) {
+      const value = parse(getComputedStyle(node).backgroundColor);
+      if (value.length >= 3 && (value.length < 4 || value[3] > 0)) return value;
+    }
+    return parse(getComputedStyle(document.documentElement).backgroundColor);
+  };
+  const problems = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const element = node.parentElement;
+    if (!node.textContent.trim() || !element || !element.getClientRects().length) continue;
+    const style = getComputedStyle(element);
+    if (style.visibility === "hidden" || element.closest(".skip")) continue;
+    const [a, b] = [lum(parse(style.color)), lum(background(element))];
+    const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    const size = parseFloat(style.fontSize);
+    const large = size >= 24 || (size >= 18.66 && Number(style.fontWeight) >= 700);
+    if (ratio < (large ? 3 : 4.5)) problems.push(`${ratio.toFixed(2)} "${node.textContent.trim().slice(0, 30)}"`);
+  }
+  return [...new Set(problems)].slice(0, 5);
+}
 
 (async () => {
   const browser = await chromium.launch();
@@ -56,6 +100,8 @@ const reports = {
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
              `${name}: page overflows at ${width}px`);
       assert.equal(await page.locator("html").getAttribute("lang"), "en");
+      assert.deepEqual(await page.evaluate(contrastProblems), [], `${name}: contrast below WCAG AA`);
+      assert.equal(await page.locator("main").count(), 1, `${name}: main landmark`);
       await page.keyboard.press("Tab");
       assert.equal(await page.evaluate(() => document.activeElement.className), "skip", `${name}: skip link`);
       await page.close();
