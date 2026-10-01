@@ -9,6 +9,8 @@ build/
 dist/
 runs/
 workspace/
+!examples/hillclimb-run/workspace/
+!examples/hillclimb-run/workspace/**
 .env
 node_modules/
 

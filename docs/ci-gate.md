@@ -27,6 +27,7 @@ evalarc diff examples/results-diff/inspect/baseline.json \
 
 ```text
 match accuracy: 0.625 -> 0.8125 | Checks that lost passes or coverage: 3 | Improved: 6 | Unchanged: 7
+  1 within sampling noise (record more attempts to separate from repeat-sampling variation; the gate still fails)
   regressed: refund-duplicate / includes
   regressed: refund-duplicate / match
   less_reliable: cancel-pending / match
@@ -69,6 +70,144 @@ Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
 no samples, malformed input). Treat 2 as a broken pipeline, not a regression.
 
+## Sampling-noise annotation
+
+A single evaluation is a sample. When a check records more than one attempt
+(Inspect epochs, promptfoo repeats, repeated JUnit cases), `diff` marks a change
+**within sampling noise** when both sides show variation and their 95% Wilson
+intervals overlap, so the recorded number of attempts cannot separate the change
+from repeat-sampling variation. `diff.json` carries `within_sampling_noise` on
+each affected change and `blocking_changes_within_sampling_noise` at the top
+level; `summary.md`, `index.html` and the CLI line repeat the count.
+
+This is a descriptive flag, not a significance test, and it **never relaxes the
+gate**: a flagged regression still exits 1. It answers a different question than
+the gate — whether the recorded evidence is enough to trust the direction of the
+change. A clean all-pass to all-fail swing is the strongest signal available at
+that attempt count and is never called noise. To resolve a flagged change,
+record more attempts per check (Inspect `--epochs`, promptfoo `--repeat`); if
+the change persists, it was real, and if it disappears, it was noise. This
+mirrors the practice of requiring a gain to exceed evaluation noise before
+acting on it.
+
+## Held-out split: did the change generalize?
+
+When a change was tuned against some evaluation cases, those cases alone cannot
+show that it will help elsewhere. Declare which cases were **not** looked at while
+making the change, in a small JSON file:
+
+```json
+{
+  "schema_version": "evalarc.case-split.v1",
+  "description": "Status and address cases were not used while revising the answers.",
+  "held_out": ["status-*", "address-change"]
+}
+```
+
+Entries are exact case IDs or glob patterns; each must match at least one case,
+and at least one case must remain for tuning. Then:
+
+```bash
+evalarc diff examples/results-diff/inspect/baseline.json \
+  examples/results-diff/inspect/current.json \
+  --held-out examples/results-diff/inspect/split.json \
+  --harness examples/results-diff/inspect/harness
+```
+
+```text
+Held-out split: held_out_gain_within_noise | tuning +15.0 pp (5 cases) | held out +33.3 pp (3 cases)
+Harness leakage: 2 hit(s) in 1 file(s), 2 from held-out cases
+  examples/results-diff/inspect/harness/system-prompt.md:9 input of status-missing
+  examples/results-diff/inspect/harness/system-prompt.md:9 expected of status-missing
+```
+
+`diff` compares the pass rate of check attempts in each partition and reports
+one state:
+
+| State | Meaning |
+| --- | --- |
+| `held_out_regressions` | A held-out check lost passes or coverage |
+| `generalizes` | Held-out cases improved beyond sampling noise (non-overlapping 95% Wilson intervals) |
+| `overfitting_signal` | Tuning cases improved beyond noise; held-out cases did not |
+| `held_out_gain_within_noise` | Held-out cases improved, but the recorded attempts cannot separate it from noise |
+| `no_measurable_gain` | Neither partition improved beyond noise |
+
+In the recorded example, the three held-out cases rise from 8/12 to 12/12
+passing attempts. Twelve attempts are not enough to call that beyond noise, so
+the state is `held_out_gain_within_noise`. The split file is copied to
+`split.json` in the output folder with its SHA-256 in `diff.json`.
+
+The split is only as independent as its declaration: EvalArc cannot confirm that
+held-out results were hidden from whoever made the change. Keep the held-out
+cases out of the files, logs and failure transcripts the author or tuning loop
+reads, and change the split only in a reviewed commit.
+
+## Harness leakage scan
+
+`--harness PATH ...` scans prompt, skill, instruction and tool-description files
+(or folders; hidden entries and binary files are skipped) for recorded case
+inputs and expected answers copied verbatim. Matching ignores case and
+whitespace; strings shorter than `--leak-min-chars` (default 12) are ignored.
+Inputs come from Inspect sample inputs and promptfoo test variables; expected
+answers come from Inspect targets and positive promptfoo assertion values
+(`not-*` and code assertions are skipped). JUnit reports carry neither, so
+nothing is scanned for them.
+
+The example prompt contains `"What is the status of order 9999?" ->
+status:9999:unknown`, a held-out input and its reference answer. A tuning loop
+that pastes failing cases into the prompt raises the score without helping on
+new inputs. Paraphrased or encoded copies are not detected, and a shared
+phrase can be legitimate; review each hit.
+
+## Require generalization
+
+`--require-generalization` (requires `--held-out`) additionally fails the gate
+unless the state is `generalizes` and no held-out case text was found in the
+harness. Without it, the split and leakage sections are informational and the
+exit code is unchanged. Both examples above exit 1 because checks regressed.
+
+## Cost at equal quality
+
+When an evaluation is near saturation, the useful change is often the same
+quality at lower cost: a smaller model, lower thinking effort, a shorter prompt
+or better prompt caching. `diff.json` always includes a `usage` block with the
+mean usage per attempt over cases present in both runs, for every metric the
+tool recorded:
+
+| Metric | Inspect AI | promptfoo | JUnit |
+| --- | --- | --- | --- |
+| `cost_usd` | `model_usage.*.total_cost` | `cost` | — |
+| `total_tokens`, `input_tokens`, `output_tokens` | `model_usage` sums | `tokenUsage` | — |
+| `cached_input_tokens`, `reasoning_tokens` | cache reads, reasoning tokens | `cached`, `completionDetails.reasoning` | — |
+| `duration_seconds` | sample `working_time` (else `total_time`) | `latencyMs` | test `time` |
+
+Missing values stay unknown and are never counted as zero; each metric reports
+how many attempts recorded it. When input and cache-read tokens are both
+recorded, `usage.cache_read_share` gives the share of input tokens read from the
+prompt cache, a main cost driver. The Markdown and HTML reports add a "Cost and
+usage" section when cost or tokens were recorded.
+
+`--max-cost-ratio R` adds a gate: current mean usage per attempt must be at most
+`R` times the baseline (`1.0` = no increase, `0.5` = at least halve it). The
+quality gate still applies, so a cheaper run that loses a check fails.
+`--cost-metric auto` (the default) uses recorded cost, else total tokens;
+`cost`, `tokens` and `duration` select one explicitly. If the chosen metric is
+missing on any matched attempt, or the baseline mean is zero, the comparison
+exits 2 rather than guessing.
+
+```bash
+evalarc diff baseline.json current.json --max-cost-ratio 0.5
+```
+
+```text
+Cost gate (cost_usd): current/baseline 0.412, limit 0.5 — pass
+```
+
+EvalArc does not price tokens. Token counts from different models use different
+tokenizers and prices, so prefer recorded cost when the model changes. A JUnit
+duration times the test, which may not include the agent. Ratios come from one
+run each and carry no interval; repeat runs when the margin is small.
+
 ## How each format maps to checks
 
 | Format | Case | Check | Passed when |
@@ -104,7 +243,29 @@ macOS runners with Python 3.11+.
 Inputs: `baseline`, `current` (required), `format` (`auto`), `threshold`
 (`1.0`), `output` (`evalarc-diff`, must not exist yet) and
 `fail-on-regression` (`true`; set `false` to report without failing). Unusable
-input always fails the step.
+input always fails the step. Optional `held-out` (split file), `harness`
+(space-separated paths) and `require-generalization` (`false`) add the
+[held-out review](#held-out-split-did-the-change-generalize) and
+[leakage scan](#harness-leakage-scan); their results are exposed as the
+`generalization-state` and `leakage-hits` outputs and as warning annotations on
+the leaking file and line. `max-cost-ratio` and `cost-metric` add the
+[cost gate](#cost-at-equal-quality); its ratio is the `cost-ratio` output.
+
+```yaml
+- uses: noteflowai/evalarc@v0.16.0
+  with:
+    baseline: evals/baseline.json
+    current: results/current.json
+    held-out: evals/split.json
+    harness: prompts/ skills/ tools.json
+    require-generalization: "true"
+```
+
+To review every step of a tuning loop rather than one change, use
+[`evalarc hillclimb-review`](hillclimb-review.md). Before tuning against an
+evaluation, run [`evalarc eval-health`](eval-health.md)
+on its results to find saturation, never-passing checks, flaky checks and
+pipeline errors.
 
 ### Where the baseline comes from
 

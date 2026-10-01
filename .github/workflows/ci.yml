@@ -135,21 +135,107 @@ jobs:
           current: examples/results-diff/junit/current.xml
           output: runs/action-unusable
           fail-on-regression: "false"
+      - name: A held-out split and leaked harness text are reported and can be required
+        id: heldout
+        continue-on-error: true
+        uses: ./
+        with:
+          baseline: examples/results-diff/inspect/baseline.json
+          current: examples/results-diff/inspect/current.json
+          output: runs/action-heldout
+          held-out: examples/results-diff/inspect/split.json
+          harness: examples/results-diff/inspect/harness
+          require-generalization: "true"
+      - name: A cost gate on recorded durations passes for identical results
+        id: cost
+        uses: ./
+        with:
+          baseline: examples/results-diff/promptfoo/current.json
+          current: examples/results-diff/promptfoo/current.json
+          output: runs/action-cost
+          max-cost-ratio: "1.0"
+          cost-metric: duration
       - name: Check the reported outcomes
         env:
+          COST_RATIO: ${{ steps.cost.outputs.cost-ratio }}
           REGRESSED: ${{ steps.regressed.outcome }}
           BLOCKING: ${{ steps.regressed.outputs.blocking-changes }}
           GATE: ${{ steps.regressed.outputs.gate-passed }}
           UNCHANGED: ${{ steps.unchanged.outputs.gate-passed }}
           UNUSABLE: ${{ steps.unusable.outcome }}
+          HELDOUT: ${{ steps.heldout.outcome }}
+          STATE: ${{ steps.heldout.outputs.generalization-state }}
+          LEAKS: ${{ steps.heldout.outputs.leakage-hits }}
         run: |
           test "$REGRESSED" = failure
           test "$BLOCKING" = 3
           test "$GATE" = false
           test "$UNCHANGED" = true
           test "$UNUSABLE" = failure
+          test "$HELDOUT" = failure
+          test "$STATE" = held_out_gain_within_noise
+          test "$LEAKS" = 2
+          test "$COST_RATIO" = 1.0
+          test -f runs/action-heldout/split.json
           test -f runs/action-regressed/index.html
           cmp runs/action-regressed/current.json examples/results-diff/inspect/current.json
+      - name: Hillclimb review keeps cost steps and rejects the overfit step
+        run: |
+          python -m pip install --quiet .
+          evalarc hillclimb-review examples/hillclimb-review/results/00-baseline.json \
+            examples/hillclimb-review/results/0[1-5]-*.json \
+            --held-out examples/hillclimb-review/split.json --objective cost \
+            --output runs/hillclimb --markdown "$GITHUB_STEP_SUMMARY"
+          python -c "import json; r = json.load(open('runs/hillclimb/hillclimb.json')); assert r['recommendation'] == 'merge_cost'; assert [s['decision'] for s in r['steps']] == ['keep', 'rollback_overfit', 'keep', 'rollback_regression', 'keep']"
+          set +e
+          evalarc hillclimb-review examples/hillclimb-review/results/00-baseline.json \
+            examples/hillclimb-review/results/0[1-5]-*.json \
+            --held-out examples/hillclimb-review/split.json
+          test $? -eq 1
+      - name: Blind judging packets keep verdicts out of the shared folder
+        run: |
+          python -m pip install --quiet .
+          evalarc judge-packet grader examples/results-diff/inspect/current.json \
+            --sample 10 --output runs/judge-grader
+          ! grep -r recorded_passed runs/judge-grader/share
+          evalarc judge-packet pairwise examples/results-diff/inspect/baseline.json \
+            examples/results-diff/inspect/current.json --output runs/judge-pairwise
+          ! grep -r current_is runs/judge-pairwise/share
+          evalarc eval-health examples/results-diff/inspect/current.json \
+            --cases examples/results-diff/inspect/cases.json --json \
+            | python -c "import json, sys; assert 'adversarial_sampling' in {f['id'] for f in json.load(sys.stdin)['findings']}"
+      - name: Hillclimb run keeps root-cause fixes and rejects pasted cases
+        run: |
+          python -m pip install --quiet .
+          cp -r examples/hillclimb-run "$RUNNER_TEMP/climb"
+          evalarc hillclimb-run "$RUNNER_TEMP/climb/hillclimb.toml" --output runs/climb --trust-local
+          python -c "import json; s = json.load(open('runs/climb/loop.json')); assert [x['decision'] for x in s['steps']] == ['keep', 'rollback_pasted_case', 'rollback_overfit', 'no_change', 'keep'], s"
+          evalarc judge-packet pairwise runs/climb/results/00-baseline.json runs/climb/results/05.json --output runs/climb-ab
+          evalarc judge-run runs/climb-ab --config "$RUNNER_TEMP/climb/judge.toml" --output runs/climb-ab.json --trust-local
+          evalarc judge-score runs/climb-ab runs/climb-ab.json --require-current-preferred
+      - name: A scaffolded evaluation project runs through every command
+        run: |
+          python -m pip install --quiet .
+          evalarc eval-init "$RUNNER_TEMP/proj"
+          cd "$RUNNER_TEMP/proj"
+          evalarc review-inputs cases.jsonl --output ../review --write-split split.json \
+            --write-manifest cases.manifest.json
+          python evaluate.py ../baseline.json --epochs 3
+          evalarc eval-health ../baseline.json --cases cases.manifest.json --output ../health
+          evalarc judge-packet grader ../baseline.json --sample 6 --output ../spot
+          set +e
+          evalarc hillclimb-run hillclimb.toml --output ../project-loop --trust-local
+          test $? -eq 1
+      - name: Eval health reports noise above the minimum effect
+        run: |
+          python -m pip install --quiet .
+          evalarc eval-health examples/results-diff/inspect/baseline.json \
+            examples/results-diff/inspect/current.json --ordered --min-effect 0.05 \
+            --output runs/eval-health --markdown "$GITHUB_STEP_SUMMARY"
+          set +e
+          evalarc eval-health examples/results-diff/inspect/current.json \
+            --min-effect 0.05 --require-healthy
+          test $? -eq 1
   strands-recipe:
     runs-on: ubuntu-latest
     steps:

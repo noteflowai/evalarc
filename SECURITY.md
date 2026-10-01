@@ -38,6 +38,14 @@ portable disk quota: choose a quota-limited worker filesystem for untrusted runs
 Docker image resolution records a local immutable image ID; also archive the
 image or pin its registry digest for reproduction on another host.
 
+`evalarc hillclimb-run` and `evalarc judge-run` execute commands declared in a
+caller's TOML file on the host, with the caller's environment (so their own model
+API keys reach them), and also require `--trust-local`. EvalArc itself makes no
+model or network calls. The hillclimb `allow` list compares the workspace (including
+`.git`) before and after each propose command, removes files it created and stops
+on any other change; it is a guard, not a sandbox, and cannot see or undo changes
+outside the workspace.
+
 Local mode requires `--trust-local`. It executes with the host user's filesystem
 and network privileges. Clearing the child environment does not provide a
 sandbox. Use local mode only for code you trust, such as the bundled audit

@@ -258,3 +258,102 @@ def test_markdown_escapes_table_cells():
     result = compare("promptfoo")
     result["changes"][0]["case_id"] = "a | b `c`"
     assert "`a \\| b 'c'`" in render_markdown(result)
+
+
+def _repeated_inspect(tmp_path, baseline_pass, current_pass, epochs=3):
+    """Build a two-attempt-per-check Inspect pair for one case/check.
+
+    baseline_pass / current_pass give how many of `epochs` attempts pass on each side.
+    """
+    base = json.loads((EXAMPLES / "inspect/baseline.json").read_text())
+    template = base["samples"][0]
+
+    def build(passes):
+        samples = []
+        for epoch in range(1, epochs + 1):
+            sample = copy.deepcopy(template)
+            sample["id"] = "flaky-case"
+            sample["epoch"] = epoch
+            sample.pop("error", None)
+            sample["scores"] = {"match": {"value": "C" if epoch <= passes else "I"}}
+            samples.append(sample)
+        document = copy.deepcopy(base)
+        document["samples"] = samples
+        return document
+
+    b = write(tmp_path / "b.json", build(baseline_pass))
+    c = write(tmp_path / "c.json", build(current_pass))
+    return diff(load_results(b), load_results(c))
+
+
+def test_flaky_partial_regression_is_marked_within_sampling_noise(tmp_path):
+    result = _repeated_inspect(tmp_path, baseline_pass=3, current_pass=1)
+    row = next(r for r in result["changes"] if r["check"] == "match")
+    assert row["kind"] == "less_reliable"
+    assert row["within_sampling_noise"] is True
+    assert result["blocking_changes"] == 1
+    assert result["blocking_changes_within_sampling_noise"] == 1
+    # The annotation never relaxes the gate.
+    assert result["gate_passed"] is False
+    md = render_markdown(result)
+    assert "within sampling noise" in md
+    assert "less reliable (within noise)" in md
+
+
+def test_clean_full_swing_is_not_marked_within_noise(tmp_path):
+    result = _repeated_inspect(tmp_path, baseline_pass=3, current_pass=0)
+    row = next(r for r in result["changes"] if r["check"] == "match")
+    assert row["kind"] == "regressed"
+    assert row["within_sampling_noise"] is False
+    assert result["blocking_changes_within_sampling_noise"] == 0
+    assert "within sampling noise" not in render_markdown(result)
+
+
+def test_recorded_inspect_flags_only_the_flaky_partial_change():
+    # The inspect example records two attempts per check. Only the 2/2 -> 1/2 flaky
+    # change is within sampling noise; the clean 2/2 -> 0/2 regressions are not.
+    result = compare("inspect")
+    flagged = [
+        (row["case_id"], row["check"])
+        for row in result["changes"]
+        if row.get("within_sampling_noise") is True
+    ]
+    assert flagged == [("cancel-pending", "match")]
+    assert result["blocking_changes_within_sampling_noise"] == 1
+    # The two clean regressions keep the gate red and are not called noise.
+    for row in result["changes"]:
+        if row["kind"] == "regressed":
+            assert row["within_sampling_noise"] is False
+    assert result["gate_passed"] is False
+
+
+def test_wilson_interval_matches_known_bounds():
+    from evalarc.results_diff import _wilson_interval
+
+    low, high = _wilson_interval(1, 2)
+    assert round(low, 4) == 0.0945 and round(high, 4) == 0.9055
+    assert _wilson_interval(0, 0) == (0.0, 1.0)
+    assert _wilson_interval(5, 5)[1] == 1.0
+
+
+def test_within_noise_returns_none_without_repeated_attempts():
+    from evalarc.results_diff import _within_sampling_noise
+
+    one = {"passed": 1, "assessed": 1, "attempts": 1}
+    zero = {"passed": 0, "assessed": 1, "attempts": 1}
+    # No sampling spread on either side: the flag does not apply.
+    assert _within_sampling_noise(one, zero) is None
+    # Absent side (added/removed check) also does not apply.
+    assert _within_sampling_noise(None, one) is None
+    assert _within_sampling_noise(one, None) is None
+
+
+def test_html_reports_within_noise_when_flagged(tmp_path):
+    result = _repeated_inspect(tmp_path, baseline_pass=3, current_pass=1)
+    from evalarc.results_diff import render_html
+
+    destination = tmp_path / "index.html"
+    render_html(result, destination)
+    html = destination.read_text()
+    assert "within noise" in html
+    assert "within sampling noise" in html

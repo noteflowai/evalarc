@@ -1,0 +1,5 @@
+{
+  "schema_version": "evalarc.case-split.v1",
+  "description": "Status and address cases were not used while revising the refund and cancel answers.",
+  "held_out": ["status-*", "address-change"]
+}

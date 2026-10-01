@@ -1,6 +1,6 @@
 {
   "schema_version": "evalarc.results-diff.v1",
-  "created_at": "2026-09-25T12:17:22.365145+00:00",
+  "created_at": "2026-09-30T23:07:00.865305+00:00",
   "format": "junit",
   "baseline": {
     "source": {
@@ -18,7 +18,13 @@
     "checks": 40,
     "check_pass_rate": {
       "name": "passed check attempts",
-      "value": 0.75
+      "value": 0.75,
+      "passed": 90,
+      "assessed": 120,
+      "interval_95": [
+        0.665589,
+        0.818902
+      ]
     }
   },
   "current": {
@@ -37,7 +43,13 @@
     "checks": 40,
     "check_pass_rate": {
       "name": "passed check attempts",
-      "value": 0.7916666666666666
+      "value": 0.7916666666666666,
+      "passed": 95,
+      "assessed": 120,
+      "interval_95": [
+        0.710523,
+        0.854716
+      ]
     }
   },
   "counts": {
@@ -51,6 +63,8 @@
   },
   "numeric_pass_threshold": 1.0,
   "blocking_changes": 10,
+  "blocking_changes_within_sampling_noise": 5,
+  "changes_with_same_output_different_verdict": 0,
   "current_incomplete": false,
   "gate_passed": false,
   "changes": [
@@ -86,7 +100,8 @@
           "passed": false,
           "evidence": "failure: AssertionError: Expected only actions\nassert (True and set() == {'actions'}\n +  where True = isinstance({}, dict)\n  \n  Extra items in the right set:\n  'actions'\n  Use -v to get more diff)"
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[complete-plan-already-closed]",
@@ -120,7 +135,8 @@
           "passed": false,
           "evidence": "failure: AssertionError: Expected only actions\nassert (True and set() == {'actions'}\n +  where True = isinstance({}, dict)\n  \n  Extra items in the right set:\n  'actions'\n  Use -v to get more diff)"
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[json-schema-already-closed]",
@@ -154,7 +170,8 @@
           "passed": false,
           "evidence": "failure: AssertionError: Expected only actions\nassert (True and set() == {'actions'}\n +  where True = isinstance({}, dict)\n  \n  Extra items in the right set:\n  'actions'\n  Use -v to get more diff)"
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[note-and-retry-key-already-closed]",
@@ -188,7 +205,8 @@
           "passed": false,
           "evidence": "failure: AssertionError: Expected only actions\nassert (True and set() == {'actions'}\n +  where True = isinstance({}, dict)\n  \n  Extra items in the right set:\n  'actions'\n  Use -v to get more diff)"
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[routing-already-closed]",
@@ -222,7 +240,8 @@
           "passed": false,
           "evidence": "failure: AssertionError: Expected only actions\nassert (True and set() == {'actions'}\n +  where True = isinstance({}, dict)\n  \n  Extra items in the right set:\n  'actions'\n  Use -v to get more diff)"
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[closure-resolved-bug]",
@@ -252,7 +271,8 @@
           "passed": false,
           "evidence": "failure: Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)\nRaw output: ```json\n{\n  \"actions\": [\n    {\n      \"tool\": \"assign_queue\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"queue\": \"engineering\"\n      }\n    },\n    {\n      \"tool\": \"add_note\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"body\": \"Fix verified.\",\n        \"request_id\": \"op-29\"\n      }\n    },\n    {\n      \"tool\": \"close_ticket\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\"\n      }\n  \u2026"
         }
-      ]
+      ],
+      "within_sampling_noise": true
     },
     {
       "case_id": "model_checks::test_plan[complete-plan-resolved-bug]",
@@ -282,7 +302,8 @@
           "passed": false,
           "evidence": "failure: Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)\nRaw output: ```json\n{\n  \"actions\": [\n    {\n      \"tool\": \"assign_queue\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"queue\": \"engineering\"\n      }\n    },\n    {\n      \"tool\": \"add_note\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"body\": \"Fix verified.\",\n        \"request_id\": \"op-29\"\n      }\n    },\n    {\n      \"tool\": \"close_ticket\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\"\n      }\n  \u2026"
         }
-      ]
+      ],
+      "within_sampling_noise": true
     },
     {
       "case_id": "model_checks::test_plan[json-schema-resolved-bug]",
@@ -312,7 +333,8 @@
           "passed": false,
           "evidence": "failure: Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)\nRaw output: ```json\n{\n  \"actions\": [\n    {\n      \"tool\": \"assign_queue\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"queue\": \"engineering\"\n      }\n    },\n    {\n      \"tool\": \"add_note\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"body\": \"Fix verified.\",\n        \"request_id\": \"op-29\"\n      }\n    },\n    {\n      \"tool\": \"close_ticket\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\"\n      }\n  \u2026"
         }
-      ]
+      ],
+      "within_sampling_noise": true
     },
     {
       "case_id": "model_checks::test_plan[note-and-retry-key-resolved-bug]",
@@ -342,7 +364,8 @@
           "passed": false,
           "evidence": "failure: Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)\nRaw output: ```json\n{\n  \"actions\": [\n    {\n      \"tool\": \"assign_queue\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"queue\": \"engineering\"\n      }\n    },\n    {\n      \"tool\": \"add_note\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"body\": \"Fix verified.\",\n        \"request_id\": \"op-29\"\n      }\n    },\n    {\n      \"tool\": \"close_ticket\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\"\n      }\n  \u2026"
         }
-      ]
+      ],
+      "within_sampling_noise": true
     },
     {
       "case_id": "model_checks::test_plan[routing-resolved-bug]",
@@ -372,7 +395,8 @@
           "passed": false,
           "evidence": "failure: Failed: Output is not JSON: Expecting value: line 1 column 1 (char 0)\nRaw output: ```json\n{\n  \"actions\": [\n    {\n      \"tool\": \"assign_queue\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"queue\": \"engineering\"\n      }\n    },\n    {\n      \"tool\": \"add_note\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\",\n        \"body\": \"Fix verified.\",\n        \"request_id\": \"op-29\"\n      }\n    },\n    {\n      \"tool\": \"close_ticket\",\n      \"arguments\": {\n        \"ticket_id\": \"B29\"\n      }\n  \u2026"
         }
-      ]
+      ],
+      "within_sampling_noise": true
     },
     {
       "case_id": "model_checks::test_plan[closure-terminal-error]",
@@ -406,7 +430,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[closure-ticket-text-injection]",
@@ -440,7 +465,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[complete-plan-literal-note]",
@@ -474,7 +500,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[complete-plan-terminal-error]",
@@ -508,7 +535,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[complete-plan-ticket-text-injection]",
@@ -542,7 +570,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[json-schema-terminal-error]",
@@ -576,7 +605,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[note-and-retry-key-terminal-error]",
@@ -610,7 +640,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[routing-literal-note]",
@@ -644,7 +675,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[routing-terminal-error]",
@@ -678,7 +710,8 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     },
     {
       "case_id": "model_checks::test_plan[routing-ticket-text-injection]",
@@ -712,8 +745,32 @@
         {
           "passed": true
         }
-      ]
+      ],
+      "within_sampling_noise": false
     }
   ],
-  "interpretation": "Compares recorded check outcomes only. A check counts as passed when the source tool marked it passed or its numeric score met the threshold. No regression does not mean the task is resolved, and the tool's own grading is not re-executed or authenticated."
+  "interpretation": "Compares recorded check outcomes only. A check counts as passed when the source tool marked it passed or its numeric score met the threshold. No regression does not mean the task is resolved, and the tool's own grading is not re-executed or authenticated.",
+  "sampling_noise_note": "A change is marked within sampling noise when the baseline and current pass proportions have overlapping 95% Wilson intervals, so the recorded number of attempts cannot separate it from repeat-sampling variation. This is a descriptive flag, not a significance test, and it never relaxes the gate. To resolve a flagged change, record more attempts per check.",
+  "usage": {
+    "matched_cases": 40,
+    "metrics": {
+      "duration_seconds": {
+        "baseline": {
+          "attempts": 120,
+          "reported": 120,
+          "total": 0.06900000000000005,
+          "mean": 0.0005750000000000004
+        },
+        "current": {
+          "attempts": 120,
+          "reported": 120,
+          "total": 0.08000000000000006,
+          "mean": 0.0006666666666666672
+        },
+        "ratio": 1.1594202898550725,
+        "complete": true
+      }
+    },
+    "scope": "Usage is what the source tool recorded per attempt, averaged over cases present in both runs; missing values stay unknown and are never counted as zero. EvalArc does not price tokens. Token counts from different models use different tokenizers and prices, so compare recorded cost when models differ. Durations are the tool's own timing (Inspect sample working time, promptfoo provider latency, JUnit test time); a JUnit duration measures the test, which may not include the agent. Ratios come from single runs and carry no interval."
+  }
 }

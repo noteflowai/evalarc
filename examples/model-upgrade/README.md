@@ -20,6 +20,14 @@ Markdown fences. Ten other checks improve and twenty remain unchanged.
 The ten blocking checks share these two format/schema failures; they are not
 ten independent failure causes. Every answer, including these failures, is retained.
 
+With three generations per check, the diff marks the five `resolved-bug` drops
+(3/3 → 1/3) as [within sampling noise](../../docs/ci-gate.md#sampling-noise-annotation):
+three attempts cannot separate them from repeat-sampling variation. The five
+`already-closed` drops (3/3 → 0/3) are not flagged. The gate fails either way.
+The flag describes how much evidence was recorded, not what caused the failure.
+The fenced-JSON cause is visible in the answers, but confirming that the
+`resolved-bug` rate really fell needs more generations.
+
 ## Recompute the checks without generating answers
 
 From the repository root, install the dev tools and use a new output directory:

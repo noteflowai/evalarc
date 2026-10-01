@@ -1,0 +1,4 @@
+# evalarc judge-run PACKET --config examples/hillclimb-run/judge.toml --output verdicts.json --trust-local
+command = ["{python}", "{config_dir}/judge.py"]
+model = "scripted/rule-judge"
+timeout_seconds = 30

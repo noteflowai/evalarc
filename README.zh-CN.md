@@ -52,13 +52,13 @@ EvalArc 是面向 Agent 评测的 Python 命令行复核工具：逐项对比已
 3. **本地复算。** [首次复核指南](docs/first-review.zh-CN.md)使用发布的 wheel 和原始记录重建报告；
    复核退出 0 表示一致，对照退出 1 表示发现退步。
 
-在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.16.1/)
+在新的虚拟环境中，从 [PyPI](https://pypi.org/project/evalarc/0.17.0/)
 安装已发布的复核工具：
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.16.1
+python -m pip install evalarc==0.17.0
 evalarc --version
 ```
 
@@ -73,6 +73,13 @@ PyPI 与 GitHub Releases 提供相同的 wheel 和源码包，也支持
 | --- | --- | --- |
 | 变更前后的 Agent 评测 | 匹配条件下哪些检查退步 | [运行与对照](docs/workflow.md) |
 | 变更前后的 Inspect AI、promptfoo 或 JUnit 结果 | 总分上升时仍列出丢失通过的检查项，并让拉取请求失败 | [CI 门禁与 GitHub Action](docs/ci-gate.zh-CN.md) |
+| 针对部分评测调过的提示词或技能 | 对比留出用例与调优用例，发现过拟合信号；查找被复制进提示词的用例文本 | [留出集](docs/ci-gate.zh-CN.md#留出集改动是否泛化) |
+| 更便宜的模型、更低思考强度或更短的提示词 | 要求不丢失检查项，且记录的成本或 token 不超过基线的设定倍数 | [保质降本](docs/ci-gate.zh-CN.md#保质降本) |
+| 准备据以调优的已保存结果 | 发现饱和、始终失败或波动的检查、评分不一致、截断、自评、流水线错误，以及大于目标效应的噪声 | [评测健康检查](docs/eval-health.zh-CN.md) |
+| 准备采信的评分器，或按偏好评判的改动 | 盲抽查并统计误判通过/失败；与基线做随机 A/B 盲评并检查位置偏差 | [盲评](docs/judging.zh-CN.md) |
+| 为自己的应用新建评测 | 生成用例、程序化评分器、评测脚本与调优配置；运行前审查输入 | [创建评测项目](docs/eval-init.zh-CN.md) |
+| 想用自己的模型调用命令做爬山调优的提示词或技能 | 运行循环：只给调优失败、只许改允许的文件、粘贴用例与泄露自动回滚、按留出结果保留或回滚 | [运行爬山调优](docs/hillclimb-run.zh-CN.md) |
+| 爬山调优每一步的结果 | 按调优与留出用例重放保留/回滚规则，分类停滞原因，判断是否合并 | [爬山调优复核](docs/hillclimb-review.zh-CN.md) |
 | Strands Evals 任务的观测状态 | 用原生 SDK 报告复核备注、关闭状态及逐项回归 | [免安装交互报告](https://noteflowai.github.io/evalarc/strands/index.html) · [运行示例](examples/strands-state-review/README.zh-CN.md) |
 | AgentCore Evaluate 结果与 spans | 有效零分、跳过、缺失以及技能交付 | [导出到审阅](docs/agentcore-first-review.md) |
 | 同一记录上的多次评判 | 分数变化、通过/拒绝翻转及未评判情况 | [中文指南](docs/judge-stability.zh-CN.md) |
@@ -94,7 +101,7 @@ PyPI 与 GitHub Releases 提供相同的 wheel 和源码包，也支持
 准确率从 0.625 升至 0.8125，同时有三个检查项丢失通过。
 
 ```yaml
-- uses: noteflowai/evalarc@v0.16.1 # 或完整的提交 SHA
+- uses: noteflowai/evalarc@v0.17.0 # 或完整的提交 SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json

@@ -25,6 +25,31 @@ inputs:
   fail-on-regression:
     description: Fail this step when a check lost passes or coverage. Unusable input always fails.
     default: "true"
+  held-out:
+    description: >-
+      Optional evalarc.case-split.v1 JSON naming cases held out from tuning. Adds a
+      tuning versus held-out comparison and an overfitting signal to the report.
+    default: ""
+  harness:
+    description: >-
+      Optional space-separated prompt, skill or tool-description files or folders to scan
+      for recorded case inputs and expected answers copied verbatim.
+    default: ""
+  require-generalization:
+    description: >-
+      Also fail unless held-out cases improve beyond sampling noise and no held-out case
+      text appears in the harness. Requires held-out.
+    default: "false"
+  max-cost-ratio:
+    description: >-
+      Optional. Also fail unless current mean recorded usage per attempt is at most this
+      multiple of the baseline (1.0 = no increase). Unrecorded usage fails as unusable.
+    default: ""
+  cost-metric:
+    description: >-
+      Usage for max-cost-ratio - auto (recorded cost, else total tokens), cost, tokens or
+      duration.
+    default: auto
   python:
     description: Python 3.11+ interpreter used to create the action's virtual environment.
     default: python3
@@ -38,6 +63,17 @@ outputs:
   report:
     description: Folder containing the offline report and preserved inputs.
     value: ${{ steps.diff.outputs.report }}
+  generalization-state:
+    description: >-
+      Held-out split state (generalizes, overfitting_signal, held_out_regressions,
+      held_out_gain_within_noise, no_measurable_gain); empty without held-out.
+    value: ${{ steps.diff.outputs.generalization-state }}
+  leakage-hits:
+    description: Number of harness leakage hits; empty without harness.
+    value: ${{ steps.diff.outputs.leakage-hits }}
+  cost-ratio:
+    description: Current/baseline usage ratio for the cost gate; empty without max-cost-ratio.
+    value: ${{ steps.diff.outputs.cost-ratio }}
 runs:
   using: composite
   steps:
@@ -60,11 +96,27 @@ runs:
         THRESHOLD: ${{ inputs.threshold }}
         OUTPUT: ${{ inputs.output }}
         FAIL_ON_REGRESSION: ${{ inputs.fail-on-regression }}
+        HELD_OUT: ${{ inputs.held-out }}
+        HARNESS: ${{ inputs.harness }}
+        REQUIRE_GENERALIZATION: ${{ inputs.require-generalization }}
+        MAX_COST_RATIO: ${{ inputs.max-cost-ratio }}
+        COST_METRIC: ${{ inputs.cost-metric }}
       run: |
         bin="$RUNNER_TEMP/evalarc-action/bin"
+        extra=()
+        if [ -n "$HELD_OUT" ]; then extra+=(--held-out "$HELD_OUT"); fi
+        if [ -n "$HARNESS" ]; then
+          read -r -a harness_paths <<< "$HARNESS"
+          extra+=(--harness "${harness_paths[@]}")
+        fi
+        if [ "$REQUIRE_GENERALIZATION" = "true" ]; then extra+=(--require-generalization); fi
+        if [ -n "$MAX_COST_RATIO" ]; then
+          extra+=(--max-cost-ratio "$MAX_COST_RATIO" --cost-metric "$COST_METRIC")
+        fi
         set +e
         "$bin/evalarc" diff "$BASELINE" "$CURRENT" --format "$FORMAT" \
-          --threshold "$THRESHOLD" --output "$OUTPUT" --markdown "$GITHUB_STEP_SUMMARY"
+          --threshold "$THRESHOLD" --output "$OUTPUT" --markdown "$GITHUB_STEP_SUMMARY" \
+          "${extra[@]}"
         code=$?
         set -e
         if [ "$code" -eq 2 ]; then
@@ -79,14 +131,32 @@ runs:
             output.write(f"gate-passed={str(result['gate_passed']).lower()}\n")
             output.write(f"blocking-changes={result['blocking_changes']}\n")
             output.write(f"report={os.environ['OUTPUT']}\n")
+            review = result.get("generalization") or {}
+            leakage = result.get("leakage")
+            output.write(f"generalization-state={review.get('state', '')}\n")
+            output.write(f"leakage-hits={'' if leakage is None else len(leakage['hits'])}\n")
+            gate = result.get("cost_gate")
+            output.write(f"cost-ratio={'' if gate is None else round(gate['ratio'], 6)}\n")
         blocking = [row for row in result["changes"] if row["kind"] in (
             "regressed", "less_reliable", "unassessed", "removed")]
         clean = lambda text: str(text).replace("%", "%25").replace("\r", "").replace("\n", " ")
+        # Property values (file=, line=) also need ":" and "," escaped.
+        prop = lambda text: clean(text).replace(":", "%3A").replace(",", "%2C")
         for row in blocking[:10]:
             print(f"::warning title=EvalArc {row['kind'].replace('_', ' ')}::"
                   f"{clean(row['case_id'])} / {clean(row['check'])}")
+        gate = result.get("cost_gate")
+        if gate and not gate["passed"]:
+            print(f"::warning title=EvalArc cost gate::{gate['metric']} ratio "
+                  f"{gate['ratio']:.3f} exceeds {gate['max_ratio']:g}")
+        if review and review["state"] != "generalizes":
+            print(f"::warning title=EvalArc held-out split::{clean(review['explanation'])}")
+        for hit in (leakage or {}).get("hits", [])[:10]:
+            line = f",line={hit['line']}" if hit.get("line") else ""
+            print(f"::warning title=EvalArc harness leakage,file={prop(hit['file'])}{line}::"
+                  f"{clean(hit['role'])} of case {clean(hit['case_id'])} appears verbatim")
         PY
         if [ "$code" -eq 1 ] && [ "$FAIL_ON_REGRESSION" = "true" ]; then
-          echo "::error title=EvalArc::A check lost passes or coverage. Report: $OUTPUT/index.html"
+          echo "::error title=EvalArc::A check lost passes or coverage, or a required generalization or cost gate failed. Report: $OUTPUT/index.html"
           exit 1
         fi

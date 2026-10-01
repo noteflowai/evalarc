@@ -66,13 +66,13 @@ and the upgrade gate fails. These checks share two format/schema failures.
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.16.1/)
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.17.0/)
 in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.16.1
+python -m pip install evalarc==0.17.0
 evalarc --version
 ```
 
@@ -88,6 +88,13 @@ to produce your first HTML report without cloning the source.
 | --- | --- | --- |
 | A changed agent implementation | Compare matching evaluations and inspect regressed checks | [Run and compare](docs/workflow.md) |
 | Inspect AI, promptfoo or JUnit results before and after a change | List the checks that lost passes, even when the headline improves; fail the pull request | [CI gate and GitHub Action](docs/ci-gate.md) |
+| A prompt or skill change tuned against part of an eval | Compare held-out and tuning cases for an overfitting signal; find case text copied into prompts | [Held-out split](docs/ci-gate.md#held-out-split-did-the-change-generalize) |
+| A cheaper model, lower thinking effort or shorter prompt | Require no lost checks and recorded cost or tokens at most a set ratio of the baseline | [Cost at equal quality](docs/ci-gate.md#cost-at-equal-quality) |
+| Saved results you plan to tune against | Find saturation, never-passing and flaky checks, inconsistent grading, truncation, self-grading, pipeline errors and noise above the change you need | [Eval health](docs/eval-health.md) |
+| A grader you are about to trust, or a change judged by preference | Blind spot checks with false accepts/rejects; blind randomized A/B against the baseline with position-bias checks | [Blind judging](docs/judging.md) |
+| A new evaluation for your application | Scaffold cases, a programmatic grader, a runner and a hillclimb config; review the inputs before any run | [Evaluation project](docs/eval-init.md) |
+| A prompt or skill you want to hillclimb with your own model-calling commands | Run the loop: tuning failures only, edits limited to allowed files, pasted-case and leakage rollback, keep/rollback by held-out results | [Hillclimb run](docs/hillclimb-run.md) |
+| Results of each step of a hillclimbing loop | Replay keep/rollback rules on tuning and held-out cases, triage stalls, and decide whether to merge | [Hillclimb review](docs/hillclimb-review.md) |
 | A Strands Evals task with observed state | Recheck notes and closure using native SDK reports and case/rule identities | [Interactive review](https://noteflowai.github.io/evalarc/strands/index.html) · [Run the example](examples/strands-state-review/README.md) |
 | Saved AgentCore Evaluate results and spans | Inspect valid zero scores, skipped judgments, missing results and skill delivery | [Export-to-review walkthrough](docs/agentcore-first-review.md) |
 | Repeated judgments on one fixed recording | Separate score variation, verdict disagreement and incomplete assessments | [Judge Stability](docs/judge-stability.md) |
@@ -113,7 +120,7 @@ offline report with copies of both inputs. In the
 0.625 to 0.8125 while three checks lose passes.
 
 ```yaml
-- uses: noteflowai/evalarc@v0.16.1 # or a full commit SHA
+- uses: noteflowai/evalarc@v0.17.0 # or a full commit SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json
