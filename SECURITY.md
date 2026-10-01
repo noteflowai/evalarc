@@ -46,6 +46,10 @@ model or network calls. The hillclimb `allow` list compares the workspace (inclu
 on any other change; it is a guard, not a sandbox, and cannot see or undo changes
 outside the workspace.
 
+`evalarc view` serves report folders read-only on `127.0.0.1` only, rejects other
+`Host` headers, path traversal and directory listings, and has no API. Report pages
+allow exactly one inline script by CSP hash and no network access.
+
 Local mode requires `--trust-local`. It executes with the host user's filesystem
 and network privileges. Clearing the child environment does not provide a
 sandbox. Use local mode only for code you trust, such as the bundled audit
