@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- CI tests Python 3.14 alongside 3.11–3.13, and the package declares 3.14
+  support. A new test reads zstd-compressed Inspect `.eval` archives directly
+  on 3.14 and checks they give the same diff as the JSON logs.
+- Dependabot opens weekly grouped update PRs for GitHub Actions and the npm
+  browser-check/front-end toolchain.
+
 ## 0.17.4 — 2026-10-02
 
 - Add `evalarc view [DIR]`: a read-only, loopback-only local viewer that lists

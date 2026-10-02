@@ -1,0 +1,19 @@
+# Weekly update PRs for pinned CI actions and the browser-check/front-end toolchain.
+# The Python package has no runtime dependencies; dev tools are range-pinned in
+# pyproject.toml.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      browser-tooling:
+        patterns: ["*"]

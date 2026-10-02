@@ -358,3 +358,26 @@ def test_html_reports_within_noise_when_flagged(tmp_path):
     html = destination.read_text()
     assert "within noise" in html
     assert "within sampling noise" in html
+
+
+@pytest.mark.skipif(
+    not hasattr(zipfile, "ZIP_ZSTANDARD"), reason="zstd .eval archives need Python 3.14+"
+)
+def test_zstd_eval_archives_match_the_json_logs(tmp_path):
+    """Inspect writes .eval logs with zstd; Python 3.14+ reads them directly."""
+    archives = {}
+    for name in ("baseline", "current"):
+        document = json.loads((EXAMPLES / f"inspect/{name}.json").read_text())
+        samples = document.pop("samples")
+        archive = tmp_path / f"{name}.eval"
+        with zipfile.ZipFile(archive, "w", zipfile.ZIP_ZSTANDARD) as output:
+            output.writestr("header.json", json.dumps(document))
+            for sample in samples:
+                output.writestr(
+                    f"samples/{sample['id']}_epoch_{sample['epoch']}.json", json.dumps(sample)
+                )
+        archives[name] = archive
+    from_archive = diff(load_results(archives["baseline"]), load_results(archives["current"]))
+    from_json = compare("inspect")
+    assert from_archive["changes"] == from_json["changes"]
+    assert from_archive["blocking_changes"] == 3
