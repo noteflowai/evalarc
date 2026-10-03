@@ -281,6 +281,9 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site
+          # v4+ drops dotfiles by default; the published behavior-audit evidence lists
+          # node_modules/.pnpm/lock.yaml in its manifest, so keep hidden files.
+          include-hidden-files: true
       - uses: actions/deploy-pages@v5
         id: deployment
   huggingface:
