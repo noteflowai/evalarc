@@ -439,8 +439,22 @@ def _inspect(document: dict, threshold: float) -> dict:
     usage: dict[str, list] = {}
     outputs: dict[str, dict[str, list]] = {}
     samples_meta: dict[str, list] = {}
+    seen: set[tuple[str, int]] = set()
     for sample in document["samples"]:
         case_id = str(sample["id"])
+        epoch = sample.get("epoch")
+        if isinstance(epoch, int) and not isinstance(epoch, bool):
+            # A repeated (id, epoch) pair would silently count as an extra attempt and
+            # overstate coverage. Ids 7 and "7" collide because case_id is str(id).
+            key = (case_id, epoch)
+            if key in seen:
+                raise ValueError(
+                    f"Inspect log has duplicate sample {_shown_id(sample['id'])} epoch {epoch}: "
+                    "each sample and epoch must appear once, or the copy would count as an "
+                    "extra attempt. Re-export the log from Inspect (inspect log dump) instead "
+                    "of merging or editing it."
+                )
+            seen.add(key)
         checks = cases.setdefault(case_id, {})
         _add_material(material, case_id, "input", _message_text(sample.get("input")))
         usage.setdefault(case_id, []).append(inspect_usage(sample))
@@ -503,6 +517,12 @@ def _inspect(document: dict, threshold: float) -> dict:
         "generate_config": _generate_config(spec.get("model_generate_config")),
         "incomplete": document.get("status") not in (None, "success"),
     }
+
+
+def _shown_id(value: object, limit: int = 80) -> str:
+    """Render an untrusted sample id safely: repr() escapes control characters."""
+    text = repr(value)
+    return text if len(text) <= limit else text[: limit - 3] + "..."
 
 
 def _inspect_passed(value: object, threshold: float) -> bool | None:

@@ -84,7 +84,17 @@ status, such as JUnit, are never marked incomplete.
 
 Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
-no samples, malformed input). Treat 2 as a broken pipeline, not a regression.
+no samples, malformed input, an Inspect sample repeated in the same epoch).
+Treat 2 as a broken pipeline, not a regression.
+
+An Inspect log that contains the same sample ID twice in one epoch (an integer
+`7` and a string `"7"` count as the same ID) exits 2 and names the sample
+and epoch. Counting the copy as an extra attempt would overstate coverage and
+could hide a `less_covered` change. Such logs usually come from merging,
+concatenating or editing results; re-export with
+`inspect log dump LOG.eval > LOG.json` or rerun the evaluation. The same ID in
+different epochs is a normal repeated attempt, and samples without an integer
+`epoch` are not checked.
 
 ## Sampling-noise annotation
 
