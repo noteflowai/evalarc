@@ -193,17 +193,12 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         )
     lines.append(f"| Cases | {before['cases']} | {after['cases']} |")
     if result["current_incomplete"]:
-        status = after["identity"].get("status")
+        status = _inline_code_text(after["identity"].get("status"))
         lines += ["", f"The current run did not finish (status `{status}`); the gate fails."]
     if result.get("baseline_incomplete"):
         # Escape the untrusted status like a table cell, then code-format it explicitly
         # so the line matches the current-run message: (status `error`).
-        status = (
-            str(before["identity"].get("status"))
-            .replace("|", "\\|")
-            .replace("`", "'")
-            .replace("\n", " ")
-        )
+        status = _inline_code_text(before["identity"].get("status"))
         lines += [
             "",
             f"The baseline run did not finish (status `{status}`); the gate fails because "
@@ -212,7 +207,8 @@ def render_markdown(result: dict, limit: int = 50) -> str:
             "Rerun the baseline to completion.",
         ]
     if before["headline"] and before["headline"].get("name"):
-        lines += ["", f"Headline metric: `{before['headline']['name']}` from the source tool."]
+        name = _inline_code_text(before["headline"]["name"])
+        lines += ["", f"Headline metric: `{name}` from the source tool."]
     graded = result.get("changes_with_same_output_different_verdict") or 0
     if graded:
         lines += [
@@ -1068,5 +1064,23 @@ def _fraction(tally: dict | None) -> str:
     return text
 
 
+def _inline_code_text(value: object) -> str:
+    """Make an untrusted value safe inside one Markdown inline code span on one line.
+
+    Pipes are escaped for table rows, backticks become apostrophes so they cannot
+    close the span, and every CommonMark line ending (CRLF, CR, LF) becomes a space
+    so the value cannot start a new line such as a fake verdict heading. Only the
+    rendered text changes; result dicts and diff.json keep the raw value.
+    """
+    return (
+        str(value)
+        .replace("|", "\\|")
+        .replace("`", "'")
+        .replace("\r\n", " ")
+        .replace("\r", " ")
+        .replace("\n", " ")
+    )
+
+
 def _cell(text: str) -> str:
-    return "`" + str(text).replace("|", "\\|").replace("`", "'").replace("\n", " ") + "`"
+    return "`" + _inline_code_text(text) + "`"

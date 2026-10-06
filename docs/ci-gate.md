@@ -362,3 +362,9 @@ as one removed and one added check. Numeric scores below full credit count as
 not passed unless you lower `--threshold`; a fall from 0.9 to 0.6 at the default
 threshold is not reported. Use the [EvalArc audit workflow](workflow.md) when
 you also need to check the grader itself.
+
+In `summary.md`, the run status, the headline metric name and the case and check
+identifiers in the change table are escaped (pipes as `\|`, backticks as
+apostrophes, line breaks including carriage returns as spaces), so a crafted
+value cannot add a heading or a passing verdict; `diff.json` keeps them
+unmodified.

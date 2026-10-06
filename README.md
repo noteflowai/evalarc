@@ -66,13 +66,13 @@ and the upgrade gate fails. These checks share two format/schema failures.
    installs the published wheel, downloads the records and rebuilds the comparison.
    Verification exits 0 for consistency; comparison exits 1 for the regression.
 
-Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.17.6/)
+Install the released reviewer from [PyPI](https://pypi.org/project/evalarc/0.17.7/)
 in a fresh virtual environment:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install evalarc==0.17.6
+python -m pip install evalarc==0.17.7
 evalarc --version
 ```
 
@@ -124,7 +124,7 @@ because checks missing from it cannot be compared; rerun that evaluation to
 completion and compare again.
 
 ```yaml
-- uses: noteflowai/evalarc@v0.17.6 # or a full commit SHA
+- uses: noteflowai/evalarc@v0.17.7 # or a full commit SHA
   with:
     baseline: evals/baseline.json
     current: results/current.json
