@@ -70,6 +70,8 @@ evalarc hillclimb-review examples/hillclimb-review/results/00-baseline.json \
 | 更强模型或更高思考强度应得分更高 | `eval-health --ordered` `capability_inversion` |
 | 基线分数带置信区间 | `diff`、`eval-health`、`hillclimb-review` 中的 95% 区间 |
 | 首轮前测量噪声，与最小有效提升比较 | `eval-health --min-effect`、`hillclimb-review` 提示 |
+| 程序化打分：精确匹配、固定标签、JSON Schema、单元测试 | `eval-init` 评分器：`exact`、`label`、`json_schema`、`command` |
+| 首轮迭代前随机拆分训练集与测试集 | `review-inputs --random-split`，只在 `cases.jsonl` 中记录一次 |
 | 训练/测试拆分；训练涨、测试不涨则回滚 | `diff --held-out`、`hillclimb-review` `rollback_overfit` |
 | 退步回滚；两者都涨才保留 | `hillclimb-review` 规则 |
 | 不把失败样例粘进提示词 | `--harness` 泄露扫描；`tuning-failures.json` 不含留出用例 |

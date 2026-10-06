@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `review-inputs --random-split F --seed N` holds out a random, source-stratified
+  share of cases and records it in `cases.jsonl`; it refuses once `held_out` is
+  declared, so the split cannot be reshuffled after results are seen.
+- The `eval-init` grader adds `json_schema` (a JSON Schema subset) and `command`
+  (an argument array such as a unit-test runner, passing on exit 0) checks,
+  validated by `review-inputs`.
+
 ## 0.17.5 — 2026-10-05
 
 - fix: reject duplicate Inspect samples instead of counting them as extra attempts. evalarc diff now refuses an Inspect AI log, JSON or .eval archive, that contains the same (sample id, epoch) pair more than once. Before this change the copy was silently counted as an extra attempt, which inflated coverage and could hide a less_covered change. The ids are compared after str(), so an integer 7 and a string '7' in the same epoch also count as a duplicate. A duplicate in either the baseline or the current file makes load_results raise ValueError, and the CLI prints that message to stderr and exits 2 before any comparison. The message names the sample (shown with repr() and cut to 80 characters, so newlines and control characters stay escaped) and the epoch, and tells you to re-export with inspect log dump. Valid multi-epoch logs, logs without an epoch field, the recorded examples, the diff.json schema and the gate logic are unchanged. docs/ci-gate.md and docs/ci-gate.zh-CN.md add this case to the exit-2 list.

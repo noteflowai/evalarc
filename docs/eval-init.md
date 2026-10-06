@@ -31,8 +31,8 @@ before you change anything. Replace `respond()` in `app.py` with your model call
 | --- | --- | --- |
 | `id` | yes | Unique case ID |
 | `input` | yes | What the application receives; state every condition the grader checks |
-| `check` | yes | `exact`, `contains`, `label` or `json_keys` (see `grader.py`) |
-| `expected` | yes | The answer; a list of keys for `json_keys` |
+| `check` | yes | `exact`, `contains`, `label`, `json_keys`, `json_schema` or `command` (see `grader.py`) |
+| `expected` | yes | The answer; a list of keys for `json_keys`; a JSON Schema for `json_schema`; an argument array for `command` (for example a unit-test runner), which gets the output on stdin and passes on exit 0 |
 | `labels` | for `label` | The allowed labels, including `expected` |
 | `source` | yes | `production`, `bug_report`, `support_ticket`, `user_traffic`, `manual`, `synthetic`, `model_failure` |
 | `difficulty` | for `model_failure` | Why the task itself is hard |
@@ -53,6 +53,12 @@ difficulty, and reports `no_held_out`, `held_out_share`, `duplicate_inputs`,
 `--write-manifest` regenerate `split.json` and the case manifest from
 `cases.jsonl`, so the case file stays the single source of truth.
 `--require-clean` exits 1 on any warning.
+
+`--random-split F` (with `--seed`) holds out a random share of cases,
+stratified by `source` so each source keeps tuning and held-out cases, and writes
+the choice into `cases.jsonl` as `held_out`. It refuses to run once `held_out`
+is declared, so the split is decided once and cannot be reshuffled after results
+are seen.
 
 ## What remains yours
 
