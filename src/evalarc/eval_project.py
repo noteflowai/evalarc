@@ -20,7 +20,8 @@ from evalarc.artifacts import new_run
 from evalarc.templates import asset
 
 CASE_FIELDS = {"id", "input", "expected", "check", "source", "labels", "difficulty", "held_out"}
-CHECKS = ("exact", "contains", "label", "json_keys")
+CHECKS = ("exact", "contains", "label", "json_keys", "json_schema", "command")
+SCHEMA_TYPES = {"object", "array", "string", "number", "integer", "boolean", "null"}
 MAX_CASES_BYTES = 16 * 1024 * 1024
 MAX_CASES = 10_000
 SCHEMA = "evalarc.input-review.v1"
@@ -152,7 +153,16 @@ def load_cases(path: Path) -> list[dict]:
         if case["source"] not in provenance.SOURCES:
             raise ValueError(f"{where} source must be one of {', '.join(provenance.SOURCES)}")
         expected = case.get("expected")
-        if case["check"] == "json_keys":
+        if case["check"] == "json_schema":
+            _check_schema(expected, f"{where} json_schema expected")
+        elif case["check"] == "command":
+            if (
+                not isinstance(expected, list)
+                or not expected
+                or not all(isinstance(item, str) and item for item in expected)
+            ):
+                raise ValueError(f"{where} command needs expected as an argument array")
+        elif case["check"] == "json_keys":
             if (
                 not isinstance(expected, list)
                 or not expected
@@ -177,6 +187,60 @@ def load_cases(path: Path) -> list[dict]:
     if len(cases) > MAX_CASES:
         raise ValueError(f"{path.name} has more than {MAX_CASES} cases")
     return cases
+
+
+def _check_schema(schema: object, where: str, depth: int = 0) -> None:
+    """The JSON Schema subset grader.py implements: type, required, properties,
+    items, enum, minimum, maximum, minLength, maxLength."""
+    if depth > 8 or not isinstance(schema, dict) or not schema:
+        raise ValueError(f"{where} must be a non-empty JSON Schema object")
+    allowed = {
+        "type",
+        "required",
+        "properties",
+        "items",
+        "enum",
+        "minimum",
+        "maximum",
+        "minLength",
+        "maxLength",
+        "additionalProperties",
+    }
+    unknown = set(schema) - allowed
+    if unknown:
+        raise ValueError(f"{where} uses unsupported keywords: {', '.join(sorted(unknown))}")
+    kind = schema.get("type")
+    kinds = kind if isinstance(kind, list) else [kind] if kind is not None else []
+    if any(item not in SCHEMA_TYPES for item in kinds):
+        raise ValueError(f"{where} type must be one of {', '.join(sorted(SCHEMA_TYPES))}")
+    for name, sub in (schema.get("properties") or {}).items():
+        _check_schema(sub, f"{where}.properties.{name}", depth + 1)
+    if "items" in schema:
+        _check_schema(schema["items"], f"{where}.items", depth + 1)
+
+
+def assign_random_split(cases: list[dict], fraction: float, seed: int) -> list[dict]:
+    """Hold out a random share of cases, stratified by source so each source keeps
+    tuning and held-out cases; recorded in each case's held_out field."""
+    import random
+
+    if not 0 < fraction < 1:
+        raise ValueError("--random-split must be between 0 and 1, e.g. 0.33")
+    rng = random.Random(seed)
+    by_source: dict[str, list[dict]] = {}
+    for case in cases:
+        by_source.setdefault(case["source"], []).append(case)
+    chosen: set[str] = set()
+    for group in by_source.values():
+        ids = sorted(case["id"] for case in group)
+        rng.shuffle(ids)
+        take = round(len(ids) * fraction)
+        if len(ids) >= 2:
+            take = min(max(take, 1), len(ids) - 1)
+        chosen.update(ids[:take])
+    if not chosen or len(chosen) == len(cases):
+        raise ValueError("the random split left no tuning or no held-out cases; add cases")
+    return [{**case, "held_out": case["id"] in chosen} for case in cases]
 
 
 def split_document(cases: list[dict]) -> dict:
@@ -319,6 +383,8 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
         expected = case["expected"]
         if case["check"] == "label":
             expected = f"{expected} (of {', '.join(case['labels'])})"
+        elif case["check"] in ("json_schema", "command"):
+            expected = json.dumps(expected, ensure_ascii=False)
         elif not isinstance(expected, str):
             expected = ", ".join(expected)
         body += (
@@ -372,6 +438,16 @@ def review_command(args) -> int:
 
     try:
         cases = load_cases(args.cases)
+        if args.random_split is not None:
+            if any("held_out" in case for case in cases):
+                raise ValueError(
+                    "cases.jsonl already declares held_out; remove it or omit --random-split"
+                )
+            cases = assign_random_split(cases, args.random_split, args.seed)
+            args.cases.write_text(
+                "".join(json.dumps(case, ensure_ascii=False) + "\n" for case in cases),
+                encoding="utf-8",
+            )
         source = {
             "name": args.cases.name,
             "sha256": hashlib.sha256(args.cases.read_bytes()).hexdigest(),

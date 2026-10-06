@@ -9,7 +9,7 @@ example cases with your own.
 | `cases.jsonl` | One case per line: `id`, `input`, `expected`, `check`, `source`, optional `labels`, `difficulty`, `held_out` |
 | `app.py` | The application under evaluation; replace `respond()` with your model call |
 | `prompt.md` | The text the hillclimb loop may edit |
-| `grader.py` | Programmatic checks: `exact`, `contains`, `label`, `json_keys` |
+| `grader.py` | Programmatic checks: `exact`, `contains`, `label`, `json_keys`, `json_schema`, `command` (e.g. unit tests) |
 | `evaluate.py` | Runs every case for several epochs and writes an Inspect-format log |
 | `propose.py` | Stub proposer for `evalarc hillclimb-run`; replace with your model call |
 | `hillclimb.toml` | Loop configuration: only `prompt.md` may change |
@@ -23,7 +23,8 @@ only then synthetic cases grounded in those. Record each case's `source`. A case
 you chose because a model failed it is `model_failure` and needs a `difficulty`
 explaining why the task itself is hard. State every condition the grader checks
 in the input, so two experts would grade it the same way. Mark about a third as
-`"held_out": true`; the hillclimb loop never sees them.
+`"held_out": true`, or let `review-inputs --random-split 0.33` choose them once;
+the hillclimb loop never sees them.
 
 ## 2. Review the inputs before running anything
 

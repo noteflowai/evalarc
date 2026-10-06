@@ -175,3 +175,83 @@ def test_hillclimb_on_the_scaffold_rejects_overfit_and_keeps_root_cause(project,
     state = json.loads((tmp_path / "climb/loop.json").read_text())
     assert [step["decision"] for step in state["steps"]] == ["rollback_overfit", "keep"]
     assert (project / "prompt.md").read_text().endswith("- down -> oncall\n- stopped -> oncall\n")
+
+
+def test_random_split_is_stratified_and_recorded(project, tmp_path, capsys):
+    cases = [base_case(id=f"p{i}", input=f"ticket {i}") for i in range(6)]
+    cases += [base_case(id=f"s{i}", input=f"other {i}", source="synthetic") for i in range(3)]
+    write_cases(project, cases)
+    split = tmp_path / "split.json"
+    args = [
+        "review-inputs",
+        str(project / "cases.jsonl"),
+        "--random-split",
+        "0.33",
+        "--seed",
+        "7",
+        "--write-split",
+        str(split),
+    ]
+    assert main(args) == 0
+    recorded = [json.loads(line) for line in (project / "cases.jsonl").read_text().splitlines()]
+    held = {c["id"] for c in recorded if c["held_out"]}
+    assert held == set(json.loads(split.read_text())["held_out"])
+    # Each source keeps both tuning and held-out cases.
+    assert any(h.startswith("p") for h in held) and any(h.startswith("s") for h in held)
+    assert len(held) == 3
+    # The split is decided once: rerunning refuses to reshuffle.
+    assert main(args) == 2
+    assert "already declares held_out" in capsys.readouterr().err
+    write_cases(project, cases)
+    main(args)
+    again = [json.loads(line) for line in (project / "cases.jsonl").read_text().splitlines()]
+    assert {c["id"] for c in again if c["held_out"]} == held  # same seed, same split
+
+
+def _grader(project):
+    sys.path.insert(0, str(project))
+    try:
+        import grader  # noqa: PLC0415
+
+        return grader
+    finally:
+        sys.path.remove(str(project))
+        sys.modules.pop("grader", None)
+
+
+def test_json_schema_and_command_checks(project, tmp_path):
+    grader = _grader(project)
+    schema = {
+        "type": "object",
+        "required": ["queue", "priority"],
+        "properties": {
+            "queue": {"enum": ["billing", "oncall"]},
+            "priority": {"type": "integer", "minimum": 1, "maximum": 3},
+        },
+        "additionalProperties": False,
+    }
+    case = {"check": "json_schema", "expected": schema}
+    assert grader.grade(case, '{"queue": "billing", "priority": 2}')[0]
+    passed, why = grader.grade(case, '{"queue": "sales", "priority": 9, "x": 1}')
+    assert not passed and "$.queue" in why and "$.priority > 3" in why
+    assert not grader.grade(case, "not json")[0]
+    test = tmp_path / "check.py"
+    test.write_text("import sys\nsys.exit(0 if 'billing' in sys.stdin.read() else 1)\n")
+    command = {"check": "command", "expected": [sys.executable, str(test)]}
+    assert grader.grade(command, "queue: billing")[0]
+    assert not grader.grade(command, "queue: general")[0]
+
+
+@pytest.mark.parametrize(
+    "case,message",
+    [
+        (base_case(check="json_schema", expected={"type": "tuple"}), "type must be one of"),
+        (base_case(check="json_schema", expected={"pattern": "x"}), "unsupported keywords"),
+        (base_case(check="json_schema", expected="x"), "non-empty JSON Schema"),
+        (base_case(check="command", expected="pytest"), "argument array"),
+    ],
+)
+def test_invalid_schema_and_command_cases(project, capsys, case, message):
+    write_cases(project, [case])
+    assert main(["review-inputs", str(project / "cases.jsonl")]) == 2
+    assert message in capsys.readouterr().err

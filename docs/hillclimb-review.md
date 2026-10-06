@@ -87,6 +87,8 @@ outcomes.
 | Stronger models or more thinking should score higher | `eval-health --ordered` `capability_inversion` |
 | Baseline with confidence intervals | 95% intervals in `diff`, `eval-health` and `hillclimb-review` |
 | Measure eval noise before the first iteration; compare with the minimum effect | `eval-health --min-effect`, `hillclimb-review` notes |
+| Programmatic graders: exact match, fixed labels, JSON schema, unit tests | `eval-init` grader: `exact`, `label`, `json_schema`, `command` |
+| Randomly split cases into train and test before the first iteration | `review-inputs --random-split`, recorded once in `cases.jsonl` |
 | Train/test split; roll back when train improves but test does not | `diff --held-out`, `hillclimb-review` `rollback_overfit` |
 | Roll back regressions; keep only when both improve | `hillclimb-review` rules |
 | Do not paste failing cases into the prompt | `--harness` leakage scan; `tuning-failures.json` excludes held-out cases |

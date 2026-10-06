@@ -409,6 +409,14 @@ def parser() -> argparse.ArgumentParser:
     inputs.add_argument(
         "--write-manifest", type=Path, metavar="PATH", help="write the case manifest here"
     )
+    inputs.add_argument(
+        "--random-split",
+        type=float,
+        metavar="F",
+        help="hold out a random share F of cases (stratified by source) and record it as "
+        "held_out in cases.jsonl; refuses if held_out is already declared",
+    )
+    inputs.add_argument("--seed", type=int, default=0, help="seed for --random-split")
     inputs.add_argument("--require-clean", action="store_true")
     packet = commands.add_parser(
         "judge-packet",
