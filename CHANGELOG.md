@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.6 — 2026-10-06
 
 - `review-inputs --random-split F --seed N` holds out a random, source-stratified
   share of cases and records it in `cases.jsonl`; it refuses once `held_out` is
