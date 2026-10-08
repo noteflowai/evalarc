@@ -38,8 +38,8 @@ evalarc --version
 curl --fail --location \
   https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-evidence-explorer.zip \
   --output evalarc-evidence-explorer.zip
-echo "4ac78211c718dc930a0091227e0d4d9baf0543e05222792d82e05cb44362a073  evalarc-evidence-explorer.zip" | sha256sum --check
-python -m zipfile -e evalarc-evidence-explorer.zip .
+echo "4ac78211c718dc930a0091227e0d4d9baf0543e05222792d82e05cb44362a073  evalarc-evidence-explorer.zip" | sha256sum --check \
+  && python -m zipfile -e evalarc-evidence-explorer.zip .
 evalarc verify evalarc-evidence-explorer/comparison --json
 evalarc compare evalarc-evidence-explorer/comparison/baseline.json \
   evalarc-evidence-explorer/comparison/current.json \
@@ -50,7 +50,9 @@ evalarc compare evalarc-evidence-explorer/comparison/baseline.json \
 即使总分提高。用浏览器直接打开 `comparison-review/index.html`，可以离线查看。
 重复运行时换一个输出文件夹。
 
-若下载内容与发布 ZIP 不一致，`sha256sum --check` 会使流程停止。完整校验清单见[发布页](https://github.com/noteflowai/evalarc/releases/tag/v0.12.1)
+只有 `sha256sum --check` 成功时才会解压（`&&`）。若输出 `FAILED`，不会解压任何文件，后续命令会
+提示文件不存在；此时应重新下载，不要继续。命令分行书写，是因为 `compare` 和后面的 `--require-accepted`
+预期退出 **1**，因此不要在 `set -e` 下运行整个流程。完整校验清单见[发布页](https://github.com/noteflowai/evalarc/releases/tag/v0.12.1)
 的 `SHA256SUMS`。
 
 ## 4. 检查验收结论
@@ -77,14 +79,14 @@ evalarc verify evalarc-evidence-explorer/suite --json --require-accepted
 curl --fail --location \
   https://github.com/noteflowai/evalarc/releases/download/v0.17.7/evalarc-0.17.7.tar.gz \
   --output evalarc-0.17.7.tar.gz
-echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check
-tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff
+echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check \
+  && tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff
 evalarc diff evalarc-0.17.7/examples/results-diff/inspect/baseline.json \
   evalarc-0.17.7/examples/results-diff/inspect/current.json --output inspect-review
 evalarc verify inspect-review --json
 ```
 
-diff 退出 **1**：准确率从 0.625 升到 0.8125，但 `refund-duplicate` 的 `match` 与 `includes`
+只有摘要一致时才会解压源码包。diff 退出 **1**：准确率从 0.625 升到 0.8125，但 `refund-duplicate` 的 `match` 与 `includes`
 都失败，`cancel-pending` 的 `match` 只在两个 epoch 中通过一次。`inspect-review/` 中有两份输入的
 逐字节副本、`summary.md`、`index.html` 和 `params.json`；verify 从这些副本重新计算，退出 **0**。
 `promptfoo/`（`.json`）和 `junit/`（`.xml`）目录同理。无法读取或无法比较的文件退出 **2**，

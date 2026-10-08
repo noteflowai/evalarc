@@ -17,14 +17,16 @@ python -m pip install evalarc==0.17.7
 curl --fail --location \
   https://github.com/noteflowai/evalarc/releases/download/v0.17.7/evalarc-0.17.7.tar.gz \
   --output evalarc-0.17.7.tar.gz
-echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check
-tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff/inspect/baseline.json \
-  evalarc-0.17.7/examples/results-diff/inspect/current.json
-mv evalarc-0.17.7/examples/results-diff/inspect/*.json .
-rm -r evalarc-0.17.7 evalarc-0.17.7.tar.gz
-sha256sum baseline.json current.json
+echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check \
+  && tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff/inspect/baseline.json \
+    evalarc-0.17.7/examples/results-diff/inspect/current.json \
+  && mv evalarc-0.17.7/examples/results-diff/inspect/*.json . \
+  && rm -r evalarc-0.17.7 evalarc-0.17.7.tar.gz \
+  && sha256sum baseline.json current.json
 ```
 
+Each step runs only if the previous one succeeded. If `sha256sum --check`
+prints `FAILED`, nothing is extracted; download again before starting.
 Expected digests: `baseline.json`
 `da31a4be7a6224f653843f28922a1fb2d950a5aba26dd1a51238d780c5c5d255`, `current.json`
 `26f02205242868f6cb29f46c10adf994b3af160551aef64ee5129af556ece172`. Do not

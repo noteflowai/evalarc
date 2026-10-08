@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 import zipfile
 from collections import Counter
 from datetime import datetime, timezone
@@ -1088,14 +1089,25 @@ _MARKDOWN_PUNCTUATION = set("\\`*_[]<>|!#~&")
 
 
 def markdown_text(value: object) -> str:
-    """Make untrusted prose safe on one Markdown line outside a code span.
+    """Keep prose on one Markdown line and escape structural punctuation.
 
-    Line endings (CRLF, CR, LF) become spaces so the value cannot start a heading
-    or verdict line, and structural punctuation is backslash-escaped so it cannot
-    create raw HTML, links, emphasis or table cells. Only rendered text changes.
+    Line endings (CRLF, CR, LF) become spaces so the text cannot start a heading or
+    verdict line, and punctuation is backslash-escaped so it cannot open raw HTML,
+    explicit links, emphasis or table cells. Code spans already in the text (from
+    _cell) are kept. It does not stop GFM from autolinking a bare URL or address, so
+    user-controlled fragments must be wrapped with _cell where the message is built.
+    Only rendered text changes.
     """
     text = str(value).replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
-    return "".join("\\" + ch if ch in _MARKDOWN_PUNCTUATION else ch for ch in text)
+    # Code spans made by _cell (no backtick inside, pipes already escaped) are kept as
+    # they are; everything outside them is escaped.
+    parts = re.split(r"(`[^`]*`)", text)
+    return "".join(
+        part
+        if index % 2
+        else "".join("\\" + ch if ch in _MARKDOWN_PUNCTUATION else ch for ch in part)
+        for index, part in enumerate(parts)
+    )
 
 
 def _cell(text: str) -> str:

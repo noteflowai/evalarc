@@ -6,13 +6,26 @@
   A carriage return in a harness-leakage hit (file, case or matched text), an
   `eval-health` result file name, or a `judge-score` case, check or judge model
   name could still start a fake `### EvalArc: No check lost passes` heading in
-  the rendered summary (GitHub's renderer treats CR as a line ending), and raw
-  HTML or link syntax in the bare-text `eval-health` and `judge-score` lines
-  rendered as a heading or a live link. The leakage table now uses the shared
-  CR-safe `_cell`; those identifiers are code-formatted; finding text uses a new
-  `markdown_text` helper (single line, Markdown/HTML punctuation escaped). JSON
-  outputs, gates and exit codes are unchanged; the only visible change for
-  ordinary input is that `eval-health` finding items show the file name as code.
+  the rendered summary (GitHub's renderer treats CR as a line ending). Raw HTML
+  or link syntax in the bare-text `eval-health` and `judge-score` lines rendered
+  as a heading or a live link, and GitHub autolinked a bare URL, `www.` host or
+  e-mail address used as a model, file, stop-reason or config value in an
+  `eval-health` finding. The leakage table uses the shared CR-safe `_cell`;
+  file, case, check and model names and the values embedded in finding text are
+  code-formatted (GitHub does not autolink inside code); the rest of the finding
+  text goes through a new `markdown_text` helper (single line, Markdown/HTML
+  punctuation escaped outside code spans). JSON outputs and gate decisions are
+  unchanged. For ordinary input, the visible change is code formatting of those
+  names in `eval-health` and `judge-score` summaries.
+- Compatibility: a `judge-score` verdicts file declaring a human judge with a
+  non-string `model` (for example `{"kind": "human", "model": 123}`) used to
+  crash Markdown rendering with an uncaught `TypeError`, so the default output
+  exited 1 even when the gate passed (`--json` was unaffected). It now renders
+  the value as code and exits by the gate result. Input validation of
+  `judge.model` for human judges is unchanged.
+- docs: the first-review walkthrough (English and Chinese) and the reviewer
+  exercise extract a download only if its SHA-256 check succeeds (`&&`); the
+  expected exit-1 steps stay separate commands.
 
 ## 0.17.7 — 2026-10-06
 

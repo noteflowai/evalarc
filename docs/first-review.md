@@ -40,8 +40,8 @@ Releases with a [checksum-pinned installation command](publication.md#python-dis
 curl --fail --location \
   https://github.com/noteflowai/evalarc/releases/download/v0.12.1/evalarc-evidence-explorer.zip \
   --output evalarc-evidence-explorer.zip
-echo "4ac78211c718dc930a0091227e0d4d9baf0543e05222792d82e05cb44362a073  evalarc-evidence-explorer.zip" | sha256sum --check
-python -m zipfile -e evalarc-evidence-explorer.zip .
+echo "4ac78211c718dc930a0091227e0d4d9baf0543e05222792d82e05cb44362a073  evalarc-evidence-explorer.zip" | sha256sum --check \
+  && python -m zipfile -e evalarc-evidence-explorer.zip .
 evalarc verify evalarc-evidence-explorer/comparison --json
 evalarc compare evalarc-evidence-explorer/comparison/baseline.json \
   evalarc-evidence-explorer/comparison/current.json \
@@ -53,8 +53,12 @@ The verification exits **0**: the records are consistent. The comparison exits
 `comparison-review/index.html` directly in your browser to inspect the result.
 It works offline. Use a new output folder when repeating the comparison.
 
-`sha256sum --check` stops the walkthrough if the download differs from the
-released ZIP; all release checksums are in `SHA256SUMS` on the
+The ZIP is extracted only if `sha256sum --check` succeeds (`&&`). If it prints
+`FAILED`, nothing is extracted and the following commands report missing files:
+download again instead of continuing. The commands are kept on separate lines
+because `compare` and the later `--require-accepted` check are expected to exit
+**1**, so do not run the walkthrough under `set -e`. All release checksums are in
+`SHA256SUMS` on the
 [release page](https://github.com/noteflowai/evalarc/releases/tag/v0.12.1).
 
 ## 4. Check the acceptance decision
@@ -85,14 +89,15 @@ released 0.17.7 source archive:
 curl --fail --location \
   https://github.com/noteflowai/evalarc/releases/download/v0.17.7/evalarc-0.17.7.tar.gz \
   --output evalarc-0.17.7.tar.gz
-echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check
-tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff
+echo "3aef77bcd457365b4219c1fb98ab74a4d2eb5c763edb14f3cf44a3b669f44b81  evalarc-0.17.7.tar.gz" | sha256sum --check \
+  && tar -xzf evalarc-0.17.7.tar.gz evalarc-0.17.7/examples/results-diff
 evalarc diff evalarc-0.17.7/examples/results-diff/inspect/baseline.json \
   evalarc-0.17.7/examples/results-diff/inspect/current.json --output inspect-review
 evalarc verify inspect-review --json
 ```
 
-The diff exits **1**: accuracy rises from 0.625 to 0.8125, but
+The archive is extracted only if its digest matches. The diff exits **1**:
+accuracy rises from 0.625 to 0.8125, but
 `refund-duplicate` fails `match` and `includes` and `cancel-pending` passes
 `match` in only one of two epochs. `inspect-review/` holds byte-identical copies
 of both inputs, `summary.md`, `index.html` and `params.json`; the verify command

@@ -76,7 +76,7 @@ def health(
             _finding(
                 "saturated",
                 "warning",
-                f"{best['source']['name']} passes {best['pass_rate']:.1%} of assessed check "
+                f"{_cell(best['source']['name'])} passes {best['pass_rate']:.1%} of assessed check "
                 f"attempts (at or above {saturation:.0%}). Quality changes can no longer be "
                 "measured reliably; add harder cases that experts agree are solvable, or tune "
                 "for cost and latency at equal quality instead (evalarc diff --max-cost-ratio).",
@@ -251,7 +251,8 @@ def health(
                         "assessed": count,
                         "attempts": len(metas),
                         "detail": (
-                            f"{count}/{len(metas)} attempt(s) truncated ({', '.join(reasons)})"
+                            f"{count}/{len(metas)} attempt(s) truncated "
+                            f"({', '.join(_cell(reason) for reason in reasons)})"
                         ),
                     }
                 )
@@ -277,9 +278,10 @@ def health(
             _finding(
                 "self_graded",
                 "warning",
-                f"{', '.join(self_graded)} grades its own outputs"
+                f"{', '.join(_cell(model) for model in self_graded)} grades its own outputs"
                 + (
-                    f" (model-graded scorers without a grader model: {', '.join(defaults)})"
+                    " (model-graded scorers without a grader model: "
+                    f"{', '.join(_cell(check) for check in defaults)})"
                     if defaults
                     else ""
                 )
@@ -333,7 +335,7 @@ def health(
                     "assessed": len(reported),
                     "attempts": len(reported),
                     "detail": (
-                        f"requested {', '.join(f'{k}={v}' for k, v in config.items())}; "
+                        f"requested {', '.join(_cell(f'{k}={v}') for k, v in config.items())}; "
                         f"0 reasoning tokens in {len(reported)} attempt(s)"
                     ),
                 }
@@ -372,7 +374,8 @@ def health(
                     _finding(
                         "capability_inversion",
                         "info" if within else "warning",
-                        f"{step['stronger']} scores {-step['delta']:.1%} below {step['weaker']}"
+                        f"{_cell(step['stronger'])} scores {-step['delta']:.1%} below "
+                        f"{_cell(step['weaker'])}"
                         + (
                             " (within sampling noise)."
                             if within

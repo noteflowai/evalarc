@@ -126,4 +126,97 @@ def test_markdown_text_is_literal_and_single_line():
         "refund-duplicate fails (2/2 → 0/2)."
     )
     assert markdown_text("a\r\nb\rc\nd") == "a b c d"
-    assert markdown_text("<b>[x](y) *z* | `c`") == "\\<b\\>\\[x\\](y) \\*z\\* \\| \\`c\\`"
+    # Code spans (from _cell) are kept; text outside them is escaped.
+    assert markdown_text("<b>[x](y) *z* | `c`") == "\\<b\\>\\[x\\](y) \\*z\\* \\| `c`"
+    assert markdown_text("`a` <i>x</i> `b`") == "`a` \\<i\\>x\\</i\\> `b`"
+    # An unmatched backtick cannot open a span that swallows later text.
+    assert markdown_text("x ` <b>") == "x \\` \\<b\\>"
+
+
+AUTOLINKS = [
+    "https://evil.example",
+    "www.evil.example",
+    "x@evil.example",
+    "a`https://evil.example`b",
+]
+
+
+def outside_code(markdown: str) -> str:
+    return re.sub(r"`[^`\n]*`", "", markdown)
+
+
+def write_inspect(tmp_path, name, value, passed=True):
+    import json
+
+    raw = json.loads((EXAMPLES / "current.json").read_text())
+    raw["eval"]["model"] = value
+    raw["eval"]["scorers"].append({"name": "model_graded_qa", "options": {}})
+    raw["eval"]["model_generate_config"] = {"reasoning_effort": value}
+    for sample in raw["samples"]:
+        sample["output"]["stop_reason"] = "max_tokens"
+        sample["model_usage"] = {"m": {"reasoning_tokens": 0}}
+        if passed:
+            sample["scores"] = {"match": {"value": "C"}}
+    path = tmp_path / name
+    path.write_text(json.dumps(raw))
+    run = load_results(path)
+    run["source"]["name"] = value + ("" if passed else "-weak")
+    return run
+
+
+@pytest.mark.parametrize("value", AUTOLINKS)
+def test_eval_health_findings_keep_untrusted_fragments_in_code(tmp_path, value):
+    """GFM autolinks bare URLs, www. hosts and e-mail addresses in prose. The
+    self_graded, saturated, capability_inversion, truncation and config findings
+    are built from model, file, stop-reason and config values; those fragments
+    must render as code (GitHub does not autolink inside code spans)."""
+    strong = write_inspect(tmp_path, "strong.json", value)
+    weak = write_inspect(tmp_path, "weak.json", value, passed=False)
+    report = health([weak, strong], ordered=True, saturation=0.5)
+    found = {finding["id"] for finding in report["findings"]}
+    assert {"self_graded", "saturated", "truncated_outputs", "config_not_applied"} <= found
+    markdown = health_markdown(report)
+    assert "evil" not in outside_code(markdown)
+    assert "evil" in markdown  # the value is still shown, as code
+    assert report["graders"]["self_graded"] == [value]  # health.json keeps the raw value
+
+
+def test_human_judge_numeric_model_renders_and_exits_by_gate(tmp_path, capsys):
+    """Compatibility boundary: before this change a human judge with a non-string
+    model crashed Markdown rendering (TypeError, exit 1) while --json passed. The
+    summary now renders it as code and exits by the gate. Validation of
+    judge.model for human judges is unchanged (still accepted)."""
+    import json
+
+    from evalarc.cli import main
+
+    packet = tmp_path / "packet"
+    assert (
+        main(
+            [
+                "judge-packet",
+                "grader",
+                str(EXAMPLES / "current.json"),
+                "--sample",
+                "4",
+                "--output",
+                str(packet),
+            ]
+        )
+        == 0
+    )
+    key = json.loads((packet / "key.json").read_text())
+    verdicts = json.loads((packet / "share/verdicts.template.json").read_text())
+    for item, hidden in key["items"].items():
+        verdicts["verdicts"][item] = "pass" if hidden["recorded_passed"] else "fail"
+    verdicts["judge"] = {"kind": "human", "model": 123}
+    path = tmp_path / "verdicts.json"
+    path.write_text(json.dumps(verdicts))
+    capsys.readouterr()
+    assert main(["judge-score", str(packet), str(path), "--min-agreement", "0.8"]) == 0
+    assert "Judge: human `123`" in capsys.readouterr().out
+    assert main(["judge-score", str(packet), str(path), "--min-agreement", "0.8", "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["judge"]["model"] == 123
+    verdicts["judge"] = {"kind": "model", "model": 123}
+    path.write_text(json.dumps(verdicts))
+    assert main(["judge-score", str(packet), str(path)]) == 2  # unchanged: rejected
