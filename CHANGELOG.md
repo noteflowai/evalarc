@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased
+
+- fix: extend 0.17.7's Markdown summary escaping to the paths it did not cover.
+  A carriage return in a harness-leakage hit (file, case or matched text), an
+  `eval-health` result file name, or a `judge-score` case, check or judge model
+  name could still start a fake `### EvalArc: No check lost passes` heading in
+  the rendered summary (GitHub's renderer treats CR as a line ending). Raw HTML
+  or link syntax in the bare-text `eval-health` and `judge-score` lines rendered
+  as a heading or a live link, and GitHub autolinked a bare URL, `www.` host or
+  e-mail address used as a model, file, stop-reason or config value in an
+  `eval-health` finding. The leakage table uses the shared CR-safe `_cell`;
+  file, case, check and model names and the values embedded in finding text are
+  code-formatted (GitHub does not autolink inside code); the rest of the finding
+  text goes through a new `markdown_text` helper (single line, Markdown/HTML
+  punctuation escaped outside code spans).
+- Output compatibility: `diff.json` and the `judge-score` JSON are unchanged. In
+  `health.json`, five human-readable text fields now contain the same code-span
+  backticks as the summary, for every input: the `message` of `saturated`,
+  `self_graded` and `capability_inversion` (for example `` `current.json` passes
+  84.4% ``... instead of `current.json passes 84.4%`...), and the item `detail` of
+  `truncated_outputs` and `config_not_applied`. Finding ids, severities, values,
+  item keys, the raw fields they quote (`runs[].source.name`,
+  `graders.self_graded`, `generate_config`, item `file`/`case_id`/`check`), the
+  JSON structure, `healthy`, `warnings` and the 0/1/2 exit codes are unchanged,
+  and `evalarc verify` still recomputes saved folders. Tools that parse or match
+  those message/detail strings should read the structured fields instead.
+- Compatibility: a `judge-score` verdicts file declaring a human judge with a
+  non-string `model` (for example `{"kind": "human", "model": 123}`) used to
+  crash Markdown rendering with an uncaught `TypeError`, so the default output
+  exited 1 even when the gate passed (`--json` was unaffected). It now renders
+  the value as code and exits by the gate result. Input validation of
+  `judge.model` for human judges is unchanged.
+- docs: the first-review walkthrough (English and Chinese) and the reviewer
+  exercise extract a download only if its SHA-256 check succeeds (`&&`); the
+  expected exit-1 steps stay separate commands.
+
 ## 0.17.7 — 2026-10-06
 
 - fix: escape untrusted run status and metric name in the Markdown gate summary. evalarc diff now escapes three kinds of untrusted input-file text in its Markdown gate summary (summary.md, the --markdown/--summary target and the GitHub Action job summary): the run-status sentences for an unfinished current or baseline run, the 'Headline metric: ... from the source tool.' sentence, and the case and check identifiers in the change table. A new helper, _inline_code_text, escapes pipes as \|, turns backticks into apostrophes and replaces every line ending (CRLF, CR, LF) with a space. A crafted status, metric name or case_id therefore stays inside one single-line code span. It cannot close the span, add a fake '### EvalArc' heading or make a failed gate look like a pass. Ordinary values render byte-for-byte as in 0.17.6. Table cells and the baseline-incomplete sentence already escaped pipes and backticks; they now also turn a carriage return into a space. Only the rendered Markdown changes. The result dict and diff.json keep the raw recorded values. gate_passed, blocking_changes and exit codes (0 pass, 1 gate failed, 2 unusable input) are unchanged. docs/ci-gate.md Limits describes the escaping.

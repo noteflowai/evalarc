@@ -367,4 +367,12 @@ In `summary.md`, the run status, the headline metric name and the case and check
 identifiers in the change table are escaped (pipes as `\|`, backticks as
 apostrophes, line breaks including carriage returns as spaces), so a crafted
 value cannot add a heading or a passing verdict; `diff.json` keeps them
-unmodified.
+unmodified. The same rule covers the harness-leakage table (file, case and
+matched text), and the `eval-health` and `judge-score` Markdown summaries (file,
+case, check and judge model names, and values embedded in finding text, in code
+spans, which GitHub does not autolink; the rest of the finding text on one line
+with Markdown and HTML punctuation backslash-escaped). HTML reports escape every
+value. Escaping protects the rendered summary and does not validate or change the
+recorded evidence. Because `eval-health` builds its finding text once, the
+human-readable `message`/`detail` strings in `health.json` carry the same code
+spans; the structured fields they quote keep the raw values.

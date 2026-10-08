@@ -26,7 +26,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from evalarc.results_diff import load_results, wilson
+from evalarc.results_diff import _cell, load_results, wilson
 
 PACKET_SCHEMA = "evalarc.judge-packet.v1"
 KEY_SCHEMA = "evalarc.judge-key.v1"
@@ -477,7 +477,7 @@ def render_markdown(result: dict) -> str:
     lines = [f"### EvalArc judge score: {result['mode']}", ""]
     judge = result["judge"]
     lines.append(
-        f"Judge: {judge.get('kind')}{' ' + judge['model'] if judge.get('model') else ''} · "
+        f"Judge: {judge.get('kind')}{' ' + _cell(judge['model']) if judge.get('model') else ''} · "
         f"{result['items'] - len(result['missing'])}/{result['items']} items answered"
     )
     if result["self_judged"]:
@@ -512,7 +512,8 @@ def render_markdown(result: dict) -> str:
         ]
         for row in result["disagreements"][:20]:
             lines.append(
-                f"- `{row['item_id']}` {row['case_id']} / {row['check']}: grader {row['grader']}, "
+                f"- `{row['item_id']}` {_cell(row['case_id'])} / {_cell(row['check'])}: "
+                f"grader {row['grader']}, "
                 f"judge {row['judge']}"
             )
         if result.get("gate"):

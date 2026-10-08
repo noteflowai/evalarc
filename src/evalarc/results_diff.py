@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 import zipfile
 from collections import Counter
 from datetime import datetime, timezone
@@ -1079,6 +1080,33 @@ def _inline_code_text(value: object) -> str:
         .replace("\r\n", " ")
         .replace("\r", " ")
         .replace("\n", " ")
+    )
+
+
+# CommonMark punctuation that can open emphasis, links, raw HTML, code spans or table
+# cells inside a line. Backslash-escaping any ASCII punctuation is always literal.
+_MARKDOWN_PUNCTUATION = set("\\`*_[]<>|!#~&")
+
+
+def markdown_text(value: object) -> str:
+    """Keep prose on one Markdown line and escape structural punctuation.
+
+    Line endings (CRLF, CR, LF) become spaces so the text cannot start a heading or
+    verdict line, and punctuation is backslash-escaped so it cannot open raw HTML,
+    explicit links, emphasis or table cells. Code spans already in the text (from
+    _cell) are kept. It does not stop GFM from autolinking a bare URL or address, so
+    user-controlled fragments must be wrapped with _cell where the message is built.
+    Only rendered text changes.
+    """
+    text = str(value).replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+    # Code spans made by _cell (no backtick inside, pipes already escaped) are kept as
+    # they are; everything outside them is escaped.
+    parts = re.split(r"(`[^`]*`)", text)
+    return "".join(
+        part
+        if index % 2
+        else "".join("\\" + ch if ch in _MARKDOWN_PUNCTUATION else ch for ch in part)
+        for index, part in enumerate(parts)
     )
 
 

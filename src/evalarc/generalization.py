@@ -16,7 +16,7 @@ import json
 import re
 from pathlib import Path
 
-from evalarc.results_diff import BLOCKING, _tally, _wilson_interval
+from evalarc.results_diff import BLOCKING, _cell, _tally, _wilson_interval
 
 SPLIT_SCHEMA = "evalarc.case-split.v1"
 MAX_SPLIT_BYTES = 4 * 1024 * 1024
@@ -441,7 +441,3 @@ def _fraction(side: dict) -> str:
     if side["pass_rate"] is None:
         return "—"
     return f"{side['passed']}/{side['assessed']} ({side['pass_rate']:.1%})"
-
-
-def _cell(text: str) -> str:
-    return "`" + str(text).replace("|", "\\|").replace("`", "'").replace("\n", " ") + "`"
