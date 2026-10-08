@@ -22,6 +22,7 @@ from evalarc.results_diff import (
     _wilson_interval,
     grading_conflicts,
     load_results,
+    markdown_text,
     wilson,
 )
 
@@ -507,9 +508,12 @@ def render_markdown(result: dict) -> str:
     lines.append("")
     if result["findings"]:
         for finding in result["findings"]:
-            lines.append(f"- **{finding['severity']} · `{finding['id']}`**: {finding['message']}")
+            lines.append(
+                f"- **{finding['severity']} · `{finding['id']}`**: "
+                f"{markdown_text(finding['message'])}"
+            )
             for item in (finding.get("items") or [])[:10]:
-                where = f"{item['file']} · " if "file" in item else ""
+                where = f"{_cell(item['file'])} · " if "file" in item else ""
                 detail = item.get("detail") or (
                     f"{item['passed']}/{item['assessed']} passed"
                     + (
@@ -518,6 +522,7 @@ def render_markdown(result: dict) -> str:
                         else ""
                     )
                 )
+                detail = markdown_text(detail)
                 lines.append(
                     f"  - {where}{_cell(item['case_id'])} / {_cell(item['check'])}: {detail}"
                 )

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- fix: extend 0.17.7's Markdown summary escaping to the paths it did not cover.
+  A carriage return in a harness-leakage hit (file, case or matched text), an
+  `eval-health` result file name, or a `judge-score` case, check or judge model
+  name could still start a fake `### EvalArc: No check lost passes` heading in
+  the rendered summary (GitHub's renderer treats CR as a line ending), and raw
+  HTML or link syntax in the bare-text `eval-health` and `judge-score` lines
+  rendered as a heading or a live link. The leakage table now uses the shared
+  CR-safe `_cell`; those identifiers are code-formatted; finding text uses a new
+  `markdown_text` helper (single line, Markdown/HTML punctuation escaped). JSON
+  outputs, gates and exit codes are unchanged; the only visible change for
+  ordinary input is that `eval-health` finding items show the file name as code.
+
 ## 0.17.7 — 2026-10-06
 
 - fix: escape untrusted run status and metric name in the Markdown gate summary. evalarc diff now escapes three kinds of untrusted input-file text in its Markdown gate summary (summary.md, the --markdown/--summary target and the GitHub Action job summary): the run-status sentences for an unfinished current or baseline run, the 'Headline metric: ... from the source tool.' sentence, and the case and check identifiers in the change table. A new helper, _inline_code_text, escapes pipes as \|, turns backticks into apostrophes and replaces every line ending (CRLF, CR, LF) with a space. A crafted status, metric name or case_id therefore stays inside one single-line code span. It cannot close the span, add a fake '### EvalArc' heading or make a failed gate look like a pass. Ordinary values render byte-for-byte as in 0.17.6. Table cells and the baseline-incomplete sentence already escaped pipes and backticks; they now also turn a carriage return into a space. Only the rendered Markdown changes. The result dict and diff.json keep the raw recorded values. gate_passed, blocking_changes and exit codes (0 pass, 1 gate failed, 2 unusable input) are unchanged. docs/ci-gate.md Limits describes the escaping.

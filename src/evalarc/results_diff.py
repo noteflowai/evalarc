@@ -1082,5 +1082,21 @@ def _inline_code_text(value: object) -> str:
     )
 
 
+# CommonMark punctuation that can open emphasis, links, raw HTML, code spans or table
+# cells inside a line. Backslash-escaping any ASCII punctuation is always literal.
+_MARKDOWN_PUNCTUATION = set("\\`*_[]<>|!#~&")
+
+
+def markdown_text(value: object) -> str:
+    """Make untrusted prose safe on one Markdown line outside a code span.
+
+    Line endings (CRLF, CR, LF) become spaces so the value cannot start a heading
+    or verdict line, and structural punctuation is backslash-escaped so it cannot
+    create raw HTML, links, emphasis or table cells. Only rendered text changes.
+    """
+    text = str(value).replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+    return "".join("\\" + ch if ch in _MARKDOWN_PUNCTUATION else ch for ch in text)
+
+
 def _cell(text: str) -> str:
     return "`" + _inline_code_text(text) + "`"

@@ -43,3 +43,13 @@ GitHub's traffic window with cumulative Stars or attachment downloads.
 
 Use aggregate channel analytics only where available. No trace upload or
 client tracking was added in this update.
+
+## Status note · 2026-10-08
+
+The plan above is a dated record. The maintained entry points are now
+[first-review.md](../first-review.md) and its Chinese edition: reviewer
+`evalarc==0.17.7` with the unchanged 0.12.1 evidence snapshot, plus a
+no-checkout `evalarc diff` step on the recorded Inspect, promptfoo and JUnit
+fixtures from the released source archive. The maintainer re-ran them on
+2026-10-08 outside the checkout. No independent first-use attempt has been
+recorded; the three-attempt target remains open.
