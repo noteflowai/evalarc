@@ -220,3 +220,23 @@ def test_human_judge_numeric_model_renders_and_exits_by_gate(tmp_path, capsys):
     verdicts["judge"] = {"kind": "model", "model": 123}
     path.write_text(json.dumps(verdicts))
     assert main(["judge-score", str(packet), str(path)]) == 2  # unchanged: rejected
+
+
+def test_health_json_contract_for_ordinary_input(capsys):
+    """Documented output compatibility: the saturated message carries the code span;
+    the structured fields it quotes, the gate and the exit code keep their values."""
+    import json
+
+    from evalarc.cli import main
+
+    assert (
+        main(["eval-health", str(EXAMPLES / "current.json"), "--saturation", "0.5", "--json"]) == 0
+    )
+    report = json.loads(capsys.readouterr().out)
+    saturated = next(f for f in report["findings"] if f["id"] == "saturated")
+    assert saturated["message"].startswith("`current.json` passes 84.4% of assessed check")
+    assert saturated["severity"] == "warning" and saturated["value"] == 0.84375
+    assert report["runs"][0]["source"]["name"] == "current.json"
+    assert (report["healthy"], report["warnings"]) == (False, 2)
+    flaky = next(f for f in report["findings"] if f["id"] == "flaky_checks")
+    assert flaky["items"][0]["file"] == "current.json"  # raw, no backticks

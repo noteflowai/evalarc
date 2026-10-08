@@ -14,9 +14,18 @@
   file, case, check and model names and the values embedded in finding text are
   code-formatted (GitHub does not autolink inside code); the rest of the finding
   text goes through a new `markdown_text` helper (single line, Markdown/HTML
-  punctuation escaped outside code spans). JSON outputs and gate decisions are
-  unchanged. For ordinary input, the visible change is code formatting of those
-  names in `eval-health` and `judge-score` summaries.
+  punctuation escaped outside code spans).
+- Output compatibility: `diff.json` and the `judge-score` JSON are unchanged. In
+  `health.json`, five human-readable text fields now contain the same code-span
+  backticks as the summary, for every input: the `message` of `saturated`,
+  `self_graded` and `capability_inversion` (for example `` `current.json` passes
+  84.4% ``... instead of `current.json passes 84.4%`...), and the item `detail` of
+  `truncated_outputs` and `config_not_applied`. Finding ids, severities, values,
+  item keys, the raw fields they quote (`runs[].source.name`,
+  `graders.self_graded`, `generate_config`, item `file`/`case_id`/`check`), the
+  JSON structure, `healthy`, `warnings` and the 0/1/2 exit codes are unchanged,
+  and `evalarc verify` still recomputes saved folders. Tools that parse or match
+  those message/detail strings should read the structured fields instead.
 - Compatibility: a `judge-score` verdicts file declaring a human judge with a
   non-string `model` (for example `{"kind": "human", "model": 123}`) used to
   crash Markdown rendering with an uncaught `TypeError`, so the default output
