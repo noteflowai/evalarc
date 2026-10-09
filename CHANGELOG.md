@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.8 — 2026-10-09
 
 - fix: extend 0.17.7's Markdown summary escaping to the paths it did not cover.
   A carriage return in a harness-leakage hit (file, case or matched text), an
