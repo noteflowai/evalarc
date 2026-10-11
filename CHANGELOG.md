@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.9 — 2026-10-11
+
+- fix: reject duplicated promptfoo result rows instead of counting them as attempts. evalarc diff now rejects promptfoo --output files in which the same result row appears twice. Before, the promptfoo loader counted every entry in results.results[] as one more attempt of its test. A row copied in by merging, concatenating or editing a file would inflate the attempt and assessed counts. That could hide lost coverage or make a less reliable check look unchanged. The loader now keys each row by (testIdx, promptIdx, provider). If a key repeats, loading stops with a ValueError, the same rule Inspect logs already follow. The message names the format, the duplicated testIdx, promptIdx and provider, and the test label. The label and provider are escaped and truncated with the existing _shown_id helper. The message also tells the user to re-export with promptfoo eval --output. evalarc diff exits 2 for a duplicate in either the baseline or the current file. It prints the message to stderr and writes no verdict or output folder. A promptIdx that is a list or object is also rejected as malformed input (exit 2), so it cannot crash the loader. Rows without an integer testIdx are not checked. --repeat output, where each repeat gets a new testIdx, still loads as attempts of one test. For valid files, results and exit codes 0 and 1 are unchanged. docs/ci-gate.md and docs/ci-gate.zh-CN.md describe the rule, exit 2 and how to recover.
+
 ## 0.17.8 — 2026-10-09
 
 - fix: extend 0.17.7's Markdown summary escaping to the paths it did not cover.

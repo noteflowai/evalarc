@@ -540,6 +540,16 @@ def _promptfoo(document: object) -> dict:
         raise ValueError("not a promptfoo output: expected results.results[]")
     rows = summary["results"]
     providers = {_provider(row) for row in rows}
+    for row in rows:
+        prompt_idx = row.get("promptIdx")
+        # promptIdx is part of the duplicate key and of the prompt set, so a list or
+        # object (unhashable) is malformed input rather than a crash.
+        if isinstance(prompt_idx, (list, dict)):
+            raise ValueError(
+                f"promptfoo output has an invalid promptIdx {_shown_id(prompt_idx)} "
+                f"(test {_shown_id(_test_label(row))}): expected an integer, a string or "
+                "null. Re-export with promptfoo eval --output instead of editing results."
+            )
     prompts = {row.get("promptIdx") for row in rows}
     # Repeats (--repeat) share a description and vars but get new test indexes, so
     # only distinct vars distinguish two tests that have the same description.
@@ -553,7 +563,25 @@ def _promptfoo(document: object) -> dict:
     samples_meta: dict[str, list] = {}
     grader_models: set[str] = set()
     model_graded: set[str] = set()
+    seen: set[tuple] = set()
     for row in rows:
+        test_idx = row.get("testIdx")
+        if isinstance(test_idx, int) and not isinstance(test_idx, bool):
+            # --repeat gives each repeat a new testIdx, so the same (testIdx, promptIdx,
+            # provider) twice is a copy left by merging or editing. Counting it as another
+            # attempt would overstate coverage, as with duplicate Inspect samples.
+            key = (test_idx, row.get("promptIdx"), _provider(row))
+            if key in seen:
+                raise ValueError(
+                    f"promptfoo output has duplicate result testIdx {test_idx} "
+                    f"promptIdx {_shown_id(row.get('promptIdx'))} "
+                    f"provider {_shown_id(_provider(row))} "
+                    f"(test {_shown_id(_test_label(row))}): each test, prompt and provider "
+                    "must appear once, or the copy would count as an extra attempt and "
+                    "overstate coverage. Re-export with promptfoo eval --output instead of "
+                    "merging or editing results."
+                )
+            seen.add(key)
         label = _test_label(row)
         if len(variants[label]) > 1 and label != _vars(row):
             label = f"{label} {_vars(row)}"
