@@ -84,7 +84,8 @@ status, such as JUnit, are never marked incomplete.
 
 Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
-no samples, malformed input, an Inspect sample repeated in the same epoch).
+no samples, malformed input, an Inspect sample repeated in the same epoch, a
+promptfoo result row repeated).
 Treat 2 as a broken pipeline, not a regression.
 
 An Inspect log that contains the same sample ID twice in one epoch (an integer
@@ -95,6 +96,21 @@ concatenating or editing results; re-export with
 `inspect log dump LOG.eval > LOG.json` or rerun the evaluation. The same ID in
 different epochs is a normal repeated attempt, and samples without an integer
 `epoch` are not checked.
+
+A promptfoo `--output` file that contains the same result row twice (the same
+`testIdx`, `promptIdx` and provider) also exits 2. The message names the row
+and its test:
+
+```text
+evalarc: promptfoo output has duplicate result testIdx 1 promptIdx 0 provider 'echo' (test 'duplicate refund is rejected'): each test, prompt and provider must appear once, or the copy would count as an extra attempt and overstate coverage. Re-export with promptfoo eval --output instead of merging or editing results.
+```
+
+promptfoo `--repeat` gives each repeat a new `testIdx`, so repeats still load
+as attempts of one test. A row with an unchanged `testIdx` is a copy left by
+merging, concatenating or editing, and counting it would inflate attempts and
+pass rates. Re-export with `promptfoo eval --output` (or remove the copied row
+in a reviewed commit) and compare again. Rows without an integer `testIdx`
+are not checked, and a copy whose `testIdx` was edited is not detected.
 
 ## Sampling-noise annotation
 
