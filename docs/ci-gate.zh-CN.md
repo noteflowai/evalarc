@@ -47,11 +47,12 @@ epoch 中都对重复订单退款（`refund-duplicate` 退化），`cancel-pendi
 `regressed` 或 `less_reliable`。删除一个失败的检查项也会失败，
 否则删掉它就能让门禁变绿。退出码：**0** 无检查项丢失通过，**1** 至少一项丢失，
 **2** 文件无法读取或无法比较（格式不同、Inspect 任务名不同、没有样本、格式错误、
-Inspect 样本在同一 epoch 中重复、promptfoo 结果行重复）。同一 epoch 中重复出现的样本 ID（整数 `7` 与字符串
+Inspect 样本在同一 epoch 中重复、Inspect 样本不是对象或没有整数/字符串 id、promptfoo 结果行重复）。同一 epoch 中重复出现的样本 ID（整数 `7` 与字符串
 `"7"` 视为同一 ID）会以退出码 2 报告并给出样本与 epoch：若把副本算作额外尝试，会夸大覆盖并
 掩盖 `less_covered`。这类日志通常来自手工合并、拼接或编辑；请用
 `inspect log dump LOG.eval > LOG.json` 重新导出，或重新运行评测。同一 ID 出现在不同 epoch
 是正常的重复尝试；没有整数 `epoch` 的样本不做此检查。
+每个 Inspect 样本都必须是 JSON 对象，且 `id` 为整数（不能是布尔值）或字符串，允许空字符串。样本按 ID 在两次运行间配对，因此缺少可用 ID 的样本会以退出码 2 报告，并给出它在日志中从 0 开始的位置（`.eval` 归档按排序后的 `samples/*.json` 顺序）和收到的类型，例如 `Inspect log sample at position 3 has an invalid id None (null)` 或 `Inspect log sample at position 3 is not an object (got array)`；缺少 id 键时显示为 `invalid id missing (missing)`。此前，缺失、null、布尔、浮点或结构化 ID 会以虚构的用例名（如 `None`）参与比较，或以内部错误信息（如 `'id'`）失败；现在一律退出 2。请用 `inspect log dump LOG.eval > LOG.json` 重新导出，或修复导出程序。Python 调用 `load_results` 时会收到 `ValueError`。
 promptfoo `--output` 文件中同一结果行（相同的 `testIdx`、`promptIdx` 与 provider）出现两次时，
 同样以退出码 2 报告，并给出该行及其测试名。promptfoo `--repeat` 会给每次重复分配新的
 `testIdx`，因此重复运行仍按同一测试的多次尝试读取；`testIdx` 未变的行是合并、拼接或编辑留下的

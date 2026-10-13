@@ -437,8 +437,32 @@ def _inspect(document: dict, threshold: float) -> dict:
     outputs: dict[str, dict[str, list]] = {}
     samples_meta: dict[str, list] = {}
     seen: set[tuple[str, int]] = set()
-    for sample in document["samples"]:
-        case_id = str(sample["id"])
+    for position, sample in enumerate(document["samples"]):
+        # Validate identity before any bookkeeping: a non-object sample or an unusable id
+        # would otherwise crash with an internal error or invent a case such as "None".
+        if not isinstance(sample, dict):
+            raise ValueError(
+                f"Inspect log sample at position {position} is not an object "
+                f"(got {_json_type(sample)}): each sample must be a JSON object with an id. "
+                "Re-export the log from Inspect (inspect log dump) instead of editing it."
+            )
+        sample_id = sample.get("id")
+        if (
+            "id" not in sample
+            or isinstance(sample_id, bool)
+            or not isinstance(sample_id, (int, str))
+        ):
+            if "id" in sample:
+                shown, kind = _shown_id(sample_id), _json_type(sample_id)
+            else:
+                shown, kind = "missing", "missing"
+            raise ValueError(
+                f"Inspect log sample at position {position} has an invalid id {shown} "
+                f"({kind}): expected an integer or a string. A sample without a stable id "
+                "cannot be matched between runs. Re-export the log from Inspect "
+                "(inspect log dump) instead of editing it."
+            )
+        case_id = str(sample_id)
         epoch = sample.get("epoch")
         if isinstance(epoch, int) and not isinstance(epoch, bool):
             # A repeated (id, epoch) pair would silently count as an extra attempt and
@@ -520,6 +544,23 @@ def _shown_id(value: object, limit: int = 80) -> str:
     """Render an untrusted sample id safely: repr() escapes control characters."""
     text = repr(value)
     return text if len(text) <= limit else text[: limit - 3] + "..."
+
+
+def _json_type(value: object) -> str:
+    """Name the JSON type of a decoded value for error messages."""
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, (int, float)):
+        return "number"
+    if isinstance(value, str):
+        return "string"
+    if isinstance(value, list):
+        return "array"
+    if isinstance(value, dict):
+        return "object"
+    return type(value).__name__
 
 
 def _inspect_passed(value: object, threshold: float) -> bool | None:
