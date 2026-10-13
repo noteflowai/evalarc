@@ -84,7 +84,8 @@ status, such as JUnit, are never marked incomplete.
 
 Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
-no samples, malformed input, an Inspect sample repeated in the same epoch, a
+no samples, malformed input, an Inspect sample repeated in the same epoch, an
+Inspect sample that is not an object or has no integer or string id, a
 promptfoo result row repeated).
 Treat 2 as a broken pipeline, not a regression.
 
@@ -96,6 +97,24 @@ concatenating or editing results; re-export with
 `inspect log dump LOG.eval > LOG.json` or rerun the evaluation. The same ID in
 different epochs is a normal repeated attempt, and samples without an integer
 `epoch` are not checked.
+
+Every Inspect sample must be a JSON object whose `id` is an integer (not a
+boolean) or a string; an empty string is allowed. Samples are matched between
+runs by this ID, so a sample without a usable one exits 2. The message gives its
+zero-based position in the log (for `.eval` archives, in sorted
+`samples/*.json` order) and the type received:
+
+```text
+evalarc: Inspect log sample at position 3 has an invalid id None (null): expected an integer or a string. A sample without a stable id cannot be matched between runs. Re-export the log from Inspect (inspect log dump) instead of editing it.
+evalarc: Inspect log sample at position 3 is not an object (got array): each sample must be a JSON object with an id. Re-export the log from Inspect (inspect log dump) instead of editing it.
+```
+
+A missing key is shown as `invalid id missing (missing)`. Earlier versions
+compared a missing, null, boolean, float or structured ID under an invented case
+name such as `None`, or failed with an internal message such as `'id'`; such
+logs now exit 2. They usually come from editing or a custom exporter: re-export
+with `inspect log dump LOG.eval > LOG.json` or fix the exporter. Python
+callers of `load_results` receive `ValueError`.
 
 A promptfoo `--output` file that contains the same result row twice (the same
 `testIdx`, `promptIdx` and provider) also exits 2. The message names the row
