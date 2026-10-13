@@ -27,6 +27,9 @@ SOURCES = (
     "model_failure",
 )
 REAL = {"production", "bug_report", "support_ticket", "user_traffic"}
+# Optional role of a case: capability cases give a hill to climb and may start at a low
+# pass rate; regression cases protect what already works and should pass every trial.
+SUITES = ("capability", "regression")
 SCOPE = (
     "Provenance is declared by the caller and not verified. It records where cases came "
     "from, not whether they represent production traffic or whether the data was "
@@ -57,10 +60,17 @@ def load(path: Path) -> dict:
         difficulty = entry.get("difficulty")
         if difficulty is not None and (not isinstance(difficulty, str) or not difficulty.strip()):
             raise ValueError(f"cases[{index}].difficulty must be a non-empty string")
-        unknown = set(entry) - {"match", "source", "difficulty", "note"}
+        suite = entry.get("suite")
+        if suite is not None and suite not in SUITES:
+            raise ValueError(f"cases[{index}].suite must be one of {', '.join(SUITES)}")
+        unknown = set(entry) - {"match", "source", "difficulty", "note", "suite"}
         if unknown:
             raise ValueError(f"cases[{index}] has unknown fields: {', '.join(sorted(unknown))}")
-        rules.append({"match": entry["match"], "source": source, "difficulty": difficulty})
+        rule = {"match": entry["match"], "source": source, "difficulty": difficulty}
+        if suite is not None:
+            # Only present when declared, so manifests without suites load as before.
+            rule["suite"] = suite
+        rules.append(rule)
     return {
         "source": {"name": path.name, "sha256": hashlib.sha256(raw).hexdigest()},
         "rules": rules,
@@ -90,7 +100,8 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
         for case, rule in assigned.items()
         if rule["source"] == "model_failure" and not rule["difficulty"]
     )
-    return {
+    suites = {case: rule["suite"] for case, rule in assigned.items() if rule.get("suite")}
+    result = {
         "manifest": manifest["source"],
         "counts": {key: value for key, value in counts.items() if value},
         "declared": len(assigned),
@@ -99,6 +110,10 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
         "unexplained_model_failures": unexplained,
         "scope": SCOPE,
     }
+    if suites:
+        # Additive key, present only when a manifest declares suite roles.
+        result["suites"] = dict(sorted(suites.items()))
+    return result
 
 
 def findings(result: dict, total: int, finding) -> list[dict]:

@@ -487,6 +487,10 @@ def _inspect(document: dict, threshold: float) -> dict:
             _add_material(material, case_id, "expected", item)
         error = sample.get("error")
         scores = sample.get("scores") or {}
+        if error:
+            # Kept on the attempt metadata only (not serialized): an errored sample is
+            # not a successful case-level trial even when some scorers recorded a pass.
+            meta["errored"] = True
         if error and not scores:
             message = error.get("message") if isinstance(error, dict) else str(error)
             checks.setdefault("sample error", []).append(_attempt(None, message))
@@ -814,7 +818,18 @@ def _record(
 ) -> None:
     """Align an output digest with the attempt just appended, and note its verdict."""
     outputs.setdefault(case_id, {}).setdefault(check, []).append(digest)
-    meta.setdefault("verdicts", {})[check] = checks[check][-1]["passed"]
+    verdicts = meta.setdefault("verdicts", {})
+    verdict = checks[check][-1]["passed"]
+    if check in verdicts:
+        # Two scorers of one attempt mapped to the same check name (e.g. "s/x" and
+        # {"s": {"x": ...}}): keep a failure, then a missing outcome, over a pass.
+        previous = verdicts[check]
+        verdict = (
+            False
+            if False in (previous, verdict)
+            else (None if None in (previous, verdict) else True)
+        )
+    verdicts[check] = verdict
 
 
 def _output_text(value: object) -> str | None:

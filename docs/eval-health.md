@@ -84,6 +84,40 @@ its verdicts, output, stop reason and usage, and `index.html` lists every case
 of the last file with its passing check attempts and a link to its recorded
 outputs. Read some of those outputs before trusting the grader.
 
+## Case-level trials: pass@k and pass^k
+
+Check pass rates pool checks; users see whole cases. The report therefore also
+counts trials: one recorded attempt of a case (an Inspect epoch, a promptfoo
+repeat, a repeated JUnit testcase). A trial fails when any check recorded for
+it failed. A trial without a failed check is unassessed when a check has no
+outcome (error, timeout, skip), when it lacks a check the case recorded on
+another attempt, when the Inspect sample recorded an error, or when it has no
+checks at all. Unassessed trials are listed and excluded from the
+denominators, never counted as a pass; every other trial succeeded.
+
+For each file and each k from 1 to the largest assessed trial count (at most
+10), `health.json` (`trials.runs[].by_k`) records:
+
+| Metric | Meaning | Use it when |
+| --- | --- | --- |
+| `pass_at_k` | chance that at least one of k trials succeeds | one success is enough, e.g. a tool that proposes several solutions |
+| `pass_hat_k` | chance that all k trials succeed | users expect the agent to succeed every time, e.g. customer-facing agents |
+
+Both use the unbiased estimators from n assessed trials with c successes,
+`1 − C(n−c, k)/C(n, k)` and `C(c, k)/C(n, k)`, averaged over the cases with at
+least k assessed trials (`cases`), each case weighted equally. At k = 1 both
+equal the case-level trial success rate; as k grows pass@k rises and pass^k
+falls. In the recorded Inspect example, `current.json` reaches pass@2 87.5% but
+pass^2 75.0%: `cancel-pending` succeeds on one of its two epochs. `per_case`
+lists every case's trials, assessed trials and successes;
+`cases_without_assessed_trials` and `min_assessed_trials` show which cases
+cannot enter any k and the largest k every case enters. The summary shows
+k = 1 and the largest k; `index.html` shows every k.
+
+The estimators describe the recorded trials. They assume the trials of a case
+are exchangeable, which repeated runs in a shared environment may violate (see
+`flaky_checks`); they are not a confidence interval.
+
 ## Case provenance
 
 Saved results do not say where a case came from. `--cases MANIFEST` reads an
@@ -102,7 +136,24 @@ Saved results do not say where a case came from. `--cases MANIFEST` reads an
 ```
 
 Sources: `production`, `bug_report`, `support_ticket`, `user_traffic`, `manual`,
-`synthetic`, `model_failure`. Findings:
+`synthetic`, `model_failure`.
+
+An entry may also declare `"suite": "capability"` or `"suite": "regression"`.
+Capability cases ask what the agent can do and may start at a low pass rate;
+regression cases protect what it already does and should succeed on every
+trial. The last file is checked against these roles from its case-level trials:
+
+```json
+{
+  "schema_version": "evalarc.case-manifest.v1",
+  "cases": [
+    {"match": "refund-*", "source": "support_ticket", "suite": "regression"},
+    {"match": "cancel-*", "source": "bug_report", "suite": "capability"}
+  ]
+}
+```
+
+Findings:
 
 | Finding | Severity | Raised when |
 | --- | --- | --- |
@@ -111,8 +162,11 @@ Sources: `production`, `bug_report`, `support_ticket`, `user_traffic`, `manual`,
 | `mostly_synthetic` | warning | more than half the declared cases are synthetic |
 | `traffic_only` | info | every case is user traffic, which under-represents hard requests |
 | `provenance_undeclared` | info | some cases match no manifest entry |
+| `regression_case_failing` | warning | a `regression` case has a failed or unassessed trial in the last file, or is missing from it |
+| `graduation_candidates` | info | a `capability` case succeeded on every trial of the last file, with at least two trials: move it to the regression suite and add harder capability cases |
 
-Every entry must match a recorded case. The manifest is copied to `cases.json`
+Because the first matching entry wins, declare a case's source and suite in
+the same entry. Every entry must match a recorded case. The manifest is copied to `cases.json`
 in the output folder. Provenance is declared, not verified; confirm retention and
 sensitive-data rules before using production sessions.
 

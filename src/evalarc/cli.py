@@ -285,7 +285,8 @@ def parser() -> argparse.ArgumentParser:
         "--cases",
         type=Path,
         metavar="MANIFEST",
-        help="evalarc.case-manifest.v1 declaring where each case came from",
+        help="evalarc.case-manifest.v1 declaring where each case came from and, "
+        "optionally, its capability or regression suite",
     )
     health.add_argument(
         "--plan-attempts",
