@@ -12,7 +12,8 @@
   `health.json` gains `trials.runs[].by_k` with the unbiased estimators
   `pass_at_k` (at least one of k trials succeeds) and `pass_hat_k` (all k
   succeed), averaged over cases with at least k assessed trials, plus
-  per-case counts. The summary and HTML report show the same table.
+  per-case counts. The Markdown summary shows k = 1 and the largest k per
+  file; the HTML report lists every k.
 - The case manifest (`evalarc.case-manifest.v1`) accepts an optional
   `"suite": "capability" | "regression"` per entry. With `--cases`, a
   regression case with a failed or unassessed trial in the last file, or
