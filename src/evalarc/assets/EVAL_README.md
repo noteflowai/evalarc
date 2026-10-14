@@ -6,7 +6,7 @@ example cases with your own.
 
 | File | Purpose |
 | --- | --- |
-| `cases.jsonl` | One case per line: `id`, `input`, `expected`, `check`, `source`, optional `labels`, `difficulty`, `held_out` |
+| `cases.jsonl` | One case per line: `id`, `input`, `expected`, `check`, `source`, optional `labels`, `difficulty`, `held_out`, `suite` (`capability` or `regression`) |
 | `app.py` | The application under evaluation; replace `respond()` with your model call |
 | `prompt.md` | The text the hillclimb loop may edit |
 | `grader.py` | Programmatic checks: `exact`, `contains`, `label`, `json_keys`, `json_schema`, `command` (e.g. unit tests) |

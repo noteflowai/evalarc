@@ -255,3 +255,54 @@ def test_invalid_schema_and_command_cases(project, capsys, case, message):
     write_cases(project, [case])
     assert main(["review-inputs", str(project / "cases.jsonl")]) == 2
     assert message in capsys.readouterr().err
+
+
+def test_suite_is_validated_and_copied_into_the_manifest(project, tmp_path, capsys):
+    cases = [
+        base_case(id="a", suite="regression"),
+        base_case(id="b", suite="capability"),
+        base_case(id="c"),
+    ]
+    write_cases(project, cases)
+    manifest = tmp_path / "manifest.json"
+    output = tmp_path / "review"
+    args = ["review-inputs", str(project / "cases.jsonl"), "--write-manifest", str(manifest)]
+    assert main([*args, "--output", str(output)]) == 0
+    out = capsys.readouterr().out
+    assert "1 capability, 1 regression" in out and "suite_undeclared" in out
+    entries = {entry["match"]: entry for entry in json.loads(manifest.read_text())["cases"]}
+    assert entries["a"]["suite"] == "regression" and entries["b"]["suite"] == "capability"
+    assert "suite" not in entries["c"]
+    report = json.loads((output / "review.json").read_text())
+    assert report["suites"] == {"capability": 1, "regression": 1}
+    assert '<th scope="col">Suite</th>' in (output / "index.html").read_text()
+
+    # The written manifest drives the 0.18.0 eval-health suite findings.
+    from evalarc import provenance
+
+    loaded = provenance.load(manifest)
+    assert provenance.review(loaded, {"a", "b", "c"})["suites"] == {
+        "a": "regression",
+        "b": "capability",
+    }
+
+
+def test_suites_without_regression_cases_are_noted(project, capsys):
+    write_cases(project, [base_case(id="a", suite="capability")])
+    assert main(["review-inputs", str(project / "cases.jsonl")]) == 0
+    assert "no_regression_suite" in capsys.readouterr().out
+
+
+def test_cases_without_suite_are_unchanged(project, capsys):
+    assert main(["review-inputs", str(project / "cases.jsonl")]) == 0
+    out = capsys.readouterr().out
+    assert "suite_undeclared" not in out and "no_regression_suite" not in out
+    manifest = json.loads((project / "cases.manifest.json").read_text())
+    assert all("suite" not in entry for entry in manifest["cases"])
+
+
+def test_invalid_suite_is_rejected_with_its_line(project, capsys):
+    write_cases(project, [base_case(suite="smoke")])
+    assert main(["review-inputs", str(project / "cases.jsonl")]) == 2
+    err = capsys.readouterr().err
+    assert "cases.jsonl:1 suite must be one of capability, regression" in err
