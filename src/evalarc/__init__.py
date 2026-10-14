@@ -1,3 +1,3 @@
 """Auditable evaluations for AI agents."""
 
-__version__ = "0.17.10"
+__version__ = "0.18.0"
