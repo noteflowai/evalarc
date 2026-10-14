@@ -110,8 +110,11 @@ equal the case-level trial success rate; as k grows pass@k rises and pass^k
 falls. In the recorded Inspect example, `current.json` reaches pass@2 87.5% but
 pass^2 75.0%: `cancel-pending` succeeds on one of its two epochs. `per_case`
 lists every case's trials, assessed trials and successes;
-`cases_without_assessed_trials` and `min_assessed_trials` show which cases
-cannot enter any k and the largest k every case enters. The summary shows
+`cases_without_assessed_trials` lists cases that cannot enter any k, and
+`min_assessed_trials` is the fewest assessed trials of any case (not capped at
+10; `by_k` is). A trial's outcome comes from its individual checks, so a
+promptfoo test that passes overall through a `threshold` but has a failing
+assertion counts as a failed trial, consistent with the check counts. The summary shows
 k = 1 and the largest k; `index.html` shows every k.
 
 The estimators describe the recorded trials. They assume the trials of a case

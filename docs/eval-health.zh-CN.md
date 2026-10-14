@@ -72,7 +72,9 @@ JUnit testcase）。该次尝试记录的任一检查失败，试验即算失败
 试验成功率；k 增大时 pass@k 上升、pass^k 下降。在仓库自带的 Inspect 示例中，`current.json` 的
 pass@2 为 87.5%，pass^2 只有 75.0%，因为 `cancel-pending` 两个 epoch 中只成功了一次。`per_case`
 列出每个用例的试验数、已评估数与成功数；`cases_without_assessed_trials` 列出无法进入任何 k
-的用例，`min_assessed_trials` 是所有用例都能进入的最大 k。摘要只显示 k = 1 和最大 k，`index.html` 显示全部 k。
+的用例，`min_assessed_trials` 是各用例中最少的已评估试验数（不受 10 的上限约束，`by_k` 受此约束）。
+试验结果取自各个检查，因此 promptfoo 中借 `threshold` 整体通过、但有断言失败的测试，会记为失败的
+试验，与检查计数的口径一致。摘要只显示 k = 1 和最大 k，`index.html` 显示全部 k。
 
 这些估计量只描述已记录的试验，并假设同一用例的各次试验可以互换；在共享环境中重复运行可能
 违背这一假设（参见 `flaky_checks`）。它们不是置信区间。
