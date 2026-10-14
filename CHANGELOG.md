@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.18.1 — 2026-10-15
 
 - `eval-init` / `review-inputs` accept an optional `suite` (`capability` or
   `regression`) per case in `cases.jsonl` and copy it into the case manifest
