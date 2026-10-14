@@ -16,6 +16,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from evalarc import trials
 from evalarc.results_diff import (
     _cell,
     _tally,
@@ -45,8 +46,14 @@ def health(
     min_effect: float | None = None,
     ordered: bool = False,
     cases_manifest: dict | None = None,
+    trial_metrics: bool = True,
 ) -> dict:
-    """Compute findings for loaded result runs (see results_diff.load_results)."""
+    """Compute findings for loaded result runs (see results_diff.load_results).
+
+    ``trial_metrics`` adds case-level trial counts with pass@k and pass^k per file
+    (the ``trials`` key). Report folders written before it existed record no such
+    option and are recomputed without it, so they still verify byte for byte.
+    """
     if not runs or len(runs) > MAX_INPUTS:
         raise ValueError(f"eval-health reads 1–{MAX_INPUTS} result files")
     if not 0 < saturation <= 1:
@@ -386,6 +393,8 @@ def health(
                     )
                 )
 
+    trial_runs = [trials.summarize(run) for run in runs]
+
     provenance = None
     if cases_manifest is not None:
         from evalarc import provenance as case_provenance
@@ -393,6 +402,11 @@ def health(
         case_ids = {case for run in runs for case in run["cases"]}
         provenance = case_provenance.review(cases_manifest, case_ids)
         findings += case_provenance.findings(provenance, len(case_ids), _finding)
+        if provenance.get("suites"):
+            last = runs[-1]["source"]["name"]
+            findings += trials.suite_findings(
+                trial_runs[-1], provenance["suites"], last, _cell(last), _finding
+            )
 
     triage = _triage(runs[-1], inconsistent, truncated, combined)
     size = _size(summaries)
@@ -417,6 +431,11 @@ def health(
         "triage": triage,
         "size": size,
         "provenance": provenance,
+        **(
+            {"trials": {"definition": trials.DEFINITION, "runs": trial_runs}}
+            if trial_metrics
+            else {}
+        ),
         "findings": findings,
         "warnings": warnings,
         "healthy": warnings == 0,
@@ -452,6 +471,7 @@ def render_markdown(result: dict) -> str:
                 else "."
             ),
         ]
+    lines += _trial_markdown(result.get("trials"))
     size = result.get("size")
     if size:
         recorded = size["recorded_seconds_per_configuration"]
@@ -578,6 +598,7 @@ def render_html(result: dict, destination: Path) -> None:
             f"<td><code>{_esc(run['source']['sha256'][:16])}…</code></td></tr>"
         )
     body += "</tbody></table></div>"
+    body += _trial_html(result.get("trials"), _esc)
     if result.get("triage"):
         body += (
             "<h2>Failure triage</h2><p>Failing cases in the last file, classified before any "
@@ -651,6 +672,7 @@ def command(args) -> int:
             "ordered": args.ordered,
             "plan_attempts": args.plan_attempts,
             "plan_configs": args.plan_configs,
+            "trial_metrics": True,
         }
         result = evidence.compute_health(runs, params, manifest)
         if args.output:
@@ -691,6 +713,62 @@ def command(args) -> int:
         if args.output:
             print(f"Report: {args.output / 'index.html'}")
     return 1 if args.require_healthy and not result["healthy"] else 0
+
+
+# --- trial metrics ------------------------------------------------------------------
+
+
+def _trial_markdown(trial_metrics: dict | None) -> list[str]:
+    """Case-level pass@k and pass^k per file (only k > 1 differs from the trial rate)."""
+    if not trial_metrics:
+        return []
+    lines = [
+        "",
+        "Case-level trials (a trial succeeds only when every check passed):",
+        "",
+        "| File | Cases with ≥ k assessed trials | Assessed trials | Unassessed | k | pass@k "
+        "| pass^k |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for run in trial_metrics["runs"]:
+        shown = [row for row in run["by_k"] if row["k"] in (1, run["by_k"][-1]["k"])]
+        if not shown:
+            lines.append(
+                f"| {_cell(run['file'])} | 0 | 0 | {run['unassessed_trials']} | — | — | — |"
+            )
+        for row in shown:
+            lines.append(
+                f"| {_cell(run['file'])} | {row['cases']} | {run['assessed_trials']} | "
+                f"{run['unassessed_trials']} | {row['k']} | {row['pass_at_k']:.1%} | "
+                f"{row['pass_hat_k']:.1%} |"
+            )
+    return lines
+
+
+def _trial_html(trial_metrics: dict | None, esc) -> str:
+    if not trial_metrics:
+        return ""
+    body = (
+        "<h2>Case-level trials</h2><p>"
+        + esc(trial_metrics["definition"])
+        + '</p><div class="scroll"><table><caption>pass@k and pass^k by file and k</caption>'
+        '<thead><tr><th scope="col">File</th><th scope="col">k</th>'
+        '<th scope="col">Cases with at least k assessed trials</th>'
+        '<th scope="col">pass@k</th><th scope="col">pass^k</th></tr></thead><tbody>'
+    )
+    for run in trial_metrics["runs"]:
+        if not run["by_k"]:
+            body += (
+                f"<tr><td><code>{esc(run['file'])}</code></td>"
+                '<td colspan="4">No assessed trials</td></tr>'
+            )
+        for row in run["by_k"]:
+            body += (
+                f"<tr><td><code>{esc(run['file'])}</code></td><td>{row['k']}</td>"
+                f"<td>{row['cases']}</td><td>{row['pass_at_k']:.1%}</td>"
+                f"<td>{row['pass_hat_k']:.1%}</td></tr>"
+            )
+    return body + "</tbody></table></div>"
 
 
 # --- per-case records ---------------------------------------------------------------

@@ -55,7 +55,18 @@ def diff_passed(result: dict) -> bool:
 def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dict:
     from evalarc.eval_health import health, plan
 
-    result = health(runs, params["saturation"], params["min_effect"], params["ordered"], manifest)
+    # Absent from params.json written before trial metrics existed.
+    trial_metrics = params.get("trial_metrics", False)
+    if not isinstance(trial_metrics, bool):
+        raise ValueError("params.json trial_metrics must be true or false")
+    result = health(
+        runs,
+        params["saturation"],
+        params["min_effect"],
+        params["ordered"],
+        manifest,
+        trial_metrics=trial_metrics,
+    )
     if params["plan_attempts"] is not None or params["plan_configs"] is not None:
         size = result["size"]
         result["plan"] = plan(

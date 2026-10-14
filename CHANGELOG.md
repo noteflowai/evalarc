@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc eval-health` reports case-level trials with pass@k and pass^k. A
+  trial is one recorded attempt of a case (Inspect epoch, promptfoo repeat,
+  repeated JUnit testcase). It fails when any recorded check failed; without a
+  failure it is unassessed when a check has no outcome, a check recorded on
+  another attempt is missing, the Inspect sample recorded an error, or no check
+  was recorded. Unassessed trials are listed but excluded from the
+  denominators, never counted as passes. For k = 1 to the largest assessed trial count (at most 10),
+  `health.json` gains `trials.runs[].by_k` with the unbiased estimators
+  `pass_at_k` (at least one of k trials succeeds) and `pass_hat_k` (all k
+  succeed), averaged over cases with at least k assessed trials, plus
+  per-case counts. The summary and HTML report show the same table.
+- The case manifest (`evalarc.case-manifest.v1`) accepts an optional
+  `"suite": "capability" | "regression"` per entry. With `--cases`, a
+  regression case with a failed or unassessed trial in the last file, or
+  missing from it, raises the warning `regression_case_failing`; a capability
+  case that succeeded on every one of at least two trials raises the info
+  finding `graduation_candidates`. Manifests without `suite` behave as before.
+- Output compatibility: new `eval-health` folders record `"trial_metrics": true`
+  in `params.json` and contain the `trials` key. `evalarc verify` recomputes a
+  folder with the options it recorded, so folders written by earlier versions
+  (no `trial_metrics`) still verify unchanged; new folders need this version or
+  later to verify. Finding ids, severities and exit codes of existing findings
+  are unchanged.
+- When two scorers of one Inspect sample map to the same check name (a scorer
+  `s/x` beside a dict-valued scorer `s` with key `x`), the attempt's recorded
+  verdict in `cases.jsonl` now keeps a failure (then a missing outcome) instead
+  of whichever scorer came last. Check tallies were already counted per scorer
+  and do not change.
+
 ## 0.17.10 — 2026-10-13
 
 - fix: reject Inspect samples without a usable id instead of inventing case None. evalarc diff and load_results now reject Inspect samples that have no usable identity, instead of comparing them under an invented case name or failing with internal error text. This applies to JSON logs and .eval archives. Each sample is checked in recorded order, before any case bookkeeping and before the duplicate-sample guard. A sample that is not a JSON object fails with: 'Inspect log sample at position N is not an object (got TYPE)'. A sample whose id is missing, null, boolean, float, a list or an object fails with: 'Inspect log sample at position N has an invalid id SHOWN (TYPE): expected an integer or a string'. Both messages end with re-export guidance. The CLI prints evalarc: MESSAGE and exits 2. No diff.json, summary.md or index.html is written, and the --markdown file is left untouched. Two null-id samples now get the invalid-id message, not a misleading duplicate-sample error. Integer, string and empty-string ids behave as before, and the shipped example pair gives the same changes, counts and gate_passed. docs/ci-gate.md and docs/ci-gate.zh-CN.md describe the accepted id types, both messages and the re-export command.
