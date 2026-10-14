@@ -37,6 +37,7 @@ before you change anything. Replace `respond()` in `app.py` with your model call
 | `source` | yes | `production`, `bug_report`, `support_ticket`, `user_traffic`, `manual`, `synthetic`, `model_failure` |
 | `difficulty` | for `model_failure` | Why the task itself is hard |
 | `held_out` | no | `true` to keep the case away from the tuning loop |
+| `suite` | no | `capability` (a hill to climb, may start at a low pass rate) or `regression` (already works and must pass every trial); copied into the case manifest for [`eval-health --cases`](eval-health.md#case-provenance) |
 
 Prefer production sessions (after checking retention and sensitive-data rules),
 then bug reports and tickets, then 5–10 hand-written cases, and only then
@@ -49,7 +50,13 @@ page listing each case with its split, source, check, expected answer and
 difficulty, and reports `no_held_out`, `held_out_share`, `duplicate_inputs`,
 `few_cases`, `dominant_answer` and the source findings from
 [`eval-health --cases`](eval-health.md#case-provenance) (`adversarial_sampling`,
-`no_real_cases`, `mostly_synthetic`, `traffic_only`). `--write-split` and
+`no_real_cases`, `mostly_synthetic`, `traffic_only`). When any case declares a
+`suite`, it also counts the suites and reports `suite_undeclared` (some cases
+declare none) and `no_regression_suite` (none is `regression`), both info,
+and the case table gains a Suite column. When `eval-health` lists
+`graduation_candidates`, change `suite` in `cases.jsonl` and rerun
+`--write-manifest`; editing the manifest directly is overwritten.
+`--write-split` and
 `--write-manifest` regenerate `split.json` and the case manifest from
 `cases.jsonl`, so the case file stays the single source of truth.
 `--require-clean` exits 1 on any warning.

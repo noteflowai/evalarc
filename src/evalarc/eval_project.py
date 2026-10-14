@@ -19,7 +19,17 @@ from evalarc import provenance
 from evalarc.artifacts import new_run
 from evalarc.templates import asset
 
-CASE_FIELDS = {"id", "input", "expected", "check", "source", "labels", "difficulty", "held_out"}
+CASE_FIELDS = {
+    "id",
+    "input",
+    "expected",
+    "check",
+    "source",
+    "labels",
+    "difficulty",
+    "held_out",
+    "suite",
+}
 CHECKS = ("exact", "contains", "label", "json_keys", "json_schema", "command")
 SCHEMA_TYPES = {"object", "array", "string", "number", "integer", "boolean", "null"}
 MAX_CASES_BYTES = 16 * 1024 * 1024
@@ -181,6 +191,8 @@ def load_cases(path: Path) -> list[dict]:
             not isinstance(case["difficulty"], str) or not case["difficulty"].strip()
         ):
             raise ValueError(f"{where} difficulty must be a non-empty string")
+        if "suite" in case and case["suite"] not in provenance.SUITES:
+            raise ValueError(f"{where} suite must be one of {', '.join(provenance.SUITES)}")
         cases.append(case)
     if not cases:
         raise ValueError(f"{path.name} contains no cases")
@@ -262,6 +274,10 @@ def manifest_document(cases: list[dict]) -> dict:
         entry = {"match": case["id"], "source": case["source"]}
         if case.get("difficulty"):
             entry["difficulty"] = case["difficulty"]
+        if case.get("suite"):
+            # Read by eval-health --cases: regression cases must pass every trial,
+            # capability cases that always pass are graduation candidates.
+            entry["suite"] = case["suite"]
         entries.append(entry)
     return {"schema_version": provenance.SCHEMA, "cases": entries}
 
@@ -270,7 +286,11 @@ def review(cases: list[dict], source: dict) -> dict:
     manifest = {
         "source": source,
         "rules": [
-            {"match": e["match"], "source": e["source"], "difficulty": e.get("difficulty")}
+            {
+                "match": e["match"],
+                "source": e["source"],
+                "difficulty": e.get("difficulty"),
+            }
             for e in manifest_document(cases)["cases"]
         ],
     }
@@ -334,6 +354,28 @@ def review(cases: list[dict], source: dict) -> dict:
                 "score well.",
             )
         )
+    suites = Counter(case["suite"] for case in cases if case.get("suite"))
+    if suites:
+        undeclared = sum(1 for case in cases if not case.get("suite"))
+        if undeclared:
+            findings.append(
+                _finding(
+                    "suite_undeclared",
+                    "info",
+                    f"{undeclared} of {len(cases)} case(s) declare no suite while others do; "
+                    "eval-health checks suite roles only for declared cases.",
+                    value=undeclared / len(cases),
+                )
+            )
+        if not suites.get("regression"):
+            findings.append(
+                _finding(
+                    "no_regression_suite",
+                    "info",
+                    "No case is in the regression suite. Cases the agent already handles "
+                    "should be marked regression so a later change cannot silently break them.",
+                )
+            )
     warnings = sum(item["severity"] == "warning" for item in findings)
     return {
         "schema_version": SCHEMA,
@@ -342,6 +384,8 @@ def review(cases: list[dict], source: dict) -> dict:
         "held_out": held_out,
         "checks": dict(Counter(case["check"] for case in cases)),
         "sources": sources["counts"],
+        # Additive key, present only when some case declares a suite.
+        **({"suites": dict(sorted(suites.items()))} if suites else {}),
         "findings": findings,
         "warnings": warnings,
         "clean": warnings == 0,
@@ -369,6 +413,11 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
         + _esc(", ".join(f"{k} {v}" for k, v in result["sources"].items()))
         + " · checks: "
         + _esc(", ".join(f"{k} {v}" for k, v in result["checks"].items()))
+        + (
+            " · suites: " + _esc(", ".join(f"{k} {v}" for k, v in result["suites"].items()))
+            if result.get("suites")
+            else ""
+        )
         + "</p>"
     )
     if result["findings"]:
@@ -377,7 +426,9 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
         "<h2>Cases</h2><p>Read every case. Would two domain experts grade it the same way? "
         "Is every condition the grader checks stated in the input?</p>"
         '<div class="scroll"><table><thead><tr><th>Case</th><th>Split</th><th>Source</th>'
-        "<th>Input</th><th>Check</th><th>Expected</th><th>Why hard</th></tr></thead><tbody>"
+        "<th>Input</th><th>Check</th><th>Expected</th><th>Why hard</th>"
+        + ("<th>Suite</th>" if result.get("suites") else "")
+        + "</tr></thead><tbody>"
     )
     for case in cases:
         expected = case["expected"]
@@ -392,7 +443,9 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
             f"<td>{'held out' if case.get('held_out') else 'tuning'}</td>"
             f"<td>{_esc(case['source'])}</td><td>{_esc(case['input'])}</td>"
             f"<td>{_esc(case['check'])}</td><td>{_esc(expected)}</td>"
-            f"<td>{_esc(case.get('difficulty') or '—')}</td></tr>"
+            f"<td>{_esc(case.get('difficulty') or '—')}</td>"
+            + (f"<td>{_esc(case.get('suite') or '—')}</td>" if result.get("suites") else "")
+            + "</tr>"
         )
     body += f"</tbody></table></div><footer>{_esc(result['scope'])}</footer>"
     _page("Input review", "Review the inputs before running.", body, destination)
@@ -467,9 +520,11 @@ def review_command(args) -> int:
     except (OSError, ValueError, UnicodeDecodeError) as error:
         print(f"evalarc: {error}", file=sys.stderr)
         return 2
+    suites = result.get("suites")
     print(
         f"Input review: {result['cases']} cases, {result['held_out']} held out, "
-        f"{result['warnings']} warning(s)"
+        + (", ".join(f"{count} {name}" for name, count in suites.items()) + ", " if suites else "")
+        + f"{result['warnings']} warning(s)"
     )
     for finding in result["findings"]:
         print(f"  {finding['severity']}: {finding['id']} — {finding['message']}")

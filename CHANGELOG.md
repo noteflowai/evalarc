@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- `eval-init` / `review-inputs` accept an optional `suite` (`capability` or
+  `regression`) per case in `cases.jsonl` and copy it into the case manifest
+  written by `--write-manifest`, so a scaffolded project can use the 0.18.0
+  `eval-health --cases` suite findings without hand-editing the manifest.
+  Any other value exits 2 with the file and line. When some case declares a
+  suite, the review counts suites (`suites` in `review.json`, the console line
+  and the page) and reports the info findings `suite_undeclared` and
+  `no_regression_suite`, and the case table gains a Suite column. Cases
+  files without `suite` produce the same manifest, findings and review page as
+  before.
+
 ## 0.18.0 — 2026-10-14
 
 - `evalarc eval-health` reports case-level trials with pass@k and pass^k. A
