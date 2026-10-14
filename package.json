@@ -1,6 +1,6 @@
 {
   "name": "evalarc-evidence-site",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "private": true,
   "description": "Browser checks and the TypeScript report front end for EvalArc",
   "scripts": {
