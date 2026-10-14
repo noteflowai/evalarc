@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.18.0 — 2026-10-14
 
 - `evalarc eval-health` reports case-level trials with pass@k and pass^k. A
   trial is one recorded attempt of a case (Inspect epoch, promptfoo repeat,
