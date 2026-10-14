@@ -28,7 +28,7 @@ evalarc hillclimb-run hillclimb.toml --output ../climb --trust-local
 
 `review-inputs` 逐行校验（出错时退出 2 并给出行号），生成审查页，并报告 `no_held_out`、
 `held_out_share`、`duplicate_inputs`、`few_cases`、`dominant_answer` 以及
-[用例来源](eval-health.zh-CN.md#用例来源)相关发现；只要有用例声明了 `suite`，还会统计各套件数量，并在部分用例未声明时提示 `suite_undeclared`、没有任何回归用例时提示 `no_regression_suite`（均为 info）。`--write-split`、`--write-manifest` 由
+[用例来源](eval-health.zh-CN.md#用例来源)相关发现；只要有用例声明了 `suite`，还会统计各套件数量，并在部分用例未声明时提示 `suite_undeclared`、没有任何回归用例时提示 `no_regression_suite`（均为 info），用例表也会多出 Suite 列。`eval-health` 给出 `graduation_candidates` 时，请修改 `cases.jsonl` 中的 `suite` 并重新运行 `--write-manifest`；直接改清单会被覆盖。`--write-split`、`--write-manifest` 由
 `cases.jsonl` 重新生成拆分文件与用例清单，用例文件始终是唯一来源；`--require-clean` 有警告时退出 1。`--random-split F`（配合 `--seed`）按 `source` 分层随机留出一定比例的
 用例，并写入 `cases.jsonl` 的 `held_out`；已声明 `held_out` 时拒绝执行，因此拆分只做一次，看到结果后
 无法重新洗牌。`json_schema` 检查输出是否符合 JSON Schema，`command` 把输出通过标准输入交给一条命令

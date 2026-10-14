@@ -9,8 +9,9 @@
   Any other value exits 2 with the file and line. When some case declares a
   suite, the review counts suites (`suites` in `review.json`, the console line
   and the page) and reports the info findings `suite_undeclared` and
-  `no_regression_suite`; the case table gains a Suite column. Cases files
-  without `suite` produce the same manifest and findings as before.
+  `no_regression_suite`, and the case table gains a Suite column. Cases
+  files without `suite` produce the same manifest, findings and review page as
+  before.
 
 ## 0.18.0 — 2026-10-14
 

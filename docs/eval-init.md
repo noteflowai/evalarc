@@ -52,7 +52,10 @@ difficulty, and reports `no_held_out`, `held_out_share`, `duplicate_inputs`,
 [`eval-health --cases`](eval-health.md#case-provenance) (`adversarial_sampling`,
 `no_real_cases`, `mostly_synthetic`, `traffic_only`). When any case declares a
 `suite`, it also counts the suites and reports `suite_undeclared` (some cases
-declare none) and `no_regression_suite` (none is `regression`), both info.
+declare none) and `no_regression_suite` (none is `regression`), both info,
+and the case table gains a Suite column. When `eval-health` lists
+`graduation_candidates`, change `suite` in `cases.jsonl` and rerun
+`--write-manifest`; editing the manifest directly is overwritten.
 `--write-split` and
 `--write-manifest` regenerate `split.json` and the case manifest from
 `cases.jsonl`, so the case file stays the single source of truth.

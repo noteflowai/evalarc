@@ -293,16 +293,23 @@ def test_suites_without_regression_cases_are_noted(project, capsys):
     assert "no_regression_suite" in capsys.readouterr().out
 
 
-def test_cases_without_suite_are_unchanged(project, capsys):
-    assert main(["review-inputs", str(project / "cases.jsonl")]) == 0
+def test_cases_without_suite_are_unchanged(project, tmp_path, capsys):
+    manifest, output = tmp_path / "manifest.json", tmp_path / "review"
+    args = ["review-inputs", str(project / "cases.jsonl"), "--write-manifest", str(manifest)]
+    assert main([*args, "--output", str(output)]) == 0
     out = capsys.readouterr().out
     assert "suite_undeclared" not in out and "no_regression_suite" not in out
-    manifest = json.loads((project / "cases.manifest.json").read_text())
-    assert all("suite" not in entry for entry in manifest["cases"])
+    assert json.loads(manifest.read_text()) == json.loads(
+        (project / "cases.manifest.json").read_text()
+    )
+    assert all("suite" not in entry for entry in json.loads(manifest.read_text())["cases"])
+    assert "suites" not in json.loads((output / "review.json").read_text())
+    assert "Suite</th>" not in (output / "index.html").read_text()
 
 
-def test_invalid_suite_is_rejected_with_its_line(project, capsys):
-    write_cases(project, [base_case(suite="smoke")])
+@pytest.mark.parametrize("value", ["smoke", None, "", ["regression"], 1, "Regression"])
+def test_invalid_suite_is_rejected_with_its_line(project, capsys, value):
+    write_cases(project, [base_case(suite=value)])
     assert main(["review-inputs", str(project / "cases.jsonl")]) == 2
     err = capsys.readouterr().err
     assert "cases.jsonl:1 suite must be one of capability, regression" in err

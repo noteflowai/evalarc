@@ -290,7 +290,6 @@ def review(cases: list[dict], source: dict) -> dict:
                 "match": e["match"],
                 "source": e["source"],
                 "difficulty": e.get("difficulty"),
-                **({"suite": e["suite"]} if e.get("suite") else {}),
             }
             for e in manifest_document(cases)["cases"]
         ],
@@ -427,8 +426,9 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
         "<h2>Cases</h2><p>Read every case. Would two domain experts grade it the same way? "
         "Is every condition the grader checks stated in the input?</p>"
         '<div class="scroll"><table><thead><tr><th>Case</th><th>Split</th><th>Source</th>'
-        "<th>Input</th><th>Check</th><th>Expected</th><th>Why hard</th><th>Suite</th>"
-        "</tr></thead><tbody>"
+        "<th>Input</th><th>Check</th><th>Expected</th><th>Why hard</th>"
+        + ("<th>Suite</th>" if result.get("suites") else "")
+        + "</tr></thead><tbody>"
     )
     for case in cases:
         expected = case["expected"]
@@ -444,7 +444,8 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
             f"<td>{_esc(case['source'])}</td><td>{_esc(case['input'])}</td>"
             f"<td>{_esc(case['check'])}</td><td>{_esc(expected)}</td>"
             f"<td>{_esc(case.get('difficulty') or '—')}</td>"
-            f"<td>{_esc(case.get('suite') or '—')}</td></tr>"
+            + (f"<td>{_esc(case.get('suite') or '—')}</td>" if result.get("suites") else "")
+            + "</tr>"
         )
     body += f"</tbody></table></div><footer>{_esc(result['scope'])}</footer>"
     _page("Input review", "Review the inputs before running.", body, destination)
