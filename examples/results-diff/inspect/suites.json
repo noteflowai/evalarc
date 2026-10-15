@@ -1,0 +1,9 @@
+{
+  "schema_version": "evalarc.case-manifest.v1",
+  "cases": [
+    {"match": "refund-*", "source": "support_ticket", "suite": "regression", "difficulty": "refund limits and duplicate detection interact"},
+    {"match": "status-*", "source": "production", "suite": "regression"},
+    {"match": "cancel-*", "source": "bug_report", "suite": "capability"},
+    {"match": "address-change", "source": "synthetic", "suite": "capability"}
+  ]
+}

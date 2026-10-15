@@ -227,6 +227,50 @@ unless the state is `generalizes` and no held-out case text was found in the
 harness. Without it, the split and leakage sections are informational and the
 exit code is unchanged. Both examples above exit 1 because checks regressed.
 
+## Capability and regression suites
+
+A case manifest with `"suite": "capability"` or `"suite": "regression"` per
+entry (the [`eval-health` case manifest](eval-health.md#case-provenance), also
+written by `review-inputs --write-manifest`) adds a suite view to the diff:
+
+```bash
+evalarc diff examples/results-diff/inspect/baseline.json \
+  examples/results-diff/inspect/current.json \
+  --cases examples/results-diff/inspect/suites.json --output review
+```
+
+- Each changed check carries its case's `suite` in `diff.json` and in both
+  reports.
+- `diff.json` gains `suites`: for each declared suite, baseline and current
+  [case-level trials](eval-health.md#case-level-trials-passk-and-passk) with
+  pass@k and pass^k computed on that suite's cases only, the regression cases
+  that did not succeed on every current trial (`regression_failures`: failed,
+  unassessed or missing) and the cases that declare no suite.
+- The default gate is unchanged: every check is still compared, and a
+  capability check that loses passes still fails it.
+
+`--require-regression-suite` (requires `--cases`) also fails the gate unless
+every regression case succeeds on every trial of the current run. This is
+stricter than comparing against the baseline: a regression case that already
+failed on the baseline fails the gate too, because a regression suite should
+pass close to 100%. Use it once the regression suite is green, and graduate
+capability cases into it as they become reliable
+([`graduation_candidates`](eval-health.md#case-provenance)).
+
+The manifest is copied to `cases.json` in the output folder, and `evalarc
+verify` recomputes the suite view and gate. Folders written without `--cases`
+are unchanged, so earlier folders still verify; folders written with it need
+0.19.0 or later to verify. `--require-regression-suite` with a manifest that
+puts no case in the regression suite exits 2 rather than passing vacuously.
+A manifest entry that matches no case as a glob also matches a case whose ID
+equals it exactly, so pytest IDs such as `test_policy[refund]` need no glob
+escaping.
+
+In the recorded example, `refund-duplicate` (regression) fails both epochs, so
+`--require-regression-suite` fails the gate; the capability suite reaches
+pass@2 100% but pass^2 66.7%, because `cancel-pending` succeeds on one of its
+two epochs.
+
 ## Cost at equal quality
 
 When an evaluation is near saturation, the useful change is often the same
@@ -311,6 +355,24 @@ input always fails the step. Optional `held-out` (split file), `harness`
 `generalization-state` and `leakage-hits` outputs and as warning annotations on
 the leaking file and line. `max-cost-ratio` and `cost-metric` add the
 [cost gate](#cost-at-equal-quality); its ratio is the `cost-ratio` output.
+`cases` and `require-regression-suite` (`false`) add the
+[suite view and gate](#capability-and-regression-suites); the count of
+regression cases that did not succeed on every trial is the
+`regression-failures` output, with a warning annotation for each of the first
+10 cases.
+
+Case IDs and check names printed to the log come from the result files. The
+action pauses workflow-command processing while `evalarc diff` runs. If you call
+the CLI directly in a `run:` step on results you do not fully trust, do the
+same:
+
+```bash
+token="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+echo "::stop-commands::$token"
+evalarc diff baseline.json current.json --output evalarc-diff || code=$?
+echo "::$token::"
+exit "${code:-0}"
+```
 
 ```yaml
 - uses: noteflowai/evalarc@v0.16.0

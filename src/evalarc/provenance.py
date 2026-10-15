@@ -88,6 +88,10 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
             else {pattern} & case_ids
         )
         if not matched:
+            # Fallback only, so manifests that matched before keep their meaning: an ID
+            # such as pytest's test_x[param] matches itself without glob escaping.
+            matched = {pattern} & case_ids
+        if not matched:
             raise ValueError(f"case manifest entry {pattern!r} matches no recorded case")
         for case in matched:
             assigned.setdefault(case, rule)
