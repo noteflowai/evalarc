@@ -381,6 +381,13 @@ def parser() -> argparse.ArgumentParser:
         help="consecutive rollbacks before failures are triaged (default: 2)",
     )
     climb.add_argument("--min-effect", type=float, metavar="D")
+    climb.add_argument(
+        "--cases",
+        type=Path,
+        metavar="MANIFEST",
+        help="evalarc.case-manifest.v1 with suite roles: roll back any step that stops a "
+        "regression-suite case succeeding on every trial",
+    )
     climb.add_argument("--harness", type=Path, nargs="+", metavar="PATH")
     climb.add_argument("--format", choices=RESULT_FORMATS, default="auto")
     climb.add_argument("--threshold", type=float, default=1.0)

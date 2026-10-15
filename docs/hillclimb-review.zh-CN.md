@@ -23,10 +23,17 @@ evalarc hillclimb-review examples/hillclimb-review/results/00-baseline.json \
 
 | 判定 | 条件 |
 | --- | --- |
-| `rollback_regression` | 留出检查丢失通过或覆盖，或任一分区通过率下降 |
+| `rollback_regression` | 留出检查丢失通过或覆盖，或任一分区通过率下降，或（使用 `--cases` 时）某个回归套件用例不再每次试验都成功 |
 | `rollback_overfit` | 调优用例提升，留出用例没有 |
 | `keep` | 质量目标：两个分区都提升。降本目标：记录的成本下降且两个分区都没下降，或成本不升且两者都提升 |
 | `rollback_no_gain` | 其他情况 |
+
+`--cases MANIFEST` 读取用例清单中的能力/回归套件角色（见 [eval-health](eval-health.zh-CN.md#用例来源)；
+`review-inputs --write-manifest` 可从 `cases.jsonl` 生成）。某一步让回归套件用例（无论属于调优还是留出）
+从“在保留结果中每次试验都成功”变为有失败、未评估或缺失的试验时，即使两个分区都提升也会回滚：修好一个
+用例却弄坏了已经能做到的用例，不算进步。在保留结果中就已失败的回归用例不会阻断后续步骤。清单至少需要
+一个回归用例（否则退出 2），会复制为 `cases.json`，每一步记录 `regression_suite_broken`。不加 `--cases`
+写出的目录不变；加了的目录需要 0.20.0 或更高版本才能验证。
 
 连续回滚 `--stall-after` 次（默认 2）后，对最近保留结果中失败的**调优**用例按根因分类：
 `pipeline`（错误、超时、跳过）、`truncated`、`grader_inconsistent`、`regressed`、
@@ -44,6 +51,7 @@ evalarc hillclimb-review examples/hillclimb-review/results/00-baseline.json \
 | `do_not_merge_within_noise` | 1 | 质量目标下，留出提升在噪声内 |
 | `do_not_merge_cost` | 1 | 成本降幅不够，或没有记录成本 |
 | `do_not_merge_leakage` | 1 | `--harness` 在提示词、技能或工具描述中发现留出用例文本 |
+| `do_not_merge_regression_suite` | 1 | 使用 `--cases` 时：基线上每次试验都成功的回归用例，在最终结果中不再如此 |
 
 输入无效或不可比时退出 2：格式或任务不同、各步用例集合不同、同一文件出现两次，或
 `--objective cost` 时并非每次尝试都记录了成本或 token。

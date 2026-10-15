@@ -27,7 +27,10 @@ from evalarc.hillclimb import (
     _noise,
     _rate,
     _stall,
+    apply_regression_suite,
+    broken_regression_cases,
     hillclimb_triage,
+    regression_suite,
 )
 from evalarc.results_diff import FORMATS, diff, load_results
 
@@ -50,6 +53,7 @@ KEYS = {
     "threshold",
     "leak_min_chars",
     "paste_check",
+    "cases",
 }
 REQUIRED = {"workspace", "allow", "evaluate", "propose", "held_out"}
 # Never editable through allow. Caches are skipped by the outside-allow guard because
@@ -109,6 +113,12 @@ def load_config(path: Path) -> dict:
     ):
         raise ValueError("min_effect must be in (0, 1)")
     split_path = (base / str(raw["held_out"])).resolve()
+    manifest_path = manifest = None
+    if raw.get("cases") is not None:
+        from evalarc.provenance import load as load_manifest
+
+        manifest_path = (base / str(raw["cases"])).resolve()
+        manifest = load_manifest(manifest_path)
     return {
         "path": path,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -122,6 +132,8 @@ def load_config(path: Path) -> dict:
         ),
         "split_path": split_path,
         "split": load_split(split_path),
+        "manifest_path": manifest_path,
+        "manifest": manifest,
         "objective": objective,
         "cost_metric": raw.get("cost_metric", "auto"),
         "max_cost_ratio": float(raw.get("max_cost_ratio", 1.0)),
@@ -278,6 +290,8 @@ def run_loop(config: dict, output: Path) -> dict:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
     shutil.copyfile(config["split_path"], output / "split.json")
+    if config.get("manifest") is not None:
+        shutil.copyfile(config["manifest_path"], output / "cases.json")
     shutil.copyfile(config["path"], output / "config.toml")
     state = {
         "schema_version": SCHEMA,
@@ -311,6 +325,11 @@ def run_loop(config: dict, output: Path) -> dict:
         cases = set(baseline["cases"])
         held_out = partition(config["split"], cases)
         tuning = cases - held_out
+        regression = (
+            set(regression_suite(config["manifest"], cases)["regression_cases"])
+            if config.get("manifest") is not None
+            else None
+        )
         evaluated = [(baseline_path, baseline)]
         start = {
             name: _rate(baseline, members)
@@ -417,6 +436,12 @@ def run_loop(config: dict, output: Path) -> dict:
                         decision, reason = _decide(config["objective"], parts, cost)
                     except ValueError as error:
                         raise LoopError(str(error)) from None
+                    broken = (
+                        broken_regression_cases(kept_run, candidate, regression)
+                        if regression is not None
+                        else []
+                    )
+                    decision, reason = apply_regression_suite(decision, reason, broken)
                     evaluated.append((result_path, candidate))
                     step |= {
                         "decision": decision,
@@ -426,6 +451,8 @@ def run_loop(config: dict, output: Path) -> dict:
                         "held_out_delta": parts["held_out"]["delta"],
                         "cost": cost,
                     }
+                    if regression is not None:
+                        step["regression_suite_broken"] = broken
                     if decision == "keep":
                         kept_index, kept_run, kept_files = len(evaluated) - 1, candidate, proposed
                         kept_history.append(candidate)
@@ -465,8 +492,16 @@ def run_loop(config: dict, output: Path) -> dict:
             if kept_files
             else []
         )
+        manifest = config.get("manifest")
+        if manifest is not None:
+            # Name as copied into the run folder, so evalarc verify recomputes the same report.
+            manifest = {**manifest, "source": {**manifest["source"], "name": "cases.json"}}
         final = evidence.compute_hillclimb(
-            runs, params, config["split"], [(output / e["file"], e["label"]) for e in harness]
+            runs,
+            params,
+            config["split"],
+            [(output / e["file"], e["label"]) for e in harness],
+            manifest,
         )
         evidence.write_params(
             output,
@@ -476,6 +511,7 @@ def run_loop(config: dict, output: Path) -> dict:
                 "inputs": [{"file": f"results/{path.name}"} for path, _ in evaluated],
                 "split": "split.json",
                 "harness": harness,
+                **({"cases": "cases.json"} if manifest is not None else {}),
             },
         )
         write_hillclimb_report(output, final)

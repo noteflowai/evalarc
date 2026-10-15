@@ -114,7 +114,9 @@ def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dic
     return result
 
 
-def compute_hillclimb(runs: list[dict], params: dict, split: dict, harness) -> dict:
+def compute_hillclimb(
+    runs: list[dict], params: dict, split: dict, harness, manifest: dict | None = None
+) -> dict:
     from evalarc.hillclimb import review
 
     return review(
@@ -128,6 +130,7 @@ def compute_hillclimb(runs: list[dict], params: dict, split: dict, harness) -> d
         harness or None,
         labels=params["labels"],
         min_steps=params["min_steps"],
+        manifest=manifest,
     )
 
 
@@ -278,7 +281,16 @@ def verify_report(directory: Path) -> dict:
             for item, run in zip(params["inputs"], recorded["runs"])
         ]
         split = _split(params, read, directory, recorded)
-        computed = compute_hillclimb(runs, params, split, harness)
+        manifest = None
+        if params.get("cases"):
+            from evalarc.provenance import load as load_manifest
+
+            read(params["cases"])
+            manifest = load_manifest(directory / params["cases"])
+            if not isinstance(recorded.get("suites"), dict):
+                raise ValueError("hillclimb.json lacks the suite roles that params.json records")
+            manifest["source"]["name"] = recorded["suites"]["manifest"]["name"]
+        computed = compute_hillclimb(runs, params, split, harness, manifest)
         passed = computed["merge_recommended"]
         summary = {
             "recommendation": computed["recommendation"],

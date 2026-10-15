@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc hillclimb-review --cases MANIFEST` and the `hillclimb-run` config key
+  `cases` read capability/regression suite roles. A step that makes a
+  regression-suite case go from succeeding on every trial of the kept result
+  to a failed, unassessed or missing trial is rolled back
+  (`rollback_regression`, reason naming the count) even when both partitions
+  improved; `hillclimb-run` restores the workspace as for any rollback. A
+  regression case that already failed in the kept result does not block later
+  steps. Each step records `regression_suite_broken`, the review gains
+  `suites`, and a new recommendation `do_not_merge_regression_suite` (exit 1)
+  guards the final result against the baseline. A manifest with no regression
+  case exits 2.
+- Output compatibility: without `--cases`/`cases`, `hillclimb.json`,
+  `params.json`, `loop.json` and the reports are unchanged, so earlier folders
+  still verify. Folders written with it copy the manifest to `cases.json` and
+  need this version or later to verify.
+
 ## 0.19.0 — 2026-10-15
 
 - `evalarc diff --cases MANIFEST` reads the capability/regression suite roles of

@@ -43,7 +43,12 @@ environment. Placeholders: `{python}`, `{workspace}`; `{output}` (evaluate: the
 result path to write); `{failures}`, `{allowed}`, `{iteration}` (propose). Other
 keys: `cost_metric`, `max_cost_ratio`, `min_effect`, `result_suffix` (`.json`,
 `.xml`, `.eval`), `format`, `threshold`, `leak_min_chars` (12),
-`paste_check` (true).
+`paste_check` (true), and `cases`: a case manifest with suite roles (for an
+`eval-init` project, `cases.manifest.json` after `review-inputs
+--write-manifest`). With `cases`, an iteration that breaks a regression-suite
+case is rolled back and restored like any other regression, using the
+[`hillclimb-review` rule](hillclimb-review.md#rules); the manifest is copied to
+`cases.json` in the run folder.
 
 ## Each iteration
 
