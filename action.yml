@@ -40,6 +40,16 @@ inputs:
       Also fail unless held-out cases improve beyond sampling noise and no held-out case
       text appears in the harness. Requires held-out.
     default: "false"
+  cases:
+    description: >-
+      Optional evalarc.case-manifest.v1 JSON with "suite" (capability or regression) per
+      case. Adds per-suite case-level pass@k/pass^k and tags changed checks with their suite.
+    default: ""
+  require-regression-suite:
+    description: >-
+      Also fail unless every regression-suite case succeeds on every trial of the current
+      run, including failures already present on the baseline. Requires cases.
+    default: "false"
   max-cost-ratio:
     description: >-
       Optional. Also fail unless current mean recorded usage per attempt is at most this
@@ -74,6 +84,11 @@ outputs:
   cost-ratio:
     description: Current/baseline usage ratio for the cost gate; empty without max-cost-ratio.
     value: ${{ steps.diff.outputs.cost-ratio }}
+  regression-failures:
+    description: >-
+      Number of regression-suite cases that did not succeed on every trial of the current
+      run; empty without cases.
+    value: ${{ steps.diff.outputs.regression-failures }}
 runs:
   using: composite
   steps:
@@ -101,6 +116,8 @@ runs:
         REQUIRE_GENERALIZATION: ${{ inputs.require-generalization }}
         MAX_COST_RATIO: ${{ inputs.max-cost-ratio }}
         COST_METRIC: ${{ inputs.cost-metric }}
+        CASES: ${{ inputs.cases }}
+        REQUIRE_REGRESSION_SUITE: ${{ inputs.require-regression-suite }}
       run: |
         bin="$RUNNER_TEMP/evalarc-action/bin"
         extra=()
@@ -110,6 +127,8 @@ runs:
           extra+=(--harness "${harness_paths[@]}")
         fi
         if [ "$REQUIRE_GENERALIZATION" = "true" ]; then extra+=(--require-generalization); fi
+        if [ -n "$CASES" ]; then extra+=(--cases "$CASES"); fi
+        if [ "$REQUIRE_REGRESSION_SUITE" = "true" ]; then extra+=(--require-regression-suite); fi
         if [ -n "$MAX_COST_RATIO" ]; then
           extra+=(--max-cost-ratio "$MAX_COST_RATIO" --cost-metric "$COST_METRIC")
         fi
@@ -137,6 +156,9 @@ runs:
             output.write(f"leakage-hits={'' if leakage is None else len(leakage['hits'])}\n")
             gate = result.get("cost_gate")
             output.write(f"cost-ratio={'' if gate is None else round(gate['ratio'], 6)}\n")
+            suites = result.get("suites")
+            failures = "" if suites is None else len(suites["regression_failures"])
+            output.write(f"regression-failures={failures}\n")
         blocking = [row for row in result["changes"] if row["kind"] in (
             "regressed", "less_reliable", "unassessed", "less_covered", "removed")]
         clean = lambda text: str(text).replace("%", "%25").replace("\r", "").replace("\n", " ")
@@ -151,12 +173,15 @@ runs:
                   f"{gate['ratio']:.3f} exceeds {gate['max_ratio']:g}")
         if review and review["state"] != "generalizes":
             print(f"::warning title=EvalArc held-out split::{clean(review['explanation'])}")
+        for item in ((result.get("suites") or {}).get("regression_failures") or [])[:10]:
+            print(f"::warning title=EvalArc regression suite::"
+                  f"{clean(item['case_id'])}: {clean(item['detail'])}")
         for hit in (leakage or {}).get("hits", [])[:10]:
             line = f",line={hit['line']}" if hit.get("line") else ""
             print(f"::warning title=EvalArc harness leakage,file={prop(hit['file'])}{line}::"
                   f"{clean(hit['role'])} of case {clean(hit['case_id'])} appears verbatim")
         PY
         if [ "$code" -eq 1 ] && [ "$FAIL_ON_REGRESSION" = "true" ]; then
-          echo "::error title=EvalArc::A check lost passes or coverage, or a required generalization or cost gate failed. Report: $OUTPUT/index.html"
+          echo "::error title=EvalArc::A check lost passes or coverage, or a required generalization, cost or regression-suite gate failed. Report: $OUTPUT/index.html"
           exit 1
         fi

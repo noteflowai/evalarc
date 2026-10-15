@@ -22,11 +22,19 @@ IGNORED = {"created_at", "evalarc_version"}
 # --- shared computations ----------------------------------------------------------
 
 
-def compute_diff(runs: list[dict], params: dict, split: dict | None, harness) -> dict:
+def compute_diff(
+    runs: list[dict], params: dict, split: dict | None, harness, manifest: dict | None = None
+) -> dict:
     from evalarc.generalization import generalization_passed, review_split, scan_harness
     from evalarc.results_diff import diff
     from evalarc.usage import cost_gate
 
+    # Absent from params.json written before suite roles reached diff.
+    require_regression = params.get("require_regression_suite", False)
+    if not isinstance(require_regression, bool):
+        raise ValueError("params.json require_regression_suite must be true or false")
+    if require_regression and manifest is None:
+        raise ValueError("--require-regression-suite requires --cases")
     result = diff(*runs)
     held_out = None
     if split is not None:
@@ -41,7 +49,28 @@ def compute_diff(runs: list[dict], params: dict, split: dict | None, harness) ->
         result["cost_gate"] = cost_gate(
             result["usage"], params["cost_metric"], params["max_cost_ratio"]
         )
+    if manifest is not None:
+        _add_suites(result, runs, manifest, require_regression)
     return result
+
+
+def _add_suites(result: dict, runs: list[dict], manifest: dict, required: bool) -> None:
+    """Additive keys for diff --cases: suite per changed row and per-suite trials."""
+    from evalarc import provenance, trials
+
+    case_ids = set(runs[0]["cases"]) | set(runs[1]["cases"])
+    review = provenance.review(manifest, case_ids)
+    if not review.get("suites"):
+        raise ValueError('the case manifest declares no suite; add "suite" to its entries')
+    comparison = trials.suite_comparison(runs[0], runs[1], review)
+    for row in result["changes"]:
+        role = review["suites"].get(row["case_id"])
+        if role:
+            row["suite"] = role
+    result["suites"] = comparison
+    if required:
+        result["regression_suite_required"] = True
+        result["regression_suite_passed"] = not comparison["regression_failures"]
 
 
 def diff_passed(result: dict) -> bool:
@@ -49,6 +78,7 @@ def diff_passed(result: dict) -> bool:
         result["gate_passed"]
         and result.get("generalization_passed", True)
         and (result.get("cost_gate") or {}).get("passed", True)
+        and result.get("regression_suite_passed", True)
     )
 
 
@@ -206,7 +236,14 @@ def verify_report(directory: Path) -> dict:
             for label, item in zip(("baseline", "current"), params["inputs"])
         ]
         split = _split(params, read, directory, recorded.get("generalization"))
-        computed = compute_diff(runs, params, split, harness)
+        manifest = None
+        if params.get("cases"):
+            from evalarc.provenance import load as load_manifest
+
+            read(params["cases"])
+            manifest = load_manifest(directory / params["cases"])
+            manifest["source"]["name"] = recorded["suites"]["manifest"]["name"]
+        computed = compute_diff(runs, params, split, harness, manifest)
         passed = diff_passed(computed)
         summary = {
             "gate_passed": computed["gate_passed"],

@@ -246,6 +246,8 @@ def render_markdown(result: dict, limit: int = 50) -> str:
                 kind += " (within noise)"
             if row.get("same_output_different_verdict"):
                 kind += " (same output, new verdict)"
+            if row.get("suite"):
+                kind += f" · {row['suite']}"
             lines.append(
                 f"| {kind} | {_cell(row['case_id'])} | "
                 f"{_cell(row['check'])} | {_fraction(row['baseline'])} | "
@@ -262,6 +264,10 @@ def render_markdown(result: dict, limit: int = 50) -> str:
 
     if usage_report.shown(result):
         lines.append(usage_report.render_markdown(result))
+    if result.get("suites"):
+        from evalarc.suite_report import render_markdown as suites_markdown
+
+        lines.append(suites_markdown(result))
     lines.append(f"<sub>{result['interpretation']}</sub>")
     return "\n".join(lines) + "\n"
 
@@ -274,6 +280,7 @@ def render_html(result: dict, destination: Path) -> None:
         result["gate_passed"]
         and result.get("generalization_passed", True)
         and (result.get("cost_gate") or {}).get("passed", True)
+        and result.get("regression_suite_passed", True)
     )
     reasons = []
     if result["blocking_changes"]:
@@ -286,6 +293,8 @@ def render_html(result: dict, destination: Path) -> None:
         reasons.append("generalization was required and not shown")
     if result.get("cost_gate") and not result["cost_gate"]["passed"]:
         reasons.append("the cost gate failed")
+    if result.get("regression_suite_required") and not result.get("regression_suite_passed"):
+        reasons.append("a regression-suite case did not succeed on every trial")
     within = result.get("blocking_changes_within_sampling_noise") or 0
     if passed:
         next_step = ""
@@ -334,6 +343,8 @@ def render_html(result: dict, destination: Path) -> None:
                 change_label += " · within noise"
             if row.get("same_output_different_verdict"):
                 change_label += " · same output, new verdict"
+            if row.get("suite"):
+                change_label += f" · {row['suite']} suite"
             body += (
                 f"<tr><td>{_tone(change_label, tone)}</td>"
                 f"<td><code>{_esc(row['case_id'])}</code></td><td>{_esc(row['check'])}</td>"
@@ -352,6 +363,10 @@ def render_html(result: dict, destination: Path) -> None:
 
     if usage_report.shown(result):
         body += usage_report.render_html(result)
+    if result.get("suites"):
+        from evalarc.suite_report import render_html as suites_html
+
+        body += suites_html(result, _esc)
     body += (
         '<h2>Inputs</h2><p class="metadata">'
         + "<br>".join(

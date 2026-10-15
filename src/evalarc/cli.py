@@ -233,6 +233,19 @@ def parser() -> argparse.ArgumentParser:
         help="usage for --max-cost-ratio; auto uses recorded cost, else total tokens",
     )
     results_diff.add_argument(
+        "--cases",
+        type=Path,
+        metavar="MANIFEST",
+        help="evalarc.case-manifest.v1 with suite roles; reports capability and regression "
+        "suites with case-level pass@k/pass^k and tags changed checks with their suite",
+    )
+    results_diff.add_argument(
+        "--require-regression-suite",
+        action="store_true",
+        help="also fail unless every regression-suite case succeeds on every trial of the "
+        "current run (requires --cases)",
+    )
+    results_diff.add_argument(
         "--require-generalization",
         action="store_true",
         help="also fail unless held-out cases improve beyond sampling noise and no held-out "
@@ -896,6 +909,8 @@ def _results_diff(args: argparse.Namespace) -> int:
 
         if args.require_generalization and not args.held_out:
             raise ValueError("--require-generalization requires --held-out")
+        if args.require_regression_suite and not args.cases:
+            raise ValueError("--require-regression-suite requires --cases")
         runs = [
             load_results(path, args.format, args.threshold)
             for path in (args.baseline, args.current)
@@ -905,6 +920,11 @@ def _results_diff(args: argparse.Namespace) -> int:
             from evalarc.generalization import load_split
 
             split = load_split(args.held_out)
+        manifest = None
+        if args.cases:
+            from evalarc.provenance import load as load_manifest
+
+            manifest = load_manifest(args.cases)
         params = {
             "format": args.format,
             "threshold": args.threshold,
@@ -913,7 +933,10 @@ def _results_diff(args: argparse.Namespace) -> int:
             "max_cost_ratio": args.max_cost_ratio,
             "cost_metric": args.cost_metric,
         }
-        result = evidence.compute_diff(runs, params, split, args.harness)
+        if manifest is not None:
+            # Recorded only when used, so folders without --cases keep earlier params.
+            params["require_regression_suite"] = args.require_regression_suite
+        result = evidence.compute_diff(runs, params, split, args.harness, manifest)
         if args.output:
             with new_run(args.output) as output:
                 inputs = []
@@ -928,6 +951,10 @@ def _results_diff(args: argparse.Namespace) -> int:
                         args.held_out, split["source"]["sha256"], output / "split.json"
                     )
                 harness = evidence.copy_harness(args.harness, output) if args.harness else []
+                if manifest is not None:
+                    evidence.copy_input(
+                        args.cases, manifest["source"]["sha256"], output / "cases.json"
+                    )
                 evidence.write_params(
                     output,
                     "diff",
@@ -936,6 +963,7 @@ def _results_diff(args: argparse.Namespace) -> int:
                         "inputs": inputs,
                         "split": "split.json" if split is not None else None,
                         "harness": harness,
+                        **({"cases": "cases.json"} if manifest is not None else {}),
                     },
                 )
                 write_json(output / "diff.json", result)
@@ -1005,6 +1033,10 @@ def _results_diff(args: argparse.Namespace) -> int:
                 f"Cost gate ({gate['metric']}): current/baseline {gate['ratio']:.3f}, "
                 f"limit {gate['max_ratio']:g} — {'pass' if gate['passed'] else 'fail'}"
             )
+        from evalarc.suite_report import console_lines
+
+        for line in console_lines(result):
+            print(line)
         if args.output:
             print(f"Report: {args.output / 'index.html'}")
     from evalarc.evidence import diff_passed

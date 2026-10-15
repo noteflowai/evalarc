@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc diff --cases MANIFEST` reads the capability/regression suite roles of
+  a case manifest. Changed checks carry their case's `suite`, and `diff.json`
+  gains `suites`: per suite, baseline and current case-level trials with pass@k
+  and pass^k on that suite's cases, `regression_failures` (regression cases
+  that did not succeed on every current trial: failed, unassessed or missing)
+  and `undeclared_cases`. The summary, HTML report and console show the same.
+  The default gate is unchanged.
+- `--require-regression-suite` (requires `--cases`) also fails the gate unless
+  every regression case succeeds on every trial of the current run, including
+  failures already present on the baseline.
+- The GitHub Action gains the inputs `cases` and `require-regression-suite`,
+  the output `regression-failures`, and a warning annotation per failing
+  regression case.
+- Output compatibility: without `--cases`, `diff.json`, `params.json`, the
+  summary and the page are unchanged, so earlier folders still verify. Folders
+  written with `--cases` copy the manifest to `cases.json`, record
+  `require_regression_suite` and need this version or later to verify. A
+  manifest that declares no suite exits 2.
+
 ## 0.18.1 — 2026-10-15
 
 - `eval-init` / `review-inputs` accept an optional `suite` (`capability` or

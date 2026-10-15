@@ -154,22 +154,7 @@ def suite_findings(
     """
     per_case = trials["per_case"]
     out = []
-    failing = []
-    for case_id in sorted(case for case, role in suites.items() if role == "regression"):
-        item = per_case.get(case_id)
-        if item is None:
-            detail = "not recorded in the last file"
-        elif not item["assessed"]:
-            detail = f"0 of {item['trials']} trial(s) assessed"
-        elif item["successes"] < item["assessed"] or item["assessed"] < item["trials"]:
-            detail = f"{item['successes']}/{item['assessed']} assessed trial(s) succeeded" + (
-                f", {item['trials'] - item['assessed']} unassessed"
-                if item["assessed"] < item["trials"]
-                else ""
-            )
-        else:
-            continue
-        failing.append(_item(last_file, case_id, item, detail))
+    failing = regression_failures(per_case, suites, last_file, "not recorded in the last file")
     if failing:
         out.append(
             finding(
@@ -205,6 +190,71 @@ def suite_findings(
                 items=ready,
             )
         )
+    return out
+
+
+def regression_failures(
+    per_case: dict, suites: dict[str, str], file: str, missing: str
+) -> list[dict]:
+    """Regression cases that did not succeed on every trial (failed, unassessed, missing)."""
+    failing = []
+    for case_id in sorted(case for case, role in suites.items() if role == "regression"):
+        item = per_case.get(case_id)
+        if item is None:
+            detail = missing
+        elif not item["assessed"]:
+            detail = f"0 of {item['trials']} trial(s) assessed"
+        elif item["successes"] < item["assessed"] or item["assessed"] < item["trials"]:
+            detail = f"{item['successes']}/{item['assessed']} assessed trial(s) succeeded" + (
+                f", {item['trials'] - item['assessed']} unassessed"
+                if item["assessed"] < item["trials"]
+                else ""
+            )
+        else:
+            continue
+        failing.append(_item(file, case_id, item, detail))
+    return failing
+
+
+def suite_comparison(baseline: dict, current: dict, review: dict) -> dict:
+    """Per-suite case-level trials for a baseline/current pair (``evalarc diff --cases``).
+
+    ``review`` is ``provenance.review`` over the union of both runs' case IDs. Each
+    suite reports pass@k / pass^k on each side, computed on the suite's cases only;
+    ``regression_failures`` lists regression cases that did not succeed on every trial
+    of the current run (failed, unassessed or missing).
+    """
+    suites = review.get("suites") or {}
+    out: dict = {"manifest": review["manifest"], "suites": {}}
+    for role in ("capability", "regression"):
+        members = sorted(case for case, value in suites.items() if value == role)
+        if not members:
+            continue
+        sides = {}
+        for label, run in (("baseline", baseline), ("current", current)):
+            subset = {
+                "source": run["source"],
+                "cases": {case: run["cases"][case] for case in members if case in run["cases"]},
+                "samples": {
+                    case: run["samples"][case]
+                    for case in members
+                    if case in (run.get("samples") or {})
+                },
+            }
+            summary = summarize(subset)
+            sides[label] = {
+                "cases": summary["cases"],
+                "assessed_trials": summary["assessed_trials"],
+                "unassessed_trials": summary["unassessed_trials"],
+                "successful_trials": summary["successful_trials"],
+                "by_k": summary["by_k"],
+            }
+        out["suites"][role] = {"cases": len(members), **sides}
+    current_trials = case_trials(current)
+    out["regression_failures"] = regression_failures(
+        current_trials, suites, current["source"]["name"], "not recorded in the current run"
+    )
+    out["undeclared_cases"] = sorted((set(baseline["cases"]) | set(current["cases"])) - set(suites))
     return out
 
 

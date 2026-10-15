@@ -120,6 +120,23 @@ GitHub Action 对应输入为 `held-out`、`harness`（空格分隔）和 `requi
 [`evalarc eval-health`](eval-health.zh-CN.md) 检查评测本身；要复核调优循环的每一步，请用
 [`evalarc hillclimb-review`](hillclimb-review.zh-CN.md)。
 
+## 能力套件与回归套件
+
+用例清单（[`eval-health` 用例清单](eval-health.zh-CN.md#用例来源)，也可由
+`review-inputs --write-manifest` 生成）的条目可以声明 `"suite": "capability"` 或
+`"suite": "regression"`。加上 `--cases cases.manifest.json` 后：每个变化的检查都会标出所属套件；
+`diff.json` 新增 `suites`，按套件给出基线与当前的[用例级试验](eval-health.zh-CN.md#用例级试验passk-与-passk)
+（只在该套件的用例上计算 pass@k 与 pass^k）、当前运行中未能每次试验都成功的回归用例
+（`regression_failures`：失败、未评估或缺失），以及未声明套件的用例。默认门禁不变：所有检查照常比较，
+能力用例的检查少通过仍会导致失败。
+
+`--require-regression-suite`（需要 `--cases`）额外要求每个回归用例在当前运行的每次试验中都成功，
+否则门禁失败。这比与基线比较更严格：基线上就已失败的回归用例同样会导致失败，因为回归套件应接近
+100% 通过。请在回归套件全部通过后再开启它，并把稳定通过的能力用例（`graduation_candidates`）移入回归套件。
+清单会以 `cases.json` 复制到输出目录，`evalarc verify` 会重算套件部分和门禁。不加 `--cases` 写出的目录
+不变，因此旧目录仍能验证；加了 `--cases` 的目录需要 0.18.2 或更高版本才能验证。GitHub Action 对应输入为
+`cases` 和 `require-regression-suite`，输出为 `regression-failures`。
+
 ## 保质降本
 
 评测接近饱和时，有用的改动往往是质量不变、成本更低：更小的模型、更低的思考强度、更短的提示词
