@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.19.0 — 2026-10-15
 
 - `evalarc diff --cases MANIFEST` reads the capability/regression suite roles of
   a case manifest. Changed checks carry their case's `suite`, and `diff.json`
