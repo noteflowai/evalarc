@@ -182,6 +182,13 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         if result.get("baseline_incomplete")
         else "the current run is incomplete"
     )
+    if result.get("regression_suite_required") and not result.get("regression_suite_passed"):
+        # Only on the new opt-in gate, so summaries without it keep their earlier heading.
+        verdict = (
+            "regression-suite case(s) did not succeed on every trial"
+            if result["gate_passed"]
+            else verdict + "; regression-suite case(s) did not succeed on every trial"
+        )
     lines = [f"### EvalArc: {verdict}", ""]
     lines += ["| | Baseline | Current |", "| --- | ---: | ---: |"]
     before, after = result["baseline"], result["current"]

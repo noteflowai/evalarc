@@ -19,7 +19,15 @@
   summary and the page are unchanged, so earlier folders still verify. Folders
   written with `--cases` copy the manifest to `cases.json`, record
   `require_regression_suite` and need this version or later to verify. A
-  manifest that declares no suite exits 2.
+  manifest that declares no suite exits 2, and so does
+  `--require-regression-suite` when no case is in the regression suite.
+- Case manifests (`eval-health --cases`, `diff --cases`) now match an entry to
+  a case whose ID equals it exactly even when it contains glob characters, so
+  pytest IDs such as `test_policy[refund]` need no `[[]` escaping. Glob
+  matching is unchanged.
+- Console lines of `evalarc diff` replace control characters in case IDs,
+  check names and file names with spaces, so a crafted ID cannot print a line
+  that GitHub Actions reads as a workflow command. Saved reports are unchanged.
 
 ## 0.18.1 — 2026-10-15
 

@@ -903,6 +903,7 @@ def main(argv: list[str] | None = None) -> int:
 
 def _results_diff(args: argparse.Namespace) -> int:
     from evalarc.results_diff import BLOCKING, load_results, render_html, render_markdown
+    from evalarc.suite_report import console_text
 
     try:
         from evalarc import evidence
@@ -997,7 +998,10 @@ def _results_diff(args: argparse.Namespace) -> int:
             )
         for row in result["changes"]:
             if row["kind"] in BLOCKING:
-                print(f"  {row['kind']}: {row['case_id']} / {row['check']}")
+                print(
+                    f"  {row['kind']}: {console_text(row['case_id'])} / "
+                    f"{console_text(row['check'])}"
+                )
         if result["current_incomplete"]:
             print("The current run is incomplete; the gate fails.")
         if result.get("baseline_incomplete"):
@@ -1024,7 +1028,10 @@ def _results_diff(args: argparse.Namespace) -> int:
                 + (f", {leakage['held_out_hits']} from held-out cases" if review else "")
             )
             for hit in leakage["hits"][:10]:
-                print(f"  {hit['file']}:{hit['line'] or '?'} {hit['role']} of {hit['case_id']}")
+                print(
+                    f"  {console_text(hit['file'])}:{hit['line'] or '?'} {hit['role']} of "
+                    f"{console_text(hit['case_id'])}"
+                )
         if result.get("generalization_required") and not result["generalization_passed"]:
             print("Generalization is required and was not shown; the gate fails.")
         gate = result.get("cost_gate")

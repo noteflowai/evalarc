@@ -82,11 +82,11 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
     assigned: dict[str, dict] = {}
     for rule in manifest["rules"]:
         pattern = rule["match"]
-        matched = (
-            {case for case in case_ids if fnmatch.fnmatchcase(case, pattern)}
-            if any(ch in pattern for ch in "*?[")
-            else {pattern} & case_ids
-        )
+        # An exact ID always matches, so IDs such as pytest's test_x[param] need no
+        # glob escaping; glob characters additionally match by pattern.
+        matched = {pattern} & case_ids
+        if any(ch in pattern for ch in "*?["):
+            matched |= {case for case in case_ids if fnmatch.fnmatchcase(case, pattern)}
         if not matched:
             raise ValueError(f"case manifest entry {pattern!r} matches no recorded case")
         for case in matched:

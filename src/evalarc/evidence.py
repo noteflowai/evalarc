@@ -62,6 +62,11 @@ def _add_suites(result: dict, runs: list[dict], manifest: dict, required: bool) 
     review = provenance.review(manifest, case_ids)
     if not review.get("suites"):
         raise ValueError('the case manifest declares no suite; add "suite" to its entries')
+    if required and "regression" not in review["suites"].values():
+        # A required gate over an empty regression suite would pass without checking anything.
+        raise ValueError(
+            '--require-regression-suite needs at least one case with "suite": "regression"'
+        )
     comparison = trials.suite_comparison(runs[0], runs[1], review)
     for row in result["changes"]:
         role = review["suites"].get(row["case_id"])
@@ -242,6 +247,8 @@ def verify_report(directory: Path) -> dict:
 
             read(params["cases"])
             manifest = load_manifest(directory / params["cases"])
+            if not isinstance(recorded.get("suites"), dict):
+                raise ValueError("diff.json lacks the suite view that params.json records")
             manifest["source"]["name"] = recorded["suites"]["manifest"]["name"]
         computed = compute_diff(runs, params, split, harness, manifest)
         passed = diff_passed(computed)

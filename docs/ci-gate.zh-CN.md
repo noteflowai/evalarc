@@ -134,7 +134,7 @@ GitHub Action 对应输入为 `held-out`、`harness`（空格分隔）和 `requi
 否则门禁失败。这比与基线比较更严格：基线上就已失败的回归用例同样会导致失败，因为回归套件应接近
 100% 通过。请在回归套件全部通过后再开启它，并把稳定通过的能力用例（`graduation_candidates`）移入回归套件。
 清单会以 `cases.json` 复制到输出目录，`evalarc verify` 会重算套件部分和门禁。不加 `--cases` 写出的目录
-不变，因此旧目录仍能验证；加了 `--cases` 的目录需要 0.18.2 或更高版本才能验证。GitHub Action 对应输入为
+不变，因此旧目录仍能验证；加了 `--cases` 的目录需要 0.19.0 或更高版本才能验证。清单中没有任何回归用例时，`--require-regression-suite` 以退出码 2 报错，而不是空检查通过。清单条目与用例 ID 完全相同时直接匹配，因此 `test_policy[refund]` 这类 pytest ID 不需要转义 glob 字符。仓库示例可用 `examples/results-diff/inspect/suites.json` 试运行。GitHub Action 对应输入为
 `cases` 和 `require-regression-suite`，输出为 `regression-failures`。
 
 ## 保质降本

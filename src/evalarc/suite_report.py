@@ -2,7 +2,17 @@
 
 from __future__ import annotations
 
+import re
+
 from evalarc.results_diff import _cell
+
+_CONTROL = re.compile(r"[\x00-\x1f\x7f]")
+
+
+def console_text(value: object) -> str:
+    """One console line: control characters (CR, LF, ESC) become spaces, so an untrusted
+    case ID cannot start a new line such as a GitHub workflow command."""
+    return _CONTROL.sub(" ", str(value))
 
 
 def _pick(by_k: list[dict]) -> list[dict]:
@@ -39,7 +49,7 @@ def console_lines(result: dict) -> list[str]:
     failures = review["regression_failures"]
     if failures:
         lines.append(f"{len(failures)} regression-suite case(s) did not succeed on every trial:")
-        lines += [f"  {item['case_id']}: {item['detail']}" for item in failures[:10]]
+        lines += [f"  {console_text(item['case_id'])}: {item['detail']}" for item in failures[:10]]
     if result.get("regression_suite_required") and not result.get("regression_suite_passed"):
         lines.append("The regression suite is required to pass every trial; the gate fails.")
     return lines

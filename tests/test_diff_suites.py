@@ -207,3 +207,85 @@ def test_untrusted_case_ids_are_escaped(tmp_path):
     assert "\r" not in markdown
     assert not any(line.lstrip("- ").startswith("### fake") for line in markdown.splitlines())
     assert "`<img src=x onerror=1>\\| ### fake`" in markdown
+
+
+def test_required_gate_needs_a_regression_case(tmp_path, capsys):
+    only_capability = write_manifest(
+        tmp_path / "m.json", [{"match": "cancel-*", "source": "bug_report", "suite": "capability"}]
+    )
+    args = ["diff", str(INSPECT / "baseline.json"), str(INSPECT / "current.json")]
+    assert main([*args, "--cases", str(only_capability), "--require-regression-suite"]) == 2
+    assert "needs at least one case" in capsys.readouterr().err
+    assert main([*args, "--cases", str(only_capability)]) == 1  # informational is fine
+
+
+def test_verify_recomputes_the_recorded_gate_option(tmp_path, capsys):
+    manifest = write_manifest(tmp_path / "m.json", MANIFEST)
+    out = tmp_path / "review"
+    args = ["diff", str(INSPECT / "baseline.json"), str(INSPECT / "current.json")]
+    assert main([*args, "--cases", str(manifest), "--output", str(out)]) == 1
+    params = json.loads((out / "params.json").read_text())
+    params["require_regression_suite"] = True
+    (out / "params.json").write_text(json.dumps(params))
+    capsys.readouterr()
+    assert main(["verify", str(out), "--json"]) == 2
+    # A params file that records cases but a report without the suite view fails clearly.
+    params["require_regression_suite"] = False
+    (out / "params.json").write_text(json.dumps(params))
+    report = json.loads((out / "diff.json").read_text())
+    del report["suites"]
+    (out / "diff.json").write_text(json.dumps(report))
+    assert main(["verify", str(out), "--json"]) == 2
+    assert "lacks the suite view" in capsys.readouterr().out
+
+
+def test_junit_and_promptfoo_suites(tmp_path):
+    junit = ROOT / "examples/results-diff/junit"
+    runs = [load_results(junit / f"{n}.xml") for n in ("baseline", "current")]
+    case = sorted(runs[1]["cases"])[0]
+    assert "[" in case  # pytest-style parameter id
+    manifest = provenance.load(
+        write_manifest(
+            tmp_path / "j.json", [{"match": case, "source": "production", "suite": "regression"}]
+        )
+    )
+    result = evidence.compute_diff(runs, PARAMS, None, [], manifest)
+    side = result["suites"]["suites"]["regression"]["current"]
+    assert side["cases"] == 1 and side["by_k"][0]["k"] == 1
+
+    promptfoo = ROOT / "examples/results-diff/promptfoo"
+    runs = [load_results(promptfoo / f"{n}.json") for n in ("baseline", "current")]
+    ids = sorted(runs[1]["cases"])
+    manifest = provenance.load(
+        write_manifest(
+            tmp_path / "p.json", [{"match": "*", "source": "production", "suite": "capability"}]
+        )
+    )
+    result = evidence.compute_diff(runs, PARAMS, None, [], manifest)
+    assert result["suites"]["suites"]["capability"]["cases"] == len(
+        set(ids) | set(runs[0]["cases"])
+    )
+    assert result["suites"]["regression_failures"] == []
+
+
+def test_exact_ids_with_glob_characters_match(tmp_path):
+    review = provenance.review(
+        provenance.load(
+            write_manifest(tmp_path / "m.json", [{"match": "t::x[a]", "source": "production"}])
+        ),
+        {"t::x[a]", "t::xa"},
+    )
+    assert review["declared"] == 2  # exact ID, plus the glob match "t::xa" as before
+
+
+def test_console_lines_cannot_start_workflow_commands(tmp_path, capsys):
+    case = "r%x\r\n::error::pwn"
+    base = log(tmp_path / "b.json", {case: [True]})
+    cur = log(tmp_path / "c.json", {case: [False]})
+    manifest = write_manifest(
+        tmp_path / "m.json", [{"match": "r*", "source": "production", "suite": "regression"}]
+    )
+    assert main(["diff", str(base), str(cur), "--cases", str(manifest)]) == 1
+    out = capsys.readouterr().out
+    assert not any(line.startswith("::") for line in out.splitlines())
+    assert "\r" not in out
