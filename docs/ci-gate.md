@@ -361,6 +361,19 @@ regression cases that did not succeed on every trial is the
 `regression-failures` output, with a warning annotation for each of the first
 10 cases.
 
+Case IDs and check names printed to the log come from the result files. The
+action pauses workflow-command processing while `evalarc diff` runs. If you call
+the CLI directly in a `run:` step on results you do not fully trust, do the
+same:
+
+```bash
+token="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+echo "::stop-commands::$token"
+evalarc diff baseline.json current.json --output evalarc-diff || code=$?
+echo "::$token::"
+exit "${code:-0}"
+```
+
 ```yaml
 - uses: noteflowai/evalarc@v0.16.0
   with:

@@ -296,8 +296,10 @@ def test_console_lines_cannot_start_workflow_commands(tmp_path, capsys):
     )
     assert main(["diff", str(base), str(cur), "--cases", str(manifest)]) == 1
     out = capsys.readouterr().out
-    assert not any(line.startswith("::") for line in out.splitlines())
-    assert "\r" not in out
+    # The runner trims leading whitespace before looking for "::"; the CR/LF in the ID
+    # must not have produced a line of its own.
+    assert not any(line.lstrip().startswith("::") for line in out.splitlines())
+    assert "\r" not in out and "r%x  ::error::pwn" in out
 
 
 def test_action_pauses_workflow_commands_around_evalarc():
