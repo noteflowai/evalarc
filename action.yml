@@ -132,12 +132,17 @@ runs:
         if [ -n "$MAX_COST_RATIO" ]; then
           extra+=(--max-cost-ratio "$MAX_COST_RATIO" --cost-metric "$COST_METRIC")
         fi
+        # Case IDs, check names and statuses printed by evalarc come from the result
+        # files. Pause workflow-command processing so none of them is read as a command.
+        token="$("$bin/python" -c 'import secrets; print(secrets.token_hex(16))')"
+        echo "::stop-commands::$token"
         set +e
         "$bin/evalarc" diff "$BASELINE" "$CURRENT" --format "$FORMAT" \
           --threshold "$THRESHOLD" --output "$OUTPUT" --markdown "$GITHUB_STEP_SUMMARY" \
           "${extra[@]}"
         code=$?
         set -e
+        echo "::$token::"
         if [ "$code" -eq 2 ]; then
           echo "::error title=EvalArc::The result files could not be compared; see the log above."
           exit 2

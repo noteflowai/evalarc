@@ -262,12 +262,14 @@ verify` recomputes the suite view and gate. Folders written without `--cases`
 are unchanged, so earlier folders still verify; folders written with it need
 0.19.0 or later to verify. `--require-regression-suite` with a manifest that
 puts no case in the regression suite exits 2 rather than passing vacuously.
-A manifest entry matches a case whose ID equals it exactly, so pytest IDs such
-as `test_policy[refund]` need no glob escaping.
+A manifest entry that matches no case as a glob also matches a case whose ID
+equals it exactly, so pytest IDs such as `test_policy[refund]` need no glob
+escaping.
 
 In the recorded example, `refund-duplicate` (regression) fails both epochs, so
 `--require-regression-suite` fails the gate; the capability suite reaches
-pass@2 100% but pass^2 50%.
+pass@2 100% but pass^2 66.7%, because `cancel-pending` succeeds on one of its
+two epochs.
 
 ## Cost at equal quality
 

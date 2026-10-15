@@ -13,21 +13,25 @@
   every regression case succeeds on every trial of the current run, including
   failures already present on the baseline.
 - The GitHub Action gains the inputs `cases` and `require-regression-suite`,
-  the output `regression-failures`, and a warning annotation per failing
-  regression case.
+  the output `regression-failures`, and a warning annotation for each of the
+  first 10 failing regression cases.
 - Output compatibility: without `--cases`, `diff.json`, `params.json`, the
   summary and the page are unchanged, so earlier folders still verify. Folders
   written with `--cases` copy the manifest to `cases.json`, record
   `require_regression_suite` and need this version or later to verify. A
   manifest that declares no suite exits 2, and so does
   `--require-regression-suite` when no case is in the regression suite.
-- Case manifests (`eval-health --cases`, `diff --cases`) now match an entry to
-  a case whose ID equals it exactly even when it contains glob characters, so
-  pytest IDs such as `test_policy[refund]` need no `[[]` escaping. Glob
-  matching is unchanged.
+- Case manifests (`eval-health --cases`, `diff --cases`, `review-inputs`): an
+  entry that matches no case as a glob now also matches a case whose ID equals
+  it exactly, so pytest IDs such as `test_policy[refund]` need no `[[]`
+  escaping. Such entries used to exit 2; entries that matched before match the
+  same cases, so earlier folders still verify.
 - Console lines of `evalarc diff` replace control characters in case IDs,
-  check names and file names with spaces, so a crafted ID cannot print a line
-  that GitHub Actions reads as a workflow command. Saved reports are unchanged.
+  check names, file names and the baseline status with spaces, so a crafted
+  value cannot add a console line. The GitHub Action also pauses
+  workflow-command processing (`::stop-commands::` with a random token) while
+  `evalarc diff` runs, so values printed from the result files cannot issue
+  workflow commands such as spoofed annotations. Saved reports are unchanged.
 
 ## 0.18.1 — 2026-10-15
 

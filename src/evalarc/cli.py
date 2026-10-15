@@ -1005,7 +1005,7 @@ def _results_diff(args: argparse.Namespace) -> int:
         if result["current_incomplete"]:
             print("The current run is incomplete; the gate fails.")
         if result.get("baseline_incomplete"):
-            status = result["baseline"]["identity"].get("status")
+            status = console_text(result["baseline"]["identity"].get("status"))
             print(
                 f"The baseline run is incomplete (status {status}); "
                 f"{counts.get('added', 0)} check(s) appear only in the current run and were "

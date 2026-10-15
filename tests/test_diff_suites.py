@@ -275,7 +275,16 @@ def test_exact_ids_with_glob_characters_match(tmp_path):
         ),
         {"t::x[a]", "t::xa"},
     )
-    assert review["declared"] == 2  # exact ID, plus the glob match "t::xa" as before
+    # The glob matches "t::xa", so the entry keeps its earlier meaning.
+    assert review["declared"] == 1 and review["undeclared"] == ["t::x[a]"]
+    alone = provenance.review(
+        provenance.load(
+            write_manifest(tmp_path / "n.json", [{"match": "t::x[a]", "source": "production"}])
+        ),
+        {"t::x[a]"},
+    )
+    # No glob match: the exact ID matches instead of exiting 2.
+    assert alone["declared"] == 1
 
 
 def test_console_lines_cannot_start_workflow_commands(tmp_path, capsys):
@@ -289,3 +298,13 @@ def test_console_lines_cannot_start_workflow_commands(tmp_path, capsys):
     out = capsys.readouterr().out
     assert not any(line.startswith("::") for line in out.splitlines())
     assert "\r" not in out
+
+
+def test_action_pauses_workflow_commands_around_evalarc():
+    text = (ROOT / "action.yml").read_text()
+    start = text.index('echo "::stop-commands::$token"')
+    call = text.index('"$bin/evalarc" diff', start)
+    resume = text.index('echo "::$token::"', call)
+    annotations = text.index("::warning title=EvalArc", resume)
+    assert start < call < resume < annotations
+    assert "secrets.token_hex(16)" in text
