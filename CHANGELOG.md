@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.20.0 — 2026-10-15
 
 - `evalarc hillclimb-review --cases MANIFEST` and the `hillclimb-run` config key
   `cases` read capability/regression suite roles. A step that makes a
