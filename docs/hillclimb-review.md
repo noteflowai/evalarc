@@ -44,10 +44,13 @@ Each step is compared with the **last kept** result, not with the baseline:
 (see [eval-health](eval-health.md#case-provenance); `review-inputs
 --write-manifest` writes one from `cases.jsonl`). A step that makes a
 regression-suite case, tuning or held out, go from succeeding on every trial of
-the kept result to anything less (a failed, unassessed or missing trial) is
+the kept result to anything less (a failed, unassessed or missing trial, or
+fewer recorded trials) is
 rolled back even when both partitions improved: one fixed case that breaks a
-case the agent already handled is not progress. A regression case that already
-failed in the kept result does not block later steps. The manifest needs at
+case the agent already handled is not progress. A regression case that did not
+succeed on every trial of the kept result, including one unassessed trial such
+as a pipeline flake, is not protected until it succeeds on every trial again,
+so a pre-existing failure does not block later steps. The manifest needs at
 least one regression case (otherwise exit 2), is copied to `cases.json`, and
 each step records `regression_suite_broken`. Folders written without `--cases`
 are unchanged; folders written with it need 0.20.0 or later to verify.

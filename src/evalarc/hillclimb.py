@@ -228,8 +228,9 @@ def broken_regression_cases(kept: dict, candidate: dict, regression: set[str]) -
     """Regression cases that succeeded on every trial of ``kept`` but not of ``candidate``.
 
     Trials follow ``trials.case_trials``: a failed, unassessed or missing trial counts as
-    not succeeding. A case that already failed in ``kept`` is not counted again, so one
-    pre-existing failure does not block every later step.
+    not succeeding, and so does recording fewer trials than ``kept`` (lost coverage). A
+    case that did not succeed on every trial of ``kept`` (failed or unassessed) is not
+    protected, so one pre-existing failure does not block every later step.
     """
     from evalarc.trials import case_trials
 
@@ -239,7 +240,8 @@ def broken_regression_cases(kept: dict, candidate: dict, regression: set[str]) -
     before, after = case_trials(kept), case_trials(candidate)
     broken = []
     for case_id in sorted(regression):
-        if reliable(before.get(case_id)) and not reliable(after.get(case_id)):
+        old, new = before.get(case_id), after.get(case_id)
+        if reliable(old) and (not reliable(new) or new["trials"] < old["trials"]):
             item = after.get(case_id) or {"trials": 0, "assessed": 0, "successes": 0}
             broken.append({"case_id": case_id, **item})
     return broken

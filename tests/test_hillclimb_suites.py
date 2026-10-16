@@ -91,14 +91,21 @@ def _write(path, rows):
     return path
 
 
-def test_final_comparison_flags_a_break_across_kept_steps(tmp_path):
+def test_fewer_trials_count_as_broken(tmp_path):
+    base = inspect_log(tmp_path / "0.json", outcomes(OFF, OFF, OFF, OFF, ON))
+    step = inspect_log(tmp_path / "1.json", outcomes(ON, ON, ON, OFF, [True]))
+    result = review([base, step], split(tmp_path), manifest=regression(tmp_path, "reg"))
+    assert result["steps"][0]["decision"] == "rollback_regression"
+    assert result["steps"][0]["regression_suite_broken"][0]["trials"] == 1
+
+
+def test_final_comparison_flags_a_break_across_kept_steps(tmp_path, monkeypatch):
     # Defense in depth: the step rule makes this unreachable today, so force a step
     # check that sees nothing and a final check that sees the loss.
     import evalarc.hillclimb as climb
 
     base = inspect_log(tmp_path / "0.json", outcomes(OFF, OFF, OFF, OFF, ON))
     step = inspect_log(tmp_path / "1.json", outcomes(ON, ON, ON, OFF, ON))
-    original = climb.broken_regression_cases
     calls = []
 
     def fake(kept, candidate, cases):
@@ -107,11 +114,8 @@ def test_final_comparison_flags_a_break_across_kept_steps(tmp_path):
             return []
         return [{"case_id": "reg", "trials": 8, "assessed": 8, "successes": 7}]
 
-    climb.broken_regression_cases = fake
-    try:
-        result = review([base, step], split(tmp_path), manifest=regression(tmp_path, "reg"))
-    finally:
-        climb.broken_regression_cases = original
+    monkeypatch.setattr(climb, "broken_regression_cases", fake)
+    result = review([base, step], split(tmp_path), manifest=regression(tmp_path, "reg"))
     assert result["steps"][0]["decision"] == "keep"
     assert result["recommendation"] == "do_not_merge_regression_suite"
     assert result["merge_recommended"] is False
@@ -188,5 +192,25 @@ def test_hillclimb_run_rolls_back_a_step_that_breaks_a_regression_case(tmp_path,
     assert first["decision"] == "rollback_regression"
     assert [item["case_id"] for item in first["regression_suite_broken"]] == ["t07"]
     assert (suite_out / "cases.json").is_file()
+    # The rolled-back refund rule is not in the restored workspace or the final diff.
+    assert "route refund" not in (tmp_path / "suite-example/workspace/rules.md").read_text()
+    assert "route refund" not in (suite_out / "final.diff").read_text()
+    report = json.loads((suite_out / "hillclimb.json").read_text())
+    assert report["suites"]["regression_cases"] == ["t07"]
+    assert report["steps"][0]["regression_suite_broken"][0]["case_id"] == "t07"
     capsys.readouterr()
     assert main(["verify", str(suite_out), "--json"]) == 0
+
+
+def test_hillclimb_run_rejects_a_manifest_without_regression_cases_before_running(tmp_path, capsys):
+    config = _breaking_example(tmp_path / "example")
+    manifest(
+        tmp_path / "example",
+        [{"match": "*", "source": "production", "suite": "capability"}],
+        name="cases.manifest.json",
+    )
+    config.write_text(config.read_text() + 'cases = "cases.manifest.json"\n')
+    out = tmp_path / "climb"
+    assert main(["hillclimb-run", str(config), "--output", str(out), "--trust-local"]) == 2
+    assert "no case in the regression suite" in capsys.readouterr().err
+    assert not out.exists()

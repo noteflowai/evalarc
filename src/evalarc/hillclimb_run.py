@@ -119,6 +119,13 @@ def load_config(path: Path) -> dict:
 
         manifest_path = (base / str(raw["cases"])).resolve()
         manifest = load_manifest(manifest_path)
+        if not any(rule.get("suite") == "regression" for rule in manifest["rules"]):
+            # Checked before any command runs, so no baseline evaluation is spent on it.
+            raise ValueError(
+                f"{manifest_path.name} puts no case in the regression suite; declare "
+                '"suite": "regression" (in cases.jsonl for eval-init projects, then rerun '
+                "review-inputs --write-manifest)"
+            )
     return {
         "path": path,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
