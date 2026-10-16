@@ -243,7 +243,7 @@ def broken_regression_cases(kept: dict, candidate: dict, regression: set[str]) -
         old, new = before.get(case_id), after.get(case_id)
         if reliable(old) and (not reliable(new) or new["trials"] < old["trials"]):
             item = after.get(case_id) or {"trials": 0, "assessed": 0, "successes": 0}
-            broken.append({"case_id": case_id, **item})
+            broken.append({"case_id": case_id, **item, "kept_trials": old["trials"]})
     return broken
 
 
@@ -531,7 +531,11 @@ def render_markdown(result: dict) -> str:
 def _broken_text(item: dict) -> str:
     if not item["trials"]:
         return "not recorded"
-    return f"{item['successes']}/{item['trials']} trial(s) succeeded"
+    text = f"{item['successes']}/{item['trials']} trial(s) succeeded"
+    kept = item.get("kept_trials")
+    if kept and item["trials"] < kept:
+        text += f", kept result recorded {kept}"
+    return text
 
 
 def _suite_markdown(result: dict) -> list[str]:

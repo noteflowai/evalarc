@@ -48,7 +48,7 @@ def test_a_step_that_breaks_a_regression_case_is_rolled_back(tmp_path):
     assert first["decision"] == "rollback_regression"
     assert first["reason"] == "1 regression-suite case(s) stopped succeeding on every trial"
     assert first["regression_suite_broken"] == [
-        {"case_id": "reg", "trials": 8, "assessed": 8, "successes": 7}
+        {"case_id": "reg", "trials": 8, "assessed": 8, "successes": 7, "kept_trials": 8}
     ]
     assert result["recommendation"] == "no_change_kept"
     assert result["suites"]["regression_cases"] == ["reg"]
@@ -72,7 +72,7 @@ def test_unassessed_and_errored_trials_count_as_broken(tmp_path):
         _write(tmp_path / "c.json", [("reg", 1, "C"), ("reg", 2, None), ("t", 1, "C")])
     )
     assert broken_regression_cases(base, cur, {"reg"}) == [
-        {"case_id": "reg", "trials": 2, "assessed": 1, "successes": 1}
+        {"case_id": "reg", "trials": 2, "assessed": 1, "successes": 1, "kept_trials": 2}
     ]
 
 
@@ -97,6 +97,7 @@ def test_fewer_trials_count_as_broken(tmp_path):
     result = review([base, step], split(tmp_path), manifest=regression(tmp_path, "reg"))
     assert result["steps"][0]["decision"] == "rollback_regression"
     assert result["steps"][0]["regression_suite_broken"][0]["trials"] == 1
+    assert "(1/1 trial(s) succeeded, kept result recorded 8)" in render_markdown(result)
 
 
 def test_final_comparison_flags_a_break_across_kept_steps(tmp_path, monkeypatch):
