@@ -20,7 +20,11 @@ evalarc hillclimb-run /tmp/climb-example/hillclimb.toml --output runs/climb --tr
 `held_out`（拆分文件）、`evaluate`、`propose`（参数数组，不经 shell，在工作区内以你的环境变量运行）、
 `objective`（`quality` 或 `cost`）、`max_iterations`、`stall_after`、`timeout_seconds`，以及可选的
 `cost_metric`、`max_cost_ratio`、`min_effect`、`result_suffix`、`format`、`threshold`、
-`leak_min_chars`、`paste_check`。占位符：`{python}`、`{workspace}`；evaluate 用 `{output}`；
+`leak_min_chars`、`paste_check`、`cases`（带套件角色的用例清单；`eval-init` 项目先在 `cases.jsonl` 中给用例加上
+`"suite": "regression"`，再用 `review-inputs --write-manifest` 生成的 `cases.manifest.json`；清单中没有回归用例时，
+在评测基线之前就以退出码 2 报错）。设置 `cases` 后，弄坏回归套件用例的
+迭代会像其他退步一样被回滚并恢复，规则同 [`hillclimb-review`](hillclimb-review.zh-CN.md#规则)；清单会复制为运行目录中的 `cases.json`。
+占位符：`{python}`、`{workspace}`；evaluate 用 `{output}`；
 propose 用 `{failures}`、`{allowed}`、`{iteration}`。
 
 ## 每一轮

@@ -48,6 +48,10 @@ RECOMMENDATIONS = {
         "cases or repetitions and rerun the final and baseline configurations."
     ),
     "do_not_merge_cost": "Do not merge: recorded cost did not fall below the required ratio.",
+    "do_not_merge_regression_suite": (
+        "Do not merge: a regression-suite case that succeeded on every baseline trial no "
+        "longer does in the final result."
+    ),
     "do_not_merge_leakage": (
         "Do not merge: held-out case text appears in the harness, so held-out results "
         "no longer measure generalization."
@@ -72,6 +76,7 @@ def review(
     harness: list[Path] | None = None,
     labels: list[str] | None = None,
     min_steps: int = 1,
+    manifest: dict | None = None,
 ) -> dict:
     if objective not in OBJECTIVES:
         raise ValueError(f"--objective must be one of {', '.join(OBJECTIVES)}")
@@ -97,6 +102,8 @@ def review(
     cases = set(runs[0]["cases"])
     held_out = partition(split, cases)
     tuning = cases - held_out
+    suites = regression_suite(manifest, cases) if manifest is not None else None
+    regression = set(suites["regression_cases"]) if suites else set()
 
     baseline = runs[0]
     start = _snapshot(baseline, tuning, held_out)
@@ -123,6 +130,8 @@ def review(
         parts = split_review["partitions"]
         cost = _cost(result, cost_metric)
         decision, reason = _decide(objective, parts, cost)
+        broken = broken_regression_cases(kept, candidate, regression) if suites else []
+        decision, reason = apply_regression_suite(decision, reason, broken)
         step = {
             "index": index,
             "label": labels[index],
@@ -142,6 +151,9 @@ def review(
                 "changes_with_same_output_different_verdict"
             ],
         }
+        if suites:
+            # Additive key, present only with a case manifest.
+            step["regression_suite_broken"] = broken
         if decision == "keep":
             kept_index, streak = index, 0
             kept_history.append(candidate)
@@ -158,6 +170,8 @@ def review(
 
     final = runs[kept_index]
     comparison = _final(baseline, final, split, tuning, held_out, cost_metric)
+    if suites:
+        comparison["regression_suite_broken"] = broken_regression_cases(baseline, final, regression)
     leakage = scan_harness(harness, runs, held_out) if harness else None
     recommendation = _recommend(objective, kept_index, comparison, leakage, max_cost_ratio)
     return {
@@ -185,8 +199,62 @@ def review(
         "recommendation_text": RECOMMENDATIONS[recommendation],
         "merge_recommended": recommendation in ("merge", "merge_cost"),
         "tuning_failures": _tuning_failures(final, tuning),
+        **({"suites": suites} if suites else {}),
         "scope": SCOPE,
     }
+
+
+def regression_suite(manifest: dict, cases: set[str]) -> dict:
+    """Suite roles of a case manifest for hillclimbing; needs at least one regression case."""
+    from evalarc import provenance
+
+    review = provenance.review(manifest, cases)
+    roles = review.get("suites") or {}
+    regression = sorted(case for case, role in roles.items() if role == "regression")
+    if not regression:
+        # Without regression cases the rule would never fire, which reads like protection.
+        raise ValueError(
+            'the case manifest puts no case in the regression suite; add "suite": '
+            '"regression" to cases the agent must keep passing'
+        )
+    return {
+        "manifest": review["manifest"],
+        "regression_cases": regression,
+        "capability_cases": sorted(case for case, role in roles.items() if role == "capability"),
+    }
+
+
+def broken_regression_cases(kept: dict, candidate: dict, regression: set[str]) -> list[dict]:
+    """Regression cases that succeeded on every trial of ``kept`` but not of ``candidate``.
+
+    Trials follow ``trials.case_trials``: a failed, unassessed or missing trial counts as
+    not succeeding, and so does recording fewer trials than ``kept`` (lost coverage). A
+    case that did not succeed on every trial of ``kept`` (failed or unassessed) is not
+    protected, so one pre-existing failure does not block every later step.
+    """
+    from evalarc.trials import case_trials
+
+    def reliable(item: dict | None) -> bool:
+        return bool(item) and item["trials"] > 0 and item["successes"] == item["trials"]
+
+    before, after = case_trials(kept), case_trials(candidate)
+    broken = []
+    for case_id in sorted(regression):
+        old, new = before.get(case_id), after.get(case_id)
+        if reliable(old) and (not reliable(new) or new["trials"] < old["trials"]):
+            item = after.get(case_id) or {"trials": 0, "assessed": 0, "successes": 0}
+            broken.append({"case_id": case_id, **item, "kept_trials": old["trials"]})
+    return broken
+
+
+def apply_regression_suite(decision: str, reason: str, broken: list[dict]) -> tuple[str, str]:
+    """Roll back a change that broke a regression-suite case, whatever else it improved."""
+    if not broken or decision == "rollback_regression":
+        return decision, reason
+    return (
+        "rollback_regression",
+        f"{len(broken)} regression-suite case(s) stopped succeeding on every trial",
+    )
 
 
 def _decide(objective: str, parts: dict, cost: dict | None) -> tuple[str, str]:
@@ -349,6 +417,8 @@ def _recommend(objective, kept_index, comparison, leakage, max_cost_ratio) -> st
         or (comparison["tuning"]["delta"] or 0) < 0
     ):
         return "do_not_merge_regression"
+    if comparison.get("regression_suite_broken"):
+        return "do_not_merge_regression_suite"
     if objective == "cost":
         cost = comparison["cost"]
         if cost is None or cost["ratio"] > max_cost_ratio or cost["ratio"] >= 1:
@@ -453,8 +523,71 @@ def render_markdown(result: dict) -> str:
             "held-out cases.",
             "",
         ]
+    lines += _suite_markdown(result)
     lines.append(f"<sub>{result['scope']}</sub>")
     return "\n".join(lines) + "\n"
+
+
+def _broken_text(item: dict) -> str:
+    if not item["trials"]:
+        return "not recorded"
+    text = f"{item['successes']}/{item['trials']} trial(s) succeeded"
+    kept = item.get("kept_trials")
+    if kept and item["trials"] < kept:
+        text += f", kept result recorded {kept}"
+    return text
+
+
+def _suite_markdown(result: dict) -> list[str]:
+    suites = result.get("suites")
+    if not suites:
+        return []
+    lines = [
+        f"Regression suite: {len(suites['regression_cases'])} case(s) must keep succeeding on "
+        "every trial; a step that breaks one is rolled back.",
+        "",
+    ]
+    for step in result["steps"]:
+        for item in step.get("regression_suite_broken") or []:
+            lines.append(
+                f"- step {_cell(step['label'])}: {_cell(item['case_id'])} ({_broken_text(item)})"
+            )
+    for item in result["final"].get("regression_suite_broken") or []:
+        lines.append(
+            f"- final {_cell(result['final']['label'])} vs baseline: {_cell(item['case_id'])} "
+            f"({_broken_text(item)})"
+        )
+    return lines + [""]
+
+
+def _suite_html(result: dict, esc) -> str:
+    suites = result.get("suites")
+    if not suites:
+        return ""
+    rows = [
+        (f"step {step['label']}", item)
+        for step in result["steps"]
+        for item in step.get("regression_suite_broken") or []
+    ] + [
+        (f"final {result['final']['label']} vs baseline", item)
+        for item in result["final"].get("regression_suite_broken") or []
+    ]
+    body = (
+        f"<h2>Regression suite</h2><p>{len(suites['regression_cases'])} case(s) must keep "
+        "succeeding on every trial; a step that breaks one is rolled back.</p>"
+    )
+    if not rows:
+        return body + "<p>No step broke a regression-suite case.</p>"
+    return (
+        body + '<div class="scroll"><table><thead><tr><th>Where</th><th>Case</th><th>Trials</th>'
+        "</tr></thead><tbody>"
+        + "".join(
+            f"<tr><td>{esc(where)}</td><td><code>{esc(item['case_id'])}</code></td>"
+            f"<td>{esc(_broken_text(item))}</td></tr>"
+            for where, item in rows
+        )
+        + "</tbody></table></div>"
+    )
 
 
 def render_html(result: dict, destination: Path) -> None:
@@ -474,6 +607,7 @@ def render_html(result: dict, destination: Path) -> None:
             "do_not_merge_within_noise": "Add held-out cases or repetitions and rerun.",
             "do_not_merge_cost": "Look for cheaper configurations at equal quality.",
             "do_not_merge_leakage": "Remove held-out case text from the harness and rerun.",
+            "do_not_merge_regression_suite": "Inspect the regression-suite cases listed below.",
         }[result["recommendation"]],
     )
     body += (
@@ -539,6 +673,7 @@ def render_html(result: dict, destination: Path) -> None:
             f"<p>Harness leakage: {len(result['leakage']['hits'])} hit(s), "
             f"{result['leakage']['held_out_hits']} from held-out cases.</p>"
         )
+    body += _suite_html(result, _esc)
     body += (
         '<p><a href="hillclimb.json">Review JSON</a> · <a href="summary.md">Markdown</a> · '
         '<a href="tuning-failures.json">Tuning failures only</a></p>'
@@ -576,6 +711,11 @@ def command(args) -> int:
         from evalarc import evidence
 
         split = load_split(args.held_out)
+        manifest = None
+        if args.cases:
+            from evalarc.provenance import load as load_manifest
+
+            manifest = load_manifest(args.cases)
         params = {
             "format": args.format,
             "threshold": args.threshold,
@@ -587,7 +727,7 @@ def command(args) -> int:
             "labels": [path.name for path in paths],
             "min_steps": 1,
         }
-        result = evidence.compute_hillclimb(runs, params, split, args.harness)
+        result = evidence.compute_hillclimb(runs, params, split, args.harness, manifest)
         if args.output:
             with new_run(args.output) as output:
                 inputs = []
@@ -597,10 +737,21 @@ def command(args) -> int:
                     inputs.append({"file": name})
                 evidence.copy_input(args.held_out, split["source"]["sha256"], output / "split.json")
                 harness = evidence.copy_harness(args.harness, output) if args.harness else []
+                if manifest is not None:
+                    evidence.copy_input(
+                        args.cases, manifest["source"]["sha256"], output / "cases.json"
+                    )
                 evidence.write_params(
                     output,
                     "hillclimb-review",
-                    {**params, "inputs": inputs, "split": "split.json", "harness": harness},
+                    {
+                        **params,
+                        "inputs": inputs,
+                        "split": "split.json",
+                        "harness": harness,
+                        # Recorded only when used, so folders without it keep earlier params.
+                        **({"cases": "cases.json"} if manifest is not None else {}),
+                    },
                 )
                 write_hillclimb_report(output, result)
         if args.markdown:

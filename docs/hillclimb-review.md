@@ -35,10 +35,25 @@ Each step is compared with the **last kept** result, not with the baseline:
 
 | Decision | When |
 | --- | --- |
-| `rollback_regression` | A held-out check lost passes or coverage, or either partition's pass rate fell |
+| `rollback_regression` | A held-out check lost passes or coverage, either partition's pass rate fell, or (with `--cases`) a regression-suite case stopped succeeding on every trial |
 | `rollback_overfit` | Tuning cases improved, held-out cases did not |
 | `keep` | Quality objective: both partitions improved. Cost objective: recorded cost fell with neither partition falling, or both improved at no higher cost |
 | `rollback_no_gain` | Anything else |
+
+`--cases MANIFEST` reads the capability/regression suite roles of a case manifest
+(see [eval-health](eval-health.md#case-provenance); `review-inputs
+--write-manifest` writes one from `cases.jsonl`). A step that makes a
+regression-suite case, tuning or held out, go from succeeding on every trial of
+the kept result to anything less (a failed, unassessed or missing trial, or
+fewer recorded trials) is
+rolled back even when both partitions improved: one fixed case that breaks a
+case the agent already handled is not progress. A regression case that did not
+succeed on every trial of the kept result, including one unassessed trial such
+as a pipeline flake, is not protected until it succeeds on every trial again,
+so a pre-existing failure does not block later steps. The manifest needs at
+least one regression case (otherwise exit 2), is copied to `cases.json`, and
+each step records `regression_suite_broken`. Folders written without `--cases`
+are unchanged; folders written with it need 0.20.0 or later to verify.
 
 After `--stall-after` consecutive rollbacks (default 2), the failing **tuning**
 cases of the last kept result are triaged: `pipeline` (errors, timeouts, skips),
@@ -59,6 +74,7 @@ Wilson intervals:
 | `do_not_merge_within_noise` | 1 | Quality objective, but the held-out gain is within noise |
 | `do_not_merge_cost` | 1 | Cost did not fall enough, or was not recorded |
 | `do_not_merge_leakage` | 1 | `--harness` found held-out case text in prompts, skills or tool descriptions |
+| `do_not_merge_regression_suite` | 1 | With `--cases`: a regression case that succeeded on every baseline trial no longer does in the final result |
 
 Invalid or incomparable inputs exit 2: different formats or tasks, different
 case sets between steps, a file listed twice, or `--objective cost` without cost
