@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.1 — 2026-10-17
+
+- test: EA-02 regression corpus that pins how the diff gate handles missing evidence. tests/test_feature_cb4fe5a9ab91.py adds a synthetic regression corpus for EA-02. It pins what evalarc diff does for each category: control and added checks pass (exit 0). Removed checks, fewer epochs at the same pass rate (less_covered), a JUnit skip as the only change (unassessed) and an incomplete baseline or current run fail (exit 1), and the summary heading names the cause. Malformed samples, duplicate IDs and non-comparable runs are rejected (exit 2) with a message naming the problem. An invariant test checks that no case with missing evidence passes. The corpus found one defect, which is fixed in results_diff.py: an Inspect sample ID repeated with a null, boolean, string or other non-integer epoch, or with an integer epoch mixed with a missing one, used to count as an extra attempt and could hide lost coverage. It now exits 2. Logs where every copy of an ID has no epoch key still load as before. docs/ci-gate.md and docs/ci-gate.zh-CN.md now have a Regression corpus table.
+
 ## 0.20.0 — 2026-10-15
 
 - `evalarc hillclimb-review --cases MANIFEST` and the `hillclimb-run` config key

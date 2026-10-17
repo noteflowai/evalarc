@@ -95,8 +95,19 @@ and epoch. Counting the copy as an extra attempt would overstate coverage and
 could hide a `less_covered` change. Such logs usually come from merging,
 concatenating or editing results; re-export with
 `inspect log dump LOG.eval > LOG.json` or rerun the evaluation. The same ID in
-different epochs is a normal repeated attempt, and samples without an integer
-`epoch` are not checked.
+different epochs is a normal repeated attempt. A sample ID that appears more
+than once also exits 2 if any copy has a null, boolean, string or other
+non-integer `epoch`, or if copies mix an integer epoch with a missing one: the
+copies cannot be told apart from an extra attempt. Earlier versions counted
+them as extra attempts, so a rerun with lost epochs could pass the gate. Logs
+whose copies of an ID all omit the `epoch` key (older exports) still load each
+copy as an attempt, as before; EvalArc cannot detect lost coverage in them.
+
+```text
+evalarc: Inspect log has duplicate sample 'refund' without a valid epoch (got None (null)): a sample repeated without an integer epoch would count as an extra attempt and overstate coverage. Re-export the log from Inspect (inspect log dump) instead of merging or editing it.
+```
+
+Samples without an epoch whose IDs differ still load as single attempts.
 
 Every Inspect sample must be a JSON object whose `id` is an integer (not a
 boolean) or a string; an empty string is allowed. Samples are matched between
@@ -130,6 +141,39 @@ merging, concatenating or editing, and counting it would inflate attempts and
 pass rates. Re-export with `promptfoo eval --output` (or remove the copied row
 in a reviewed commit) and compare again. Rows without an integer `testIdx`
 are not checked, and a copy whose `testIdx` was edited is not detected.
+
+## Regression corpus
+
+`tests/test_feature_cb4fe5a9ab91.py` pins how the gate handles each kind of
+missing or unusable evidence. It uses small synthetic inputs: edits of the
+bundled examples and hand-written JUnit XML. Every case goes through
+`load_results` and `diff` and also through `evalarc diff`, so the table shows
+what the command does now:
+
+| Category | Synthetic input change | Kind or error | Gate |
+| --- | --- | --- | --- |
+| control | identical Inspect logs | none | pass (exit 0) |
+| added check | current adds a passing scorer | `added` | pass (exit 0) |
+| removed check | current drops a passing scorer | `removed` | fail (exit 1) |
+| unequal coverage | 3 passing epochs become 1 passing epoch | `less_covered` | fail (exit 1) |
+| skip only | one passing JUnit test is skipped, nothing else changes | `unassessed` | fail (exit 1) |
+| malformed | Inspect sample is not an object or has no id; promptfoo `promptIdx` is a list | `is not an object`, `has an invalid id`, `invalid promptIdx` | unusable (exit 2) |
+| duplicate IDs | same Inspect sample and epoch twice; ids `7` and `"7"`; same Inspect sample twice with a null epoch; same promptfoo `testIdx`, `promptIdx` and provider twice | `duplicate sample`, `without a valid epoch`, `duplicate result` | unusable (exit 2) |
+| duplicate IDs (control) | promptfoo `--repeat` rows with new `testIdx` | none; loaded as extra attempts | pass (exit 0) |
+| non-comparable | different Inspect task; Inspect against JUnit | `not comparable: task`, `different formats` | unusable (exit 2) |
+| incomplete | baseline or current Inspect status `error` | `baseline_incomplete` or `current_incomplete` | fail (exit 1) |
+
+The summary heading also names the cause. It reads `N check(s) lost passes or
+coverage` when a check was removed, lost coverage or was skipped, and `the
+baseline run is incomplete` or `the current run is incomplete` for an
+unfinished run. One invariant test checks that no case with lost, missing or
+unusable evidence passes the gate. The inputs are synthetic. They pin
+EvalArc's classification rules; they do not describe real exports or measure
+false-alarm rates. To run the corpus:
+
+```bash
+python -m pytest -q tests/test_feature_cb4fe5a9ab91.py
+```
 
 ## Sampling-noise annotation
 

@@ -51,7 +51,7 @@ Inspect 样本在同一 epoch 中重复、Inspect 样本不是对象或没有整
 `"7"` 视为同一 ID）会以退出码 2 报告并给出样本与 epoch：若把副本算作额外尝试，会夸大覆盖并
 掩盖 `less_covered`。这类日志通常来自手工合并、拼接或编辑；请用
 `inspect log dump LOG.eval > LOG.json` 重新导出，或重新运行评测。同一 ID 出现在不同 epoch
-是正常的重复尝试；没有整数 `epoch` 的样本不做此检查。
+是正常的重复尝试。同一样本 ID 出现多次且任一副本的 `epoch` 为 null、布尔值、字符串或其他非整数类型，或整数 epoch 与缺失 epoch 混用时，同样以退出码 2 报告（`duplicate sample ... without a valid epoch`），因为副本无法与额外尝试区分；此前它们会被算作额外尝试，丢失 epoch 的重跑可能通过门禁。没有 epoch 但 ID 不同的样本仍按单次尝试读取。同一 ID 的所有副本都缺少 `epoch` 键（旧版导出）时仍按多次尝试读取，与以前相同，此时无法发现覆盖丢失。
 每个 Inspect 样本都必须是 JSON 对象，且 `id` 为整数（不能是布尔值）或字符串，允许空字符串。样本按 ID 在两次运行间配对，因此缺少可用 ID 的样本会以退出码 2 报告，并给出它在日志中从 0 开始的位置（`.eval` 归档按排序后的 `samples/*.json` 顺序）和收到的类型，例如 `Inspect log sample at position 3 has an invalid id None (null)` 或 `Inspect log sample at position 3 is not an object (got array)`；缺少 id 键时显示为 `invalid id missing (missing)`。此前，缺失、null、布尔、浮点或结构化 ID 会以虚构的用例名（如 `None`）参与比较，或以内部错误信息（如 `'id'`）失败；现在一律退出 2。请用 `inspect log dump LOG.eval > LOG.json` 重新导出，或修复导出程序。Python 调用 `load_results` 时会收到 `ValueError`。
 promptfoo `--output` 文件中同一结果行（相同的 `testIdx`、`promptIdx` 与 provider）出现两次时，
 同样以退出码 2 报告，并给出该行及其测试名。promptfoo `--repeat` 会给每次重复分配新的
@@ -59,6 +59,29 @@ promptfoo `--output` 文件中同一结果行（相同的 `testIdx`、`promptIdx
 副本，若计入会夸大尝试次数与通过率。请用 `promptfoo eval --output` 重新导出（或在经过审阅的
 提交中删除副本行）后再比较。没有整数 `testIdx` 的行不做此检查，`testIdx` 被改过的副本也无法发现。
 2 表示流水线本身有问题，不是退化。
+
+## 回归语料
+
+`tests/test_feature_cb4fe5a9ab91.py` 用小型合成输入（对内置示例的编辑和手写的 JUnit XML）固定门禁对每类缺失或不可用证据的处理。每个用例同时经过 `load_results` + `diff` 与 `evalarc diff`，下表即命令当前的行为：
+
+| 类别 | 合成输入变化 | 类型或错误 | 门禁 |
+| --- | --- | --- | --- |
+| 对照 | 两份 Inspect 日志相同 | 无 | 通过（退出 0） |
+| 新增检查 | 当前新增一个通过的评分器 | `added` | 通过（退出 0） |
+| 删除检查 | 当前去掉一个原本通过的评分器 | `removed` | 失败（退出 1） |
+| 覆盖不等 | 3 个通过的 epoch 变为 1 个 | `less_covered` | 失败（退出 1） |
+| 仅跳过 | 一个原本通过的 JUnit 测试被跳过，其余不变 | `unassessed` | 失败（退出 1） |
+| 格式错误 | Inspect 样本不是对象或缺少 id；promptfoo `promptIdx` 为列表 | `is not an object`、`has an invalid id`、`invalid promptIdx` | 不可用（退出 2） |
+| 重复 ID | 同一 Inspect 样本与 epoch 出现两次；id `7` 与 `"7"`；同一 Inspect 样本以 null epoch 出现两次；promptfoo 相同 `testIdx`、`promptIdx` 与 provider 出现两次 | `duplicate sample`、`without a valid epoch`、`duplicate result` | 不可用（退出 2） |
+| 重复 ID（对照） | promptfoo `--repeat` 行使用新的 `testIdx` | 无，按额外尝试读取 | 通过（退出 0） |
+| 不可比较 | Inspect 任务名不同；Inspect 对 JUnit | `not comparable: task`、`different formats` | 不可用（退出 2） |
+| 未完成 | 基线或当前 Inspect 状态为 `error` | `baseline_incomplete` 或 `current_incomplete` | 失败（退出 1） |
+
+摘要标题同样给出原因：删除、覆盖减少或跳过时为 `N check(s) lost passes or coverage`，未完成的运行为 `the baseline run is incomplete` 或 `the current run is incomplete`。另有一个不变量测试确认：凡是丢失、缺少或不可用证据的用例都不会通过门禁。输入均为合成数据，只固定 EvalArc 的分类规则，不代表真实导出，也不衡量误报率。运行：
+
+```bash
+python -m pytest -q tests/test_feature_cb4fe5a9ab91.py
+```
 
 ## 采样噪声标注
 
