@@ -458,7 +458,10 @@ def _inspect(document: dict, threshold: float) -> dict:
     usage: dict[str, list] = {}
     outputs: dict[str, dict[str, list]] = {}
     samples_meta: dict[str, list] = {}
-    seen: set[tuple[str, int]] = set()
+    seen: set[tuple[str, object]] = set()
+    ids_seen: set[str] = set()
+    # case_id -> how its first copy without an integer epoch was shown in errors.
+    without_epoch: dict[str, str] = {}
     for position, sample in enumerate(document["samples"]):
         # Validate identity before any bookkeeping: a non-object sample or an unusable id
         # would otherwise crash with an internal error or invent a case such as "None".
@@ -486,7 +489,27 @@ def _inspect(document: dict, threshold: float) -> dict:
             )
         case_id = str(sample_id)
         epoch = sample.get("epoch")
-        if isinstance(epoch, int) and not isinstance(epoch, bool):
+        valid_epoch = isinstance(epoch, int) and not isinstance(epoch, bool)
+        got = None
+        if not valid_epoch:
+            got = f"{_shown_id(epoch)} ({_json_type(epoch)})" if "epoch" in sample else "missing"
+        # Without a usable epoch, a repeated id cannot be a distinct repeat: the copy
+        # would count as an extra attempt and hide a less_covered change. This holds
+        # when any copy has a null, boolean, string or other non-integer epoch, or when
+        # copies mix an integer epoch with a missing one. Older logs whose copies of an
+        # id all omit the epoch key keep their existing behavior: each copy is an attempt.
+        earlier = without_epoch.get(case_id)
+        legacy = got == "missing" and earlier == "missing"
+        repeated = case_id in ids_seen and (got is not None or earlier is not None)
+        if repeated and not legacy:
+            shown = earlier if earlier is not None else got
+            raise ValueError(
+                f"Inspect log has duplicate sample {_shown_id(sample['id'])} without a valid "
+                f"epoch (got {shown}): a sample repeated without an integer epoch would count "
+                "as an extra attempt and overstate coverage. Re-export the log from Inspect "
+                "(inspect log dump) instead of merging or editing it."
+            )
+        if valid_epoch:
             # A repeated (id, epoch) pair would silently count as an extra attempt and
             # overstate coverage. Ids 7 and "7" collide because case_id is str(id).
             key = (case_id, epoch)
@@ -498,6 +521,9 @@ def _inspect(document: dict, threshold: float) -> dict:
                     "of merging or editing it."
                 )
             seen.add(key)
+        else:
+            without_epoch.setdefault(case_id, got)
+        ids_seen.add(case_id)
         checks = cases.setdefault(case_id, {})
         _add_material(material, case_id, "input", _message_text(sample.get("input")))
         usage.setdefault(case_id, []).append(inspect_usage(sample))
