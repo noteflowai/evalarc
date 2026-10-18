@@ -42,7 +42,7 @@ assistant 轮次、工具调用、消息数和错误重试的均值与最大值�
 ## 失败分类
 
 报告对最后一个文件中每个失败用例按首个命中的规则分类，先弄清原因再改动：`pipeline`（有错误、
-超时或跳过）、`truncated`（触及 token 上限）、`grader_inconsistent`（同一输出判定不同）、
+超时或跳过）、`truncated`（触及 token 上限）、`task_or_grader_broken`（使用 `--reference` 时参考解也未通过）、`grader_inconsistent`（同一输出判定不同）、
 `regressed`（本文件全失败但早先文件通过过）、`never_passes`（所有文件每次都失败）、
 `variable`（部分尝试通过）、`consistent_failure`（单次尝试失败，适合做根因修复）。
 每行运行记录还给出 95% Wilson 区间、平均记录时长与成本。
@@ -53,6 +53,17 @@ assistant 轮次、工具调用、消息数和错误重试的均值与最大值�
 
 退出码：**0** 报告已生成；使用 `--require-healthy` 时，存在任何警告为 **1**；输入无法读取或
 无法比较、选项无效或输出目录已存在为 **2**。输入必须格式相同；Inspect 还要求任务名相同。
+
+### 参考解
+
+已知正确的解法都通不过的任务是坏的，而不是难：可能有未写明的要求、过于死板的评分器，或无法复现的任务。对前沿
+模型来说，始终不通过的检查更常见的原因是任务本身有问题，而不是能力不足。用参考解（返回期望答案的求解器、参考实现
+或可信配置）把同一评测跑一次，再把结果文件交给 `--reference`：
+`evalarc eval-health baseline.json current.json --reference reference.json --output health`。
+参考解在任一尝试中未通过的检查报 `reference_fails` 警告，并在失败分类中优先归为 `task_or_grader_broken`；记录中有、
+参考解却缺失的用例提示 `reference_incomplete`。`health.json` 新增 `reference`（文件标识、未通过的检查和缺失用例）。
+参考解必须与结果格式相同（Inspect 还要求任务名相同），且不能是结果文件之一；它会复制到输出目录，`evalarc verify`
+据此重算。不加 `--reference` 时报告不变；加了该选项写出的目录需要 0.21.0 或更高版本才能验证。
 
 ## 规模、计划与逐用例记录
 

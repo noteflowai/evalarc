@@ -45,7 +45,18 @@ second.judge = { kind: "human", model: null, description: "second annotator" };
 fs.writeFileSync(`${out}/verdicts-2.json`, JSON.stringify(second));
 run("judge-score", `${out}/spot`, `${out}/verdicts.json`, `${out}/verdicts-2.json`, "--output", `${runs}/panel`);
 run("eval-init", `${out}/proj`);
-run("review-inputs", `${out}/proj/cases.jsonl`, "--output", `${runs}/review`);
+run("review-inputs", `${out}/proj/cases.jsonl`, "--prompt", `${out}/proj/prompt.md`, "--output", `${runs}/review`);
+// Synthetic reference for the report check only: the recorded current run with every
+// score set to correct except one, so reference_fails and task_or_grader_broken render.
+const reference = JSON.parse(fs.readFileSync(`${inspect}/current.json`, "utf8"));
+for (const sample of reference.samples) {
+  for (const score of Object.values(sample.scores || {})) {
+    score.value = sample.id === "cancel-pending" && sample.epoch === 2 ? "I" : "C";
+  }
+}
+fs.writeFileSync(`${out}/reference.json`, JSON.stringify(reference));
+run("eval-health", `${inspect}/baseline.json`, `${inspect}/current.json`, "--reference", `${out}/reference.json`,
+    "--output", `${runs}/reference`);
 const render = (kind, source, target) => execFileSync(python, ["-c", `
 import json, sys
 from pathlib import Path
@@ -61,7 +72,7 @@ for (const [kind, source] of [["audit", "support-audit/audit.json"], ["evaluatio
 
 const reports = {
   diff: /Gate failed/, suites: /regression-suite case did not succeed/, attributes: /Gate failed/, health: /warning\(s\) before tuning|Ready to tune/, climb: /Merge/,
-  score: /Grader agrees with the judge/, panel: /Grader agrees with the annotators’ consensus/, review: /Inputs ready to run/,
+  reference: /warning\(s\) before tuning/, score: /Grader agrees with the judge/, panel: /Grader agrees with the annotators’ consensus/, review: /Inputs ready to run/,
   audit: /declared faults detected/, evaluation: /Resolved|Not resolved|Unassessed/,
   comparison: /regressed/, repetition: /attempt\(s\) resolved/, suite: /job gate\(s\) accepted/,
 };

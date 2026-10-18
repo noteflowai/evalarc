@@ -31,12 +31,13 @@ before you change anything. Replace `respond()` in `app.py` with your model call
 | --- | --- | --- |
 | `id` | yes | Unique case ID |
 | `input` | yes | What the application receives; state every condition the grader checks |
-| `check` | yes | `exact`, `contains`, `label`, `json_keys`, `json_schema` or `command` (see `grader.py`) |
+| `check` | yes | `exact`, `contains`, `label`, `regex`, `fuzzy`, `json_keys`, `json_schema` or `command` (see `grader.py`) |
 | `expected` | yes | The answer; a list of keys for `json_keys`; a JSON Schema for `json_schema`; an argument array for `command` (for example a unit-test runner), which gets the output on stdin and passes on exit 0 |
 | `labels` | for `label` | The allowed labels, including `expected` |
 | `source` | yes | `production`, `bug_report`, `support_ticket`, `user_traffic`, `manual`, `synthetic`, `model_failure` |
 | `difficulty` | for `model_failure` | Why the task itself is hard |
 | `held_out` | no | `true` to keep the case away from the tuning loop |
+| `min_ratio` | for `fuzzy`, optional | Similarity needed, in (0, 1], default 0.9 |
 | `suite` | no | `capability` (a hill to climb, may start at a low pass rate) or `regression` (already works and must pass every trial); copied into the case manifest for [`eval-health --cases`](eval-health.md#case-provenance) |
 | `expect_action`, `expect_change`, `impact`, `owner` | no | [Case attributes](eval-health.md#case-attributes), copied into the case manifest: should the agent act or abstain, fail-to-pass or pass-to-pass, impact, and owner |
 
@@ -66,6 +67,26 @@ and the case table gains a Suite column. When `eval-health` lists
 `--write-manifest` regenerate `split.json` and the case manifest from
 `cases.jsonl`, so the case file stays the single source of truth.
 `--require-clean` exits 1 on any warning.
+
+`regex` passes when the whole stripped output matches the pattern in
+`expected` (Python `re.fullmatch`; add `.*` to allow surrounding text).
+`review-inputs` rejects patterns that do not compile or are longer than 1,000
+characters; patterns run on your evaluation host, so keep them simple. `fuzzy`
+passes when difflib's similarity ratio between the output and `expected`,
+ignoring case and repeated whitespace, is at least `min_ratio`. Both tolerate
+valid variation better than `exact` and stay deterministic; use a model judge
+only when even these are too rigid.
+
+`--prompt FILE...` names the prompt, skill or tool-description files the agent
+sees. Everything the grader checks should be stated in the task: a case graded
+with `label` needs every allowed label, `json_keys` every key, and
+`json_schema` every required key and string enum value, mentioned as a whole
+word in those files or in the case input (ignoring case). Otherwise the review
+reports `unstated_requirement` (warning) naming the case and missing terms; an
+agent that follows the instructions could not know them. The expected answer
+itself is not required (that would leak it), and `exact`, `contains`, `regex`,
+`fuzzy` and `command` cases are not checked. `review.json` records the files'
+names and SHA-256 as `prompt_files`.
 
 `--random-split F` (with `--seed`) holds out a random share of cases,
 stratified by `source` so each source keeps tuning and held-out cases, and writes

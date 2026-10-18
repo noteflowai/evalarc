@@ -58,6 +58,7 @@ wins, so the cause is known before anything is changed:
 | --- | --- | --- |
 | `pipeline` | a failing check has errors, timeouts or skips | Fix the pipeline; not a model failure |
 | `truncated` | an attempt hit a token limit | Raise the limit or shorten the task |
+| `task_or_grader_broken` | with `--reference`, the reference solution also fails a failing check | Fix the task wording, grader or reference |
 | `grader_inconsistent` | the same output got different verdicts | Fix or pin the grader |
 | `regressed` | fails every attempt here but passed in an earlier file | Inspect what the change broke |
 | `never_passes` | fails every attempt in every file | Read the task and grader for ambiguity |
@@ -65,6 +66,30 @@ wins, so the cause is known before anything is changed:
 | `consistent_failure` | fails, single attempt | Candidate for a root-cause fix |
 
 Each run row also carries a 95% Wilson interval, mean recorded duration and cost.
+
+### Reference solution
+
+A task that a known-good solution cannot pass is broken, not hard: an
+unstated requirement, a rigid grader or a task that cannot be reproduced. With
+frontier models, a check that never passes is more often a broken task than
+missing capability. Run the same evaluation once with a reference solution (a
+solver that returns the expected answer, the reference implementation, or a
+trusted configuration) and pass its result file:
+
+```bash
+evalarc eval-health baseline.json current.json --reference reference.json --output health
+```
+
+- `reference_fails` (warning): checks of recorded cases that do not pass on
+  every attempt of the reference. They are triaged `task_or_grader_broken`
+  ahead of any agent-related category.
+- `reference_incomplete` (info): recorded cases missing from the reference.
+- `health.json` gains `reference` (its file identity, failing checks and
+  missing cases). The reference must use the same format and, for Inspect,
+  task; it may not be one of the result files. It is copied to the output
+  folder, and `evalarc verify` recomputes against it. Without `--reference`,
+  reports are unchanged; folders written with it need 0.21.0 or later to
+  verify.
 
 The resolvable change is twice the 95% normal-approximation half-width at the
 last file's pass rate, the same non-overlap rule `evalarc diff` uses for its

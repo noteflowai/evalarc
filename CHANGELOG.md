@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- `evalarc eval-health --reference RESULT` reads a run of the same evaluation
+  with a known-good solution. Checks the reference does not pass on every
+  attempt raise `reference_fails` (warning) and are triaged
+  `task_or_grader_broken`; recorded cases it lacks raise `reference_incomplete`
+  (info). `health.json` gains `reference`; the file is copied and verified.
+- `evalarc review-inputs --prompt FILE...` warns with `unstated_requirement`
+  when a `label`, `json_keys` or `json_schema` case is graded on labels, keys or
+  enum values that neither the prompt files nor the case input mention.
+  `review.json` gains `prompt_files`.
+- `eval-init` graders gain the deterministic checks `regex` (`re.fullmatch` on
+  the stripped output) and `fuzzy` (difflib similarity at least `min_ratio`,
+  default 0.9). `review-inputs` validates the pattern and `min_ratio`.
 - Case manifests (`evalarc.case-manifest.v1`) and `eval-init` `cases.jsonl`
   accept optional case attributes: `expect_action` (`act` | `abstain`),
   `expect_change` (`fail_to_pass` | `pass_to_pass`), `impact`

@@ -334,6 +334,14 @@ def parser() -> argparse.ArgumentParser:
         "attempts stopped by a message, time or other non-token limit (limit_reached)",
     )
     health.add_argument(
+        "--reference",
+        type=Path,
+        metavar="RESULT",
+        help="result file of the same evaluation run with a known-good solution (oracle); "
+        "warn on checks it does not pass (reference_fails) and triage them as "
+        "task_or_grader_broken",
+    )
+    health.add_argument(
         "--cluster-errors",
         action="store_true",
         help="group recurring error messages of unassessed attempts and flag one message "
@@ -464,6 +472,15 @@ def parser() -> argparse.ArgumentParser:
         "held_out in cases.jsonl; refuses if held_out is already declared",
     )
     inputs.add_argument("--seed", type=int, default=0, help="seed for --random-split")
+    inputs.add_argument(
+        "--prompt",
+        type=Path,
+        nargs="+",
+        metavar="FILE",
+        help="prompt, skill or tool-description files the agent sees; warn when a case is "
+        "graded on labels, JSON keys or schema values that neither these files nor its "
+        "input mention (unstated_requirement)",
+    )
     inputs.add_argument("--require-clean", action="store_true")
     packet = commands.add_parser(
         "judge-packet",

@@ -49,6 +49,7 @@ def health(
     trial_metrics: bool = True,
     transcript_metrics: bool = False,
     cluster_errors: bool = False,
+    reference_run: dict | None = None,
 ) -> dict:
     """Compute findings for loaded result runs (see results_diff.load_results).
 
@@ -455,7 +456,33 @@ def health(
                 trial_runs[-1], provenance["suites"], last, _cell(last), _finding
             )
 
-    triage = _triage(runs[-1], inconsistent, truncated, combined)
+    reference_view = broken = None
+    if reference_run is not None:
+        reference_view, broken = _reference(reference_run, runs)
+        if reference_view["failing"]:
+            findings.append(
+                _finding(
+                    "reference_fails",
+                    "warning",
+                    f"{len(reference_view['failing'])} check(s) in "
+                    f"{len({row['case_id'] for row in reference_view['failing']})} case(s) do "
+                    "not pass on every attempt of the reference solution. A task that a known "
+                    "good solution cannot pass is broken: fix the task wording, the grader or "
+                    "the reference before reading these failures as missing capability.",
+                    items=reference_view["failing"],
+                )
+            )
+        if reference_view["missing_cases"]:
+            findings.append(
+                _finding(
+                    "reference_incomplete",
+                    "info",
+                    f"{len(reference_view['missing_cases'])} case(s) have no reference result, "
+                    "so whether they are solvable is unknown.",
+                    value=len(reference_view["missing_cases"]) / max(1, len(combined_cases(runs))),
+                )
+            )
+    triage = _triage(runs[-1], inconsistent, truncated, combined, broken)
     size = _size(summaries)
     warnings = sum(item["severity"] == "warning" for item in findings)
     return {
@@ -485,6 +512,8 @@ def health(
         ),
         # Additive key, present only when the case manifest declares expect_action.
         **({"behavior": behavior} if behavior else {}),
+        # Additive key, present only with --reference.
+        **({"reference": reference_view} if reference_view is not None else {}),
         # Additive key, present only with --transcript-metrics.
         **({"transcripts": transcript_runs} if transcript_runs is not None else {}),
         "findings": findings,
@@ -734,7 +763,14 @@ def command(args) -> int:
             params["transcript_metrics"] = True
         if getattr(args, "cluster_errors", False):
             params["cluster_errors"] = True
-        result = evidence.compute_health(runs, params, manifest)
+        reference = None
+        if getattr(args, "reference", None):
+            reference = load_results(args.reference, args.format, args.threshold)
+            # A file listed both as a result and as the reference would vouch for itself.
+            if reference["source"]["sha256"] in {run["source"]["sha256"] for run in runs}:
+                raise ValueError("--reference must be a separate run of a known-good solution")
+            params["reference"] = "reference" + (args.reference.suffix or ".json")
+        result = evidence.compute_health(runs, params, manifest, reference)
         if args.output:
             with new_run(args.output) as output:
                 inputs = []
@@ -745,6 +781,10 @@ def command(args) -> int:
                 if manifest is not None:
                     evidence.copy_input(
                         args.cases, manifest["source"]["sha256"], output / "cases.json"
+                    )
+                if reference is not None:
+                    evidence.copy_input(
+                        args.reference, reference["source"]["sha256"], output / params["reference"]
                     )
                 evidence.write_params(
                     output,
@@ -1028,6 +1068,7 @@ def cases_html(run: dict) -> str:
 TRIAGE_NEXT = {
     "pipeline": "Fix the error, timeout or skip; not a model failure",
     "truncated": "Raise the token limit or shorten the task",
+    "task_or_grader_broken": "The reference solution fails too; fix the task or grader",
     "grader_inconsistent": "Fix or pin the grader before tuning",
     "never_passes": "Read the task and grader for ambiguity or an unstated requirement",
     "regressed": "Passed in an earlier file; inspect what the change broke",
@@ -1036,10 +1077,53 @@ TRIAGE_NEXT = {
 }
 
 
-def _triage(run: dict, inconsistent: list, truncated: list, combined: dict) -> list[dict]:
+def combined_cases(runs: list[dict]) -> set[str]:
+    return {case for run in runs for case in run["cases"]}
+
+
+def _reference(reference: dict, runs: list[dict]) -> tuple[dict, set]:
+    """Checks the reference solution does not pass on every attempt; cases it lacks."""
+    if reference["format"] != runs[0]["format"]:
+        raise ValueError(
+            f"the reference uses {reference['format']}, the results use {runs[0]['format']}"
+        )
+    tasks = {run["identity"].get("task") for run in runs} - {None}
+    task = reference["identity"].get("task")
+    if task is not None and tasks and task not in tasks:
+        raise ValueError(f"the reference is for task {task!r}, the results for {sorted(tasks)}")
+    cases = combined_cases(runs)
+    failing, broken = [], set()
+    for case_id in sorted(cases & set(reference["cases"])):
+        for check, attempts in sorted(reference["cases"][case_id].items()):
+            tally = _tally(attempts)
+            if tally["passed"] < tally["attempts"]:
+                broken.add((case_id, check))
+                failing.append(
+                    {
+                        "file": reference["source"]["name"],
+                        "case_id": case_id,
+                        "check": check,
+                        **tally,
+                    }
+                )
+    return (
+        {
+            "source": reference["source"],
+            "cases": len(cases & set(reference["cases"])),
+            "failing": failing,
+            "missing_cases": sorted(cases - set(reference["cases"])),
+        },
+        broken,
+    )
+
+
+def _triage(
+    run: dict, inconsistent: list, truncated: list, combined: dict, broken: set | None = None
+) -> list[dict]:
     """Classify each failing case in one run by the likeliest cause (first match wins).
 
     `combined` pools every file, so a check that passed anywhere is not "never_passes".
+    `broken` holds (case, check) pairs the reference solution does not pass.
     """
     grader = {(row["case_id"], row["check"]) for row in inconsistent}
     cut = {row["case_id"] for row in truncated if row.get("file") == run["source"]["name"]}
@@ -1055,6 +1139,8 @@ def _triage(run: dict, inconsistent: list, truncated: list, combined: dict) -> l
             category = "pipeline"
         elif case_id in cut:
             category = "truncated"
+        elif broken and any((case_id, check) in broken for check in failing):
+            category = "task_or_grader_broken"
         elif any((case_id, check) in grader for check in failing):
             category = "grader_inconsistent"
         elif all(tallies[check]["passed"] == 0 for check in failing) and any(
