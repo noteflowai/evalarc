@@ -93,6 +93,11 @@ itself is not required (that would leak it), and `exact`, `contains`, `regex`,
 `fuzzy` and `command` cases are not checked. `review.json` records the files'
 names and SHA-256 as `prompt_files`.
 
+Grade the answer or final state, not the path the agent took to reach it:
+[grade outcomes, not paths](agent-evals.md#grade-outcomes-not-paths). To let
+product, support or sales colleagues add cases, review `cases.jsonl` in CI as in
+[contribute cases by pull request](agent-evals.md#contribute-cases-by-pull-request).
+
 `--random-split F` (with `--seed`) holds out a random share of cases,
 stratified by `source` so each source keeps tuning and held-out cases, and writes
 the choice into `cases.jsonl` as `held_out`. It refuses to run once `held_out`

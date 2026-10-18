@@ -19,6 +19,8 @@ Use the two existing packs as examples: `coding.py` runs completed artifacts;
 5. Add an independently implemented reference and meaningful defects. Register
    declared fault controls in `CONTROL_PACKS` in `audit.py`, with the intended
    target dimension. The audit must reject a fault in that dimension.
+   Grade the final state the task cares about, not the order of steps that
+   produced it; see [grade outcomes, not paths](agent-evals.md#grade-outcomes-not-paths).
 6. Test positive outcomes, false-success claims, side effects, protocol failures,
    and unassessable environment failures. Run an actual Docker audit and archive
    its evidence. Change the task version when case generation, contract, budget,

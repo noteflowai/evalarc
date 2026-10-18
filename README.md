@@ -37,7 +37,9 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
 
 The [homepage](https://noteflowai.github.io/evalarc/) compares the recorded model upgrade before you enter the full lab. Switch generation seeds, open that exact output, or save a result image with the comparison scope. The full model review keeps the selected case and seed in its URL.
 
-Product direction and acceptance milestones: [Roadmap](ROADMAP.md).
+Product direction and acceptance milestones: [Roadmap](ROADMAP.md). How the
+recommendations of Anthropic's *Demystifying evals for AI agents* map to EvalArc,
+and what it does not cover: [Agent evaluations, mapped](docs/agent-evals.md).
 
 ## Review a real model upgrade
 
@@ -91,7 +93,7 @@ to produce your first HTML report without cloning the source.
 | A prompt or skill change tuned against part of an eval | Compare held-out and tuning cases for an overfitting signal; find case text copied into prompts | [Held-out split](docs/ci-gate.md#held-out-split-did-the-change-generalize) |
 | A cheaper model, lower thinking effort or shorter prompt | Require no lost checks and recorded cost or tokens at most a set ratio of the baseline | [Cost at equal quality](docs/ci-gate.md#cost-at-equal-quality) |
 | Saved results you plan to tune against | Find saturation, never-passing and flaky checks, inconsistent grading, truncation, self-grading, pipeline errors and noise above the change you need; report case-level pass@k and pass^k and check capability/regression suite roles | [Eval health](docs/eval-health.md) |
-| A grader you are about to trust, or a change judged by preference | Blind spot checks with false accepts/rejects; blind randomized A/B against the baseline with position-bias checks | [Blind judging](docs/judging.md) |
+| A grader you are about to trust, or a change judged by preference | Blind spot checks with false accepts/rejects; blind randomized A/B against the baseline with position-bias checks; agreement and consensus across several annotators | [Blind judging](docs/judging.md) |
 | A folder of reports from many runs | Open one local index with every report's verdict; sort, filter and drill in | [Browse reports](docs/viewer.md) |
 | A new evaluation for your application | Scaffold cases, a programmatic grader, a runner and a hillclimb config; review the inputs before any run | [Evaluation project](docs/eval-init.md) |
 | A prompt or skill you want to hillclimb with your own model-calling commands | Run the loop: tuning failures only, edits limited to allowed files, pasted-case and leakage rollback, keep/rollback by held-out results | [Hillclimb run](docs/hillclimb-run.md) |

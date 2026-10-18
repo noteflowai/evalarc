@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- `docs/agent-evals.md` (and Chinese) maps the recommendations of Anthropic's
+  "Demystifying evals for AI agents" to the EvalArc command, finding or field
+  that applies each, marking partial support: a glossary, grading outcomes rather than paths, a trial
+  isolation checklist, a CI workflow for contributing cases by pull request,
+  and the layers EvalArc does not cover (production monitoring, live A/B tests,
+  simulated users, latency). Linked from both READMEs, task authoring, workflow
+  and eval-init.
+- `examples/static-analysis/` runs lint, format, type and security analyzers as
+  stable pytest checks that `evalarc diff` can gate on, with a test that a new
+  lint violation fails the gate. A linter's own JUnit report is keyed by rule
+  and path, so it misses repeat violations and fails on moves; the README
+  explains why.
 - `evalarc eval-health --reference RESULT` reads a run of the same evaluation
   with a known-good solution. Checks the reference does not pass on every
   graded attempt raise `reference_fails` (warning) and are triaged
