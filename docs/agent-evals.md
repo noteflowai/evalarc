@@ -36,7 +36,7 @@ monitor production. [中文](agent-evals.zh-CN.md).
 | Outcome verification | Built-in packs grade host-owned final state; [behavior review](https://noteflowai.github.io/evalarc/behavior-audit/index.html) checks actual service submissions |
 | Tool-call verification | Partial. The support pack's host verifier checks the tool effects that matter (notes, closure, idempotency); imported runs get only tool-call counts with `--transcript-metrics`, not which tools or parameters. See [grade outcomes, not paths](#grade-outcomes-not-paths) |
 | Transcript analysis: turns, tokens | `usage` in `diff`; `--transcript-metrics` adds turns, tool calls, messages and error retries, gateable with `--cost-metric turns` |
-| Rubric scoring, natural-language assertions, reference-based judging | Not built in: EvalArc does not run rubric graders. It imports their verdicts (Inspect `model_graded_*`, promptfoo `llm-rubric`, `g-eval` and similar) and checks them below; `judge-run` runs your judge command over a blind packet, which includes the expected answer as a reference |
+| Rubric scoring, natural-language assertions, reference-based judging | Not built in: EvalArc does not run rubric graders. It imports their verdicts (Inspect `model_graded_*`, promptfoo `llm-rubric`, `g-eval` and similar) and checks them below; `judge-run` runs your judge command over a blind packet, which includes the expected answer as a reference when the results record one |
 | One isolated judge per dimension | Not enforced: each check is judged and reported on its own, but EvalArc cannot see whether one judge call graded several dimensions |
 | Model-based graders and their calibration | `eval-health` flags `self_graded` and `model_judge_replaceable`; `judge-packet grader` measures a grader against blind human or model judgments ([judging](judging.md)) |
 | Multi-judge consensus, inter-annotator agreement | `judge-score PACKET A.json B.json C.json`: pairwise and Fleiss' kappa, majority or unanimous consensus, `--min-annotator-agreement` |
@@ -51,7 +51,7 @@ monitor production. [中文](agent-evals.zh-CN.md).
 | --- | --- |
 | Capability evals start low; regression evals stay near 100% | `"suite": "capability"` / `"regression"` per case; `regression_case_failing`, `diff --require-regression-suite`, `hillclimb` rollback on a broken regression case |
 | Graduate saturated capability cases | `graduation_candidates` |
-| pass@k and pass^k | Unbiased estimators per file in `eval-health`, and per suite in `eval-health --cases` and `diff --cases` when the manifest declares suites |
+| pass@k and pass^k | Unbiased estimators per file in `eval-health`; per suite in `diff --cases` when the manifest declares suites |
 | Changes within noise | 95% Wilson intervals, `within_sampling_noise`, `noise_exceeds_min_effect`, `--min-effect` |
 
 ### Building the task set

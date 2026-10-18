@@ -31,7 +31,7 @@ JUnit、AgentCore、ATIF），并运行三个内置任务包；它不调用模�
 | 结果核验 | 内置任务包对主机持有的最终状态评分；[行为审查](https://noteflowai.github.io/evalarc/behavior-audit/index.html)检查实际提交到服务的内容 |
 | 工具调用核验 | 部分支持。support 任务包的主机评分器检查关键的工具效果（备注、关闭、幂等）；导入的运行只能用 `--transcript-metrics` 统计工具调用次数，不检查调用了哪些工具或参数。见[评结果而不是路径](#评结果而不是路径) |
 | Transcript 分析：轮次、token | `diff` 的 `usage`；`--transcript-metrics` 增加轮次、工具调用、消息数和错误重试，可用 `--cost-metric turns` 设门禁 |
-| 评分细则、自然语言断言、基于参考答案的评判 | 不内置：EvalArc 不运行细则评分器，只导入它们的判定（Inspect `model_graded_*`、promptfoo `llm-rubric`、`g-eval` 等）并按下文检查；`judge-run` 在盲评数据包上运行你的裁判命令，数据包中包含期望答案作为参考 |
+| 评分细则、自然语言断言、基于参考答案的评判 | 不内置：EvalArc 不运行细则评分器，只导入它们的判定（Inspect `model_graded_*`、promptfoo `llm-rubric`、`g-eval` 等）并按下文检查；`judge-run` 在盲评数据包上运行你的裁判命令，结果记录了期望答案时，数据包会把它作为参考 |
 | 每个维度一个独立裁判 | 不强制：每个检查单独评判、单独报告，但 EvalArc 看不到一次裁判调用是否同时评了多个维度 |
 | 模型评分器及其校准 | `eval-health` 报 `self_graded`、`model_judge_replaceable`；`judge-packet grader` 用盲评的人工或模型判断衡量评分器（[盲评](judging.zh-CN.md)） |
 | 多裁判共识、标注者一致性 | `judge-score PACKET A.json B.json C.json`：两两一致率与 Fleiss' kappa、多数或全体一致共识、`--min-annotator-agreement` |
@@ -46,7 +46,7 @@ JUnit、AgentCore、ATIF），并运行三个内置任务包；它不调用模�
 | --- | --- |
 | 能力评测起点低；回归评测接近 100% | 每个用例的 `"suite": "capability"` / `"regression"`；`regression_case_failing`、`diff --require-regression-suite`、`hillclimb` 在回归用例被破坏时回滚 |
 | 饱和的能力用例“毕业” | `graduation_candidates` |
-| pass@k 与 pass^k | `eval-health` 按文件给出无偏估计；清单声明了套件时，`eval-health --cases` 与 `diff --cases` 还按套件给出 |
+| pass@k 与 pass^k | `eval-health` 按文件给出无偏估计；清单声明了套件时，`diff --cases` 还按套件给出 |
 | 噪声内的变化 | 95% Wilson 区间、`within_sampling_noise`、`noise_exceeds_min_effect`、`--min-effect` |
 
 ### 构建任务集
