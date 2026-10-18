@@ -60,11 +60,14 @@ evalarc judge-score spot alice.json bob.json carol.json \
 ```
 
 报告给出每两位标注者之间的共同判定项数、一致率（含 95% 区间）和 Cohen's kappa，以及所有标注者都有
-明确判定的条目上的 Fleiss' kappa；`unsure` 和未作答不计入。共识规则：`majority`（默认）要求超过半数
+明确判定的条目上的 Fleiss' kappa；`unsure` 和未作答不计入。成对数据包中 `tie` 算作明确答案（两位标注者都认为
+两者无差别，也是一致），只有 `unsure` 和未作答被排除。共识规则：`majority`（默认）要求超过半数
 标注者给出相同的明确答案，`unanimous` 要求全体一致；`unsure` 从不计入共识，没有共识的条目列为
-`undecided` 并排除。评分器的混淆表、误接受/误拒绝，或成对偏好，都以共识答案为准计算。
-`--min-annotator-agreement A` 要求每位标注者都答完所有条目，且每两位标注者在共同判定的条目上一致率
-不低于 A，否则退出 1（门禁 `reason` 为 `annotators_disagree`）。一致率低说明任务或评分标准有歧义，
+`undecided` 并排除；只要还有 `undecided` 条目，任何门禁都会失败，因为只覆盖部分条目的共识不能为评分器作保。
+每位标注者的 `unsure` 数见 `annotators[]`，共识本身不会是 `unsure`。评分器的混淆表、误接受/误拒绝，或成对偏好，都以共识答案为准计算。
+`--min-annotator-agreement A` 要求每位标注者都答完所有条目（否则 `reason` 为 `incomplete`）、没有标注者是被测模型
+（`self_judged`）、每个条目都有共识（`undecided_items`），且每两位标注者在共同判定的条目上一致率不低于 A
+（`annotators_disagree`），否则退出 1。一致率低说明任务或评分标准有歧义，
 应先修正再采信评分器比较。同时使用其他门禁时，`judge_gate_passed` 保留该门禁本身的结果，`passed`
 要求两者都通过。每位标注者都会列出文件哈希、作答数、unsure 数和 `self_judged`；任何一位是被测模型都会
 标记结果。完全相同或重复给出的文件退出 2。`--output` 把每个文件保存为 `verdicts-01.json`、

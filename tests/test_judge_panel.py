@@ -168,9 +168,10 @@ def test_panel_cli_writes_every_verdicts_file_and_exits_by_gate(tmp_path, capsys
     assert main([*args, "--min-annotator-agreement", "0.9"]) == 1
     assert (out / "verdicts-01.json").is_file() and (out / "verdicts-02.json").is_file()
     summary = (out / "summary.md").read_text()
-    assert "lowest pairwise agreement 70.0%" in summary and "**fail**" in summary
+    assert "lowest pairwise agreement 70.0%" in summary
+    assert "**fail: undecided_items**" in summary
     html = (out / "index.html").read_text()
-    assert "<h2>Annotators</h2>" in html and "annotators disagree" in html
+    assert "<h2>Annotators</h2>" in html and "3 item(s) without annotator consensus" in html
 
 
 def test_annotator_names_are_escaped(tmp_path):
@@ -255,3 +256,55 @@ def test_shared_unsure_is_undecided_not_a_consensus(tmp_path):
     assert result["consensus"]["undecided"] == ["item-001"]
     assert result["annotator_agreement"]["pairs"][0]["items"] == 3
     assert result["annotator_agreement"]["fleiss_items"] == 3
+
+
+def test_undecided_items_fail_every_gate(tmp_path):
+    packet_dir = make_packet(tmp_path, "grader", "current", sample=12)
+    key = json.loads((packet_dir / "key.json").read_text())
+    ids = sorted(key["items"])
+    a = verdicts(tmp_path, packet_dir, truth, "a")
+    # b disagrees with a on 11 of 12 items: the consensus decides one item only.
+    b = verdicts(tmp_path, packet_dir, flipped(*ids[1:]), "b")
+    result = score(packet_dir, [a, b], min_agreement=0.9)
+    assert result["agreement"] == 1.0 and result["decided"] == 1
+    assert result["gate"]["passed"] is False
+
+    # Shared unsure answers leave items undecided too.
+    def mostly_unsure(item_id, hidden):
+        return truth(item_id, hidden) if item_id == ids[0] else "unsure"
+
+    c = verdicts(tmp_path, packet_dir, mostly_unsure, "c")
+    d = verdicts(
+        tmp_path, packet_dir, mostly_unsure, "d", judge={"kind": "human", "description": "d"}
+    )
+    both = score(packet_dir, [c, d], min_agreement=0.9, min_annotator_agreement=0.9)
+    assert both["gate"]["passed"] is False and both["gate"]["reason"] == "undecided_items"
+    assert both["gate"]["judge_gate_passed"] is False
+
+
+def test_annotator_gate_reasons(tmp_path):
+    packet_dir = make_packet(tmp_path, "grader", "current", sample=6)
+    subject = json.loads((packet_dir / "key.json").read_text())["subject_models"][0]
+    a = verdicts(tmp_path, packet_dir, truth, "a")
+    missing = verdicts(
+        tmp_path, packet_dir, lambda i, h: None if i == "item-001" else truth(i, h), "m"
+    )
+    assert score(packet_dir, [a, missing], min_annotator_agreement=0.5)["gate"]["reason"] == (
+        "incomplete"
+    )
+    model = verdicts(
+        tmp_path, packet_dir, truth, "model", judge={"kind": "model", "model": subject}
+    )
+    gate = score(packet_dir, [a, model], min_annotator_agreement=0.5)["gate"]
+    assert gate == {"min_annotator_agreement": 0.5, "passed": False, "reason": "self_judged"}
+    with pytest.raises(ValueError, match="--consensus needs two or more"):
+        score(packet_dir, [a], consensus="unanimous")
+
+
+def test_single_file_errors_keep_their_wording(tmp_path):
+    packet_dir = make_packet(tmp_path, "grader", "current", sample=4)
+    other = make_packet(tmp_path / "o", "grader", "current", sample=4, seed=9)
+    c = verdicts(tmp_path, other, truth, "c")
+    with pytest.raises(ValueError) as error:
+        score(packet_dir, c)
+    assert str(error.value) == "verdicts were recorded for a different packet"

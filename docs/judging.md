@@ -82,17 +82,23 @@ evalarc judge-score spot alice.json bob.json carol.json \
 - **Agreement between annotators.** For every pair: items both decided,
   percent agreement with a 95% interval, and Cohen's kappa; across all
   annotators, Fleiss' kappa over the items every annotator decided. `unsure`
-  and unanswered items are excluded.
+  and unanswered items are excluded. In pairwise packets `tie` is a decisive
+  answer here (two annotators who both see no difference agree); only `unsure`
+  and unanswered are excluded.
 - **Consensus.** `majority` (default) needs more than half of all annotators on
   the same decisive answer; `unanimous` needs every annotator. `unsure` never
   counts toward a consensus. Items without one are listed as `undecided` and
-  left out.
+  left out of the comparison, and any gate fails while one remains: a consensus
+  that decided only part of the packet cannot vouch for the grader. Per-annotator
+  `unsure` counts are in `annotators[]`; a consensus is never `unsure`.
 - **Grader or baseline against the consensus.** The usual grader confusion
   table and false accepts/rejects, or the pairwise preference, are computed
   against the consensus answers.
-- `--min-annotator-agreement A` also fails (exit 1, gate `reason`
-  `annotators_disagree`) unless every item is answered by every annotator and
-  every pair agrees on at least A of the items both decided. Low agreement means
+- `--min-annotator-agreement A` also fails (exit 1) unless every item is
+  answered by every annotator (`reason` `incomplete`), no annotator is a model
+  under evaluation (`self_judged`), every item has a consensus
+  (`undecided_items`), and every pair agrees on at least A of the items both
+  decided (`annotators_disagree`). Low agreement means
   the task or rubric is ambiguous: fix it before trusting the grader comparison.
   With another gate, `judge_gate_passed` keeps that gate's own outcome and
   `passed` requires both.
