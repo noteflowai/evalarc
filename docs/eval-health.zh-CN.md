@@ -100,7 +100,19 @@ pass@2 为 87.5%，pass^2 只有 75.0%，因为 `cancel-pending` 两个 epoch �
 文件的用例级试验对照这些角色：`regression` 用例在最后一个文件中有失败或未评估的试验、或未出现时
 报 `regression_case_failing` 警告；`capability` 用例在最后一个文件中至少两次试验且全部成功时提示
 `graduation_candidates`，建议把它移入回归套件，并补充更难的能力用例。由于首个匹配的条目生效，
-请在同一条目里同时声明来源和套件。每个条目必须匹配至少一个用例，清单会以
+请在同一条目里同时声明来源和套件。
+
+条目还可以声明以下可选属性：`expect_action`（`act`：智能体应当执行被测行为，例如搜索、调用工具、退款、触发技能；
+`abstain`：不应执行）；`expect_change`（`fail_to_pass`：本次改动必须修复的测试；`pass_to_pass`：必须保持通过的测试），
+供 `diff --cases` 与 `--require-f2p` 使用；`impact`（`critical`、`high`、`normal`、`low`），`diff --cases` 会按影响程度
+列出阻断变化；`owner`（不超过 200 字符的文本），显示在阻断变化旁。只测“应当执行”的用例，会奖励处处都执行的智能体。
+只要有用例声明了 `expect_action`，`health.json` 就会新增 `behavior`：按文件给出 `act` 用例的用例级试验成功率
+（`undertrigger_rate` = 1 − 成功率，漏触发）和 `abstain` 用例的对应值（`overtrigger_rate`，误触发），并附 95% 区间。
+声明了 `expect_action` 的用例全部取同一个值时报 `one_sided_behavior` 警告；较少的一侧不足 25% 时提示
+`behavior_imbalance`；部分用例未声明时提示 `behavior_undeclared`。“成功”指该用例的评分器通过，因此 `act` 用例的
+评分器必须检查行为确实发生，`abstain` 用例的评分器必须检查行为没有发生。在仓库自带的 Inspect 示例上使用
+[`attributes.json`](../examples/results-diff/inspect/attributes.json) 时，误触发率从 66.7% 降到 33.3%，漏触发率却从
+0% 升到 25%。不声明这些字段时，报告不变。每个条目必须匹配至少一个用例，清单会以
 `cases.json` 复制到输出目录。来源由调用方声明、不经核验；使用生产会话前请先确认留存与敏感数据规则。
 
 ## 局限

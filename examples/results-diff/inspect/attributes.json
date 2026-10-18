@@ -1,0 +1,11 @@
+{
+  "schema_version": "evalarc.case-manifest.v1",
+  "description": "expect_action: should the agent issue a refund or cancellation (act) or refuse (abstain)?",
+  "cases": [
+    {"match": "refund-small", "source": "support_ticket", "expect_action": "act", "impact": "high", "owner": "payments-oncall"},
+    {"match": "cancel-pending", "source": "bug_report", "expect_action": "act", "impact": "normal", "owner": "orders"},
+    {"match": "refund-duplicate", "source": "support_ticket", "expect_action": "abstain", "impact": "critical", "owner": "payments-oncall"},
+    {"match": "cancel-shipped", "source": "bug_report", "expect_action": "abstain", "impact": "normal", "owner": "orders"},
+    {"match": "refund-large", "source": "support_ticket", "expect_action": "abstain", "impact": "high", "owner": "payments-oncall"}
+  ]
+}

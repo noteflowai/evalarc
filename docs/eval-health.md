@@ -176,6 +176,36 @@ Findings:
 | `regression_case_failing` | warning | a `regression` case has a failed or unassessed trial in the last file, or is missing from it |
 | `graduation_candidates` | info | a `capability` case succeeded on every trial of the last file, with at least two trials: move it to the regression suite and add harder capability cases |
 
+### Case attributes
+
+Entries may also declare, all optional:
+
+| Field | Values | Used by |
+| --- | --- | --- |
+| `expect_action` | `act` (the agent should take the behavior under test: search, call a tool, refund, trigger a skill) or `abstain` (it should not) | Over- and undertriggering below and in [`diff --cases`](ci-gate.md#over--and-undertriggering-fail-to-pass-and-impact) |
+| `expect_change` | `fail_to_pass` (a test the change must make pass) or `pass_to_pass` (a test that must keep passing) | `diff --cases` and `--require-f2p` |
+| `impact` | `critical`, `high`, `normal`, `low` | `diff --cases` lists blocking changes by impact |
+| `owner` | single-line text, at most 200 characters | shown next to blocking changes |
+
+A suite that tests only cases where a behavior should happen rewards an agent
+that does it everywhere. When any case declares `expect_action`, `health.json`
+gains `behavior`: per file, the case-level trial success on `act` cases
+(`undertrigger_rate` = 1 − success) and on `abstain` cases (`overtrigger_rate`),
+with 95% intervals. Findings:
+
+| Finding | Severity | Raised when |
+| --- | --- | --- |
+| `one_sided_behavior` | warning | every case that declares `expect_action` has the same value |
+| `behavior_imbalance` | info | the smaller side is below 25% of declared cases |
+| `behavior_undeclared` | info | some cases declare `expect_action` and others do not |
+
+Success means the case's grader passed, so an `act` case's grader must check
+that the behavior happened and an `abstain` case's grader that it did not. In
+the recorded Inspect example with
+[`attributes.json`](../examples/results-diff/inspect/attributes.json),
+overtriggering falls from 66.7% to 33.3% while undertriggering rises from 0%
+to 25%. Without these fields, reports are unchanged.
+
 Because the first matching entry wins, declare a case's source and suite in
 the same entry. Every entry must match a recorded case. The manifest is copied to `cases.json`
 in the output folder. Provenance is declared, not verified; confirm retention and

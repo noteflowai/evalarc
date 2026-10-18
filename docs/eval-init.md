@@ -38,6 +38,7 @@ before you change anything. Replace `respond()` in `app.py` with your model call
 | `difficulty` | for `model_failure` | Why the task itself is hard |
 | `held_out` | no | `true` to keep the case away from the tuning loop |
 | `suite` | no | `capability` (a hill to climb, may start at a low pass rate) or `regression` (already works and must pass every trial); copied into the case manifest for [`eval-health --cases`](eval-health.md#case-provenance) |
+| `expect_action`, `expect_change`, `impact`, `owner` | no | [Case attributes](eval-health.md#case-attributes), copied into the case manifest: should the agent act or abstain, fail-to-pass or pass-to-pass, impact, and owner |
 
 Prefer production sessions (after checking retention and sensitive-data rules),
 then bug reports and tickets, then 5–10 hand-written cases, and only then
@@ -51,6 +52,11 @@ difficulty, and reports `no_held_out`, `held_out_share`, `duplicate_inputs`,
 `few_cases`, `dominant_answer` and the source findings from
 [`eval-health --cases`](eval-health.md#case-provenance) (`adversarial_sampling`,
 `no_real_cases`, `mostly_synthetic`, `traffic_only`). When any case declares a
+`expect_action`, `expect_change` or `impact`, `review.json` counts each; when
+any case declares an attribute (including only `owner`), the case table gains
+an Attributes column, and the review reports the
+`expect_action` balance findings (`one_sided_behavior`, `behavior_imbalance`,
+`behavior_undeclared`) and `impact_undeclared` (info). When any case declares
 `suite`, it also counts the suites and reports `suite_undeclared` (some cases
 declare none) and `no_regression_suite` (none is `regression`), both info,
 and the case table gains a Suite column. When `eval-health` lists

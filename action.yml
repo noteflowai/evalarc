@@ -42,13 +42,20 @@ inputs:
     default: "false"
   cases:
     description: >-
-      Optional evalarc.case-manifest.v1 JSON with "suite" (capability or regression) per
-      case. Adds per-suite case-level pass@k/pass^k and tags changed checks with their suite.
+      Optional evalarc.case-manifest.v1 JSON with "suite" (capability or regression) and/or
+      case attributes (expect_action, expect_change, impact, owner). Adds per-suite
+      pass@k/pass^k, over- and undertriggering, fail-to-pass/pass-to-pass and blocking
+      changes by impact.
     default: ""
   require-regression-suite:
     description: >-
       Also fail unless every regression-suite case succeeds on every trial of the current
       run, including failures already present on the baseline. Requires cases.
+    default: "false"
+  require-f2p:
+    description: >-
+      Also fail unless every expect_change fail_to_pass case succeeds on every current trial
+      and no pass_to_pass case breaks. Requires cases.
     default: "false"
   max-cost-ratio:
     description: >-
@@ -124,6 +131,7 @@ runs:
         CASES: ${{ inputs.cases }}
         REQUIRE_REGRESSION_SUITE: ${{ inputs.require-regression-suite }}
         TRANSCRIPT_METRICS: ${{ inputs.transcript-metrics }}
+        REQUIRE_F2P: ${{ inputs.require-f2p }}
       run: |
         bin="$RUNNER_TEMP/evalarc-action/bin"
         extra=()
@@ -136,6 +144,7 @@ runs:
         if [ -n "$CASES" ]; then extra+=(--cases "$CASES"); fi
         if [ "$REQUIRE_REGRESSION_SUITE" = "true" ]; then extra+=(--require-regression-suite); fi
         if [ "$TRANSCRIPT_METRICS" = "true" ]; then extra+=(--transcript-metrics); fi
+        if [ "$REQUIRE_F2P" = "true" ]; then extra+=(--require-f2p); fi
         if [ -n "$MAX_COST_RATIO" ]; then
           extra+=(--max-cost-ratio "$MAX_COST_RATIO" --cost-metric "$COST_METRIC")
         fi
@@ -194,6 +203,6 @@ runs:
                   f"{clean(hit['role'])} of case {clean(hit['case_id'])} appears verbatim")
         PY
         if [ "$code" -eq 1 ] && [ "$FAIL_ON_REGRESSION" = "true" ]; then
-          echo "::error title=EvalArc::A check lost passes or coverage, or a required generalization, cost or regression-suite gate failed. Report: $OUTPUT/index.html"
+          echo "::error title=EvalArc::A check lost passes or coverage, or a required generalization, cost, regression-suite or fail-to-pass gate failed. Report: $OUTPUT/index.html"
           exit 1
         fi

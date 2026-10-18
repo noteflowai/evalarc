@@ -433,13 +433,22 @@ def health(
                 )
             )
 
-    provenance = None
+    provenance = behavior = None
     if cases_manifest is not None:
         from evalarc import provenance as case_provenance
 
         case_ids = {case for run in runs for case in run["cases"]}
         provenance = case_provenance.review(cases_manifest, case_ids)
         findings += case_provenance.findings(provenance, len(case_ids), _finding)
+        behavior = None
+        if any("expect_action" in item for item in (provenance.get("attributes") or {}).values()):
+            behavior = [
+                {
+                    "file": run["source"]["name"],
+                    **trials.behavior_rates(run, provenance["attributes"]),
+                }
+                for run in runs
+            ]
         if provenance.get("suites"):
             last = runs[-1]["source"]["name"]
             findings += trials.suite_findings(
@@ -474,6 +483,8 @@ def health(
             if trial_metrics
             else {}
         ),
+        # Additive key, present only when the case manifest declares expect_action.
+        **({"behavior": behavior} if behavior else {}),
         # Additive key, present only with --transcript-metrics.
         **({"transcripts": transcript_runs} if transcript_runs is not None else {}),
         "findings": findings,
@@ -513,6 +524,7 @@ def render_markdown(result: dict) -> str:
         ]
     lines += _trial_markdown(result.get("trials"))
     lines += _transcript_markdown(result.get("transcripts"))
+    lines += _behavior_markdown(result.get("behavior"))
     size = result.get("size")
     if size:
         recorded = size["recorded_seconds_per_configuration"]
@@ -641,6 +653,7 @@ def render_html(result: dict, destination: Path) -> None:
     body += "</tbody></table></div>"
     body += _trial_html(result.get("trials"), _esc)
     body += _transcript_html(result.get("transcripts"), _esc)
+    body += _behavior_html(result.get("behavior"), _esc)
     if result.get("triage"):
         body += (
             "<h2>Failure triage</h2><p>Failing cases in the last file, classified before any "
@@ -815,6 +828,50 @@ def _trial_html(trial_metrics: dict | None, esc) -> str:
                 f"<td>{row['cases']}</td><td>{row['pass_at_k']:.1%}</td>"
                 f"<td>{row['pass_hat_k']:.1%}</td></tr>"
             )
+    return body + "</tbody></table></div>"
+
+
+def _behavior_cells(run: dict) -> list[str]:
+    cells = []
+    for polarity, rate in (("act", "undertrigger_rate"), ("abstain", "overtrigger_rate")):
+        side = run.get(polarity)
+        cells.append(
+            "—" if not side or side[rate] is None else f"{side[rate]:.1%} ({side['cases']} cases)"
+        )
+    return cells
+
+
+def _behavior_markdown(rows: list | None) -> list[str]:
+    if not rows:
+        return []
+    lines = [
+        "",
+        "Over- and undertriggering (case-level trials, from expect_action):",
+        "",
+        "| File | Undertrigger (act cases failed) | Overtrigger (abstain cases failed) |",
+        "| --- | ---: | ---: |",
+    ]
+    for run in rows:
+        under, over = _behavior_cells(run)
+        lines.append(f"| {_cell(run['file'])} | {under} | {over} |")
+    return lines
+
+
+def _behavior_html(rows: list | None, esc) -> str:
+    if not rows:
+        return ""
+    body = (
+        "<h2>Over- and undertriggering</h2><p>From each case's declared expect_action: an act "
+        "case that fails is undertriggering, an abstain case that fails is overtriggering.</p>"
+        '<div class="scroll"><table><caption>Trigger error rates by file</caption><thead><tr>'
+        "<th>File</th><th>Undertrigger</th><th>Overtrigger</th></tr></thead><tbody>"
+    )
+    for run in rows:
+        under, over = _behavior_cells(run)
+        body += (
+            f"<tr><td><code>{esc(run['file'])}</code></td><td>{esc(under)}</td>"
+            f"<td>{esc(over)}</td></tr>"
+        )
     return body + "</tbody></table></div>"
 
 

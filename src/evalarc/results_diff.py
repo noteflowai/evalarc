@@ -188,13 +188,14 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         if result.get("baseline_incomplete")
         else "the current run is incomplete"
     )
+    # Only for the opt-in gates, so summaries without them keep their earlier heading.
+    extra = []
     if result.get("regression_suite_required") and not result.get("regression_suite_passed"):
-        # Only on the new opt-in gate, so summaries without it keep their earlier heading.
-        verdict = (
-            "regression-suite case(s) did not succeed on every trial"
-            if result["gate_passed"]
-            else verdict + "; regression-suite case(s) did not succeed on every trial"
-        )
+        extra.append("regression-suite case(s) did not succeed on every trial")
+    if result.get("f2p_required") and not result.get("f2p_passed"):
+        extra.append("fail_to_pass/pass_to_pass contract not met")
+    if extra:
+        verdict = "; ".join(extra) if result["gate_passed"] else "; ".join([verdict, *extra])
     lines = [f"### EvalArc: {verdict}", ""]
     lines += ["| | Baseline | Current |", "| --- | ---: | ---: |"]
     before, after = result["baseline"], result["current"]
@@ -281,6 +282,10 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         from evalarc.suite_report import render_markdown as suites_markdown
 
         lines.append(suites_markdown(result))
+    if result.get("case_attributes"):
+        from evalarc.suite_report import attributes_markdown
+
+        lines.append(attributes_markdown(result))
     lines.append(f"<sub>{result['interpretation']}</sub>")
     return "\n".join(lines) + "\n"
 
@@ -294,6 +299,7 @@ def render_html(result: dict, destination: Path) -> None:
         and result.get("generalization_passed", True)
         and (result.get("cost_gate") or {}).get("passed", True)
         and result.get("regression_suite_passed", True)
+        and result.get("f2p_passed", True)
     )
     reasons = []
     if result["blocking_changes"]:
@@ -308,12 +314,22 @@ def render_html(result: dict, destination: Path) -> None:
         reasons.append("the cost gate failed")
     if result.get("regression_suite_required") and not result.get("regression_suite_passed"):
         reasons.append("a regression-suite case did not succeed on every trial")
+    if result.get("f2p_required") and not result.get("f2p_passed"):
+        reasons.append("a fail_to_pass case is unresolved or a pass_to_pass case broke")
     within = result.get("blocking_changes_within_sampling_noise") or 0
     if passed:
         next_step = ""
     elif result.get("baseline_incomplete") and not result["blocking_changes"]:
         # No blocking rows exist to read; the missing evidence is in the baseline.
         next_step = "Rerun the baseline to completion and compare again."
+    elif (
+        result["gate_passed"]
+        and result.get("f2p_required")
+        and not result.get("f2p_passed")
+        and result.get("regression_suite_passed", True)
+    ):
+        # Only on the opt-in gate: no blocking rows exist; the contract table explains it.
+        next_step = "Read the fail-to-pass and pass-to-pass cases under Case attributes."
     else:
         next_step = "Read the blocking rows below and their evidence"
         if within:
@@ -380,6 +396,10 @@ def render_html(result: dict, destination: Path) -> None:
         from evalarc.suite_report import render_html as suites_html
 
         body += suites_html(result, _esc)
+    if result.get("case_attributes"):
+        from evalarc.suite_report import attributes_html
+
+        body += attributes_html(result, _esc)
     body += (
         '<h2>Inputs</h2><p class="metadata">'
         + "<br>".join(

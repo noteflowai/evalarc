@@ -269,3 +269,87 @@ def _item(file: str, case_id: str, item: dict | None, detail: str) -> dict:
         "attempts": item["trials"],
         "detail": detail,
     }
+
+
+# --- case attributes: expect_action and expect_change ------------------------------
+
+
+def _reliable(item: dict | None) -> bool:
+    return bool(item) and item["trials"] > 0 and item["successes"] == item["trials"]
+
+
+def behavior_rates(run: dict, attributes: dict[str, dict]) -> dict | None:
+    """Trial success on should-act and should-abstain cases, and the implied error rates.
+
+    undertrigger_rate = 1 - success on ``act`` cases (it did not act when it should);
+    overtrigger_rate = 1 - success on ``abstain`` cases (it acted when it should not).
+    Success is the case-level trial outcome, so this assumes the grader of an act case
+    checks that the behavior happened and the grader of an abstain case that it did not.
+    """
+    from evalarc.results_diff import wilson
+
+    per_case = case_trials(run)
+    out = {}
+    for polarity, rate_name in (("act", "undertrigger_rate"), ("abstain", "overtrigger_rate")):
+        members = sorted(
+            case for case, item in attributes.items() if item.get("expect_action") == polarity
+        )
+        if not members:
+            continue
+        assessed = sum(per_case.get(case, {}).get("assessed", 0) for case in members)
+        succeeded = sum(per_case.get(case, {}).get("successes", 0) for case in members)
+        out[polarity] = {
+            "cases": len(members),
+            "recorded_cases": sum(1 for case in members if case in per_case),
+            "assessed_trials": assessed,
+            "successful_trials": succeeded,
+            "success_rate": _round(succeeded / assessed) if assessed else None,
+            rate_name: _round(1 - succeeded / assessed) if assessed else None,
+            "success_interval_95": wilson(succeeded, assessed),
+        }
+    return out or None
+
+
+def expected_changes(baseline: dict, current: dict, attributes: dict[str, dict]) -> dict | None:
+    """The fail-to-pass / pass-to-pass contract over case-level trials.
+
+    A fail_to_pass case is resolved when it succeeds on every trial of the current run.
+    A pass_to_pass case is broken when it succeeded on every baseline trial and does not
+    on every current trial (a failed, unassessed or missing trial, or fewer trials).
+    """
+    f2p = sorted(c for c, a in attributes.items() if a.get("expect_change") == "fail_to_pass")
+    p2p = sorted(c for c, a in attributes.items() if a.get("expect_change") == "pass_to_pass")
+    if not f2p and not p2p:
+        return None
+    before, after = case_trials(baseline), case_trials(current)
+
+    def counts(item: dict | None) -> dict:
+        item = item or {"trials": 0, "assessed": 0, "successes": 0}
+        return {key: item[key] for key in ("trials", "assessed", "successes")}
+
+    resolved = [case for case in f2p if _reliable(after.get(case))]
+    missing = sorted(case for case in f2p + p2p if case not in after)
+    broken = []
+    for case in p2p:
+        old, new = before.get(case), after.get(case)
+        if _reliable(old) and (not _reliable(new) or new["trials"] < old["trials"]):
+            broken.append({"case_id": case, **counts(new), "baseline_trials": old["trials"]})
+    return {
+        "fail_to_pass": {
+            "cases": len(f2p),
+            "resolved": resolved,
+            "unresolved": [
+                {"case_id": case, **counts(after.get(case))} for case in f2p if case not in resolved
+            ],
+            "already_passing_on_baseline": [case for case in f2p if _reliable(before.get(case))],
+        },
+        "pass_to_pass": {
+            "cases": len(p2p),
+            "broken": broken,
+            "not_passing_on_baseline": [
+                case for case in p2p if case in before and not _reliable(before[case])
+            ],
+            "not_on_baseline": [case for case in p2p if case not in before],
+        },
+        "not_recorded_in_current": missing,
+    }

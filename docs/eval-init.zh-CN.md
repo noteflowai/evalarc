@@ -23,7 +23,7 @@ evalarc hillclimb-run hillclimb.toml --output ../climb --trust-local
 
 `cases.jsonl` 每行一个用例：`id`、`input`（写明评分器检查的全部条件）、`check`（`exact`、
 `contains`、`label`、`json_keys`、`json_schema`、`command`）、`expected`、`labels`（`label` 检查需要）、`source`、
-`difficulty`（`model_failure` 需要）、`held_out`，以及可选的 `suite`：`capability`（能力用例，起始通过率可以很低）或 `regression`（回归用例，已经能做到，每次试验都应通过），会写入用例清单供 [`eval-health --cases`](eval-health.zh-CN.md#用例来源) 检查。优先使用生产会话（先确认留存与敏感数据规则），
+`difficulty`（`model_failure` 需要）、`held_out`，以及可选的 `suite`：`capability`（能力用例，起始通过率可以很低）或 `regression`（回归用例，已经能做到，每次试验都应通过），会写入用例清单供 [`eval-health --cases`](eval-health.zh-CN.md#用例来源) 检查；可选的 `expect_action`、`expect_change`、`impact`、`owner`（[用例属性](eval-health.zh-CN.md#用例来源)）也会写入清单。声明了这些属性时，`review.json` 会分别计数，用例表增加 Attributes 列，并报告 `expect_action` 平衡相关发现（`one_sided_behavior`、`behavior_imbalance`、`behavior_undeclared`）以及 `impact_undeclared`（info）。优先使用生产会话（先确认留存与敏感数据规则），
 其次是缺陷报告与工单、5–10 个手写用例，最后才是以它们为基础的合成用例。
 
 `review-inputs` 逐行校验（出错时退出 2 并给出行号），生成审查页，并报告 `no_held_out`、
