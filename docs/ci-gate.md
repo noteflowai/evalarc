@@ -333,7 +333,8 @@ evalarc diff examples/results-diff/inspect/baseline.json \
 - `behavior`: baseline and current undertriggering (failed `act` cases) and
   overtriggering (failed `abstain` cases). In the example, overtriggering falls
   from 66.7% to 33.3% while undertriggering rises from 0% to 25%: the change
-  moved the threshold rather than improving judgment. A failing `abstain` check
+  may have shifted a threshold rather than improved judgment (on 5 cases, so
+  read the transcripts before concluding). A failing `abstain` check
   that lost passes already fails the default gate.
 - `blocking_by_impact`: blocking changes with an `impact` or `owner`, ordered
   `critical`, `high`, `normal`, `low`, then undeclared. Gate decisions do not
@@ -356,8 +357,11 @@ evalarc diff examples/results-diff/junit/baseline.xml \
 ```
 
 Here the large-refund fix is resolved, but two other tests broke, so the gate
-fails. Without these fields, reports and gates are unchanged. Folders written
-with `--require-f2p` need 0.21.0 or later to verify.
+fails. Without these fields, reports and gates are unchanged. Folders whose
+manifest declares case attributes, or written with `--require-f2p`, need 0.21.0
+or later to verify. First match wins: an entry with attributes whose cases are
+all claimed by an earlier entry exits 2, so put specific entries before globs.
+The GitHub Action input is `require-f2p`.
 
 ## Cost at equal quality
 

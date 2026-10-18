@@ -52,8 +52,9 @@ difficulty, and reports `no_held_out`, `held_out_share`, `duplicate_inputs`,
 `few_cases`, `dominant_answer` and the source findings from
 [`eval-health --cases`](eval-health.md#case-provenance) (`adversarial_sampling`,
 `no_real_cases`, `mostly_synthetic`, `traffic_only`). When any case declares a
-`expect_action`, `expect_change` or `impact`, `review.json` counts each, the
-case table gains an Attributes column, and the review reports the
+`expect_action`, `expect_change` or `impact`, `review.json` counts each; when
+any case declares an attribute (including only `owner`), the case table gains
+an Attributes column, and the review reports the
 `expect_action` balance findings (`one_sided_behavior`, `behavior_imbalance`,
 `behavior_undeclared`) and `impact_undeclared` (info). When any case declares
 `suite`, it also counts the suites and reports `suite_undeclared` (some cases

@@ -185,7 +185,7 @@ Entries may also declare, all optional:
 | `expect_action` | `act` (the agent should take the behavior under test: search, call a tool, refund, trigger a skill) or `abstain` (it should not) | Over- and undertriggering below and in [`diff --cases`](ci-gate.md#over--and-undertriggering-fail-to-pass-and-impact) |
 | `expect_change` | `fail_to_pass` (a test the change must make pass) or `pass_to_pass` (a test that must keep passing) | `diff --cases` and `--require-f2p` |
 | `impact` | `critical`, `high`, `normal`, `low` | `diff --cases` lists blocking changes by impact |
-| `owner` | text, at most 200 characters | shown next to blocking changes |
+| `owner` | single-line text, at most 200 characters | shown next to blocking changes |
 
 A suite that tests only cases where a behavior should happen rewards an agent
 that does it everywhere. When any case declares `expect_action`, `health.json`

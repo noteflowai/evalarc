@@ -66,9 +66,6 @@ def compute_diff(
     return result
 
 
-IMPACT_ORDER = ("critical", "high", "normal", "low")
-
-
 def _add_manifest(
     result: dict, runs: list[dict], manifest: dict, required: bool, require_f2p: bool
 ) -> None:
@@ -115,9 +112,11 @@ def _add_attributes(result: dict, runs: list[dict], review: dict, require_f2p: b
         view["behavior"] = sides
     if changes:
         view["expected_changes"] = changes
+    from evalarc.provenance import ATTRIBUTES
     from evalarc.results_diff import BLOCKING
 
-    rank = {name: index for index, name in enumerate(IMPACT_ORDER)}
+    order = ATTRIBUTES["impact"]
+    rank = {name: index for index, name in enumerate(order)}
     blocking = [
         {
             "case_id": row["case_id"],
@@ -130,9 +129,7 @@ def _add_attributes(result: dict, runs: list[dict], review: dict, require_f2p: b
         if row["kind"] in BLOCKING and (row.get("impact") or row.get("owner"))
     ]
     if blocking:
-        blocking.sort(
-            key=lambda item: (rank.get(item["impact"], len(IMPACT_ORDER)), item["case_id"])
-        )
+        blocking.sort(key=lambda item: (rank.get(item["impact"], len(order)), item["case_id"]))
         view["blocking_by_impact"] = blocking
     result["case_attributes"] = view
     if require_f2p:

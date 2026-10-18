@@ -328,6 +328,7 @@ def expected_changes(baseline: dict, current: dict, attributes: dict[str, dict])
         return {key: item[key] for key in ("trials", "assessed", "successes")}
 
     resolved = [case for case in f2p if _reliable(after.get(case))]
+    missing = sorted(case for case in f2p + p2p if case not in after)
     broken = []
     for case in p2p:
         old, new = before.get(case), after.get(case)
@@ -345,6 +346,10 @@ def expected_changes(baseline: dict, current: dict, attributes: dict[str, dict])
         "pass_to_pass": {
             "cases": len(p2p),
             "broken": broken,
-            "not_passing_on_baseline": [case for case in p2p if not _reliable(before.get(case))],
+            "not_passing_on_baseline": [
+                case for case in p2p if case in before and not _reliable(before[case])
+            ],
+            "not_on_baseline": [case for case in p2p if case not in before],
         },
+        "not_recorded_in_current": missing,
     }

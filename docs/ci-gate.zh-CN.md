@@ -166,8 +166,8 @@ GitHub Action 对应输入为 `held-out`、`harness`（空格分隔）和 `requi
 `owner`，不声明套件也可以。变化的检查会带上所属用例的属性，`diff.json` 新增 `case_attributes`：
 
 - `behavior`：基线与当前的漏触发率（`act` 用例失败）和误触发率（`abstain` 用例失败）。在仓库自带的 Inspect 示例上使用
-  `examples/results-diff/inspect/attributes.json` 时，误触发从 66.7% 降到 33.3%，漏触发却从 0% 升到 25%：这次改动只是
-  移动了阈值，并没有提高判断力。`abstain` 用例的检查少通过时，默认门禁本来就会失败。
+  `examples/results-diff/inspect/attributes.json` 时，误触发从 66.7% 降到 33.3%，漏触发却从 0% 升到 25%：这次改动可能只是
+  移动了阈值，而不是提高了判断力（只有 5 个用例，下结论前请先读对话记录）。`abstain` 用例的检查少通过时，默认门禁本来就会失败。
 - `blocking_by_impact`：带 `impact` 或 `owner` 的阻断变化，按 `critical`、`high`、`normal`、`low`、未声明排序；
   门禁判定不受影响程度左右。
 - `expected_changes`：编码智能体的验收约定。`fail_to_pass` 用例在当前运行的每次试验中都成功才算已修复；`pass_to_pass`
@@ -177,8 +177,8 @@ GitHub Action 对应输入为 `held-out`、`harness`（空格分隔）和 `requi
 `--require-f2p`（需要 `--cases`）额外要求所有 `fail_to_pass` 用例都已修复且没有 `pass_to_pass` 用例被破坏，否则门禁
 失败；没有任何 `fail_to_pass` 用例时退出 2。pytest 或 JUnit 的 ID 可以精确匹配，例如
 `evalarc diff examples/results-diff/junit/baseline.xml examples/results-diff/junit/current.xml --cases examples/results-diff/junit/cases.json --require-f2p`：
-大额退款的修复已完成，但另外两个测试被破坏，因此门禁失败。不声明这些字段时，报告和门禁都不变。使用 `--require-f2p`
-写出的目录需要 0.21.0 或更高版本才能验证。
+大额退款的修复已完成，但另外两个测试被破坏，因此门禁失败。不声明这些字段时，报告和门禁都不变。清单声明了用例属性、或使用了 `--require-f2p` 的目录，
+需要 0.21.0 或更高版本才能验证。首个匹配的条目生效：带属性的条目所匹配的用例若都已被前面的条目占用，命令退出 2，因此请把具体条目放在 glob 之前。GitHub Action 对应输入为 `require-f2p`。
 
 ## 保质降本
 

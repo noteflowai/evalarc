@@ -178,10 +178,12 @@ def attributes_console(result: dict) -> list[str]:
     changes = view.get("expected_changes")
     if changes:
         f2p, p2p = changes["fail_to_pass"], changes["pass_to_pass"]
-        lines.append(
-            f"fail_to_pass: {len(f2p['resolved'])}/{f2p['cases']} resolved | pass_to_pass: "
-            f"{len(p2p['broken'])}/{p2p['cases']} broken"
-        )
+        parts = []
+        if f2p["cases"]:
+            parts.append(f"fail_to_pass: {len(f2p['resolved'])}/{f2p['cases']} resolved")
+        if p2p["cases"]:
+            parts.append(f"pass_to_pass: {len(p2p['broken'])}/{p2p['cases']} broken")
+        lines.append(" | ".join(parts))
         lines += [
             f"  unresolved: {console_text(item['case_id'])}" for item in f2p["unresolved"][:10]
         ]
@@ -200,6 +202,12 @@ def attributes_console(result: dict) -> list[str]:
     return lines
 
 
+def _trials_text(item: dict, missing: list) -> str:
+    if item["case_id"] in missing:
+        return "not recorded in the current run"
+    return f"{item['successes']}/{item['trials']} trial(s) succeeded"
+
+
 def attributes_markdown(result: dict) -> str:
     view = result["case_attributes"]
     lines = ["", "#### Case attributes", ""]
@@ -213,8 +221,8 @@ def attributes_markdown(result: dict) -> str:
         lines += [
             "",
             "An act case fails when the agent did not act (undertriggering); an abstain case "
-            "fails when it acted (overtriggering). Watch both: improving one by moving the "
-            "threshold usually worsens the other.",
+            "fails when it acted (overtriggering). Read both: one improving while the other "
+            "worsens suggests a shifted threshold rather than better judgment.",
             "",
         ]
     changes = view.get("expected_changes")
@@ -231,14 +239,14 @@ def attributes_markdown(result: dict) -> str:
             ),
             "",
         ]
+        missing = changes.get("not_recorded_in_current") or []
         lines += [
-            f"- unresolved {_cell(item['case_id'])}: {item['successes']}/{item['trials']} "
-            "trial(s) succeeded"
+            f"- unresolved {_cell(item['case_id'])}: {_trials_text(item, missing)}"
             for item in f2p["unresolved"][:20]
         ]
         lines += [
-            f"- broken {_cell(item['case_id'])}: {item['successes']}/{item['trials']} "
-            f"trial(s) succeeded (baseline {item['baseline_trials']}/{item['baseline_trials']})"
+            f"- broken {_cell(item['case_id'])}: {_trials_text(item, missing)} "
+            f"(baseline {item['baseline_trials']}/{item['baseline_trials']})"
             for item in p2p["broken"][:20]
         ]
         if f2p["already_passing_on_baseline"]:
@@ -297,7 +305,8 @@ def attributes_html(result: dict, esc) -> str:
                 "<thead><tr><th>State</th><th>Case</th><th>Current trials</th></tr></thead><tbody>"
                 + "".join(
                     f"<tr><td>{esc(state)}</td><td><code>{esc(item['case_id'])}</code></td>"
-                    f"<td>{item['successes']}/{item['trials']}</td></tr>"
+                    f"<td>{esc(_trials_text(item, changes.get('not_recorded_in_current') or []))}"
+                    "</td></tr>"
                     for state, item in items
                 )
                 + "</tbody></table></div>"

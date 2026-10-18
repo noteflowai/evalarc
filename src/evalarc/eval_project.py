@@ -401,7 +401,8 @@ def review(cases: list[dict], source: dict) -> dict:
                 "impact_undeclared",
                 "info",
                 f"{len(cases) - sum(impacts.values())} of {len(cases)} case(s) declare no "
-                "impact while others do; diff lists their blocking changes after declared ones.",
+                "impact while others do; diff --cases lists their blocking changes after "
+                "declared ones only when they declare an owner.",
                 value=(len(cases) - sum(impacts.values())) / len(cases),
             )
         )

@@ -322,6 +322,14 @@ def render_html(result: dict, destination: Path) -> None:
     elif result.get("baseline_incomplete") and not result["blocking_changes"]:
         # No blocking rows exist to read; the missing evidence is in the baseline.
         next_step = "Rerun the baseline to completion and compare again."
+    elif (
+        result["gate_passed"]
+        and result.get("f2p_required")
+        and not result.get("f2p_passed")
+        and result.get("regression_suite_passed", True)
+    ):
+        # Only on the opt-in gate: no blocking rows exist; the contract table explains it.
+        next_step = "Read the fail-to-pass and pass-to-pass cases under Case attributes."
     else:
         next_step = "Read the blocking rows below and their evidence"
         if within:

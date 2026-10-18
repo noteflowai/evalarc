@@ -33,9 +33,9 @@ def junit_runs():
         ("expect_action", "maybe", "expect_action must be one of act, abstain"),
         ("expect_change", "p2p", "expect_change must be one of fail_to_pass, pass_to_pass"),
         ("impact", "urgent", "impact must be one of critical, high, normal, low"),
-        ("owner", "", "owner must be a non-empty string"),
-        ("owner", "x" * 201, "owner must be a non-empty string"),
-        ("owner", 7, "owner must be a non-empty string"),
+        ("owner", "", "owner must be a non-empty single-line string"),
+        ("owner", "x" * 201, "owner must be a non-empty single-line string"),
+        ("owner", 7, "owner must be a non-empty single-line string"),
     ],
 )
 def test_invalid_attributes(tmp_path, field, value, message):
@@ -236,7 +236,7 @@ def test_untrusted_owner_is_escaped(tmp_path):
 
     base = load_results(log(tmp_path / "b.json", {"c": [True]}))
     cur = load_results(log(tmp_path / "c.json", {"c": [False]}))
-    owner = "<img src=x onerror=1>|`\r### fake"
+    owner = "<img src=x onerror=1>|` ### fake"
     manifest = provenance.load(
         write_manifest(tmp_path / "m.json", [{"match": "c", "source": "manual", "owner": owner}])
     )
@@ -326,3 +326,55 @@ def test_require_f2p_alone_fails_an_otherwise_passing_gate(tmp_path, capsys):
     summary = (out / "summary.md").read_text()
     assert summary.startswith("### EvalArc: fail_to_pass/pass_to_pass contract not met")
     assert "fail_to_pass case is unresolved" in (out / "index.html").read_text()
+
+
+def test_a_shadowed_attribute_entry_is_an_error(tmp_path):
+    shadowed = provenance.load(
+        write_manifest(
+            tmp_path / "m.json",
+            [
+                {"match": "*", "source": "manual", "expect_change": "pass_to_pass"},
+                {"match": "fix", "source": "bug_report", "expect_change": "fail_to_pass"},
+            ],
+        )
+    )
+    with pytest.raises(ValueError, match="put specific entries before globs"):
+        provenance.review(shadowed, {"fix", "keep"})
+    # Entries without attributes keep first-match-wins without an error.
+    plain = provenance.load(
+        write_manifest(
+            tmp_path / "p.json",
+            [{"match": "*", "source": "manual"}, {"match": "fix", "source": "bug_report"}],
+        )
+    )
+    assert provenance.review(plain, {"fix", "keep"})["declared"] == 2
+
+
+def test_missing_cases_are_reported_as_not_recorded(tmp_path):
+    from evalarc.suite_report import attributes_markdown
+
+    base = load_results(log(tmp_path / "b.json", {"fix": [False], "keep": [True], "x": [True]}))
+    cur = load_results(log(tmp_path / "c.json", {"x": [True]}))
+    manifest = provenance.load(
+        write_manifest(
+            tmp_path / "m.json",
+            [
+                {"match": "fix", "source": "bug_report", "expect_change": "fail_to_pass"},
+                {"match": "keep", "source": "manual", "expect_change": "pass_to_pass"},
+            ],
+        )
+    )
+    result = evidence.compute_diff([base, cur], PARAMS, None, [], manifest)
+    changes = result["case_attributes"]["expected_changes"]
+    assert changes["not_recorded_in_current"] == ["fix", "keep"]
+    markdown = attributes_markdown(result)
+    assert "unresolved `fix`: not recorded in the current run" in markdown
+    assert "broken `keep`: not recorded in the current run" in markdown
+
+
+def test_owner_must_be_one_line(tmp_path):
+    path = write_manifest(
+        tmp_path / "m.json", [{"match": "*", "source": "manual", "owner": "a\nb"}]
+    )
+    with pytest.raises(ValueError, match="single-line"):
+        provenance.load(path)

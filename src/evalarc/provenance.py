@@ -105,9 +105,15 @@ def validate_attributes(entry: dict, where: str) -> dict:
             out[name] = entry[name]
     if "owner" in entry:
         owner = entry["owner"]
-        if not isinstance(owner, str) or not owner.strip() or len(owner) > MAX_OWNER_CHARS:
+        if (
+            not isinstance(owner, str)
+            or not owner.strip()
+            or len(owner) > MAX_OWNER_CHARS
+            or any(ord(char) < 32 or ord(char) == 127 for char in owner)
+        ):
             raise ValueError(
-                f"{where}.owner must be a non-empty string of at most {MAX_OWNER_CHARS} characters"
+                f"{where}.owner must be a non-empty single-line string of at most "
+                f"{MAX_OWNER_CHARS} characters"
             )
         out["owner"] = owner
     return out
@@ -129,6 +135,13 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
             matched = {pattern} & case_ids
         if not matched:
             raise ValueError(f"case manifest entry {pattern!r} matches no recorded case")
+        if rule.get("attributes") and matched <= set(assigned):
+            # First match wins, so these attributes would apply to no case. Earlier
+            # manifests without attributes keep loading unchanged.
+            raise ValueError(
+                f"case manifest entry {pattern!r} declares case attributes, but every case it "
+                "matches is claimed by an earlier entry; put specific entries before globs"
+            )
         for case in matched:
             assigned.setdefault(case, rule)
     counts = {source: 0 for source in SOURCES}
