@@ -99,6 +99,12 @@ choose a new path and inspect the abandoned files before manual cleanup.
 `trajectory` also refuses an existing output file. Its JSON file is published
 only after serialization completes.
 
+## Results from other harnesses
+
+EvalArc isolates trials only in its built-in Docker backend. Before trusting
+results written by another harness, work through the
+[trial isolation checklist](agent-evals.md#trial-isolation-checklist).
+
 ## Exit codes
 
 | Command | `0` | `1` | `2` |

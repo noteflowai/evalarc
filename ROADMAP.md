@@ -24,6 +24,8 @@ EvalArc already imports Inspect, promptfoo and JUnit. Its [export fixtures](exam
 
 For EA-01/EA-03, compare the native report/gate with EvalArc on the same permitted baseline/candidate exports, including a failed or incomplete run. Measure setup effort, correct release decisions, explanation time and false alarms. Seek three independent workflows within 30 days. If native tooling is sufficient, narrow EvalArc to the demonstrated interchange gap or maintain it without adding another evaluation stack.
 
+Practices from Anthropic's "Demystifying evals for AI agents" are mapped to commands in [Agent evaluations, mapped](docs/agent-evals.md). The measurement tooling it calls for exists; what remains needs people and data: annotator agreement and judge calibration on a permitted labeled corpus (EA-04), tasks drawn from real failures, and independent first-use and reviewer timing (EA-01, EA-03).
+
 ## Now
 
 | ID | Outcome | Acceptance evidence |
