@@ -177,6 +177,8 @@ def test_normalization_keeps_distinct_errors_apart():
     )
     assert normalize_error("try again in 250 ms") == normalize_error("try again in 980 ms")
     assert normalize_error("Used 290 tokens") == "Used # tokens"
+    for keyword in ("HTTP", "Status", "Exit", "ERROR", "status code:"):
+        assert normalize_error(f"{keyword} 429") != normalize_error(f"{keyword} 500")
     assert normalize_error("429 Too Many Requests") != normalize_error("500 Internal Server Error")
     long = "x" * 300
     assert normalize_error(long + "a") != normalize_error(long + "b")

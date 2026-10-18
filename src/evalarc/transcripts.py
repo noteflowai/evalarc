@@ -22,7 +22,7 @@ MIN_CLUSTER_CASES = 3
 # Status and exit codes identify the failure, so they are kept: "code 137" and "code 1"
 # are different errors, and so are HTTP 429 and 500.
 _CODES = re.compile(
-    r"\b(?:code|status|errno|exit|http|error)\s*[:=]?\s*\d{1,4}\b"
+    r"\b(?i:code|status|errno|exit|http|error)\s*[:=]?\s*\d{1,4}\b"
     # A bare 3-digit status needs a capitalized reason phrase ("429 Too Many Requests").
     r"|\b[1-5]\d\d\b(?=\s+[A-Z][a-z])",
 )
