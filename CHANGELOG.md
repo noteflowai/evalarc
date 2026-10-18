@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.21.0 — 2026-10-18
 
 - `docs/agent-evals.md` (and Chinese) maps the recommendations of Anthropic's
   "Demystifying evals for AI agents" to the EvalArc command, finding or field
