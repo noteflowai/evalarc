@@ -160,6 +160,11 @@ def prepare(
         "items": items,
     }
     packet_bytes = _canonical(packet)
+    if len(packet_bytes) > MAX_PACKET_BYTES:
+        raise ValueError(
+            f"the packet would be {len(packet_bytes)} bytes, above {MAX_PACKET_BYTES}; lower "
+            "--sample or --transcript-max-chars"
+        )
     key = {
         "schema_version": KEY_SCHEMA,
         "mode": mode,
@@ -252,14 +257,20 @@ def _pairwise_candidates(baseline: dict, current: dict) -> tuple[list[dict], dic
 
 MAX_TRANSCRIPT_CHARS = 200_000
 MAX_MESSAGE_CHARS = 4_000
+MAX_TRANSCRIPT_ENTRIES = 200
+# Characters charged per message on top of its text, so empty messages cannot grow the
+# excerpt without bound.
+ENTRY_OVERHEAD = 40
 
 
 def transcript_excerpt(messages: object, max_chars: int) -> list[dict] | None:
     """Role, text and tool calls of recorded messages, bounded; None when unrecorded.
 
-    Only message text and tool call names and arguments are copied: no scores, metadata,
-    events or model usage, so the packet stays blind. Long messages are cut at
-    ``MAX_MESSAGE_CHARS`` and the excerpt stops after ``max_chars`` characters in total.
+    Only message text, tool call names and arguments, and tool errors are copied: no
+    scores, metadata, events or model usage, so the packet stays blind. Long messages are
+    cut at ``MAX_MESSAGE_CHARS``. Whole messages are added while the excerpt stays within
+    ``max_chars`` characters (each message also costs ``ENTRY_OVERHEAD``) and at most
+    ``MAX_TRANSCRIPT_ENTRIES`` messages; a final ``excerpt`` entry counts the rest.
     """
     if not isinstance(messages, list):
         return None
@@ -283,8 +294,16 @@ def transcript_excerpt(messages: object, max_chars: int) -> list[dict] | None:
             entry["tool_calls"] = calls
         if message.get("role") == "tool" and message.get("function"):
             entry["function"] = str(message["function"])
-        size = len(text) + sum(len(c["function"]) + len(c["arguments"]) for c in calls)
-        if used + size > max_chars:
+        error = message.get("error")
+        if isinstance(error, dict) and error.get("message"):
+            entry["error"] = str(error["message"])[:MAX_MESSAGE_CHARS]
+        size = (
+            ENTRY_OVERHEAD
+            + len(text)
+            + len(entry.get("error", ""))
+            + sum(len(c["function"]) + len(c["arguments"]) for c in calls)
+        )
+        if used + size > max_chars or len(out) >= MAX_TRANSCRIPT_ENTRIES:
             out.append({"role": "excerpt", "text": f"… {len(messages) - len(out)} more message(s)"})
             break
         used += size
@@ -871,7 +890,10 @@ def _sheet_transcript(title: str, transcript: list | None, esc) -> str:
             for call in entry.get("tool_calls") or []
         )
         role = entry["role"] + (f" · {entry['function']}" if entry.get("function") else "")
-        rows.append(f"<li><strong>{esc(role)}</strong><pre>{esc(entry['text'])}</pre>{calls}</li>")
+        error = f"<p>Tool error: {esc(entry['error'])}</p>" if entry.get("error") else ""
+        rows.append(
+            f"<li><strong>{esc(role)}</strong><pre>{esc(entry['text'])}</pre>{calls}{error}</li>"
+        )
     return f"<details><summary>{esc(title)}</summary><ol>{''.join(rows)}</ol></details>"
 
 
@@ -1167,7 +1189,11 @@ def prepare_command(args) -> int:
     from evalarc.evaluate import write_json
 
     try:
-        runs = [load_results(path, args.format, args.threshold) for path in args.results]
+        keep = bool(getattr(args, "include_transcript", False))
+        runs = [
+            load_results(path, args.format, args.threshold, keep_messages=keep)
+            for path in args.results
+        ]
         packet, key = prepare(
             args.mode,
             runs,

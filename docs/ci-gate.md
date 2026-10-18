@@ -361,7 +361,8 @@ run each and carry no interval; repeat runs when the margin is small.
 
 Quality can stay the same while an agent takes twice the turns. For Inspect
 logs, `--transcript-metrics` counts each attempt's recorded messages and adds
-`n_turns` (assistant messages), `n_tool_calls`, `n_messages` and
+`n_turns` (generated assistant messages; few-shot messages from the sample
+input are skipped), `n_tool_calls`, `n_messages` and
 `n_error_retries` to `usage`, and `--cost-metric turns` or `tool_calls` gates
 on them:
 

@@ -177,7 +177,7 @@ Markdown 与 HTML 报告会增加“Cost and usage”部分。
 GitHub Action 对应输入为 `max-cost-ratio`、`cost-metric`、`transcript-metrics`，输出为 `cost-ratio`。
 
 质量不变，Agent 的轮次却可能翻倍。对 Inspect 日志，`--transcript-metrics` 统计每次尝试记录的消息，在
-`usage` 中加入 `n_turns`（assistant 消息数）、`n_tool_calls`、`n_messages` 和 `n_error_retries`，并可用
+`usage` 中加入 `n_turns`（生成的 assistant 消息数，不含样本输入中的少样本消息）、`n_tool_calls`、`n_messages` 和 `n_error_retries`，并可用
 `--cost-metric turns` 或 `tool_calls` 设门禁，例如
 `evalarc diff baseline.json current.json --transcript-metrics --max-cost-ratio 1.2 --cost-metric turns`。
 promptfoo 与 JUnit 不记录对话过程，这些指标保持未知，按轮次或工具调用设门禁时退出 2。不加该选项时

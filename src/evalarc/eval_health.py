@@ -411,7 +411,8 @@ def health(
                     f"{sum(item['assessed'] for item in limited)} attempt(s) in {len(limited)} "
                     "case(s) stopped at a message, time or other non-token limit. Raise the "
                     "limit or shorten the task before tuning; an attempt cut off by a budget "
-                    "measures the budget, not the agent.",
+                    "measures the budget, not the agent. An operator stop is not a budget: "
+                    "rerun those attempts.",
                     items=limited,
                 )
             )

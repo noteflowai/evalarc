@@ -19,11 +19,19 @@ from __future__ import annotations
 import re
 
 MIN_CLUSTER_CASES = 3
+# Status and exit codes identify the failure, so they are kept: "code 137" and "code 1"
+# are different errors, and so are HTTP 429 and 500.
+_CODES = re.compile(
+    r"\b(?:code|status|errno|exit|http|error)\s*[:=]?\s*\d{1,4}\b"
+    r"|\b[1-5]\d\d\b(?=\s+[a-z])",
+    re.IGNORECASE,
+)
 _VOLATILE = re.compile(
     r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"  # UUIDs
     r"|0x[0-9a-f]+|\b[0-9a-f]{12,}\b"  # hexadecimal identifiers
-    r"|\b(?=[a-z_-]*\d)[a-z0-9_-]{8,}\b"  # request IDs and tokens mixing letters and digits
-    r"|\d+(?:\.\d+)?",  # numbers, ports, durations, timestamps
+    r"|\b(?=[a-z_-]*\d)[a-z0-9_-]{8,}\b"  # request IDs, tokens and model names with digits
+    r"|\d+(?:\.\d+)?\s*(?:ms|s|sec|seconds|m|min|minutes)?\b"  # numbers, durations in any unit
+    r"|\d+(?:\.\d+)?",  # remaining numbers, ports, timestamps
     re.IGNORECASE,
 )
 METRICS = ("n_turns", "n_tool_calls", "n_messages", "n_error_retries")
@@ -73,8 +81,12 @@ def limit_items(runs: list[dict]) -> list[dict]:
     items = []
     for run in runs:
         for case_id, metas in sorted((run.get("samples") or {}).items()):
-            kinds = [meta.get("limit") for meta in metas]
-            hit = [kind for kind in kinds if kind and kind != "token"]
+            # Token limits and other cut-off outputs are already truncated_outputs.
+            hit = [
+                meta["limit"]
+                for meta in metas
+                if meta.get("limit") and meta["limit"] != "token" and not meta.get("truncated")
+            ]
             if hit:
                 items.append(
                     {
@@ -92,7 +104,29 @@ def limit_items(runs: list[dict]) -> list[dict]:
 
 
 def normalize_error(text: str) -> str:
-    return " ".join(_VOLATILE.sub("#", text).split())[:200]
+    """Error text with volatile parts replaced by ``#``; status and exit codes are kept."""
+    kept: list[str] = []
+
+    def protect(match: re.Match) -> str:
+        kept.append(match.group(0))
+        # Letters only, so the placeholder survives the number replacement below.
+        index, label = len(kept) - 1, ""
+        while True:
+            index, rest = divmod(index, 26)
+            label = chr(ord("a") + rest) + label
+            if not index:
+                break
+        return f"\x00{label}\x00"
+
+    def restore(match: re.Match) -> str:
+        index = 0
+        for char in match.group(1):
+            index = index * 26 + ord(char) - ord("a")
+        return kept[index]
+
+    text = _VOLATILE.sub("#", _CODES.sub(protect, text))
+    text = re.sub("\x00([a-z]+)\x00", restore, text)
+    return " ".join(text.split())
 
 
 def error_clusters(run: dict) -> list[dict]:
@@ -101,10 +135,16 @@ def error_clusters(run: dict) -> list[dict]:
     for case_id, checks in run["cases"].items():
         for check, attempts in checks.items():
             for attempt in attempts:
-                if attempt["passed"] is not None or not attempt.get("evidence"):
+                evidence = attempt.get("evidence")
+                if attempt["passed"] is not None or not evidence:
                     continue
-                key = normalize_error(str(attempt["evidence"]))
-                entry = clusters.setdefault(key, {"message": key, "cases": set(), "attempts": 0})
+                if str(evidence).startswith("skipped"):
+                    # A skip is a declared decision (e.g. "requires GPU"), not a failure.
+                    continue
+                key = normalize_error(str(evidence))
+                entry = clusters.setdefault(
+                    key, {"message": key[:200], "cases": set(), "attempts": 0}
+                )
                 entry["cases"].add(case_id)
                 entry["attempts"] += 1
     rows = [

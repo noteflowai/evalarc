@@ -108,7 +108,7 @@ def test_promptfoo_and_junit_report_transcripts_as_unknown():
         ]
         result = evidence.compute_diff(runs, {**PARAMS, "transcript_metrics": True}, None, [])
         assert not any(name.startswith("n_") for name in result["usage"]["metrics"])
-        with pytest.raises(ValueError, match="not recorded on every attempt"):
+        with pytest.raises(ValueError, match="promptfoo and JUnit record none"):
             evidence.compute_diff(
                 runs,
                 {**PARAMS, "transcript_metrics": True, "max_cost_ratio": 1, "cost_metric": "turns"},
@@ -160,13 +160,20 @@ def test_health_correlated_errors(tmp_path):
     finding = next(f for f in result["findings"] if f["id"] == "correlated_errors")
     item = finding["items"][0]
     assert item["cases"] == ["address-change", "status-missing", "status-open"]
-    assert item["message"] == "RateLimitError # request #"
+    assert item["message"] == "RateLimitError 429 request #"
     two = with_transcripts("current", tmp_path / "d.json", errors=("status-open", "address-change"))
     assert correlated_items([two]) == []
 
 
 def test_normalization_keeps_distinct_errors_apart():
     assert normalize_error("Timeout after 30s") == normalize_error("Timeout after 45.5s")
+    assert normalize_error("retry in 1.2s") == normalize_error("retry in 845ms")
+    assert normalize_error("exited with code 137") != normalize_error("exited with code 1")
+    assert normalize_error("HTTP 429 Too Many Requests") != normalize_error(
+        "HTTP 500 Too Many Requests"
+    )
+    long = "x" * 300
+    assert normalize_error(long + "a") != normalize_error(long + "b")
     assert normalize_error("connection refused") != normalize_error("permission denied")
     assert normalize_error("id 3f2a9c1b-0d4e-4f5a-9b6c-7d8e9f0a1b2c gone") == "id # gone"
 
@@ -194,9 +201,72 @@ def test_health_cli_options_are_recorded_and_verified(tmp_path, capsys):
     assert main(["verify", str(out), "--json"]) == 0
 
 
-def test_judge_packet_transcripts_are_blind_bounded_and_follow_a_b(tmp_path):
-    base = with_transcripts("baseline", tmp_path / "b.json")
+def test_messages_are_kept_only_when_asked(tmp_path):
+    with_transcripts("current", tmp_path / "c.json")
+    plain = load_results(tmp_path / "c.json")
+    assert all(
+        "messages" not in m and "transcript" in m for ms in plain["samples"].values() for m in ms
+    )
+    kept = load_results(tmp_path / "c.json", keep_messages=True)
+    assert all("messages" in m for ms in kept["samples"].values() for m in ms)
+
+
+def test_input_assistant_messages_are_not_turns():
+    messages = [
+        {"role": "assistant", "source": "input", "content": "few-shot"},
+        {"role": "assistant", "source": "generate", "content": "x"},
+    ]
+    assert transcript_counts(messages)["n_turns"] == 1
+
+
+def test_skips_are_not_correlated_errors(tmp_path):
+    path = tmp_path / "j.xml"
+    path.write_text(
+        "<testsuite name='s'>"
+        + "".join(
+            f"<testcase classname='c' name='t{i}'><skipped message='requires GPU'/></testcase>"
+            for i in range(4)
+        )
+        + "</testsuite>"
+    )
+    assert correlated_items([load_results(path)]) == []
+
+
+def test_packet_size_is_checked_when_written(tmp_path, monkeypatch):
+    import evalarc.judging as judging
+
     cur = with_transcripts("current", tmp_path / "c.json", calls={"refund-duplicate": 3})
+    cur = load_results(tmp_path / "c.json", keep_messages=True)
+    monkeypatch.setattr(judging, "MAX_PACKET_BYTES", 2_000)
+    with pytest.raises(ValueError, match="lower --sample or --transcript-max-chars"):
+        prepare("grader", [cur], 10, 0, transcript_chars=20_000)
+
+
+def test_tool_errors_reach_the_judge():
+    excerpt = transcript_excerpt(
+        [
+            {
+                "role": "tool",
+                "function": "lookup",
+                "content": "",
+                "error": {"type": "parsing", "message": "order not found: bad"},
+            }
+        ],
+        1000,
+    )
+    assert excerpt[0]["error"] == "order not found: bad"
+
+
+def test_empty_messages_cannot_grow_the_excerpt_without_bound():
+    excerpt = transcript_excerpt([{"role": "assistant", "content": ""}] * 1000, 200_000)
+    assert len(excerpt) == 201 and excerpt[-1]["role"] == "excerpt"
+
+
+def test_judge_packet_transcripts_are_blind_bounded_and_follow_a_b(tmp_path):
+    with_transcripts("baseline", tmp_path / "b.json")
+    with_transcripts("current", tmp_path / "c.json", calls={"refund-duplicate": 3})
+    base = load_results(tmp_path / "b.json", keep_messages=True)
+    cur = load_results(tmp_path / "c.json", keep_messages=True)
     packet, key = prepare("pairwise", [base, cur], 40, 7, transcript_chars=20_000)
     for item in packet["items"]:
         current_side = key["items"][item["item_id"]]["current_is"].lower()
@@ -224,7 +294,7 @@ def test_excerpt_is_bounded_and_text_only():
         {"role": "assistant", "content": [{"type": "image"}, {"type": "text", "text": "hi"}]}
     ]
     excerpt = transcript_excerpt(messages, 9000)
-    assert len(excerpt[0]["text"]) == 4000
+    assert len(excerpt[0]["text"]) == 4000 and len(excerpt) == 3
     assert excerpt[-1] == {"role": "excerpt", "text": "… 2 more message(s)"}
     assert transcript_excerpt(None, 1000) is None
     assert transcript_excerpt([messages[-1]], 1000)[0]["text"] == "[image]\nhi"
@@ -263,3 +333,15 @@ def test_fixture_copy_keeps_the_recorded_outputs(tmp_path):
     original = load_results(INSPECT / "current.json")
     copied = with_transcripts("current", tmp_path / "c.json")
     assert copy.deepcopy(original["cases"]) == copied["cases"]
+
+
+def test_cli_packet_includes_transcripts_only_with_the_flag(tmp_path, capsys):
+    with_transcripts("current", tmp_path / "c.json")
+    args = ["judge-packet", "grader", str(tmp_path / "c.json"), "--sample", "4"]
+    assert main([*args, "--include-transcript", "--output", str(tmp_path / "t")]) == 0
+    assert main([*args, "--output", str(tmp_path / "p")]) == 0
+    with_t = json.loads((tmp_path / "t/share/packet.json").read_text())
+    plain = json.loads((tmp_path / "p/share/packet.json").read_text())
+    assert all(item["transcript"] for item in with_t["items"])
+    assert all("transcript" not in item for item in plain["items"])
+    assert "<details>" in (tmp_path / "t/share/index.html").read_text()

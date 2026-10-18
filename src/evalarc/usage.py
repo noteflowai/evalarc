@@ -24,7 +24,7 @@ COST_METRICS = {"cost": "cost_usd", "tokens": "total_tokens", "duration": "durat
 TRANSCRIPT_METRICS = ("n_turns", "n_tool_calls", "n_messages", "n_error_retries")
 TRANSCRIPT_COST_METRICS = {"turns": "n_turns", "tool_calls": "n_tool_calls"}
 TRANSCRIPT_SCOPE = (
-    " Transcript counts (n_turns = assistant messages, n_tool_calls, n_messages, "
+    " Transcript counts (n_turns = generated assistant messages, n_tool_calls, n_messages, "
     "n_error_retries) come from Inspect sample messages; promptfoo and JUnit record none."
 )
 USAGE_SCOPE = (
@@ -184,7 +184,22 @@ def cost_gate(usage: dict, metric: str, max_ratio: float) -> dict:
         if metric in TRANSCRIPT_COST_METRICS and not usage.get("transcripts"):
             raise ValueError(f"--cost-metric {metric} requires --transcript-metrics")
         chosen = {**COST_METRICS, **TRANSCRIPT_COST_METRICS}[metric]
-        if not _gateable(usage["metrics"].get(chosen)):
+        row = usage["metrics"].get(chosen)
+        if metric in TRANSCRIPT_COST_METRICS and not _gateable(row):
+            sides = (
+                "; ".join(
+                    f"{label} {row[label]['reported']}/{row[label]['attempts']} attempts "
+                    f"recorded, mean {row[label]['mean']}"
+                    for label in ("baseline", "current")
+                )
+                if row
+                else "no attempt recorded a transcript (promptfoo and JUnit record none)"
+            )
+            raise ValueError(
+                f"{chosen} cannot be gated: every matched attempt needs a recorded Inspect "
+                f"transcript and the baseline mean must be above zero ({sides})"
+            )
+        if not _gateable(row):
             raise ValueError(
                 f"{chosen} is not recorded on every attempt of the matched cases in both "
                 "runs, or its baseline mean is zero; the cost gate cannot be assessed"
