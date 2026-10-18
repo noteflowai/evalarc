@@ -455,6 +455,11 @@ def parser() -> argparse.ArgumentParser:
     )
     packet.add_argument("--sample", type=int, default=40, help="items to include (default: 40)")
     packet.add_argument("--seed", type=int, default=0, help="sampling and A/B order seed")
+    packet.add_argument(
+        "--allow-unsure",
+        action="store_true",
+        help="pairwise packets: also allow the answer unsure (excluded from the win rate)",
+    )
     packet.add_argument("--format", choices=RESULT_FORMATS, default="auto")
     packet.add_argument("--threshold", type=float, default=1.0)
     packet.add_argument("--output", type=Path, required=True)
@@ -485,13 +490,33 @@ def parser() -> argparse.ArgumentParser:
         help="unblind judgments recorded for a judging packet",
         epilog=(
             "exit codes:\n  0  scored (and any requested gate passed)\n"
-            "  1  --min-agreement or --require-current-preferred gate failed\n"
+            "  1  --min-agreement, --min-annotator-agreement or --require-current-preferred "
+            "gate failed\n"
             "  2  unreadable, mismatched or invalid packet or verdicts, or existing output"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     judged.add_argument("packet", type=Path, help="folder written by judge-packet")
-    judged.add_argument("verdicts", type=Path, help="evalarc.judge-verdicts.v1 JSON")
+    judged.add_argument(
+        "verdicts",
+        type=Path,
+        nargs="+",
+        help="evalarc.judge-verdicts.v1 JSON; two or more files (one per annotator) also "
+        "measure agreement between annotators and score against their consensus",
+    )
+    judged.add_argument(
+        "--consensus",
+        choices=("majority", "unanimous"),
+        default="majority",
+        help="with several verdicts files: how annotators' answers combine (default: majority)",
+    )
+    judged.add_argument(
+        "--min-annotator-agreement",
+        type=float,
+        metavar="A",
+        help="with several verdicts files: also fail unless every item is answered and every "
+        "pair of annotators agrees on at least A of the items both decided",
+    )
     judged.add_argument(
         "--min-agreement",
         type=float,

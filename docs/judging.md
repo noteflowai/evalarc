@@ -63,6 +63,54 @@ current win rate among decisive items with a 95% interval, and state
 reports how often the judge chose position A; an interval excluding 50% is
 flagged as **position bias**.
 
+`judge-packet pairwise --allow-unsure` adds `unsure` to the allowed answers, so a
+judge without enough information says so instead of guessing. Unsure answers are
+counted (`unsure` in the result) and excluded from the win rate. Grader packets
+always allow `unsure`.
+
+## Several annotators: agreement and consensus
+
+A task is well specified when two domain experts reach the same verdict on their
+own. Give the same `share/` folder to two or more annotators (people, or separate
+judge models through `judge-run`) and score their files together:
+
+```bash
+evalarc judge-score spot alice.json bob.json carol.json \
+  --consensus majority --min-annotator-agreement 0.8 --min-agreement 0.9 --output panel
+```
+
+- **Agreement between annotators.** For every pair: items both decided,
+  percent agreement with a 95% interval, and Cohen's kappa; across all
+  annotators, Fleiss' kappa over the items every annotator decided. `unsure`
+  and unanswered items are excluded. In pairwise packets `tie` is a decisive
+  answer here (two annotators who both see no difference agree); only `unsure`
+  and unanswered are excluded.
+- **Consensus.** `majority` (default) needs more than half of all annotators on
+  the same decisive answer; `unanimous` needs every annotator. `unsure` never
+  counts toward a consensus. Items without one are listed as `undecided` and
+  left out of the comparison, and any gate fails while one remains: a consensus
+  that decided only part of the packet cannot vouch for the grader. Per-annotator
+  `unsure` counts are in `annotators[]`; a consensus is never `unsure`.
+- **Grader or baseline against the consensus.** The usual grader confusion
+  table and false accepts/rejects, or the pairwise preference, are computed
+  against the consensus answers.
+- `--min-annotator-agreement A` also fails (exit 1) unless every item is
+  answered by every annotator (`reason` `incomplete`), no annotator is a model
+  under evaluation (`self_judged`), every item has a consensus
+  (`undecided_items`), and every pair agrees on at least A of the items both
+  decided (`annotators_disagree`). Low agreement means
+  the task or rubric is ambiguous: fix it before trusting the grader comparison.
+  With another gate, `judge_gate_passed` keeps that gate's own outcome and
+  `passed` requires both.
+- Each annotator is listed with its file hash, answered and unsure counts and
+  `self_judged`; any self-judging annotator flags the result. Byte-identical or
+  repeated files exit 2. `--output` keeps every file as `verdicts-01.json`,
+  `verdicts-02.json`, … With one verdicts file, the result is unchanged.
+
+These numbers measure the annotators you used. They become calibration evidence
+only for a permitted, labeled corpus and qualified annotators; scripted examples
+are not.
+
 ## Running a judge model with `judge-run`
 
 EvalArc does not call the judge itself, but `judge-run` can run your judge
@@ -92,7 +140,8 @@ is required.
 
 ## Gates and exit codes
 
-`judge-score` exits 0 after scoring. `--min-agreement A` (grader) and
+`judge-score` exits 0 after scoring. `--min-agreement A` (grader),
+`--min-annotator-agreement A` (several verdicts files) and
 `--require-current-preferred` (pairwise) exit 1 unless every item is answered,
 the judge is not a model under evaluation, and the requirement holds (for
 pairwise, also no position bias). Mismatched packets, edited `share/packet.json`,

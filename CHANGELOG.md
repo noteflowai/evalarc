@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc judge-score PACKET VERDICTS...` accepts two or more verdicts files,
+  one per annotator. It reports agreement between annotators (per pair: items
+  both decided, percent agreement with a 95% interval, Cohen's kappa; overall:
+  Fleiss' kappa), combines answers with `--consensus majority|unanimous`
+  (`unsure` never counts; items without consensus are `undecided` and
+  excluded), and scores the grader or the pairwise preference against the
+  consensus. In panels, any gate fails while an item is `undecided`.
+  `--min-annotator-agreement A` fails (exit 1) with reason `incomplete`,
+  `self_judged`, `undecided_items` or `annotators_disagree` unless every item is
+  answered and decided, no annotator is a model under evaluation, and every
+  pair agrees on at least A. `--output` keeps each file as `verdicts-NN.json`.
+- `judge-packet pairwise --allow-unsure` adds the answer `unsure`, counted and
+  excluded from the win rate.
+- Output compatibility: with one verdicts file and default packets, packets,
+  `score.json` (key order included), the summary, the page and the console are
+  unchanged.
+
 ## 0.20.1 — 2026-10-17
 
 - test: EA-02 regression corpus that pins how the diff gate handles missing evidence. tests/test_feature_cb4fe5a9ab91.py adds a synthetic regression corpus for EA-02. It pins what evalarc diff does for each category: control and added checks pass (exit 0). Removed checks, fewer epochs at the same pass rate (less_covered), a JUnit skip as the only change (unassessed) and an incomplete baseline or current run fail (exit 1), and the summary heading names the cause. Malformed samples, duplicate IDs and non-comparable runs are rejected (exit 2) with a message naming the problem. An invariant test checks that no case with missing evidence passes. The corpus found one defect, which is fixed in results_diff.py: an Inspect sample ID repeated with a null, boolean, string or other non-integer epoch, or with an integer epoch mixed with a missing one, used to count as an extra attempt and could hide lost coverage. It now exits 2. Logs where every copy of an ID has no epoch key still load as before. docs/ci-gate.md and docs/ci-gate.zh-CN.md now have a Regression corpus table.

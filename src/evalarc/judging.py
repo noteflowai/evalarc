@@ -49,6 +49,11 @@ INSTRUCTIONS = {
         "not infer it from position."
     ),
 }
+UNSURE_NOTE = (
+    " Answer unsure when the item does not give enough information to choose; unsure "
+    "answers are counted but excluded from the win rate."
+)
+CONSENSUS_RULES = ("majority", "unanimous")
 SCOPE = {
     "grader": (
         "Agreement between the recorded grader and caller-supplied judgments on a "
@@ -68,10 +73,18 @@ SCOPE = {
 # --- prepare ----------------------------------------------------------------------
 
 
-def prepare(mode: str, runs: list[dict], sample: int, seed: int) -> tuple[dict, dict]:
-    """Return (packet shown to the judge, key kept by the reviewer)."""
+def prepare(
+    mode: str, runs: list[dict], sample: int, seed: int, allow_unsure: bool = False
+) -> tuple[dict, dict]:
+    """Return (packet shown to the judge, key kept by the reviewer).
+
+    ``allow_unsure`` adds ``unsure`` to pairwise packets (grader packets always allow it),
+    so a judge without enough information can say so instead of guessing.
+    """
     if mode not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
+    if allow_unsure and mode != "pairwise":
+        raise ValueError("--allow-unsure applies to pairwise packets; grader packets allow unsure")
     if not 1 <= sample <= MAX_ITEMS:
         raise ValueError(f"--sample must be 1–{MAX_ITEMS}")
     rng = random.Random(seed)
@@ -121,11 +134,12 @@ def prepare(mode: str, runs: list[dict], sample: int, seed: int) -> tuple[dict, 
                 "current_is": "A" if current_is_a else "B",
             }
         items.append(public)
+    allowed = list(ALLOWED[mode]) + (["unsure"] if allow_unsure else [])
     packet = {
         "schema_version": PACKET_SCHEMA,
         "mode": mode,
-        "instructions": INSTRUCTIONS[mode],
-        "allowed_verdicts": list(ALLOWED[mode]),
+        "instructions": INSTRUCTIONS[mode] + (UNSURE_NOTE if allow_unsure else ""),
+        "allowed_verdicts": allowed,
         "items": items,
     }
     packet_bytes = _canonical(packet)
@@ -221,10 +235,40 @@ def _pairwise_candidates(baseline: dict, current: dict) -> tuple[list[dict], dic
 
 def score(
     packet_dir: Path,
-    verdicts_path: Path,
+    verdicts_path: Path | list[Path],
     min_agreement: float | None = None,
     require_current_preferred: bool = False,
+    consensus: str = "majority",
+    min_annotator_agreement: float | None = None,
 ) -> dict:
+    """Unblind one verdicts file, or combine several annotators into a consensus.
+
+    With one file the result is unchanged from earlier releases. With two or more, the
+    annotators' agreement with each other is measured (pairwise agreement, Cohen's and
+    Fleiss' kappa), each item gets a consensus answer, and the grader or the baseline
+    comparison is scored against that consensus. Items without consensus are
+    ``undecided`` and excluded.
+    """
+    paths = list(verdicts_path) if isinstance(verdicts_path, (list, tuple)) else [verdicts_path]
+    if not paths:
+        raise ValueError("give at least one verdicts file")
+    if len(paths) == 1:
+        if min_annotator_agreement is not None:
+            raise ValueError("--min-annotator-agreement needs two or more verdicts files")
+        if consensus != "majority":
+            raise ValueError("--consensus needs two or more verdicts files")
+        return _score_one(packet_dir, paths[0], min_agreement, require_current_preferred)
+    return _score_panel(
+        packet_dir,
+        paths,
+        min_agreement,
+        require_current_preferred,
+        consensus,
+        min_annotator_agreement,
+    )
+
+
+def _load_packet(packet_dir: Path) -> tuple[dict, dict]:
     key = _read_json(packet_dir / "key.json", "key.json")
     packet_raw = (packet_dir / "share" / "packet.json").read_bytes()
     if len(packet_raw) > MAX_PACKET_BYTES:
@@ -234,33 +278,61 @@ def score(
         raise ValueError("not an EvalArc judging packet folder")
     if hashlib.sha256(_canonical(packet)).hexdigest() != key["packet_sha256"]:
         raise ValueError("share/packet.json differs from the packet this key was made for")
-    raw = verdicts_path.read_bytes()
+    return key, packet
+
+
+def _load_verdicts(path: Path, key: dict, allowed: tuple, named: bool = False) -> dict:
+    """Validate one verdicts file. ``named`` prefixes errors with the file name (panels)."""
+    where = f"{path.name}: " if named else ""
+    raw = path.read_bytes()
     if len(raw) > MAX_VERDICT_BYTES:
-        raise ValueError(f"{verdicts_path.name} exceeds {MAX_VERDICT_BYTES} bytes")
-    verdicts = _read_json(verdicts_path, verdicts_path.name)
+        raise ValueError(f"{path.name} exceeds {MAX_VERDICT_BYTES} bytes")
+    verdicts = _read_json(path, path.name)
     if verdicts.get("schema_version") != VERDICTS_SCHEMA:
-        raise ValueError(f"verdicts schema_version must be {VERDICTS_SCHEMA!r}")
+        raise ValueError(f"{where}verdicts schema_version must be {VERDICTS_SCHEMA!r}")
     if verdicts.get("packet_sha256") != key["packet_sha256"]:
-        raise ValueError("verdicts were recorded for a different packet")
+        raise ValueError(f"{where}verdicts were recorded for a different packet")
     judge = verdicts.get("judge")
     if not isinstance(judge, dict) or judge.get("kind") not in ("human", "model"):
-        raise ValueError('verdicts need judge.kind "human" or "model"')
+        raise ValueError(f'{where}verdicts need judge.kind "human" or "model"')
     if judge["kind"] == "model" and not isinstance(judge.get("model"), str):
-        raise ValueError("a model judge needs judge.model")
+        raise ValueError(f"{where}a model judge needs judge.model")
     marks = verdicts.get("verdicts")
     if not isinstance(marks, dict):
-        raise ValueError("verdicts must map item IDs to answers")
+        raise ValueError(f"{where}verdicts must map item IDs to answers")
     unknown = set(marks) - set(key["items"])
     if unknown:
-        raise ValueError(f"unknown item IDs: {', '.join(sorted(unknown)[:5])}")
-    mode, allowed = key["mode"], ALLOWED[key["mode"]]
+        raise ValueError(f"{where}unknown item IDs: {', '.join(sorted(unknown)[:5])}")
     for item_id, answer in marks.items():
         if answer is not None and answer not in allowed:
-            raise ValueError(f"{item_id}: answer must be one of {', '.join(allowed)} or null")
+            raise ValueError(
+                f"{where}{item_id}: answer must be one of {', '.join(allowed)} or null"
+            )
+    return {
+        "judge": judge,
+        "marks": marks,
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "repeats": verdicts.get("repeats"),
+        "name": path.name,
+    }
+
+
+def _score_one(
+    packet_dir: Path,
+    verdicts_path: Path,
+    min_agreement: float | None,
+    require_current_preferred: bool,
+) -> dict:
+    key, packet = _load_packet(packet_dir)
+    mode, allowed = key["mode"], tuple(packet["allowed_verdicts"])
+    loaded = _load_verdicts(verdicts_path, key, allowed)
+    judge, marks, raw_sha = loaded["judge"], loaded["marks"], loaded["sha256"]
     missing = sorted(item for item in key["items"] if marks.get(item) is None)
-    consistency = _consistency(verdicts.get("repeats"), key, allowed)
+    consistency = _consistency(loaded["repeats"], key, allowed)
     by_id = {item["item_id"]: item for item in packet["items"]}
-    body = (_score_grader if mode == "grader" else _score_pairwise)(key, by_id, marks)
+    body = (_score_grader if mode == "grader" else _score_pairwise)(
+        key, by_id, marks, **({"unsure_allowed": True} if _pairwise_unsure(packet) else {})
+    )
     self_judged = judge["kind"] == "model" and judge["model"] in set(
         key.get("subject_models") or []
     )
@@ -269,7 +341,7 @@ def score(
         "created_at": datetime.now(timezone.utc).isoformat(),
         "mode": mode,
         "packet_sha256": key["packet_sha256"],
-        "verdicts_sha256": hashlib.sha256(raw).hexdigest(),
+        "verdicts_sha256": raw_sha,
         "judge": {k: judge.get(k) for k in ("kind", "model", "description") if judge.get(k)},
         "self_judged": self_judged,
         "items": len(key["items"]),
@@ -279,6 +351,18 @@ def score(
         "judge_consistency": consistency,
         "scope": SCOPE[mode],
     }
+    _apply_gates(result, mode, min_agreement, require_current_preferred)
+    return result
+
+
+def _pairwise_unsure(packet: dict) -> bool:
+    return packet["mode"] == "pairwise" and "unsure" in packet["allowed_verdicts"]
+
+
+def _apply_gates(
+    result: dict, mode: str, min_agreement: float | None, require_current_preferred: bool
+) -> None:
+    self_judged = result["self_judged"]
     if min_agreement is not None:
         if mode != "grader":
             raise ValueError("--min-agreement applies to grader packets")
@@ -306,7 +390,221 @@ def score(
                 and not result["position_bias"]
             ),
         }
+
+
+def _score_panel(
+    packet_dir: Path,
+    paths: list[Path],
+    min_agreement: float | None,
+    require_current_preferred: bool,
+    rule: str,
+    min_annotator_agreement: float | None,
+) -> dict:
+    if rule not in CONSENSUS_RULES:
+        raise ValueError(f"--consensus must be one of {', '.join(CONSENSUS_RULES)}")
+    if min_annotator_agreement is not None and not 0 < min_annotator_agreement <= 1:
+        raise ValueError("--min-annotator-agreement must be in (0, 1]")
+    resolved = [path.resolve() for path in paths]
+    repeated = sorted(
+        {path.name for path, real in zip(paths, resolved) if resolved.count(real) > 1}
+    )
+    if repeated:
+        raise ValueError(f"each verdicts file may appear once: {', '.join(repeated)}")
+    key, packet = _load_packet(packet_dir)
+    mode, allowed = key["mode"], tuple(packet["allowed_verdicts"])
+    panel = [_load_verdicts(path, key, allowed, named=True) for path in paths]
+    seen: dict[str, str] = {}
+    for entry in panel:
+        if entry["sha256"] in seen:
+            raise ValueError(
+                f"{seen[entry['sha256']]} and {entry['name']} are byte-identical; each annotator "
+                "judges separately"
+            )
+        seen[entry["sha256"]] = entry["name"]
+    items = sorted(key["items"])
+    decisive = [answer for answer in allowed if answer != "unsure"]
+    subjects = set(key.get("subject_models") or [])
+    annotators = []
+    for entry in panel:
+        judge = entry["judge"]
+        annotators.append(
+            {
+                "file": entry["name"],
+                "verdicts_sha256": entry["sha256"],
+                "judge": {
+                    k: judge.get(k) for k in ("kind", "model", "description") if judge.get(k)
+                },
+                "self_judged": judge["kind"] == "model" and judge["model"] in subjects,
+                "answered": sum(1 for item in items if entry["marks"].get(item) is not None),
+                "unsure": sum(1 for item in items if entry["marks"].get(item) == "unsure"),
+                "judge_consistency": _consistency(entry["repeats"], key, allowed),
+            }
+        )
+    marks_list = [entry["marks"] for entry in panel]
+    agreement = annotator_agreement(marks_list, items, decisive)
+    consensus_marks, undecided = consensus_answers(marks_list, items, decisive, rule)
+    missing = sorted(item for item in items if any(m.get(item) is None for m in marks_list))
+    by_id = {item["item_id"]: item for item in packet["items"]}
+    body = (_score_grader if mode == "grader" else _score_pairwise)(
+        key,
+        by_id,
+        consensus_marks,
+        **({"unsure_allowed": True} if _pairwise_unsure(packet) else {}),
+    )
+    self_judged = any(item["self_judged"] for item in annotators)
+    result = {
+        "schema_version": RESULT_SCHEMA,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "mode": mode,
+        "packet_sha256": key["packet_sha256"],
+        "verdicts_sha256": [item["verdicts_sha256"] for item in annotators],
+        "judge": {"kind": "consensus", "description": f"{rule} of {len(panel)} annotators"},
+        "self_judged": self_judged,
+        "items": len(items),
+        "missing": missing,
+        "complete": not missing,
+        **body,
+        "judge_consistency": None,
+        "annotators": annotators,
+        "annotator_agreement": agreement,
+        "consensus": {"rule": rule, "decided": len(items) - len(undecided), "undecided": undecided},
+        "scope": SCOPE[mode] + PANEL_SCOPE,
+    }
+    _apply_gates(result, mode, min_agreement, require_current_preferred)
+    gate = result.get("gate")
+    if gate is not None and undecided:
+        # A consensus that decided only part of the packet cannot vouch for the grader.
+        gate["passed"] = False
+        gate["reason"] = "undecided_items"
+    if min_annotator_agreement is not None:
+        lowest = agreement["min_pairwise_agreement"]
+        reason = (
+            "incomplete"
+            if not result["complete"]
+            else "self_judged"
+            if self_judged
+            else "undecided_items"
+            if undecided
+            else "annotators_disagree"
+            if lowest is None or lowest < min_annotator_agreement
+            else None
+        )
+        gate = result.setdefault("gate", {})
+        if "passed" in gate:
+            # The other gate's outcome (already failed by undecided items, if any);
+            # "passed" becomes both together.
+            gate["judge_gate_passed"] = gate["passed"]
+        gate["min_annotator_agreement"] = min_annotator_agreement
+        gate["passed"] = bool(gate.get("passed", True) and reason is None)
+        if reason:
+            gate["reason"] = reason
     return result
+
+
+PANEL_SCOPE = (
+    " Several annotators judged the same blind packet; the grader or baseline comparison "
+    "uses their consensus. Low agreement between annotators means the task or rubric is "
+    "ambiguous, so their consensus is a weak reference."
+)
+
+
+def consensus_answers(
+    marks_list: list[dict], items: list[str], decisive: list[str], rule: str
+) -> tuple[dict, list[str]]:
+    """Consensus answer per item, or ``undecided``.
+
+    ``majority``: more than half of all annotators gave the same decisive answer
+    (``unsure`` and unanswered never count toward it). ``unanimous``: every annotator
+    gave the same decisive answer. Undecided items are left out of the returned map.
+    """
+    out, undecided = {}, []
+    n = len(marks_list)
+    for item in items:
+        votes = [marks.get(item) for marks in marks_list]
+        counts = {answer: votes.count(answer) for answer in decisive}
+        best = max(decisive, key=lambda answer: counts[answer])
+        top = counts[best]
+        tied = sum(1 for answer in decisive if counts[answer] == top) > 1
+        ok = top == n if rule == "unanimous" else (top * 2 > n and not tied)
+        if ok:
+            out[item] = best
+        else:
+            undecided.append(item)
+    return out, undecided
+
+
+def annotator_agreement(marks_list: list[dict], items: list[str], decisive: list[str]) -> dict:
+    """Agreement between annotators on decisive answers (unsure and unanswered excluded)."""
+    pairs = []
+    for i in range(len(marks_list)):
+        for j in range(i + 1, len(marks_list)):
+            both = [
+                (marks_list[i][item], marks_list[j][item])
+                for item in items
+                if marks_list[i].get(item) in decisive and marks_list[j].get(item) in decisive
+            ]
+            agree = sum(1 for a, b in both if a == b)
+            pairs.append(
+                {
+                    "annotators": [i, j],
+                    "items": len(both),
+                    "agreement": _round(agree / len(both)) if both else None,
+                    "agreement_interval_95": wilson(agree, len(both)),
+                    "cohen_kappa": _round_or_none(_cohen(both, decisive)),
+                }
+            )
+    full = [
+        [marks.get(item) for marks in marks_list]
+        for item in items
+        if all(marks.get(item) in decisive for marks in marks_list)
+    ]
+    values = [pair["agreement"] for pair in pairs if pair["agreement"] is not None]
+    return {
+        "pairs": pairs,
+        "min_pairwise_agreement": min(values) if values else None,
+        "fleiss_kappa": _round_or_none(_fleiss(full, decisive)),
+        "fleiss_items": len(full),
+    }
+
+
+def _cohen(pairs: list[tuple[str, str]], categories: list[str]) -> float | None:
+    n = len(pairs)
+    if not n:
+        return None
+    observed = sum(1 for a, b in pairs if a == b) / n
+    expected = sum(
+        (sum(1 for a, _ in pairs if a == c) / n) * (sum(1 for _, b in pairs if b == c) / n)
+        for c in categories
+    )
+    if math.isclose(expected, 1.0):
+        return None
+    return (observed - expected) / (1 - expected)
+
+
+def _fleiss(rows: list[list[str]], categories: list[str]) -> float | None:
+    """Fleiss' kappa over items every annotator answered decisively."""
+    if not rows:
+        return None
+    raters = len(rows[0])
+    counts = [[row.count(c) for c in categories] for row in rows]
+    n_items = len(rows)
+    p_items = [
+        (sum(value * value for value in row) - raters) / (raters * (raters - 1)) for row in counts
+    ]
+    p_bar = sum(p_items) / n_items
+    shares = [sum(row[k] for row in counts) / (n_items * raters) for k in range(len(categories))]
+    p_e = sum(share * share for share in shares)
+    if math.isclose(p_e, 1.0):
+        return None
+    return (p_bar - p_e) / (1 - p_e)
+
+
+def _round(value: float) -> float:
+    return round(value, 6)
+
+
+def _round_or_none(value: float | None) -> float | None:
+    return None if value is None else _round(value)
 
 
 def _consistency(repeats: object, key: dict, allowed: tuple) -> dict | None:
@@ -394,14 +692,17 @@ def _kappa(c: dict) -> float | None:
     return (observed - expected) / (1 - expected)
 
 
-def _score_pairwise(key: dict, items: dict, marks: dict) -> dict:
-    wins = losses = ties = chose_a = 0
+def _score_pairwise(key: dict, items: dict, marks: dict, unsure_allowed: bool = False) -> dict:
+    wins = losses = ties = chose_a = unsure = 0
     per_case: dict[str, dict] = {}
     for item_id, hidden in sorted(key["items"].items()):
         answer = marks.get(item_id)
         if answer is None:
             continue
         case = per_case.setdefault(items[item_id]["case_id"], {"wins": 0, "losses": 0, "ties": 0})
+        if answer == "unsure":
+            unsure += 1
+            continue
         if answer == "tie":
             ties += 1
             case["ties"] += 1
@@ -433,6 +734,8 @@ def _score_pairwise(key: dict, items: dict, marks: dict) -> dict:
         "position_a_interval_95": bias,
         "position_bias": bool(bias and (bias[0] > 0.5 or bias[1] < 0.5)),
         "per_case": per_case,
+        # Only in packets prepared with --allow-unsure, so earlier results keep their keys.
+        **({"unsure": unsure} if unsure_allowed else {}),
     }
 
 
@@ -480,6 +783,7 @@ def render_markdown(result: dict) -> str:
         f"Judge: {judge.get('kind')}{' ' + _cell(judge['model']) if judge.get('model') else ''} · "
         f"{result['items'] - len(result['missing'])}/{result['items']} items answered"
     )
+    lines += _panel_markdown(result)
     if result["self_judged"]:
         lines += ["", "**The judge model is a model under evaluation; use a separate judge.**"]
     consistency = result.get("judge_consistency")
@@ -516,12 +820,13 @@ def render_markdown(result: dict) -> str:
                 f"grader {row['grader']}, "
                 f"judge {row['judge']}"
             )
-        if result.get("gate"):
+        if "min_agreement" in (result.get("gate") or {}):
             gate = result["gate"]
             lines += [
                 "",
                 f"Gate: agreement ≥ {gate['min_agreement']:g}, complete, separate judge — "
-                f"**{'pass' if gate['passed'] else 'fail'}**",
+                f"**{'pass' if gate.get('judge_gate_passed', gate['passed']) else 'fail'}**"
+                + (" (undecided items)" if gate.get("reason") == "undecided_items" else ""),
             ]
     else:
         lines += [
@@ -532,16 +837,102 @@ def render_markdown(result: dict) -> str:
             f"({_interval(result['current_win_rate_interval_95'])}). Chose position A "
             f"{_pct(result['position_a_rate'])} ({_interval(result['position_a_interval_95'])})"
             + (" — **position bias**" if result["position_bias"] else "")
-            + ".",
+            + "."
+            + (f" Unsure {result['unsure']}." if "unsure" in result else ""),
         ]
-        if result.get("gate"):
+        if (result.get("gate") or {}).get("require_current_preferred"):
             lines += [
                 "",
                 "Gate: current preferred beyond its interval, complete, no position bias, "
-                f"separate judge — **{'pass' if result['gate']['passed'] else 'fail'}**",
+                "separate judge — **"
+                + (
+                    "pass"
+                    if result["gate"].get("judge_gate_passed", result["gate"]["passed"])
+                    else "fail"
+                )
+                + "**",
             ]
     lines += ["", f"<sub>{result['scope']}</sub>"]
     return "\n".join(lines) + "\n"
+
+
+def _who(judge: dict) -> str:
+    return judge.get("kind", "") + (f" {judge['model']}" if judge.get("model") else "")
+
+
+def _panel_markdown(result: dict) -> list[str]:
+    if "annotators" not in result:
+        return []
+    agreement, consensus = result["annotator_agreement"], result["consensus"]
+    lines = [
+        "",
+        f"Annotators: {len(result['annotators'])} · consensus `{consensus['rule']}` decided "
+        f"{consensus['decided']}/{result['items']} items · lowest pairwise agreement "
+        f"{_pct(agreement['min_pairwise_agreement'])} · Fleiss' kappa "
+        f"{_num(agreement['fleiss_kappa'])} ({agreement['fleiss_items']} items)",
+        "",
+        "| Annotators | Items both decided | Agreement | Cohen's kappa |",
+        "| --- | ---: | ---: | ---: |",
+    ]
+    names = [_cell(_who(item["judge"]) + " · " + item["file"]) for item in result["annotators"]]
+    for pair in agreement["pairs"]:
+        i, j = pair["annotators"]
+        lines.append(
+            f"| {names[i]} vs {names[j]} | {pair['items']} | {_pct(pair['agreement'])} | "
+            f"{_num(pair['cohen_kappa'])} |"
+        )
+    if consensus["undecided"]:
+        lines += [
+            "",
+            f"Undecided (no consensus, excluded; any gate fails): "
+            f"{', '.join(consensus['undecided'][:20])}"
+            + (" …" if len(consensus["undecided"]) > 20 else ""),
+        ]
+    flagged = [_cell(item["file"]) for item in result["annotators"] if item["self_judged"]]
+    if flagged:
+        lines += ["", f"**Self-judging annotator(s):** {', '.join(flagged)}"]
+    gate = result.get("gate") or {}
+    if "min_annotator_agreement" in gate:
+        lines += [
+            "",
+            f"Gate: every item answered and decided, separate judges, every annotator pair "
+            f"agrees on ≥ {gate['min_annotator_agreement']:g} — "
+            f"**{'fail: ' + gate['reason'] if gate.get('reason') else 'pass'}**",
+        ]
+    return lines
+
+
+def _panel_html(result: dict, esc, table) -> str:
+    if "annotators" not in result:
+        return ""
+    agreement, consensus = result["annotator_agreement"], result["consensus"]
+    names = [_who(item["judge"]) + " · " + item["file"] for item in result["annotators"]]
+    body = (
+        f"<h2>Annotators</h2><p>{len(names)} annotators judged the same blind packet. "
+        f"Consensus rule <code>{esc(consensus['rule'])}</code> decided {consensus['decided']} of "
+        f"{result['items']} items; the comparison above uses that consensus. Fleiss' kappa "
+        f"{esc(_num(agreement['fleiss_kappa']))} over {agreement['fleiss_items']} items.</p>"
+    )
+    body += table(
+        "Agreement between annotators",
+        ["Annotators", "Items both decided", "Agreement", "Cohen's kappa"],
+        [
+            [
+                esc(f"{names[pair['annotators'][0]]} vs {names[pair['annotators'][1]]}"),
+                str(pair["items"]),
+                esc(_pct(pair["agreement"])),
+                esc(_num(pair["cohen_kappa"])),
+            ]
+            for pair in agreement["pairs"]
+        ],
+    )
+    if consensus["undecided"]:
+        body += (
+            "<p>Undecided items (no consensus, excluded): "
+            + esc(", ".join(consensus["undecided"]))
+            + "</p>"
+        )
+    return body
 
 
 def render_html(result: dict, destination: Path) -> None:
@@ -555,12 +946,23 @@ def render_html(result: dict, destination: Path) -> None:
         problems.append(f"{len(result['missing'])} item(s) unanswered")
     if result["self_judged"]:
         problems.append("the judge is a model under evaluation")
+    reason = (result.get("gate") or {}).get("reason")
+    if reason == "annotators_disagree":
+        problems.append("annotators disagree more than allowed")
+    undecided = (result.get("consensus") or {}).get("undecided") or []
+    if undecided:
+        problems.append(f"{len(undecided)} item(s) without annotator consensus")
+    flagged = [item["file"] for item in result.get("annotators") or [] if item["self_judged"]]
+    if flagged:
+        problems.append("self-judging annotator(s): " + ", ".join(flagged))
     if result["mode"] == "grader":
         c = result["confusion"]
         wrong = c["false_accept"] + c["false_reject"]
         ok = (gate or {}).get("passed", not problems and not wrong)
         title = (
-            f"Grader agrees with the judge on {_pct(result['agreement'])} of decided items"
+            f"Grader agrees with the "
+            f"{'annotators’ consensus' if 'annotators' in result else 'judge'} on "
+            f"{_pct(result['agreement'])} of decided items"
             if result["agreement"] is not None
             else "No decided items"
         )
@@ -645,6 +1047,7 @@ def render_html(result: dict, destination: Path) -> None:
                 for case, v in sorted(result["per_case"].items())
             ],
         )
+    body += _panel_html(result, _esc, _table)
     consistency = result.get("judge_consistency")
     if consistency:
         body += (
@@ -666,7 +1069,9 @@ def prepare_command(args) -> int:
 
     try:
         runs = [load_results(path, args.format, args.threshold) for path in args.results]
-        packet, key = prepare(args.mode, runs, args.sample, args.seed)
+        packet, key = prepare(
+            args.mode, runs, args.sample, args.seed, getattr(args, "allow_unsure", False)
+        )
         with new_run(args.output) as output:
             share = output / "share"
             share.mkdir()
@@ -702,13 +1107,23 @@ def score_command(args) -> int:
     from evalarc.evaluate import write_json
 
     try:
+        paths = args.verdicts if isinstance(args.verdicts, list) else [args.verdicts]
         result = score(
-            args.packet, args.verdicts, args.min_agreement, args.require_current_preferred
+            args.packet,
+            paths,
+            args.min_agreement,
+            args.require_current_preferred,
+            getattr(args, "consensus", "majority"),
+            getattr(args, "min_annotator_agreement", None),
         )
         if args.output:
             with new_run(args.output) as output:
                 write_json(output / "score.json", result)
-                (output / "verdicts.json").write_bytes(args.verdicts.read_bytes())
+                if len(paths) == 1:
+                    (output / "verdicts.json").write_bytes(paths[0].read_bytes())
+                else:
+                    for index, path in enumerate(paths, start=1):
+                        (output / f"verdicts-{index:02d}.json").write_bytes(path.read_bytes())
                 (output / "summary.md").write_text(render_markdown(result), encoding="utf-8")
                 render_html(result, output / "index.html")
     except (OSError, ValueError, KeyError, TypeError, AttributeError, RecursionError) as error:
