@@ -47,6 +47,8 @@ def health(
     ordered: bool = False,
     cases_manifest: dict | None = None,
     trial_metrics: bool = True,
+    transcript_metrics: bool = False,
+    cluster_errors: bool = False,
 ) -> dict:
     """Compute findings for loaded result runs (see results_diff.load_results).
 
@@ -395,6 +397,41 @@ def health(
 
     trial_runs = [trials.summarize(run) for run in runs]
 
+    transcript_runs = None
+    if transcript_metrics:
+        from evalarc import transcripts as transcript_report
+
+        transcript_runs = [transcript_report.summarize_transcripts(run) for run in runs]
+        limited = transcript_report.limit_items(runs)
+        if limited:
+            findings.append(
+                _finding(
+                    "limit_reached",
+                    "warning",
+                    f"{sum(item['assessed'] for item in limited)} attempt(s) in {len(limited)} "
+                    "case(s) stopped at a message, time or other non-token limit. Raise the "
+                    "limit or shorten the task before tuning; an attempt cut off by a budget "
+                    "measures the budget, not the agent.",
+                    items=limited,
+                )
+            )
+    if cluster_errors:
+        from evalarc import transcripts as transcript_report
+
+        correlated = transcript_report.correlated_items(runs)
+        if correlated:
+            findings.append(
+                _finding(
+                    "correlated_errors",
+                    "warning",
+                    f"{len(correlated)} error message(s) each recur in at least "
+                    f"{transcript_report.MIN_CLUSTER_CASES} cases of one file. Attempts that "
+                    "failed for the same infrastructure reason are not independent: fix the "
+                    "cause and rerun them rather than reading them as agent failures.",
+                    items=correlated,
+                )
+            )
+
     provenance = None
     if cases_manifest is not None:
         from evalarc import provenance as case_provenance
@@ -436,6 +473,8 @@ def health(
             if trial_metrics
             else {}
         ),
+        # Additive key, present only with --transcript-metrics.
+        **({"transcripts": transcript_runs} if transcript_runs is not None else {}),
         "findings": findings,
         "warnings": warnings,
         "healthy": warnings == 0,
@@ -472,6 +511,7 @@ def render_markdown(result: dict) -> str:
             ),
         ]
     lines += _trial_markdown(result.get("trials"))
+    lines += _transcript_markdown(result.get("transcripts"))
     size = result.get("size")
     if size:
         recorded = size["recorded_seconds_per_configuration"]
@@ -599,6 +639,7 @@ def render_html(result: dict, destination: Path) -> None:
         )
     body += "</tbody></table></div>"
     body += _trial_html(result.get("trials"), _esc)
+    body += _transcript_html(result.get("transcripts"), _esc)
     if result.get("triage"):
         body += (
             "<h2>Failure triage</h2><p>Failing cases in the last file, classified before any "
@@ -674,6 +715,11 @@ def command(args) -> int:
             "plan_configs": args.plan_configs,
             "trial_metrics": True,
         }
+        # Recorded only when used, so folders without them keep earlier params.
+        if getattr(args, "transcript_metrics", False):
+            params["transcript_metrics"] = True
+        if getattr(args, "cluster_errors", False):
+            params["cluster_errors"] = True
         result = evidence.compute_health(runs, params, manifest)
         if args.output:
             with new_run(args.output) as output:
@@ -768,6 +814,56 @@ def _trial_html(trial_metrics: dict | None, esc) -> str:
                 f"<td>{row['cases']}</td><td>{row['pass_at_k']:.1%}</td>"
                 f"<td>{row['pass_hat_k']:.1%}</td></tr>"
             )
+    return body + "</tbody></table></div>"
+
+
+def _transcript_cell(run: dict, name: str) -> str:
+    mean, top = run["mean"][name], run["max"][name]
+    return "—" if mean is None else f"{mean:g} (max {top})"
+
+
+def _transcript_markdown(rows: list | None) -> list[str]:
+    if rows is None:
+        return []
+    lines = [
+        "",
+        "Recorded transcripts, mean per attempt (max):",
+        "",
+        "| File | Attempts with transcript | Turns | Tool calls | Messages | Error retries |",
+        "| --- | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for run in rows:
+        lines.append(
+            f"| {_cell(run['file'])} | {run['attempts_with_transcript']}/{run['attempts']} | "
+            + " | ".join(
+                _transcript_cell(run, name)
+                for name in ("n_turns", "n_tool_calls", "n_messages", "n_error_retries")
+            )
+            + " |"
+        )
+    return lines
+
+
+def _transcript_html(rows: list | None, esc) -> str:
+    if rows is None:
+        return ""
+    body = (
+        "<h2>Recorded transcripts</h2><p>Mean per attempt, with the maximum, counted from "
+        "Inspect sample messages; promptfoo and JUnit record none.</p>"
+        '<div class="scroll"><table><caption>Turns, tool calls and messages per attempt'
+        "</caption><thead><tr><th>File</th><th>Attempts with transcript</th><th>Turns</th>"
+        "<th>Tool calls</th><th>Messages</th><th>Error retries</th></tr></thead><tbody>"
+    )
+    for run in rows:
+        body += (
+            f"<tr><td><code>{esc(run['file'])}</code></td>"
+            f"<td>{run['attempts_with_transcript']}/{run['attempts']}</td>"
+            + "".join(
+                f"<td>{esc(_transcript_cell(run, name))}</td>"
+                for name in ("n_turns", "n_tool_calls", "n_messages", "n_error_retries")
+            )
+            + "</tr>"
+        )
     return body + "</tbody></table></div>"
 
 

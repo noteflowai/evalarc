@@ -528,6 +528,12 @@ def _inspect(document: dict, threshold: float) -> dict:
         _add_material(material, case_id, "input", _message_text(sample.get("input")))
         usage.setdefault(case_id, []).append(inspect_usage(sample))
         meta = _inspect_output(sample)
+        messages = sample.get("messages")
+        if isinstance(messages, list):
+            # Kept on the attempt metadata only (never serialized as is): transcript counts
+            # for --transcript-metrics and bounded excerpts for judge-packet.
+            meta["transcript"] = transcript_counts(messages, sample.get("error_retries"))
+            meta["messages"] = messages
         samples_meta.setdefault(case_id, []).append(meta)
         digest = meta["output_sha256"]
         target = sample.get("target")
@@ -886,6 +892,24 @@ def _output_text(value: object) -> str | None:
     if not isinstance(value, str):
         value = json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
     return value[:MAX_OUTPUT_CHARS]
+
+
+def transcript_counts(messages: list, retries: object = None) -> dict:
+    """Assistant turns, tool calls and messages recorded in one Inspect sample."""
+    turns = calls = 0
+    for message in messages:
+        if not isinstance(message, dict) or message.get("role") != "assistant":
+            continue
+        turns += 1
+        tool_calls = message.get("tool_calls")
+        if isinstance(tool_calls, list):
+            calls += len(tool_calls)
+    counts = {"n_turns": turns, "n_tool_calls": calls, "n_messages": len(messages)}
+    if isinstance(retries, list):
+        counts["n_error_retries"] = len(retries)
+    elif isinstance(retries, int) and not isinstance(retries, bool) and retries >= 0:
+        counts["n_error_retries"] = retries
+    return counts
 
 
 def _inspect_output(sample: dict) -> dict:

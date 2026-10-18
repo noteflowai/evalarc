@@ -49,6 +49,14 @@ evalarc judge-score ab verdicts.json --require-current-preferred
 `judge-packet pairwise --allow-unsure` 会在可选答案中加入 `unsure`，信息不足时裁判可以如实说明，
 而不是猜测。`unsure` 会计数（结果中的 `unsure`），但不计入胜率。grader 数据包始终允许 `unsure`。
 
+## 向裁判展示对话过程
+
+对 Agent 来说，一次失败是否公平，往往取决于它做了什么，而不只是最终答案。`judge-packet --include-transcript`
+会把每个抽中尝试的 Inspect 消息记录复制进数据包：角色、文本、工具调用名称与参数，以及工具返回内容。分数、
+metadata、events 和用量从不复制，数据包仍然是盲评；成对数据包中的对话过程按隐藏的 A/B 顺序排列。每条消息
+截断到 4000 字符，每段对话截断到 `--transcript-max-chars`（默认 20000）。阅读页以可折叠段落显示。
+不加该选项时数据包不变。promptfoo 结果不含对话过程。
+
 ## 多位标注者：一致性与共识
 
 两位领域专家各自给出相同判定，才说明任务定义清楚。把同一个 `share/` 交给两位或更多标注者（人，或通过

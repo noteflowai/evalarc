@@ -29,9 +29,15 @@ evalarc eval-health examples/results-diff/inspect/baseline.json \
 | `config_not_applied` | 警告 | Inspect 日志请求了 `reasoning_effort`（none/minimal 以外）或 `reasoning_tokens`，但每次尝试记录的推理 token 都是 0 | 设置可能没有生效；检查参数名、模型是否支持以及是否被覆盖 |
 | `model_judge_replaceable` | 提示 | 模型评分的检查至少有 10 个输出，且不同取值不超过 10 个或全为 JSON | 改用精确匹配、固定标签集或 JSON Schema 校验；开放式输出才用模型裁判 |
 | `self_graded` | 警告 | 被测模型同时是裁判：Inspect 模型评分器未设 `model` 选项或 `grader` 角色，或 promptfoo 评分提供方与被测提供方相同 | 指定独立的裁判模型 |
+| `limit_reached` | 警告 | 使用 `--transcript-metrics` 时，Inspect 尝试因消息数、时间、工作时间等非 token 上限而停止（token 上限归 `truncated_outputs`） | 提高上限或缩短任务；被预算截断的尝试测到的是预算 |
+| `correlated_errors` | 警告 | 使用 `--cluster-errors` 时，同一错误信息（去掉数字、十六进制 ID 和 UUID 后）在同一文件至少 3 个用例的未评估尝试中出现 | 修复共同原因后重跑；这些试验不是相互独立的 Agent 结果 |
 
 输出按记录内容的 SHA-256 比较（Inspect `output.completion`、promptfoo `response.output`）；
 JUnit 不记录输出，因此不评估评分一致性、截断和自评。
+
+`--transcript-metrics` 还会加入 `transcripts`：按文件给出带有 Inspect 对话记录的尝试数，以及每次尝试的
+assistant 轮次、工具调用、消息数和错误重试的均值与最大值，两种报告都会显示。两个选项只在使用时才写入
+`params.json`，因此旧目录验证不变；使用了它们的目录需要 0.21.0 或更高版本才能验证。
 
 ## 失败分类
 

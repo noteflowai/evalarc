@@ -174,7 +174,15 @@ Markdown 与 HTML 报告会增加“Cost and usage”部分。
 不增加，`0.5` 表示至少减半）。质量门禁照常生效，更便宜但丢失检查项的运行仍然失败。
 `--cost-metric auto`（默认）优先用记录的成本，否则用总 token；也可指定 `cost`、`tokens`、
 `duration`。所选指标在任一匹配尝试上缺失，或基线均值为零时，命令退出 2，而不是猜测。
-GitHub Action 对应输入为 `max-cost-ratio`、`cost-metric`，输出为 `cost-ratio`。
+GitHub Action 对应输入为 `max-cost-ratio`、`cost-metric`、`transcript-metrics`，输出为 `cost-ratio`。
+
+质量不变，Agent 的轮次却可能翻倍。对 Inspect 日志，`--transcript-metrics` 统计每次尝试记录的消息，在
+`usage` 中加入 `n_turns`（assistant 消息数）、`n_tool_calls`、`n_messages` 和 `n_error_retries`，并可用
+`--cost-metric turns` 或 `tool_calls` 设门禁，例如
+`evalarc diff baseline.json current.json --transcript-metrics --max-cost-ratio 1.2 --cost-metric turns`。
+promptfoo 与 JUnit 不记录对话过程，这些指标保持未知，按轮次或工具调用设门禁时退出 2。不加该选项时
+`usage` 与所有报告都不变；加了该选项写出的目录会记录 `transcript_metrics`，需要 0.21.0 或更高版本才能验证。
+支持的导出格式不含流式时间戳，因此不报告首 token 时延和每秒输出 token 数。
 
 EvalArc 不为 token 定价。不同模型的分词器和价格不同，换模型时请优先比较记录的成本。
 JUnit 时长测的是测试本身，可能不包含 Agent。比值来自各一次运行，没有区间；差距较小时请重复运行。

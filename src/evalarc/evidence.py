@@ -35,7 +35,14 @@ def compute_diff(
         raise ValueError("params.json require_regression_suite must be true or false")
     if require_regression and manifest is None:
         raise ValueError("--require-regression-suite requires --cases")
+    transcripts = params.get("transcript_metrics", False)
+    if not isinstance(transcripts, bool):
+        raise ValueError("params.json transcript_metrics must be true or false")
     result = diff(*runs)
+    if transcripts:
+        from evalarc.usage import compare_usage
+
+        result["usage"] = compare_usage(*runs, transcripts=True)
     held_out = None
     if split is not None:
         result["generalization"] = review_split(*runs, result, split)
@@ -94,6 +101,10 @@ def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dic
     trial_metrics = params.get("trial_metrics", False)
     if not isinstance(trial_metrics, bool):
         raise ValueError("params.json trial_metrics must be true or false")
+    extra = {name: params.get(name, False) for name in ("transcript_metrics", "cluster_errors")}
+    for name, value in extra.items():
+        if not isinstance(value, bool):
+            raise ValueError(f"params.json {name} must be true or false")
     result = health(
         runs,
         params["saturation"],
@@ -101,6 +112,7 @@ def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dic
         params["ordered"],
         manifest,
         trial_metrics=trial_metrics,
+        **extra,
     )
     if params["plan_attempts"] is not None or params["plan_configs"] is not None:
         size = result["size"]

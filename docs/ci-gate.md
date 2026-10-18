@@ -357,6 +357,25 @@ tokenizers and prices, so prefer recorded cost when the model changes. A JUnit
 duration times the test, which may not include the agent. Ratios come from one
 run each and carry no interval; repeat runs when the margin is small.
 
+### Turns and tool calls
+
+Quality can stay the same while an agent takes twice the turns. For Inspect
+logs, `--transcript-metrics` counts each attempt's recorded messages and adds
+`n_turns` (assistant messages), `n_tool_calls`, `n_messages` and
+`n_error_retries` to `usage`, and `--cost-metric turns` or `tool_calls` gates
+on them:
+
+```bash
+evalarc diff baseline.json current.json --transcript-metrics \
+  --max-cost-ratio 1.2 --cost-metric turns
+```
+
+promptfoo and JUnit record no transcripts, so these metrics stay unknown and a
+turn or tool-call gate exits 2. Without the flag, `usage` and every report are
+unchanged; folders written with it record `transcript_metrics` and need 0.21.0
+or later to verify. Time to first token and output tokens per second are not
+reported: the supported exports carry no streaming timestamps.
+
 ## How each format maps to checks
 
 | Format | Case | Check | Passed when |
@@ -397,7 +416,8 @@ input always fails the step. Optional `held-out` (split file), `harness`
 [held-out review](#held-out-split-did-the-change-generalize) and
 [leakage scan](#harness-leakage-scan); their results are exposed as the
 `generalization-state` and `leakage-hits` outputs and as warning annotations on
-the leaking file and line. `max-cost-ratio` and `cost-metric` add the
+the leaking file and line. `max-cost-ratio`, `cost-metric` and
+`transcript-metrics` (`false`) add the
 [cost gate](#cost-at-equal-quality); its ratio is the `cost-ratio` output.
 `cases` and `require-regression-suite` (`false`) add the
 [suite view and gate](#capability-and-regression-suites); the count of
