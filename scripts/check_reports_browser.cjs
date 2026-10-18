@@ -36,6 +36,12 @@ const template = JSON.parse(fs.readFileSync(`${out}/spot/share/verdicts.template
 for (const [id, hidden] of Object.entries(key.items)) template.verdicts[id] = hidden.recorded_passed ? "pass" : "fail";
 fs.writeFileSync(`${out}/verdicts.json`, JSON.stringify(template));
 run("judge-score", `${out}/spot`, `${out}/verdicts.json`, "--output", `${runs}/score`);
+const second = JSON.parse(JSON.stringify(template));
+const flip = Object.keys(second.verdicts)[0];
+second.verdicts[flip] = second.verdicts[flip] === "pass" ? "fail" : "pass";
+second.judge = { kind: "human", model: null, description: "second annotator" };
+fs.writeFileSync(`${out}/verdicts-2.json`, JSON.stringify(second));
+run("judge-score", `${out}/spot`, `${out}/verdicts.json`, `${out}/verdicts-2.json`, "--output", `${runs}/panel`);
 run("eval-init", `${out}/proj`);
 run("review-inputs", `${out}/proj/cases.jsonl`, "--output", `${runs}/review`);
 const render = (kind, source, target) => execFileSync(python, ["-c", `
@@ -53,7 +59,7 @@ for (const [kind, source] of [["audit", "support-audit/audit.json"], ["evaluatio
 
 const reports = {
   diff: /Gate failed/, suites: /regression-suite case did not succeed/, health: /warning\(s\) before tuning|Ready to tune/, climb: /Merge/,
-  score: /Grader agrees with the judge/, review: /Inputs ready to run/,
+  score: /Grader agrees with the judge/, panel: /Grader agrees with the annotators’ consensus/, review: /Inputs ready to run/,
   audit: /declared faults detected/, evaluation: /Resolved|Not resolved|Unassessed/,
   comparison: /regressed/, repetition: /attempt\(s\) resolved/, suite: /job gate\(s\) accepted/,
 };

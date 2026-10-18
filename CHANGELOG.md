@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- `evalarc judge-score PACKET VERDICTS...` accepts two or more verdicts files,
+  one per annotator. It reports agreement between annotators (per pair: items
+  both decided, percent agreement with a 95% interval, Cohen's kappa; overall:
+  Fleiss' kappa), combines answers with `--consensus majority|unanimous`
+  (`unsure` never counts; items without consensus are `undecided` and
+  excluded), and scores the grader or the pairwise preference against the
+  consensus. `--min-annotator-agreement A` fails (exit 1, reason
+  `annotators_disagree`) unless every item is answered and every pair agrees on
+  at least A. `--output` keeps each file as `verdicts-NN.json`.
+- `judge-packet pairwise --allow-unsure` adds the answer `unsure`, counted and
+  excluded from the win rate.
+- Output compatibility: with one verdicts file and default packets, packets,
+  `score.json` (key order included), the summary, the page and the console are
+  unchanged.
+
 ## 0.20.0 — 2026-10-15
 
 - `evalarc hillclimb-review --cases MANIFEST` and the `hillclimb-run` config key
