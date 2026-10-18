@@ -23,14 +23,15 @@ MIN_CLUSTER_CASES = 3
 # are different errors, and so are HTTP 429 and 500.
 _CODES = re.compile(
     r"\b(?:code|status|errno|exit|http|error)\s*[:=]?\s*\d{1,4}\b"
-    r"|\b[1-5]\d\d\b(?=\s+[a-z])",
-    re.IGNORECASE,
+    # A bare 3-digit status needs a capitalized reason phrase ("429 Too Many Requests").
+    r"|\b[1-5]\d\d\b(?=\s+[A-Z][a-z])",
 )
+MAX_ERROR_CHARS = 4_000
 _VOLATILE = re.compile(
     r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"  # UUIDs
     r"|0x[0-9a-f]+|\b[0-9a-f]{12,}\b"  # hexadecimal identifiers
-    r"|\b(?=[a-z_-]*\d)[a-z0-9_-]{8,}\b"  # request IDs, tokens and model names with digits
-    r"|\d+(?:\.\d+)?\s*(?:ms|s|sec|seconds|m|min|minutes)?\b"  # numbers, durations in any unit
+    r"|\b(?=[a-z_-]{0,64}\d)[a-z0-9_-]{8,}\b"  # request IDs, tokens, model names with digits
+    r"|\d+(?:\.\d+)?(?:\s*(?:ms|s|sec|seconds|m|min|minutes)\b)?"  # numbers, durations
     r"|\d+(?:\.\d+)?",  # remaining numbers, ports, timestamps
     re.IGNORECASE,
 )
@@ -104,7 +105,11 @@ def limit_items(runs: list[dict]) -> list[dict]:
 
 
 def normalize_error(text: str) -> str:
-    """Error text with volatile parts replaced by ``#``; status and exit codes are kept."""
+    """Error text with volatile parts replaced by ``#``; status and exit codes are kept.
+
+    Input is cut at ``MAX_ERROR_CHARS`` so the patterns stay fast on any recorded text.
+    """
+    text = text[:MAX_ERROR_CHARS]
     kept: list[str] = []
 
     def protect(match: re.Match) -> str:

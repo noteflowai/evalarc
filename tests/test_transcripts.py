@@ -160,7 +160,7 @@ def test_health_correlated_errors(tmp_path):
     finding = next(f for f in result["findings"] if f["id"] == "correlated_errors")
     item = finding["items"][0]
     assert item["cases"] == ["address-change", "status-missing", "status-open"]
-    assert item["message"] == "RateLimitError 429 request #"
+    assert item["message"] == "RateLimitError # request #"
     two = with_transcripts("current", tmp_path / "d.json", errors=("status-open", "address-change"))
     assert correlated_items([two]) == []
 
@@ -172,6 +172,12 @@ def test_normalization_keeps_distinct_errors_apart():
     assert normalize_error("HTTP 429 Too Many Requests") != normalize_error(
         "HTTP 500 Too Many Requests"
     )
+    assert normalize_error("timed out after 120 seconds") == normalize_error(
+        "timed out after 300 seconds"
+    )
+    assert normalize_error("try again in 250 ms") == normalize_error("try again in 980 ms")
+    assert normalize_error("Used 290 tokens") == "Used # tokens"
+    assert normalize_error("429 Too Many Requests") != normalize_error("500 Internal Server Error")
     long = "x" * 300
     assert normalize_error(long + "a") != normalize_error(long + "b")
     assert normalize_error("connection refused") != normalize_error("permission denied")
@@ -345,3 +351,11 @@ def test_cli_packet_includes_transcripts_only_with_the_flag(tmp_path, capsys):
     assert all(item["transcript"] for item in with_t["items"])
     assert all("transcript" not in item for item in plain["items"])
     assert "<details>" in (tmp_path / "t/share/index.html").read_text()
+
+
+def test_normalization_is_fast_on_long_input():
+    import time
+
+    start = time.monotonic()
+    normalize_error("a-" * 500_000)
+    assert time.monotonic() - start < 2
