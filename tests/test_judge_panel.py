@@ -267,7 +267,7 @@ def test_undecided_items_fail_every_gate(tmp_path):
     b = verdicts(tmp_path, packet_dir, flipped(*ids[1:]), "b")
     result = score(packet_dir, [a, b], min_agreement=0.9)
     assert result["agreement"] == 1.0 and result["decided"] == 1
-    assert result["gate"]["passed"] is False
+    assert result["gate"]["passed"] is False and result["gate"]["reason"] == "undecided_items"
 
     # Shared unsure answers leave items undecided too.
     def mostly_unsure(item_id, hidden):

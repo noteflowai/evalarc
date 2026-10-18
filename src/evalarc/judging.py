@@ -475,6 +475,7 @@ def _score_panel(
     if gate is not None and undecided:
         # A consensus that decided only part of the packet cannot vouch for the grader.
         gate["passed"] = False
+        gate["reason"] = "undecided_items"
     if min_annotator_agreement is not None:
         lowest = agreement["min_pairwise_agreement"]
         reason = (
@@ -490,7 +491,8 @@ def _score_panel(
         )
         gate = result.setdefault("gate", {})
         if "passed" in gate:
-            # Keep the other gate's own outcome; "passed" becomes both together.
+            # The other gate's outcome (already failed by undecided items, if any);
+            # "passed" becomes both together.
             gate["judge_gate_passed"] = gate["passed"]
         gate["min_annotator_agreement"] = min_annotator_agreement
         gate["passed"] = bool(gate.get("passed", True) and reason is None)
@@ -823,7 +825,8 @@ def render_markdown(result: dict) -> str:
             lines += [
                 "",
                 f"Gate: agreement ≥ {gate['min_agreement']:g}, complete, separate judge — "
-                f"**{'pass' if gate.get('judge_gate_passed', gate['passed']) else 'fail'}**",
+                f"**{'pass' if gate.get('judge_gate_passed', gate['passed']) else 'fail'}**"
+                + (" (undecided items)" if gate.get("reason") == "undecided_items" else ""),
             ]
     else:
         lines += [
