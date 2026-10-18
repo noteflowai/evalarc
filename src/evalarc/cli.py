@@ -338,8 +338,9 @@ def parser() -> argparse.ArgumentParser:
         type=Path,
         metavar="RESULT",
         help="result file of the same evaluation run with a known-good solution (oracle); "
-        "warn on checks it does not pass (reference_fails) and triage them as "
-        "task_or_grader_broken",
+        "warn on checks it was graded on and failed (reference_fails, triaged "
+        "task_or_grader_broken); errored or skipped reference attempts are reported as "
+        "reference_unassessed",
     )
     health.add_argument(
         "--cluster-errors",

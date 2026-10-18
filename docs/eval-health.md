@@ -90,8 +90,8 @@ evalarc eval-health baseline.json current.json --reference reference.json --outp
   broken nor triaged as such; fix the reference run.
 - `reference_incomplete` (info): recorded cases missing from the reference.
   A reference that shares no case IDs with the results exits 2.
-- `health.json` gains `reference` (its file identity, failing checks and
-  missing cases). The reference must use the same format and, for Inspect,
+- `health.json` gains `reference` (its file identity, failing and unassessed
+  checks, and missing cases). The reference must use the same format and, for Inspect,
   task; it may not be one of the result files. It is copied to the output
   folder, and `evalarc verify` recomputes against it. Without `--reference`,
   reports are unchanged; folders written with it need 0.21.0 or later to

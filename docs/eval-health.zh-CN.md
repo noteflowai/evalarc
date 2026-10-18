@@ -28,6 +28,8 @@ evalarc eval-health examples/results-diff/inspect/baseline.json \
 | `truncated_outputs` | 警告 | 尝试因 token 上限停止（`max_tokens`、`length`、Inspect token limit） | 提高上限或缩短任务；被截断的回答测的是预算 |
 | `config_not_applied` | 警告 | Inspect 日志请求了 `reasoning_effort`（none/minimal 以外）或 `reasoning_tokens`，但每次尝试记录的推理 token 都是 0 | 设置可能没有生效；检查参数名、模型是否支持以及是否被覆盖 |
 | `model_judge_replaceable` | 提示 | 模型评分的检查至少有 10 个输出，且不同取值不超过 10 个或全为 JSON | 改用精确匹配、固定标签集或 JSON Schema 校验；开放式输出才用模型裁判 |
+| `reference_fails` | 警告 | 使用 `--reference` 时，参考解经过评分却未通过某个检查 | 修正任务描述、评分器或参考解（见[参考解](#参考解)） |
+| `reference_unassessed`、`reference_incomplete` | 提示 | 使用 `--reference` 时，参考解有出错或被跳过的尝试，或缺少某些用例 | 补全参考解的运行 |
 | `self_graded` | 警告 | 被测模型同时是裁判：Inspect 模型评分器未设 `model` 选项或 `grader` 角色，或 promptfoo 评分提供方与被测提供方相同 | 指定独立的裁判模型 |
 | `limit_reached` | 警告 | 使用 `--transcript-metrics` 时，Inspect 尝试因消息数、时间、工作时间等非 token 上限而停止（token 上限及其他被截断的输出归 `truncated_outputs`） | 提高上限或缩短任务；被预算截断的尝试测到的是预算。人工中止的尝试请重跑 |
 | `correlated_errors` | 警告 | 使用 `--cluster-errors` 时，同一错误信息在同一文件至少 3 个用例的未评估尝试中出现（去掉数字、时长、十六进制 ID、UUID 以及字母数字混合的标识符，含模型名；保留状态码、退出码和 HTTP 码；跳过不计入） | 修复共同原因后重跑；这些试验不是相互独立的 Agent 结果 |
@@ -62,7 +64,7 @@ assistant 轮次、工具调用、消息数和错误重试的均值与最大值�
 `evalarc eval-health baseline.json current.json --reference reference.json --output health`。
 参考解经过评分却未通过的检查报 `reference_fails` 警告，并在失败分类中优先归为 `task_or_grader_broken`；参考解中
 出错或被跳过的尝试只提示 `reference_unassessed`，不算作任务有问题；记录中有、参考解却缺失的用例提示
-`reference_incomplete`；参考解与结果没有任何相同的用例 ID 时退出 2。`health.json` 新增 `reference`（文件标识、未通过的检查和缺失用例）。
+`reference_incomplete`；参考解与结果没有任何相同的用例 ID 时退出 2。`health.json` 新增 `reference`（文件标识、未通过的检查、未评估的检查和缺失用例）。
 参考解必须与结果格式相同（Inspect 还要求任务名相同），且不能是结果文件之一；它会复制到输出目录，`evalarc verify`
 据此重算。不加 `--reference` 时报告不变；加了该选项写出的目录需要 0.21.0 或更高版本才能验证。
 
