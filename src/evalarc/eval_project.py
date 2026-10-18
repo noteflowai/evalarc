@@ -29,7 +29,12 @@ CASE_FIELDS = {
     "difficulty",
     "held_out",
     "suite",
+    "expect_action",
+    "expect_change",
+    "impact",
+    "owner",
 }
+ATTRIBUTE_FIELDS = ("expect_action", "expect_change", "impact", "owner")
 CHECKS = ("exact", "contains", "label", "json_keys", "json_schema", "command")
 SCHEMA_TYPES = {"object", "array", "string", "number", "integer", "boolean", "null"}
 MAX_CASES_BYTES = 16 * 1024 * 1024
@@ -193,6 +198,11 @@ def load_cases(path: Path) -> list[dict]:
             raise ValueError(f"{where} difficulty must be a non-empty string")
         if "suite" in case and case["suite"] not in provenance.SUITES:
             raise ValueError(f"{where} suite must be one of {', '.join(provenance.SUITES)}")
+        try:
+            provenance.validate_attributes(case, where)
+        except ValueError as error:
+            # file:line, then the field: "cases.jsonl:3 impact must be one of ..."
+            raise ValueError(str(error).replace(f"{where}.", f"{where} ", 1)) from None
         cases.append(case)
     if not cases:
         raise ValueError(f"{path.name} contains no cases")
@@ -278,6 +288,9 @@ def manifest_document(cases: list[dict]) -> dict:
             # Read by eval-health --cases: regression cases must pass every trial,
             # capability cases that always pass are graduation candidates.
             entry["suite"] = case["suite"]
+        for name in ATTRIBUTE_FIELDS:
+            if name in case:
+                entry[name] = case[name]
         entries.append(entry)
     return {"schema_version": provenance.SCHEMA, "cases": entries}
 
@@ -290,6 +303,11 @@ def review(cases: list[dict], source: dict) -> dict:
                 "match": e["match"],
                 "source": e["source"],
                 "difficulty": e.get("difficulty"),
+                **(
+                    {"attributes": {k: e[k] for k in ATTRIBUTE_FIELDS if k in e}}
+                    if any(k in e for k in ATTRIBUTE_FIELDS)
+                    else {}
+                ),
             }
             for e in manifest_document(cases)["cases"]
         ],
@@ -376,6 +394,17 @@ def review(cases: list[dict], source: dict) -> dict:
                     "should be marked regression so a later change cannot silently break them.",
                 )
             )
+    impacts = Counter(case["impact"] for case in cases if case.get("impact"))
+    if impacts and sum(impacts.values()) < len(cases):
+        findings.append(
+            _finding(
+                "impact_undeclared",
+                "info",
+                f"{len(cases) - sum(impacts.values())} of {len(cases)} case(s) declare no "
+                "impact while others do; diff lists their blocking changes after declared ones.",
+                value=(len(cases) - sum(impacts.values())) / len(cases),
+            )
+        )
     warnings = sum(item["severity"] == "warning" for item in findings)
     return {
         "schema_version": SCHEMA,
@@ -386,6 +415,14 @@ def review(cases: list[dict], source: dict) -> dict:
         "sources": sources["counts"],
         # Additive key, present only when some case declares a suite.
         **({"suites": dict(sorted(suites.items()))} if suites else {}),
+        # Additive keys, present only when some case declares the attribute.
+        **(
+            {
+                name: dict(sorted(Counter(c[name] for c in cases if name in c).items()))
+                for name in ("expect_action", "expect_change", "impact")
+                if any(name in c for c in cases)
+            }
+        ),
         "findings": findings,
         "warnings": warnings,
         "clean": warnings == 0,
@@ -422,12 +459,14 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
     )
     if result["findings"]:
         body += _findings([(f["severity"], f["id"], f["message"]) for f in result["findings"]])
+    show_attributes = any(_attributes(case) for case in cases)
     body += (
         "<h2>Cases</h2><p>Read every case. Would two domain experts grade it the same way? "
         "Is every condition the grader checks stated in the input?</p>"
         '<div class="scroll"><table><thead><tr><th>Case</th><th>Split</th><th>Source</th>'
         "<th>Input</th><th>Check</th><th>Expected</th><th>Why hard</th>"
         + ("<th>Suite</th>" if result.get("suites") else "")
+        + ("<th>Attributes</th>" if show_attributes else "")
         + "</tr></thead><tbody>"
     )
     for case in cases:
@@ -445,6 +484,7 @@ def render_html(result: dict, cases: list[dict], destination: Path) -> None:
             f"<td>{_esc(case['check'])}</td><td>{_esc(expected)}</td>"
             f"<td>{_esc(case.get('difficulty') or '—')}</td>"
             + (f"<td>{_esc(case.get('suite') or '—')}</td>" if result.get("suites") else "")
+            + (f"<td>{_esc(_attributes(case) or '—')}</td>" if show_attributes else "")
             + "</tr>"
         )
     body += f"</tbody></table></div><footer>{_esc(result['scope'])}</footer>"
@@ -533,6 +573,10 @@ def review_command(args) -> int:
     if args.output:
         print(f"Report: {args.output / 'index.html'}")
     return 1 if args.require_clean and not result["clean"] else 0
+
+
+def _attributes(case: dict) -> str:
+    return " · ".join(f"{name} {case[name]}" for name in ATTRIBUTE_FIELDS if name in case)
 
 
 def _write_json(path: Path, document: dict) -> None:

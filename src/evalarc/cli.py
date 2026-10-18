@@ -243,14 +243,21 @@ def parser() -> argparse.ArgumentParser:
         "--cases",
         type=Path,
         metavar="MANIFEST",
-        help="evalarc.case-manifest.v1 with suite roles; reports capability and regression "
-        "suites with case-level pass@k/pass^k and tags changed checks with their suite",
+        help="evalarc.case-manifest.v1 with suite roles or case attributes; reports "
+        "capability and regression suites, over- and undertriggering (expect_action), "
+        "fail-to-pass/pass-to-pass (expect_change) and blocking changes by impact and owner",
     )
     results_diff.add_argument(
         "--require-regression-suite",
         action="store_true",
         help="also fail unless every regression-suite case succeeds on every trial of the "
         "current run (requires --cases)",
+    )
+    results_diff.add_argument(
+        "--require-f2p",
+        action="store_true",
+        help="also fail unless every expect_change fail_to_pass case succeeds on every "
+        "current trial and no pass_to_pass case breaks (requires --cases)",
     )
     results_diff.add_argument(
         "--require-generalization",
@@ -976,6 +983,8 @@ def _results_diff(args: argparse.Namespace) -> int:
             raise ValueError("--require-generalization requires --held-out")
         if args.require_regression_suite and not args.cases:
             raise ValueError("--require-regression-suite requires --cases")
+        if args.require_f2p and not args.cases:
+            raise ValueError("--require-f2p requires --cases")
         runs = [
             load_results(path, args.format, args.threshold)
             for path in (args.baseline, args.current)
@@ -1001,6 +1010,8 @@ def _results_diff(args: argparse.Namespace) -> int:
         if manifest is not None:
             # Recorded only when used, so folders without --cases keep earlier params.
             params["require_regression_suite"] = args.require_regression_suite
+            if args.require_f2p:
+                params["require_f2p"] = True
         if args.transcript_metrics:
             params["transcript_metrics"] = True
         result = evidence.compute_diff(runs, params, split, args.harness, manifest)
@@ -1106,9 +1117,9 @@ def _results_diff(args: argparse.Namespace) -> int:
                 f"Cost gate ({gate['metric']}): current/baseline {gate['ratio']:.3f}, "
                 f"limit {gate['max_ratio']:g} — {'pass' if gate['passed'] else 'fail'}"
             )
-        from evalarc.suite_report import console_lines
+        from evalarc.suite_report import attributes_console, console_lines
 
-        for line in console_lines(result):
+        for line in console_lines(result) + attributes_console(result):
             print(line)
         if args.output:
             print(f"Report: {args.output / 'index.html'}")

@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Case manifests (`evalarc.case-manifest.v1`) and `eval-init` `cases.jsonl`
+  accept optional case attributes: `expect_action` (`act` | `abstain`),
+  `expect_change` (`fail_to_pass` | `pass_to_pass`), `impact`
+  (`critical` | `high` | `normal` | `low`) and `owner`. A manifest may declare
+  them without suites.
+- `diff --cases` adds `case_attributes`: baseline and current overtriggering
+  (failed `abstain` cases) and undertriggering (failed `act` cases),
+  fail-to-pass resolved/unresolved and pass-to-pass broken cases, and blocking
+  changes ordered by impact with owners. Changed checks carry their case's
+  attributes. `--require-f2p` also fails the gate unless every `fail_to_pass`
+  case succeeds on every current trial and no `pass_to_pass` case breaks.
+- `eval-health --cases` adds `behavior` per file, and `eval-health` and
+  `review-inputs` report `one_sided_behavior` (warning), `behavior_imbalance`
+  and `behavior_undeclared` (info); `review-inputs` also reports
+  `impact_undeclared` (info).
+- New examples: `examples/results-diff/inspect/attributes.json` and
+  `examples/results-diff/junit/cases.json`.
 - `evalarc diff --transcript-metrics` (Inspect) counts each attempt's recorded
   messages and adds `n_turns` (generated assistant messages), `n_tool_calls`,
   `n_messages` and `n_error_retries` to `usage`; `--cost-metric turns` and

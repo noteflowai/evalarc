@@ -30,6 +30,17 @@ REAL = {"production", "bug_report", "support_ticket", "user_traffic"}
 # Optional role of a case: capability cases give a hill to climb and may start at a low
 # pass rate; regression cases protect what already works and should pass every trial.
 SUITES = ("capability", "regression")
+# Optional case attributes. expect_action: whether the agent should take the behavior
+# under test (search, call a tool, trigger a skill) or abstain, so over- and
+# undertriggering are measured separately. expect_change: the coding-agent contract,
+# tests that must start passing (fail_to_pass) or keep passing (pass_to_pass). impact
+# and owner say how much a broken case matters and whom to ask.
+ATTRIBUTES = {
+    "expect_action": ("act", "abstain"),
+    "expect_change": ("fail_to_pass", "pass_to_pass"),
+    "impact": ("critical", "high", "normal", "low"),
+}
+MAX_OWNER_CHARS = 200
 SCOPE = (
     "Provenance is declared by the caller and not verified. It records where cases came "
     "from, not whether they represent production traffic or whether the data was "
@@ -63,18 +74,43 @@ def load(path: Path) -> dict:
         suite = entry.get("suite")
         if suite is not None and suite not in SUITES:
             raise ValueError(f"cases[{index}].suite must be one of {', '.join(SUITES)}")
-        unknown = set(entry) - {"match", "source", "difficulty", "note", "suite"}
+        unknown = (
+            set(entry)
+            - {"match", "source", "difficulty", "note", "suite", "owner"}
+            - set(ATTRIBUTES)
+        )
         if unknown:
             raise ValueError(f"cases[{index}] has unknown fields: {', '.join(sorted(unknown))}")
         rule = {"match": entry["match"], "source": source, "difficulty": difficulty}
         if suite is not None:
             # Only present when declared, so manifests without suites load as before.
             rule["suite"] = suite
+        attributes = validate_attributes(entry, f"cases[{index}]")
+        if attributes:
+            rule["attributes"] = attributes
         rules.append(rule)
     return {
         "source": {"name": path.name, "sha256": hashlib.sha256(raw).hexdigest()},
         "rules": rules,
     }
+
+
+def validate_attributes(entry: dict, where: str) -> dict:
+    """The declared optional attributes of one manifest entry or case, validated."""
+    out = {}
+    for name, allowed in ATTRIBUTES.items():
+        if name in entry:
+            if entry[name] not in allowed:
+                raise ValueError(f"{where}.{name} must be one of {', '.join(allowed)}")
+            out[name] = entry[name]
+    if "owner" in entry:
+        owner = entry["owner"]
+        if not isinstance(owner, str) or not owner.strip() or len(owner) > MAX_OWNER_CHARS:
+            raise ValueError(
+                f"{where}.owner must be a non-empty string of at most {MAX_OWNER_CHARS} characters"
+            )
+        out["owner"] = owner
+    return out
 
 
 def review(manifest: dict, case_ids: set[str]) -> dict:
@@ -117,12 +153,18 @@ def review(manifest: dict, case_ids: set[str]) -> dict:
     if suites:
         # Additive key, present only when a manifest declares suite roles.
         result["suites"] = dict(sorted(suites.items()))
+    attributes = {
+        case: dict(rule["attributes"]) for case, rule in assigned.items() if rule.get("attributes")
+    }
+    if attributes:
+        # Additive key, present only when a manifest declares case attributes.
+        result["attributes"] = dict(sorted(attributes.items()))
     return result
 
 
 def findings(result: dict, total: int, finding) -> list[dict]:
     """Translate a provenance review into eval-health findings."""
-    out = []
+    out = behavior_findings(result, total, finding)
     counts = result["counts"]
     if result["undeclared"]:
         out.append(
@@ -183,6 +225,57 @@ def findings(result: dict, total: int, finding) -> list[dict]:
                 "info",
                 "Every case comes from user traffic. Users mostly send requests they expect "
                 "to work, so add bug reports or deliberately hard cases.",
+            )
+        )
+    return out
+
+
+MIN_MINORITY_SHARE = 0.25
+
+
+def behavior_findings(result: dict, total: int, finding) -> list[dict]:
+    """Balance of should-act and should-abstain cases (only when any case declares one)."""
+    actions = [
+        item["expect_action"]
+        for item in (result.get("attributes") or {}).values()
+        if "expect_action" in item
+    ]
+    if not actions:
+        return []
+    out = []
+    act, abstain = actions.count("act"), actions.count("abstain")
+    if not act or not abstain:
+        present = "act" if act else "abstain"
+        missing = "abstain" if act else "act"
+        out.append(
+            finding(
+                "one_sided_behavior",
+                "warning",
+                f"Every case that declares expect_action expects {present}; none expects "
+                f"{missing}. One-sided cases reward an agent that always "
+                f"{'acts' if act else 'abstains'}: add cases where it should "
+                f"{'not act' if act else 'act'}.",
+            )
+        )
+    elif min(act, abstain) / len(actions) < MIN_MINORITY_SHARE:
+        out.append(
+            finding(
+                "behavior_imbalance",
+                "info",
+                f"{act} act and {abstain} abstain case(s): the smaller side is below "
+                f"{MIN_MINORITY_SHARE:.0%}, so its over- or undertriggering rate is measured on "
+                "few cases.",
+                value=min(act, abstain) / len(actions),
+            )
+        )
+    if len(actions) < total:
+        out.append(
+            finding(
+                "behavior_undeclared",
+                "info",
+                f"{total - len(actions)} of {total} case(s) declare no expect_action while "
+                "others do; they count toward neither over- nor undertriggering.",
+                value=(total - len(actions)) / total,
             )
         )
     return out

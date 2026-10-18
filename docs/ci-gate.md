@@ -315,6 +315,50 @@ In the recorded example, `refund-duplicate` (regression) fails both epochs, so
 pass@2 100% but pass^2 66.7%, because `cancel-pending` succeeds on one of its
 two epochs.
 
+## Over- and undertriggering, fail-to-pass and impact
+
+The same `--cases` manifest can declare
+[case attributes](eval-health.md#case-attributes): `expect_action`,
+`expect_change`, `impact` and `owner`. A manifest may declare them without any
+suite.
+
+```bash
+evalarc diff examples/results-diff/inspect/baseline.json \
+  examples/results-diff/inspect/current.json \
+  --cases examples/results-diff/inspect/attributes.json --output review
+```
+
+- Changed checks carry their case's attributes, and `diff.json` gains
+  `case_attributes`.
+- `behavior`: baseline and current undertriggering (failed `act` cases) and
+  overtriggering (failed `abstain` cases). In the example, overtriggering falls
+  from 66.7% to 33.3% while undertriggering rises from 0% to 25%: the change
+  moved the threshold rather than improving judgment. A failing `abstain` check
+  that lost passes already fails the default gate.
+- `blocking_by_impact`: blocking changes with an `impact` or `owner`, ordered
+  `critical`, `high`, `normal`, `low`, then undeclared. Gate decisions do not
+  depend on impact.
+- `expected_changes`, the coding-agent contract. A `fail_to_pass` case is
+  resolved when it succeeds on every current trial. A `pass_to_pass` case is
+  broken when it succeeded on every baseline trial and no longer does (a failed,
+  unassessed or missing trial, or fewer trials). Also listed:
+  `fail_to_pass` cases that already passed on the baseline, which suggests
+  wrong labels, and `pass_to_pass` cases that were not passing on the baseline.
+
+`--require-f2p` (requires `--cases`) also fails the gate unless every
+`fail_to_pass` case is resolved and no `pass_to_pass` case broke; it exits 2
+when no case is `fail_to_pass`. A pytest or JUnit ID can be matched exactly:
+
+```bash
+evalarc diff examples/results-diff/junit/baseline.xml \
+  examples/results-diff/junit/current.xml \
+  --cases examples/results-diff/junit/cases.json --require-f2p
+```
+
+Here the large-refund fix is resolved, but two other tests broke, so the gate
+fails. Without these fields, reports and gates are unchanged. Folders written
+with `--require-f2p` need 0.21.0 or later to verify.
+
 ## Cost at equal quality
 
 When an evaluation is near saturation, the useful change is often the same

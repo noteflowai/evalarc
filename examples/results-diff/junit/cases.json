@@ -1,0 +1,8 @@
+{
+  "schema_version": "evalarc.case-manifest.v1",
+  "description": "The change fixes the large-refund policy (fail_to_pass); every other test must keep passing.",
+  "cases": [
+    {"match": "refund_checks::test_policy_outcome[refund-large]", "source": "bug_report", "expect_change": "fail_to_pass", "owner": "payments-oncall"},
+    {"match": "refund_checks::*", "source": "manual", "expect_change": "pass_to_pass"}
+  ]
+}

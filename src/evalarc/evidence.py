@@ -35,6 +35,11 @@ def compute_diff(
         raise ValueError("params.json require_regression_suite must be true or false")
     if require_regression and manifest is None:
         raise ValueError("--require-regression-suite requires --cases")
+    require_f2p = params.get("require_f2p", False)
+    if not isinstance(require_f2p, bool):
+        raise ValueError("params.json require_f2p must be true or false")
+    if require_f2p and manifest is None:
+        raise ValueError("--require-f2p requires --cases")
     transcripts = params.get("transcript_metrics", False)
     if not isinstance(transcripts, bool):
         raise ValueError("params.json transcript_metrics must be true or false")
@@ -57,18 +62,90 @@ def compute_diff(
             result["usage"], params["cost_metric"], params["max_cost_ratio"]
         )
     if manifest is not None:
-        _add_suites(result, runs, manifest, require_regression)
+        _add_manifest(result, runs, manifest, require_regression, require_f2p)
     return result
 
 
-def _add_suites(result: dict, runs: list[dict], manifest: dict, required: bool) -> None:
-    """Additive keys for diff --cases: suite per changed row and per-suite trials."""
-    from evalarc import provenance, trials
+IMPACT_ORDER = ("critical", "high", "normal", "low")
+
+
+def _add_manifest(
+    result: dict, runs: list[dict], manifest: dict, required: bool, require_f2p: bool
+) -> None:
+    from evalarc import provenance
 
     case_ids = set(runs[0]["cases"]) | set(runs[1]["cases"])
     review = provenance.review(manifest, case_ids)
-    if not review.get("suites"):
-        raise ValueError('the case manifest declares no suite; add "suite" to its entries')
+    if not review.get("suites") and not review.get("attributes"):
+        raise ValueError(
+            'the case manifest declares no suite and no case attributes; add "suite", '
+            '"expect_action", "expect_change", "impact" or "owner" to its entries'
+        )
+    if required and "regression" not in (review.get("suites") or {}).values():
+        # A required gate over an empty regression suite would pass without checking anything.
+        raise ValueError(
+            '--require-regression-suite needs at least one case with "suite": "regression"'
+        )
+    if review.get("suites"):
+        _add_suites(result, runs, review, required)
+    _add_attributes(result, runs, review, require_f2p)
+
+
+def _add_attributes(result: dict, runs: list[dict], review: dict, require_f2p: bool) -> None:
+    """Additive keys for diff --cases with expect_action, expect_change, impact, owner."""
+    from evalarc import trials
+
+    attributes = review.get("attributes") or {}
+    changes = trials.expected_changes(runs[0], runs[1], attributes)
+    if require_f2p and not (changes and changes["fail_to_pass"]["cases"]):
+        raise ValueError(
+            '--require-f2p needs at least one case with "expect_change": "fail_to_pass"'
+        )
+    if not attributes:
+        return
+    for row in result["changes"]:
+        for name, value in (attributes.get(row["case_id"]) or {}).items():
+            row[name] = value
+    view: dict = {"manifest": review["manifest"]}
+    sides = {
+        label: trials.behavior_rates(run, attributes)
+        for label, run in (("baseline", runs[0]), ("current", runs[1]))
+    }
+    if sides["baseline"] or sides["current"]:
+        view["behavior"] = sides
+    if changes:
+        view["expected_changes"] = changes
+    from evalarc.results_diff import BLOCKING
+
+    rank = {name: index for index, name in enumerate(IMPACT_ORDER)}
+    blocking = [
+        {
+            "case_id": row["case_id"],
+            "check": row["check"],
+            "kind": row["kind"],
+            "impact": row.get("impact"),
+            "owner": row.get("owner"),
+        }
+        for row in result["changes"]
+        if row["kind"] in BLOCKING and (row.get("impact") or row.get("owner"))
+    ]
+    if blocking:
+        blocking.sort(
+            key=lambda item: (rank.get(item["impact"], len(IMPACT_ORDER)), item["case_id"])
+        )
+        view["blocking_by_impact"] = blocking
+    result["case_attributes"] = view
+    if require_f2p:
+        result["f2p_required"] = True
+        result["f2p_passed"] = not (
+            changes["fail_to_pass"]["unresolved"] or changes["pass_to_pass"]["broken"]
+        )
+
+
+def _add_suites(result: dict, runs: list[dict], review: dict, required: bool) -> None:
+    """Additive keys for diff --cases: suite per changed row and per-suite trials."""
+    from evalarc import trials
+
     if required and "regression" not in review["suites"].values():
         # A required gate over an empty regression suite would pass without checking anything.
         raise ValueError(
@@ -91,6 +168,7 @@ def diff_passed(result: dict) -> bool:
         and result.get("generalization_passed", True)
         and (result.get("cost_gate") or {}).get("passed", True)
         and result.get("regression_suite_passed", True)
+        and result.get("f2p_passed", True)
     )
 
 
@@ -262,9 +340,10 @@ def verify_report(directory: Path) -> dict:
 
             read(params["cases"])
             manifest = load_manifest(directory / params["cases"])
-            if not isinstance(recorded.get("suites"), dict):
+            view = recorded.get("suites") or recorded.get("case_attributes")
+            if not isinstance(view, dict):
                 raise ValueError("diff.json lacks the suite view that params.json records")
-            manifest["source"]["name"] = recorded["suites"]["manifest"]["name"]
+            manifest["source"]["name"] = view["manifest"]["name"]
         computed = compute_diff(runs, params, split, harness, manifest)
         passed = diff_passed(computed)
         summary = {

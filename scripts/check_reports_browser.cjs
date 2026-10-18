@@ -26,6 +26,8 @@ run("diff", `${inspect}/baseline.json`, `${inspect}/current.json`, "--held-out",
     "--harness", `${inspect}/harness`, "--output", `${runs}/diff`);
 run("diff", `${inspect}/baseline.json`, `${inspect}/current.json`, "--cases", `${inspect}/suites.json`,
     "--require-regression-suite", "--output", `${runs}/suites`);
+run("diff", `${inspect}/baseline.json`, `${inspect}/current.json`, "--cases", `${inspect}/attributes.json`,
+    "--output", `${runs}/attributes`);
 run("eval-health", `${inspect}/baseline.json`, `${inspect}/current.json`, "--cases", `${inspect}/cases.json`,
     "--min-effect", "0.05", "--transcript-metrics", "--cluster-errors", "--output", `${runs}/health`);
 const steps = fs.readdirSync(`${climb}/results`).sort().map(name => `${climb}/results/${name}`);
@@ -58,7 +60,7 @@ for (const [kind, source] of [["audit", "support-audit/audit.json"], ["evaluatio
 }
 
 const reports = {
-  diff: /Gate failed/, suites: /regression-suite case did not succeed/, health: /warning\(s\) before tuning|Ready to tune/, climb: /Merge/,
+  diff: /Gate failed/, suites: /regression-suite case did not succeed/, attributes: /Gate failed/, health: /warning\(s\) before tuning|Ready to tune/, climb: /Merge/,
   score: /Grader agrees with the judge/, panel: /Grader agrees with the annotators’ consensus/, review: /Inputs ready to run/,
   audit: /declared faults detected/, evaluation: /Resolved|Not resolved|Unassessed/,
   comparison: /regressed/, repetition: /attempt\(s\) resolved/, suite: /job gate\(s\) accepted/,

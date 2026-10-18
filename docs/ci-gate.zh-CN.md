@@ -160,6 +160,26 @@ GitHub Action 对应输入为 `held-out`、`harness`（空格分隔）和 `requi
 不变，因此旧目录仍能验证；加了 `--cases` 的目录需要 0.19.0 或更高版本才能验证。清单中没有任何回归用例时，`--require-regression-suite` 以退出码 2 报错，而不是空检查通过。清单条目按 glob 匹配不到任何用例时，还会匹配 ID 与之完全相同的用例，因此 `test_policy[refund]` 这类 pytest ID 不需要转义 glob 字符。仓库示例可用 `examples/results-diff/inspect/suites.json` 试运行。GitHub Action 对应输入为
 `cases` 和 `require-regression-suite`，输出为 `regression-failures`。
 
+## 误触发与漏触发、fail-to-pass 与影响程度
+
+同一份 `--cases` 清单还可以声明[用例属性](eval-health.zh-CN.md#用例来源)：`expect_action`、`expect_change`、`impact`、
+`owner`，不声明套件也可以。变化的检查会带上所属用例的属性，`diff.json` 新增 `case_attributes`：
+
+- `behavior`：基线与当前的漏触发率（`act` 用例失败）和误触发率（`abstain` 用例失败）。在仓库自带的 Inspect 示例上使用
+  `examples/results-diff/inspect/attributes.json` 时，误触发从 66.7% 降到 33.3%，漏触发却从 0% 升到 25%：这次改动只是
+  移动了阈值，并没有提高判断力。`abstain` 用例的检查少通过时，默认门禁本来就会失败。
+- `blocking_by_impact`：带 `impact` 或 `owner` 的阻断变化，按 `critical`、`high`、`normal`、`low`、未声明排序；
+  门禁判定不受影响程度左右。
+- `expected_changes`：编码智能体的验收约定。`fail_to_pass` 用例在当前运行的每次试验中都成功才算已修复；`pass_to_pass`
+  用例在基线上每次都成功、当前却不再如此（有失败、未评估或缺失的试验，或试验次数变少）即算被破坏。基线上就已通过的
+  `fail_to_pass` 用例（标注可能有误）和基线上未通过的 `pass_to_pass` 用例也会列出。
+
+`--require-f2p`（需要 `--cases`）额外要求所有 `fail_to_pass` 用例都已修复且没有 `pass_to_pass` 用例被破坏，否则门禁
+失败；没有任何 `fail_to_pass` 用例时退出 2。pytest 或 JUnit 的 ID 可以精确匹配，例如
+`evalarc diff examples/results-diff/junit/baseline.xml examples/results-diff/junit/current.xml --cases examples/results-diff/junit/cases.json --require-f2p`：
+大额退款的修复已完成，但另外两个测试被破坏，因此门禁失败。不声明这些字段时，报告和门禁都不变。使用 `--require-f2p`
+写出的目录需要 0.21.0 或更高版本才能验证。
+
 ## 保质降本
 
 评测接近饱和时，有用的改动往往是质量不变、成本更低：更小的模型、更低的思考强度、更短的提示词
