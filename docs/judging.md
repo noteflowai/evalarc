@@ -68,6 +68,24 @@ judge without enough information says so instead of guessing. Unsure answers are
 counted (`unsure` in the result) and excluded from the win rate. Grader packets
 always allow `unsure`.
 
+## Show the transcript to the judge
+
+For agents, whether a failure is fair usually depends on what the agent did,
+not only on its final answer. `judge-packet --include-transcript` copies each
+sampled attempt's recorded Inspect messages into the packet: role, text, and
+tool call names and arguments, plus tool results. Scores, metadata, events and
+usage are never copied, so the packet stays blind; in pairwise packets the
+transcripts follow the hidden A/B order. Tool errors are included. Each message
+is cut at 4,000 characters; whole messages are then added from the start while
+the transcript stays within `--transcript-max-chars` (200–200,000, default
+20,000; each message also counts 40 characters) and at most 200 messages, and
+a final entry counts the messages left out. A packet larger than 256 MiB exits
+2 before anything is written. The reading sheet shows transcripts as
+collapsible sections. Without the flag, packets are unchanged and transcripts
+are not kept in memory. promptfoo results carry no transcripts. In pairwise
+packets, check that system prompts or tool lists do not reveal which revision
+is which.
+
 ## Several annotators: agreement and consensus
 
 A task is well specified when two domain experts reach the same verdict on their

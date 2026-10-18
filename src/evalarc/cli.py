@@ -228,9 +228,16 @@ def parser() -> argparse.ArgumentParser:
     )
     results_diff.add_argument(
         "--cost-metric",
-        choices=("auto", "cost", "tokens", "duration"),
+        choices=("auto", "cost", "tokens", "duration", "turns", "tool_calls"),
         default="auto",
-        help="usage for --max-cost-ratio; auto uses recorded cost, else total tokens",
+        help="usage for --max-cost-ratio; auto uses recorded cost, else total tokens; "
+        "turns and tool_calls need --transcript-metrics",
+    )
+    results_diff.add_argument(
+        "--transcript-metrics",
+        action="store_true",
+        help="Inspect logs: also compare assistant turns, tool calls, messages and error "
+        "retries per attempt from the recorded transcripts",
     )
     results_diff.add_argument(
         "--cases",
@@ -312,6 +319,18 @@ def parser() -> argparse.ArgumentParser:
         type=int,
         metavar="M",
         help="estimate a run over M models or configurations",
+    )
+    health.add_argument(
+        "--transcript-metrics",
+        action="store_true",
+        help="Inspect logs: summarize turns, tool calls and messages per attempt and flag "
+        "attempts stopped by a message, time or other non-token limit (limit_reached)",
+    )
+    health.add_argument(
+        "--cluster-errors",
+        action="store_true",
+        help="group recurring error messages of unassessed attempts and flag one message "
+        "spanning several cases (correlated_errors)",
     )
     health.add_argument("--output", type=Path, help="new folder for health.json and reports")
     health.add_argument("--markdown", type=Path, help="append the summary to this file")
@@ -459,6 +478,19 @@ def parser() -> argparse.ArgumentParser:
         "--allow-unsure",
         action="store_true",
         help="pairwise packets: also allow the answer unsure (excluded from the win rate)",
+    )
+    packet.add_argument(
+        "--include-transcript",
+        action="store_true",
+        help="Inspect logs: show each attempt's recorded messages and tool calls to the "
+        "judge (text only; no scores or metadata)",
+    )
+    packet.add_argument(
+        "--transcript-max-chars",
+        type=int,
+        default=20_000,
+        metavar="N",
+        help="with --include-transcript: characters per transcript (default: 20000)",
     )
     packet.add_argument("--format", choices=RESULT_FORMATS, default="auto")
     packet.add_argument("--threshold", type=float, default=1.0)
@@ -969,6 +1001,8 @@ def _results_diff(args: argparse.Namespace) -> int:
         if manifest is not None:
             # Recorded only when used, so folders without --cases keep earlier params.
             params["require_regression_suite"] = args.require_regression_suite
+        if args.transcript_metrics:
+            params["transcript_metrics"] = True
         result = evidence.compute_diff(runs, params, split, args.harness, manifest)
         if args.output:
             with new_run(args.output) as output:

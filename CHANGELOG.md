@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- `evalarc diff --transcript-metrics` (Inspect) counts each attempt's recorded
+  messages and adds `n_turns` (generated assistant messages), `n_tool_calls`,
+  `n_messages` and `n_error_retries` to `usage`; `--cost-metric turns` and
+  `tool_calls` gate on them with `--max-cost-ratio`. promptfoo and JUnit record
+  none, so they stay unknown. The GitHub Action gains `transcript-metrics` and
+  accepts the new cost metrics.
+- `evalarc eval-health --transcript-metrics` adds per-file `transcripts`
+  (mean and maximum turns, tool calls, messages and error retries) and the
+  warning `limit_reached` for attempts stopped by a message, time or other
+  non-token limit. `--cluster-errors` adds the warning `correlated_errors` when
+  one normalized error message recurs in at least 3 cases of one file
+  (status and exit codes kept; skips not counted).
+- `judge-packet --include-transcript [--transcript-max-chars N]` shows the judge
+  each attempt's recorded messages, tool calls and tool errors (text only; no
+  scores, metadata or usage), following the hidden A/B order in pairwise
+  packets. Packets above 256 MiB now exit 2 before anything is written.
+- Output compatibility: without these options, `diff.json`, `health.json`,
+  packets, `params.json` and the reports are unchanged from 0.20.1, and
+  earlier folders verify. Folders written with them record the option and
+  need this version or later to verify.
 - `evalarc judge-score PACKET VERDICTS...` accepts two or more verdicts files,
   one per annotator. It reports agreement between annotators (per pair: items
   both decided, percent agreement with a 95% interval, Cohen's kappa; overall:

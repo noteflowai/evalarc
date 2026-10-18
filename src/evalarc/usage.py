@@ -20,6 +20,13 @@ METRICS = (
     "duration_seconds",
 )
 COST_METRICS = {"cost": "cost_usd", "tokens": "total_tokens", "duration": "duration_seconds"}
+# Counted from recorded transcripts with --transcript-metrics (Inspect only).
+TRANSCRIPT_METRICS = ("n_turns", "n_tool_calls", "n_messages", "n_error_retries")
+TRANSCRIPT_COST_METRICS = {"turns": "n_turns", "tool_calls": "n_tool_calls"}
+TRANSCRIPT_SCOPE = (
+    " Transcript counts (n_turns = generated assistant messages, n_tool_calls, n_messages, "
+    "n_error_retries) come from Inspect sample messages; promptfoo and JUnit record none."
+)
 USAGE_SCOPE = (
     "Usage is what the source tool recorded per attempt, averaged over cases present in "
     "both runs; missing values stay unknown and are never counted as zero. EvalArc does "
@@ -100,15 +107,31 @@ def junit_usage(case) -> dict:
     return {} if duration is None else {"duration_seconds": duration}
 
 
-def compare_usage(baseline: dict, current: dict) -> dict:
-    """Mean usage per attempt over cases recorded in both runs."""
+def transcript_usage(run: dict) -> dict:
+    """Per case, the transcript counts of each attempt (empty dicts when unrecorded)."""
+    return {
+        case_id: [dict(meta.get("transcript") or {}) for meta in metas]
+        for case_id, metas in (run.get("samples") or {}).items()
+    }
+
+
+def compare_usage(baseline: dict, current: dict, transcripts: bool = False) -> dict:
+    """Mean usage per attempt over cases recorded in both runs.
+
+    ``transcripts`` adds the transcript counts of ``TRANSCRIPT_METRICS``; without it the
+    result is unchanged from earlier releases.
+    """
     matched = sorted(set(baseline["cases"]) & set(current["cases"]))
     metrics = {}
-    for name in METRICS:
-        sides = {
-            label: _side(run.get("usage", {}), matched, name)
-            for label, run in (("baseline", baseline), ("current", current))
-        }
+    sources = {"baseline": baseline.get("usage", {}), "current": current.get("usage", {})}
+    counted = (
+        {"baseline": transcript_usage(baseline), "current": transcript_usage(current)}
+        if transcripts
+        else None
+    )
+    for name in METRICS + (TRANSCRIPT_METRICS if transcripts else ()):
+        table = counted if name in TRANSCRIPT_METRICS else sources
+        sides = {label: _side(table[label], matched, name) for label in ("baseline", "current")}
         if not sides["baseline"]["reported"] and not sides["current"]["reported"]:
             continue
         before, after = sides["baseline"]["mean"], sides["current"]["mean"]
@@ -117,7 +140,13 @@ def compare_usage(baseline: dict, current: dict) -> dict:
             side["reported"] == side["attempts"] for side in (sides["baseline"], sides["current"])
         )
         metrics[name] = sides
-    result = {"matched_cases": len(matched), "metrics": metrics, "scope": USAGE_SCOPE}
+    result = {
+        "matched_cases": len(matched),
+        "metrics": metrics,
+        "scope": USAGE_SCOPE + (TRANSCRIPT_SCOPE if transcripts else ""),
+        # Additive key, present only with --transcript-metrics.
+        **({"transcripts": True} if transcripts else {}),
+    }
     cached, inputs = metrics.get("cached_input_tokens"), metrics.get("input_tokens")
     if cached and inputs:
         # Share of input tokens read from the prompt cache: a main cost driver.
@@ -152,8 +181,25 @@ def cost_gate(usage: dict, metric: str, max_ratio: float) -> dict:
                 "recorded durations"
             )
     else:
-        chosen = COST_METRICS[metric]
-        if not _gateable(usage["metrics"].get(chosen)):
+        if metric in TRANSCRIPT_COST_METRICS and not usage.get("transcripts"):
+            raise ValueError(f"--cost-metric {metric} requires --transcript-metrics")
+        chosen = {**COST_METRICS, **TRANSCRIPT_COST_METRICS}[metric]
+        row = usage["metrics"].get(chosen)
+        if metric in TRANSCRIPT_COST_METRICS and not _gateable(row):
+            sides = (
+                "; ".join(
+                    f"{label} {row[label]['reported']}/{row[label]['attempts']} attempts "
+                    f"recorded, mean {row[label]['mean']}"
+                    for label in ("baseline", "current")
+                )
+                if row
+                else "no attempt recorded a transcript (promptfoo and JUnit record none)"
+            )
+            raise ValueError(
+                f"{chosen} cannot be gated: every matched attempt needs a recorded Inspect "
+                f"transcript and the baseline mean must be above zero ({sides})"
+            )
+        if not _gateable(row):
             raise ValueError(
                 f"{chosen} is not recorded on every attempt of the matched cases in both "
                 "runs, or its baseline mean is zero; the cost gate cannot be assessed"
@@ -176,7 +222,7 @@ def shown(result: dict) -> bool:
     metrics = (result.get("usage") or {}).get("metrics", {})
     return any(
         metrics.get(name) and any(metrics[name][side]["total"] for side in ("baseline", "current"))
-        for name in ("cost_usd", "total_tokens")
+        for name in ("cost_usd", "total_tokens", *TRANSCRIPT_METRICS)
     )
 
 

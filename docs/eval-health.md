@@ -36,10 +36,18 @@ Report: health/index.html
 | `config_not_applied` | warning | an Inspect log requests `reasoning_effort` (other than none/minimal) or `reasoning_tokens`, but every attempt records 0 reasoning tokens | The setting may not have reached the model; check the parameter name, model support and overrides |
 | `model_judge_replaceable` | info | a model-graded check saw at least 10 outputs with at most 10 distinct values, or only JSON | Use an exact match, a fixed label set or a JSON schema check; keep model judges for open-ended outputs |
 | `self_graded` | warning | the model under test is also the judge: a model-graded Inspect scorer without a `model` option or `grader` role, or a promptfoo grading provider equal to the tested provider | Name a separate judge model |
+| `limit_reached` | warning | with `--transcript-metrics`, an Inspect attempt stopped at a message, time, working-time or other non-token limit (token limits and other truncated outputs are `truncated_outputs`) | Raise the limit or shorten the task; a budget cut-off measures the budget. Rerun operator stops |
+| `correlated_errors` | warning | with `--cluster-errors`, one error message recurs in unassessed attempts of at least 3 cases of one file. Numbers, durations, hex IDs, UUIDs and identifiers mixing letters and digits (including model names) are removed; status, exit and HTTP codes (after `code`, `status`, `exit`, `HTTP`, `errno` or before a capitalized reason such as `429 Too Many`) are kept; skips are not counted | Fix the shared cause and rerun; these trials are not independent agent outcomes |
 
 Outputs are compared by SHA-256 of the recorded completion (Inspect
 `output.completion`, promptfoo `response.output`); JUnit records no outputs, so
 grading consistency, truncation and self-grading are not assessed for it.
+
+`--transcript-metrics` also adds `transcripts`: per file, the attempts with a
+recorded Inspect transcript and the mean and maximum assistant turns, tool
+calls, messages and error retries per attempt, shown in both reports. Both
+options are recorded in `params.json` only when used, so earlier folders verify
+unchanged; folders written with them need 0.21.0 or later.
 
 ## Failure triage
 

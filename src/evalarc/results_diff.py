@@ -41,8 +41,14 @@ SAMPLING_NOISE_NOTE = (
 _WILSON_Z = 1.959963984540054
 
 
-def load_results(path: Path, fmt: str = "auto", threshold: float = 1.0) -> dict:
-    """Read one result file into cases -> checks -> attempts."""
+def load_results(
+    path: Path, fmt: str = "auto", threshold: float = 1.0, keep_messages: bool = False
+) -> dict:
+    """Read one result file into cases -> checks -> attempts.
+
+    ``keep_messages`` keeps each Inspect sample's message list on its attempt metadata
+    (for judge-packet --include-transcript); otherwise only small counts are kept.
+    """
     if fmt not in FORMATS:
         raise ValueError(f"unknown format {fmt!r}; choose one of {', '.join(FORMATS)}")
     if not math.isfinite(threshold):
@@ -54,7 +60,7 @@ def load_results(path: Path, fmt: str = "auto", threshold: float = 1.0) -> dict:
     if detected == "junit":
         run = _junit(raw)
     elif detected == "inspect":
-        run = _inspect(_inspect_document(path, raw), threshold)
+        run = _inspect(_inspect_document(path, raw), threshold, keep_messages)
     else:
         run = _promptfoo(_json(raw, path))
     if not run["cases"]:
@@ -447,7 +453,7 @@ def _inspect_document(path: Path, raw: bytes) -> dict:
     return document
 
 
-def _inspect(document: dict, threshold: float) -> dict:
+def _inspect(document: dict, threshold: float, keep_messages: bool = False) -> dict:
     spec = document.get("eval")
     if not isinstance(spec, dict) or not isinstance(document.get("samples"), list):
         raise ValueError("not an Inspect log: expected `eval` and `samples`")
@@ -528,6 +534,13 @@ def _inspect(document: dict, threshold: float) -> dict:
         _add_material(material, case_id, "input", _message_text(sample.get("input")))
         usage.setdefault(case_id, []).append(inspect_usage(sample))
         meta = _inspect_output(sample)
+        messages = sample.get("messages")
+        if isinstance(messages, list):
+            # Kept on the attempt metadata only (never serialized as is): transcript counts
+            # for --transcript-metrics and bounded excerpts for judge-packet.
+            meta["transcript"] = transcript_counts(messages, sample.get("error_retries"))
+            if keep_messages:
+                meta["messages"] = messages
         samples_meta.setdefault(case_id, []).append(meta)
         digest = meta["output_sha256"]
         target = sample.get("target")
@@ -886,6 +899,27 @@ def _output_text(value: object) -> str | None:
     if not isinstance(value, str):
         value = json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
     return value[:MAX_OUTPUT_CHARS]
+
+
+def transcript_counts(messages: list, retries: object = None) -> dict:
+    """Assistant turns, tool calls and messages recorded in one Inspect sample."""
+    turns = calls = 0
+    for message in messages:
+        if not isinstance(message, dict) or message.get("role") != "assistant":
+            continue
+        if message.get("source") == "input":
+            # Few-shot assistant messages from the sample input are not agent turns.
+            continue
+        turns += 1
+        tool_calls = message.get("tool_calls")
+        if isinstance(tool_calls, list):
+            calls += len(tool_calls)
+    counts = {"n_turns": turns, "n_tool_calls": calls, "n_messages": len(messages)}
+    if isinstance(retries, list):
+        counts["n_error_retries"] = len(retries)
+    elif isinstance(retries, int) and not isinstance(retries, bool) and retries >= 0:
+        counts["n_error_retries"] = retries
+    return counts
 
 
 def _inspect_output(sample: dict) -> dict:

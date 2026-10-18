@@ -57,9 +57,14 @@ inputs:
     default: ""
   cost-metric:
     description: >-
-      Usage for max-cost-ratio - auto (recorded cost, else total tokens), cost, tokens or
-      duration.
+      Usage for max-cost-ratio - auto (recorded cost, else total tokens), cost, tokens,
+      duration, or turns and tool_calls (these need transcript-metrics).
     default: auto
+  transcript-metrics:
+    description: >-
+      Inspect logs - also compare assistant turns, tool calls, messages and error retries
+      per attempt from the recorded transcripts.
+    default: "false"
   python:
     description: Python 3.11+ interpreter used to create the action's virtual environment.
     default: python3
@@ -118,6 +123,7 @@ runs:
         COST_METRIC: ${{ inputs.cost-metric }}
         CASES: ${{ inputs.cases }}
         REQUIRE_REGRESSION_SUITE: ${{ inputs.require-regression-suite }}
+        TRANSCRIPT_METRICS: ${{ inputs.transcript-metrics }}
       run: |
         bin="$RUNNER_TEMP/evalarc-action/bin"
         extra=()
@@ -129,6 +135,7 @@ runs:
         if [ "$REQUIRE_GENERALIZATION" = "true" ]; then extra+=(--require-generalization); fi
         if [ -n "$CASES" ]; then extra+=(--cases "$CASES"); fi
         if [ "$REQUIRE_REGRESSION_SUITE" = "true" ]; then extra+=(--require-regression-suite); fi
+        if [ "$TRANSCRIPT_METRICS" = "true" ]; then extra+=(--transcript-metrics); fi
         if [ -n "$MAX_COST_RATIO" ]; then
           extra+=(--max-cost-ratio "$MAX_COST_RATIO" --cost-metric "$COST_METRIC")
         fi

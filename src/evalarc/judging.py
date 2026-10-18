@@ -74,7 +74,12 @@ SCOPE = {
 
 
 def prepare(
-    mode: str, runs: list[dict], sample: int, seed: int, allow_unsure: bool = False
+    mode: str,
+    runs: list[dict],
+    sample: int,
+    seed: int,
+    allow_unsure: bool = False,
+    transcript_chars: int | None = None,
 ) -> tuple[dict, dict]:
     """Return (packet shown to the judge, key kept by the reviewer).
 
@@ -85,6 +90,8 @@ def prepare(
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     if allow_unsure and mode != "pairwise":
         raise ValueError("--allow-unsure applies to pairwise packets; grader packets allow unsure")
+    if transcript_chars is not None and not 200 <= transcript_chars <= MAX_TRANSCRIPT_CHARS:
+        raise ValueError(f"--transcript-max-chars must be 200–{MAX_TRANSCRIPT_CHARS}")
     if not 1 <= sample <= MAX_ITEMS:
         raise ValueError(f"--sample must be 1–{MAX_ITEMS}")
     rng = random.Random(seed)
@@ -116,6 +123,8 @@ def prepare(
         }
         if mode == "grader":
             public |= {"check": candidate["check"], "output": candidate["output"]}
+            if transcript_chars is not None:
+                public["transcript"] = transcript_excerpt(candidate["messages"], transcript_chars)
             hidden[item_id] = {
                 "attempt": candidate["attempt"],
                 "check": candidate["check"],
@@ -129,6 +138,14 @@ def prepare(
                 else (candidate["baseline"], candidate["current"])
             )
             public |= {"output_a": a, "output_b": b}
+            if transcript_chars is not None:
+                first, second = (
+                    (candidate["current_messages"], candidate["baseline_messages"])
+                    if current_is_a
+                    else (candidate["baseline_messages"], candidate["current_messages"])
+                )
+                public["transcript_a"] = transcript_excerpt(first, transcript_chars)
+                public["transcript_b"] = transcript_excerpt(second, transcript_chars)
             hidden[item_id] = {
                 "attempt": candidate["attempt"],
                 "current_is": "A" if current_is_a else "B",
@@ -143,6 +160,11 @@ def prepare(
         "items": items,
     }
     packet_bytes = _canonical(packet)
+    if len(packet_bytes) > MAX_PACKET_BYTES:
+        raise ValueError(
+            f"the packet would be {len(packet_bytes)} bytes, above {MAX_PACKET_BYTES}; lower "
+            "--sample or --transcript-max-chars"
+        )
     key = {
         "schema_version": KEY_SCHEMA,
         "mode": mode,
@@ -186,6 +208,7 @@ def _grader_candidates(run: dict) -> tuple[list[dict], dict]:
                         "input": text_in,
                         "expected": text_expected,
                         "output": meta["output_text"],
+                        "messages": meta.get("messages"),
                     }
                 )
     return candidates, {"without_output": no_output}
@@ -225,9 +248,81 @@ def _pairwise_candidates(baseline: dict, current: dict) -> tuple[list[dict], dic
                     "expected": text_expected,
                     "baseline": old["output_text"],
                     "current": new["output_text"],
+                    "baseline_messages": old.get("messages"),
+                    "current_messages": new.get("messages"),
                 }
             )
     return candidates, {"identical_outputs": identical, "unmatched_attempts": unmatched}
+
+
+MAX_TRANSCRIPT_CHARS = 200_000
+MAX_MESSAGE_CHARS = 4_000
+MAX_TRANSCRIPT_ENTRIES = 200
+# Characters charged per message on top of its text, so empty messages cannot grow the
+# excerpt without bound.
+ENTRY_OVERHEAD = 40
+
+
+def transcript_excerpt(messages: object, max_chars: int) -> list[dict] | None:
+    """Role, text and tool calls of recorded messages, bounded; None when unrecorded.
+
+    Only message text, tool call names and arguments, and tool errors are copied: no
+    scores, metadata, events or model usage, so the packet stays blind. Long messages are
+    cut at ``MAX_MESSAGE_CHARS``. Whole messages are added while the excerpt stays within
+    ``max_chars`` characters (each message also costs ``ENTRY_OVERHEAD``) and at most
+    ``MAX_TRANSCRIPT_ENTRIES`` messages; a final ``excerpt`` entry counts the rest.
+    """
+    if not isinstance(messages, list):
+        return None
+    out, used = [], 0
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        text = _message_text(message.get("content"))[:MAX_MESSAGE_CHARS]
+        entry = {"role": str(message.get("role") or "unknown"), "text": text}
+        calls = []
+        for call in message.get("tool_calls") or []:
+            if isinstance(call, dict):
+                arguments = json.dumps(call.get("arguments"), ensure_ascii=False, sort_keys=True)
+                calls.append(
+                    {
+                        "function": str(call.get("function") or ""),
+                        "arguments": arguments[:MAX_MESSAGE_CHARS],
+                    }
+                )
+        if calls:
+            entry["tool_calls"] = calls
+        if message.get("role") == "tool" and message.get("function"):
+            entry["function"] = str(message["function"])
+        error = message.get("error")
+        if isinstance(error, dict) and error.get("message"):
+            entry["error"] = str(error["message"])[:MAX_MESSAGE_CHARS]
+        size = (
+            ENTRY_OVERHEAD
+            + len(text)
+            + len(entry.get("error", ""))
+            + sum(len(c["function"]) + len(c["arguments"]) for c in calls)
+        )
+        if used + size > max_chars or len(out) >= MAX_TRANSCRIPT_ENTRIES:
+            out.append({"role": "excerpt", "text": f"… {len(messages) - len(out)} more message(s)"})
+            break
+        used += size
+        out.append(entry)
+    return out
+
+
+def _message_text(content: object) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for part in content:
+            if isinstance(part, dict) and isinstance(part.get("text"), str):
+                parts.append(part["text"])
+            elif isinstance(part, dict) and part.get("type"):
+                parts.append(f"[{part['type']}]")
+        return "\n".join(parts)
+    return ""
 
 
 # --- score ------------------------------------------------------------------------
@@ -756,9 +851,18 @@ def render_sheet(packet: dict) -> str:
         ]
         if packet["mode"] == "grader":
             parts.append(f"<h3>Output</h3><pre>{esc(item['output'])}</pre>")
+            if "transcript" in item:
+                parts.append(_sheet_transcript("Transcript", item["transcript"], esc))
         else:
             parts.append(f"<h3>Output A</h3><pre>{esc(item['output_a'])}</pre>")
             parts.append(f"<h3>Output B</h3><pre>{esc(item['output_b'])}</pre>")
+            for side in ("a", "b"):
+                if f"transcript_{side}" in item:
+                    parts.append(
+                        _sheet_transcript(
+                            f"Transcript {side.upper()}", item[f"transcript_{side}"], esc
+                        )
+                    )
         blocks.append("<section>" + "".join(parts) + "</section>")
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -774,6 +878,23 @@ def render_sheet(packet: dict) -> str:
         f"{esc(', '.join(packet['allowed_verdicts']))}. Record them in "
         "<code>verdicts.template.json</code>.</p>" + "".join(blocks) + "</main></body></html>"
     )
+
+
+def _sheet_transcript(title: str, transcript: list | None, esc) -> str:
+    if transcript is None:
+        return f"<h3>{esc(title)}</h3><p>No transcript recorded.</p>"
+    rows = []
+    for entry in transcript:
+        calls = "".join(
+            f"<br><code>{esc(call['function'])}({esc(call['arguments'])})</code>"
+            for call in entry.get("tool_calls") or []
+        )
+        role = entry["role"] + (f" · {entry['function']}" if entry.get("function") else "")
+        error = f"<p>Tool error: {esc(entry['error'])}</p>" if entry.get("error") else ""
+        rows.append(
+            f"<li><strong>{esc(role)}</strong><pre>{esc(entry['text'])}</pre>{calls}{error}</li>"
+        )
+    return f"<details><summary>{esc(title)}</summary><ol>{''.join(rows)}</ol></details>"
 
 
 def render_markdown(result: dict) -> str:
@@ -1068,9 +1189,18 @@ def prepare_command(args) -> int:
     from evalarc.evaluate import write_json
 
     try:
-        runs = [load_results(path, args.format, args.threshold) for path in args.results]
+        keep = bool(getattr(args, "include_transcript", False))
+        runs = [
+            load_results(path, args.format, args.threshold, keep_messages=keep)
+            for path in args.results
+        ]
         packet, key = prepare(
-            args.mode, runs, args.sample, args.seed, getattr(args, "allow_unsure", False)
+            args.mode,
+            runs,
+            args.sample,
+            args.seed,
+            getattr(args, "allow_unsure", False),
+            args.transcript_max_chars if getattr(args, "include_transcript", False) else None,
         )
         with new_run(args.output) as output:
             share = output / "share"

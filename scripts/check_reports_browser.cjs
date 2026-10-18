@@ -27,7 +27,7 @@ run("diff", `${inspect}/baseline.json`, `${inspect}/current.json`, "--held-out",
 run("diff", `${inspect}/baseline.json`, `${inspect}/current.json`, "--cases", `${inspect}/suites.json`,
     "--require-regression-suite", "--output", `${runs}/suites`);
 run("eval-health", `${inspect}/baseline.json`, `${inspect}/current.json`, "--cases", `${inspect}/cases.json`,
-    "--min-effect", "0.05", "--output", `${runs}/health`);
+    "--min-effect", "0.05", "--transcript-metrics", "--cluster-errors", "--output", `${runs}/health`);
 const steps = fs.readdirSync(`${climb}/results`).sort().map(name => `${climb}/results/${name}`);
 run("hillclimb-review", ...steps, "--held-out", `${climb}/split.json`, "--objective", "cost", "--output", `${runs}/climb`);
 run("judge-packet", "grader", `${inspect}/current.json`, "--sample", "6", "--output", `${out}/spot`);
