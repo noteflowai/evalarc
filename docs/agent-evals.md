@@ -3,8 +3,9 @@
 Anthropic's engineering article
 [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
 (January 9, 2026) describes how teams build agent evaluations they can trust.
-This page maps each of its recommendations to the EvalArc command, finding or
-field that applies it, and says plainly which parts EvalArc does not cover.
+This page maps its recommendations to the EvalArc command, finding or field
+that applies each, marks partial support, and says plainly which parts EvalArc
+does not cover.
 EvalArc is an offline review layer: it reads results your evaluation harness
 already wrote (Inspect AI, promptfoo, JUnit, AgentCore, ATIF) and runs three
 built-in task packs. It does not call models, simulate users, drive browsers or
@@ -17,7 +18,7 @@ monitor production. [中文](agent-evals.zh-CN.md).
 | Task (problem, test case) | Case; a task pack for built-ins | One line of `cases.jsonl`, one Inspect sample, one promptfoo test, one JUnit testcase |
 | Trial | Attempt (Inspect epoch, promptfoo repeat, repeated testcase) | A case-level trial succeeds only when every check passed ([trials](eval-health.md#case-level-trials-passk-and-passk)) |
 | Grader with assertions | Check (scorer, assertion, testcase result) | `diff` compares each case and check separately |
-| Transcript (trace, trajectory) | Recorded messages, trace or `trace.jsonl` | Inspect messages with `--transcript-metrics` / `--include-transcript`; built-in packs keep the full trace |
+| Transcript (trace, trajectory) | Recorded messages; the per-case `trace` in `evaluation.json` | Inspect messages with `--transcript-metrics` / `--include-transcript`; the support and robot packs record each case's actions and state changes; the coding pack evaluates finished artifacts and records only a transcript hash |
 | Outcome | Final state checked by the host | Built-in verifiers read host-owned state; a claimed success has no scoring authority |
 | Evaluation harness | The tool that wrote the results; `evaluate`, `repeat`, `suite` for built-ins | EvalArc reads its output |
 | Agent harness (scaffold) | Prompt, skill and tool files given to `--harness` | Scanned for leaked case text; edited by `hillclimb-run` within `allow` |
@@ -33,12 +34,15 @@ monitor production. [中文](agent-evals.zh-CN.md).
 | Binary tests: fail-to-pass, pass-to-pass | `expect_change` in the case manifest; `diff --cases --require-f2p` ([ci-gate](ci-gate.md#over--and-undertriggering-fail-to-pass-and-impact)) |
 | Static analysis: lint, type, security | One stable test per analyzer, compared with `diff` ([recipe](../examples/static-analysis/README.md)) |
 | Outcome verification | Built-in packs grade host-owned final state; [behavior review](https://noteflowai.github.io/evalarc/behavior-audit/index.html) checks actual service submissions |
-| Tool-call verification | Built-in support trace; imported runs: tool-call counts with `--transcript-metrics`. See [grade outcomes, not paths](#grade-outcomes-not-paths) |
+| Tool-call verification | Partial. The support pack's host verifier checks the tool effects that matter (notes, closure, idempotency); imported runs get only tool-call counts with `--transcript-metrics`, not which tools or parameters. See [grade outcomes, not paths](#grade-outcomes-not-paths) |
 | Transcript analysis: turns, tokens | `usage` in `diff`; `--transcript-metrics` adds turns, tool calls, messages and error retries, gateable with `--cost-metric turns` |
+| Rubric scoring, natural-language assertions, reference-based judging | Not built in: EvalArc does not run rubric graders. It imports their verdicts (Inspect `model_graded_*`, promptfoo `llm-rubric`, `g-eval` and similar) and checks them below; `judge-run` runs your judge command over a blind packet, which includes the expected answer as a reference |
+| One isolated judge per dimension | Not enforced: each check is judged and reported on its own, but EvalArc cannot see whether one judge call graded several dimensions |
 | Model-based graders and their calibration | `eval-health` flags `self_graded` and `model_judge_replaceable`; `judge-packet grader` measures a grader against blind human or model judgments ([judging](judging.md)) |
 | Multi-judge consensus, inter-annotator agreement | `judge-score PACKET A.json B.json C.json`: pairwise and Fleiss' kappa, majority or unanimous consensus, `--min-annotator-agreement` |
 | Pairwise comparison, A/B | `judge-packet pairwise` with randomized hidden order and position-bias detection |
 | Give the judge a way out ("Unknown") | `unsure` in grader packets; `--allow-unsure` in pairwise packets |
+| SME review, crowdsourced judgment | Measurement only: `judge-score` scores any number of annotators' verdict files; finding and paying them is yours |
 | Weighted, binary or hybrid scoring | Built-in weighted dimensions plus full resolution; TOML suite gates ([suites](suites.md)) |
 
 ### Capability, regression and non-determinism
@@ -47,7 +51,7 @@ monitor production. [中文](agent-evals.zh-CN.md).
 | --- | --- |
 | Capability evals start low; regression evals stay near 100% | `"suite": "capability"` / `"regression"` per case; `regression_case_failing`, `diff --require-regression-suite`, `hillclimb` rollback on a broken regression case |
 | Graduate saturated capability cases | `graduation_candidates` |
-| pass@k and pass^k | Unbiased estimators per file and per suite in `eval-health` and `diff --cases` |
+| pass@k and pass^k | Unbiased estimators per file in `eval-health`, and per suite in `eval-health --cases` and `diff --cases` when the manifest declares suites |
 | Changes within noise | 95% Wilson intervals, `within_sampling_noise`, `noise_exceeds_min_effect`, `--min-effect` |
 
 ### Building the task set
@@ -66,13 +70,14 @@ monitor production. [中文](agent-evals.zh-CN.md).
 
 | Recommendation | In EvalArc |
 | --- | --- |
-| Isolated, clean environment per trial | Built-in Docker runs ([isolation checklist](#trial-isolation-checklist)); `--cluster-errors` flags correlated infrastructure failures |
+| The evaluated agent behaves like the production agent | Not checked: compare the recorded configuration (`config_not_applied` catches only a requested thinking setting that left no reasoning tokens) |
+| Isolated, clean environment per trial | Built-in Docker runs ([isolation checklist](#trial-isolation-checklist)); `--cluster-errors` flags one error message shared by unassessed attempts of many cases |
 | Deterministic graders where possible | `model_judge_replaceable`, `inconsistent_grading` |
 | Partial credit | Built-in weighted score separate from full resolution |
 | Bugs in tasks and graders | `capability_inversion`, `always_failing`, `reference_fails`, `limit_reached`, `truncated_outputs`, `config_not_applied` |
 | Graders resistant to hacks | Built-in graders run outside the candidate; audits with declared faults; `--harness` leakage scan; `hillclimb-run` pasted-case rollback |
 | Read the transcripts | `eval-health --output` writes `cases.jsonl` and an index of outputs; `judge-packet --include-transcript`; built-in case explorer |
-| Saturation | `saturated`, `graduation_candidates` |
+| Saturation; problems hard enough for the model | `saturated`, `graduation_candidates`; making harder tasks is yours |
 | Open contribution of tasks | [Contribute cases by pull request](#contribute-cases-by-pull-request) |
 | Eval-driven development and tuning | `hillclimb-run` / `hillclimb-review` with held-out cases and rollback rules |
 
@@ -107,9 +112,12 @@ mount, CPU, memory and PID limits, a fresh state directory per case; see
 - Caches, scratch folders and databases are reset or per trial.
 - The agent cannot read the grader, the expected answers or other trials' outputs.
 - Resource limits are high enough not to fail trials; use
-  `eval-health --cluster-errors` to see whether failures share one cause.
-- Trials of one case use the same budget and configuration; `config_not_applied`
-  and `limit_reached` catch some mismatches.
+  `eval-health --cluster-errors` to see whether errored or skipped attempts
+  share one error message.
+- Trials of one case use the same budget and configuration. EvalArc sees only
+  part of this: `limit_reached` flags attempts stopped by a message or time
+  limit, and `config_not_applied` a requested thinking setting with no
+  reasoning tokens.
 
 Correlated trials make pass^k, intervals and noise estimates optimistic. EvalArc
 cannot verify isolation in an external harness; these checks are yours.
@@ -117,15 +125,18 @@ cannot verify isolation in an external harness; these checks are yours.
 ## Contribute cases by pull request
 
 People closest to users (product managers, support, sales) can add cases
-without touching the harness. Keep cases in `cases.jsonl` and review every
-change in CI:
+without touching the harness or grader code. Keep cases in `cases.jsonl`. A
+contributor adds a line, runs `evalarc review-inputs evals/cases.jsonl
+--prompt evals/prompt.md --write-manifest evals/cases.manifest.json` locally and
+commits both files; CI reviews every change (this needs EvalArc 0.21.0 or later,
+which adds `--prompt`):
 
 ```yaml
 # .github/workflows/eval-cases.yml
 name: Review eval cases
 on:
   pull_request:
-    paths: ["evals/cases.jsonl", "evals/prompt.md"]
+    paths: ["evals/cases.jsonl", "evals/cases.manifest.json", "evals/prompt.md"]
 permissions:
   contents: read
 jobs:
@@ -141,19 +152,25 @@ jobs:
           evalarc review-inputs evals/cases.jsonl --prompt evals/prompt.md
           --write-manifest evals/cases.manifest.json --output review --require-clean
       - run: git diff --exit-code evals/cases.manifest.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: case-review
+          path: review/
 ```
 
 The job fails on an invalid case (exit 2), on any review warning (exit 1:
 for example unstated requirements, one-sided behavior, duplicate inputs, no
 held-out cases or no real-world sources)
-and when the committed manifest is stale. Pin the version, and give reviewers
-the `review/index.html` artifact to read each new case.
+and when the committed manifest was not regenerated. Reviewers open
+`index.html` from the `case-review` artifact, uploaded even when the review
+fails, to read each new case.
 
 ## What EvalArc does not cover
 
 | Article layer | Status |
 | --- | --- |
-| Automated evals before release and in CI | Covered for recorded results and built-in packs |
+| Automated evals before release and in CI | Gating and review of recorded results and the built-in packs; running your agent is your harness's job |
 | Manual transcript review | Supported: blind packets, transcripts, case explorer; the reading is yours |
 | Systematic human studies | Measurement only (`judge-score` agreement); recruiting and training raters is yours |
 | A/B tests with real traffic | Not covered; `judge-packet pairwise` is an offline preference check, not a live experiment |

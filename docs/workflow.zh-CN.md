@@ -56,6 +56,10 @@ evalarc compare runs/baseline/evaluation.json runs/current/evaluation.json \
 比较目录附带前后两份完整证据。没有回归只表示已观察到的检查没有退步，
 并不等于所有任务都已完成。校验 JSON 一致性也不能证明数据提供者可信。
 
+## 来自其他评测框架的结果
+
+EvalArc 只在内置 Docker 后端隔离各次试验。采信其他评测框架写出的结果之前，请逐项检查[试验隔离清单](agent-evals.zh-CN.md#试验隔离清单)。
+
 ## 保留每次运行的证据
 
 `evaluate`、`audit`、`compare` 必须使用新的输出目录；即使目录为空也不覆盖。

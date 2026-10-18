@@ -37,8 +37,8 @@ Python 3.11+ · Linux for local workflows · no third-party Python runtime depen
 
 The [homepage](https://noteflowai.github.io/evalarc/) compares the recorded model upgrade before you enter the full lab. Switch generation seeds, open that exact output, or save a result image with the comparison scope. The full model review keeps the selected case and seed in its URL.
 
-Product direction and acceptance milestones: [Roadmap](ROADMAP.md). How each
-recommendation of Anthropic's *Demystifying evals for AI agents* maps to EvalArc,
+Product direction and acceptance milestones: [Roadmap](ROADMAP.md). How the
+recommendations of Anthropic's *Demystifying evals for AI agents* map to EvalArc,
 and what it does not cover: [Agent evaluations, mapped](docs/agent-evals.md).
 
 ## Review a real model upgrade

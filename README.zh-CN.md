@@ -69,7 +69,7 @@ PyPI 与 GitHub Releases 提供相同的 wheel 和源码包，也支持
 
 ## 用于自己的工作
 
-Anthropic《Demystifying evals for AI agents》的每条建议在 EvalArc 中如何落实、哪些不覆盖，见
+Anthropic《Demystifying evals for AI agents》的建议在 EvalArc 中如何落实、哪些不覆盖，见
 [Agent 评测逐条对照](docs/agent-evals.zh-CN.md)。
 
 | 已有材料 | 可以检查什么 | 入口 |

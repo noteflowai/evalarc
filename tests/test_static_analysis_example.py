@@ -1,5 +1,6 @@
 """The documented static-analysis recipe: stable analyzer checks gate with evalarc diff."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -35,6 +36,8 @@ def report(tmp_path, name, source):
         text=True,
         timeout=300,
         cwd=EXAMPLE.parent,
+        # Keep bytecode out of the source tree; everything else is written under tmp_path.
+        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
     )
     return xml
 

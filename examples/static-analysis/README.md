@@ -19,7 +19,10 @@ revision, and an analyzer that is not installed is skipped on both sides (`mypy`
 generated folders in CI.
 
 Feeding a linter's own JUnit output (`ruff check --output-format junit`) to `evalarc
-diff` does not work: it lists only violations, keyed by file paths that change between
-runs, so a new violation is an added check, which does not block, and a fixed one is a
-removed check, which does. Keep one stable check per analyzer instead, or run the
-analyzer as an `eval-init` `command` check.
+diff` does not work as a gate. Its testcases are keyed by rule and absolute file path,
+not by violation. A second violation of a rule that already fires in the same file is
+only another failing attempt of the same check, so the gate misses it; moving the code
+to another folder, or fixing the last violation of a rule (which removes its testcase),
+fails the gate without any new problem. Keep one
+stable check per analyzer instead, or run the analyzer as an `eval-init` `command`
+check.
