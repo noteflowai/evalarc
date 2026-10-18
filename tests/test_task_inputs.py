@@ -249,3 +249,50 @@ def test_valid_regex_and_fuzzy_cases_load(tmp_path):
         + "\n"
     )
     assert [case["check"] for case in load_cases(path)] == ["regex", "fuzzy"]
+
+
+def test_unassessed_reference_attempts_are_not_broken_tasks(tmp_path):
+    document = json.loads((INSPECT / "current.json").read_text())
+    for sample in document["samples"]:
+        for score in sample["scores"].values():
+            score["value"] = "C"
+        if sample["id"] == "cancel-pending" and sample["epoch"] == 2:
+            sample.pop("scores")
+            sample["error"] = {"message": "sandbox crashed"}
+    (tmp_path / "ref.json").write_text(json.dumps(document))
+    result = health(runs(), reference_run=load_results(tmp_path / "ref.json"))
+    ids = {f["id"] for f in result["findings"]}
+    assert "reference_fails" not in ids and "reference_unassessed" in ids
+    triage = {row["case_id"]: row["category"] for row in result["triage"]}
+    assert triage["cancel-pending"] != "task_or_grader_broken"
+
+
+def test_a_reference_with_no_shared_cases_is_rejected(tmp_path):
+    document = json.loads((INSPECT / "current.json").read_text())
+    for sample in document["samples"]:
+        sample["id"] = "other-" + str(sample["id"])
+    (tmp_path / "ref.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="shares no case IDs"):
+        health(runs(), reference_run=load_results(tmp_path / "ref.json"))
+
+
+def test_cjk_terms_inside_sentences_count_as_stated():
+    case = {
+        "id": "z",
+        "input": "请把工单分类为退款或换货",
+        "check": "label",
+        "labels": ["退款", "换货"],
+        "expected": "退款",
+        "source": "manual",
+    }
+    assert unstated_requirements([case], "") == []
+    missing = {**case, "input": "请分类"}
+    assert unstated_requirements([missing], "")[0]["missing"] == ["退款", "换货"]
+    japanese = {**case, "input": "返金してください", "labels": ["返金", "交換"], "expected": "返金"}
+    assert unstated_requirements([japanese], "")[0]["missing"] == ["交換"]
+
+
+def test_regex_rejects_rather_than_truncates_long_outputs(grader):
+    long = "1" * 100_001
+    passed, why = grader.grade({"check": "regex", "expected": r"\d+"}, long)
+    assert not passed and "longer than" in why

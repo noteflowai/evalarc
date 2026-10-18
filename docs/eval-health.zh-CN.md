@@ -60,8 +60,9 @@ assistant 轮次、工具调用、消息数和错误重试的均值与最大值�
 模型来说，始终不通过的检查更常见的原因是任务本身有问题，而不是能力不足。用参考解（返回期望答案的求解器、参考实现
 或可信配置）把同一评测跑一次，再把结果文件交给 `--reference`：
 `evalarc eval-health baseline.json current.json --reference reference.json --output health`。
-参考解在任一尝试中未通过的检查报 `reference_fails` 警告，并在失败分类中优先归为 `task_or_grader_broken`；记录中有、
-参考解却缺失的用例提示 `reference_incomplete`。`health.json` 新增 `reference`（文件标识、未通过的检查和缺失用例）。
+参考解经过评分却未通过的检查报 `reference_fails` 警告，并在失败分类中优先归为 `task_or_grader_broken`；参考解中
+出错或被跳过的尝试只提示 `reference_unassessed`，不算作任务有问题；记录中有、参考解却缺失的用例提示
+`reference_incomplete`；参考解与结果没有任何相同的用例 ID 时退出 2。`health.json` 新增 `reference`（文件标识、未通过的检查和缺失用例）。
 参考解必须与结果格式相同（Inspect 还要求任务名相同），且不能是结果文件之一；它会复制到输出目录，`evalarc verify`
 据此重算。不加 `--reference` 时报告不变；加了该选项写出的目录需要 0.21.0 或更高版本才能验证。
 

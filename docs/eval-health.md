@@ -37,6 +37,8 @@ Report: health/index.html
 | `model_judge_replaceable` | info | a model-graded check saw at least 10 outputs with at most 10 distinct values, or only JSON | Use an exact match, a fixed label set or a JSON schema check; keep model judges for open-ended outputs |
 | `self_graded` | warning | the model under test is also the judge: a model-graded Inspect scorer without a `model` option or `grader` role, or a promptfoo grading provider equal to the tested provider | Name a separate judge model |
 | `limit_reached` | warning | with `--transcript-metrics`, an Inspect attempt stopped at a message, time, working-time or other non-token limit (token limits and other truncated outputs are `truncated_outputs`) | Raise the limit or shorten the task; a budget cut-off measures the budget. Rerun operator stops |
+| `reference_fails` | warning | with `--reference`, the reference solution was graded and failed a check | Fix the task wording, grader or reference ([reference solution](#reference-solution)) |
+| `reference_unassessed`, `reference_incomplete` | info | with `--reference`, reference attempts errored or were skipped, or cases are missing from the reference | Complete the reference run |
 | `correlated_errors` | warning | with `--cluster-errors`, one error message recurs in unassessed attempts of at least 3 cases of one file. Numbers, durations, hex IDs, UUIDs and identifiers mixing letters and digits (including model names) are removed; status, exit and HTTP codes (after `code`, `status`, `exit`, `HTTP`, `errno` or before a capitalized reason such as `429 Too Many`) are kept; skips are not counted | Fix the shared cause and rerun; these trials are not independent agent outcomes |
 
 Outputs are compared by SHA-256 of the recorded completion (Inspect
@@ -80,10 +82,14 @@ trusted configuration) and pass its result file:
 evalarc eval-health baseline.json current.json --reference reference.json --output health
 ```
 
-- `reference_fails` (warning): checks of recorded cases that do not pass on
-  every attempt of the reference. They are triaged `task_or_grader_broken`
-  ahead of any agent-related category.
+- `reference_fails` (warning): checks of recorded cases that the reference
+  was graded on and failed. They are triaged `task_or_grader_broken` ahead of
+  any agent-related category.
+- `reference_unassessed` (info): reference checks with errored or skipped
+  attempts. They say nothing about the task, so they are neither reported as
+  broken nor triaged as such; fix the reference run.
 - `reference_incomplete` (info): recorded cases missing from the reference.
+  A reference that shares no case IDs with the results exits 2.
 - `health.json` gains `reference` (its file identity, failing checks and
   missing cases). The reference must use the same format and, for Inspect,
   task; it may not be one of the result files. It is copied to the output

@@ -341,8 +341,22 @@ def required_terms(case: dict) -> list[str]:
 
 
 def _mentioned(term: str, text: str) -> bool:
-    pattern = r"(?<![\w])" + re.escape(" ".join(term.casefold().split())) + r"(?![\w])"
-    return re.search(pattern, text) is not None
+    """Whole-word match where words are spaced; plain substring for CJK and similar scripts.
+
+    The boundary applies only at an edge that is an ASCII letter, digit or underscore, so
+    "general" is not stated by "generalized", while a Chinese or Japanese label inside a
+    sentence (no spaces) still counts.
+    """
+    needle = " ".join(term.casefold().split())
+    if not needle:
+        return True
+    start = r"(?<![A-Za-z0-9_])" if _ascii_word(needle[0]) else ""
+    end = r"(?![A-Za-z0-9_])" if _ascii_word(needle[-1]) else ""
+    return re.search(start + re.escape(needle) + end, text) is not None
+
+
+def _ascii_word(char: str) -> bool:
+    return char.isascii() and (char.isalnum() or char == "_")
 
 
 def unstated_requirements(cases: list[dict], prompt_text: str) -> list[dict]:

@@ -466,10 +466,22 @@ def health(
                     "warning",
                     f"{len(reference_view['failing'])} check(s) in "
                     f"{len({row['case_id'] for row in reference_view['failing']})} case(s) do "
-                    "not pass on every attempt of the reference solution. A task that a known "
-                    "good solution cannot pass is broken: fix the task wording, the grader or "
+                    "not pass on every graded attempt of the reference solution. A task that "
+                    "a known good solution cannot pass is broken: fix the task wording, the "
+                    "grader or "
                     "the reference before reading these failures as missing capability.",
                     items=reference_view["failing"],
+                )
+            )
+        if reference_view["unassessed"]:
+            findings.append(
+                _finding(
+                    "reference_unassessed",
+                    "info",
+                    f"{len(reference_view['unassessed'])} reference check(s) have errored or "
+                    "skipped attempts; fix the reference run so they show whether the task is "
+                    "solvable.",
+                    items=reference_view["unassessed"],
                 )
             )
         if reference_view["missing_cases"]:
@@ -1092,25 +1104,27 @@ def _reference(reference: dict, runs: list[dict]) -> tuple[dict, set]:
     if task is not None and tasks and task not in tasks:
         raise ValueError(f"the reference is for task {task!r}, the results for {sorted(tasks)}")
     cases = combined_cases(runs)
-    failing, broken = [], set()
-    for case_id in sorted(cases & set(reference["cases"])):
+    shared = cases & set(reference["cases"])
+    if not shared:
+        raise ValueError("the reference shares no case IDs with the results; is it the same eval?")
+    failing, unassessed, broken = [], [], set()
+    for case_id in sorted(shared):
         for check, attempts in sorted(reference["cases"][case_id].items()):
             tally = _tally(attempts)
-            if tally["passed"] < tally["attempts"]:
+            row = {"file": reference["source"]["name"], "case_id": case_id, "check": check, **tally}
+            if tally["passed"] < tally["assessed"]:
+                # The known-good solution was graded and failed: the task or grader is wrong.
                 broken.add((case_id, check))
-                failing.append(
-                    {
-                        "file": reference["source"]["name"],
-                        "case_id": case_id,
-                        "check": check,
-                        **tally,
-                    }
-                )
+                failing.append(row)
+            elif tally["assessed"] < tally["attempts"]:
+                # Errors and skips in the reference run say nothing about the task.
+                unassessed.append(row)
     return (
         {
             "source": reference["source"],
-            "cases": len(cases & set(reference["cases"])),
+            "cases": len(shared),
             "failing": failing,
+            "unassessed": unassessed,
             "missing_cases": sorted(cases - set(reference["cases"])),
         },
         broken,

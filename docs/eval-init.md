@@ -71,7 +71,9 @@ and the case table gains a Suite column. When `eval-health` lists
 `regex` passes when the whole stripped output matches the pattern in
 `expected` (Python `re.fullmatch`; add `.*` to allow surrounding text).
 `review-inputs` rejects patterns that do not compile or are longer than 1,000
-characters; patterns run on your evaluation host, so keep them simple. `fuzzy`
+characters. An output longer than 100,000 characters fails the check rather
+than being cut. Python regular expressions have no timeout, so keep patterns
+simple (avoid nested repetition such as `(a+)+`). `fuzzy`
 passes when difflib's similarity ratio between the output and `expected`,
 ignoring case and repeated whitespace, is at least `min_ratio`. Both tolerate
 valid variation better than `exact` and stay deterministic; use a model judge
@@ -80,8 +82,11 @@ only when even these are too rigid.
 `--prompt FILE...` names the prompt, skill or tool-description files the agent
 sees. Everything the grader checks should be stated in the task: a case graded
 with `label` needs every allowed label, `json_keys` every key, and
-`json_schema` every required key and string enum value, mentioned as a whole
-word in those files or in the case input (ignoring case). Otherwise the review
+`json_schema` every required key and string enum value, mentioned in those
+files or in the case input (ignoring case). Terms that start or end with an
+ASCII letter, digit or underscore must appear as whole words, so `general` is
+not stated by `generalized`; Chinese, Japanese or Korean terms count anywhere in
+the text, since those scripts do not separate words with spaces. Otherwise the review
 reports `unstated_requirement` (warning) naming the case and missing terms; an
 agent that follows the instructions could not know them. The expected answer
 itself is not required (that would leak it), and `exact`, `contains`, `regex`,

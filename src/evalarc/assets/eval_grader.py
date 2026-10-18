@@ -44,9 +44,12 @@ def grade(case: dict, output: str) -> tuple[bool, str]:
             return False, f"{text!r} is not one of {labels}"
         return text == expected, f"expected label {expected!r}"
     if check == "regex":
-        # Patterns come from cases.jsonl, which you author; the input length is capped so
-        # a slow pattern cannot stall the run on a very long output.
-        matched = re.fullmatch(expected, text[:MAX_REGEX_INPUT], re.DOTALL) is not None
+        # Patterns come from cases.jsonl, which you author: keep them simple, since Python
+        # regular expressions have no timeout. An output over the cap fails rather than
+        # being cut, so a truncated output can never pass.
+        if len(text) > MAX_REGEX_INPUT:
+            return False, f"output longer than {MAX_REGEX_INPUT} characters"
+        matched = re.fullmatch(expected, text, re.DOTALL) is not None
         return matched, f"expected to match {expected!r}"
     if check == "fuzzy":
         threshold = case.get("min_ratio", 0.9)
