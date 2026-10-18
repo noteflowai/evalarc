@@ -169,7 +169,9 @@ def diff_passed(result: dict) -> bool:
     )
 
 
-def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dict:
+def compute_health(
+    runs: list[dict], params: dict, manifest: dict | None, reference: dict | None = None
+) -> dict:
     from evalarc.eval_health import health, plan
 
     # Absent from params.json written before trial metrics existed.
@@ -187,6 +189,7 @@ def compute_health(runs: list[dict], params: dict, manifest: dict | None) -> dic
         params["ordered"],
         manifest,
         trial_metrics=trial_metrics,
+        reference_run=reference,
         **extra,
     )
     if params["plan_attempts"] is not None or params["plan_configs"] is not None:
@@ -360,7 +363,12 @@ def verify_report(directory: Path) -> dict:
             read(params["cases"])
             manifest = load_manifest(directory / params["cases"])
             manifest["source"]["name"] = recorded["provenance"]["manifest"]["name"]
-        computed = compute_health(runs, params, manifest)
+        reference = None
+        if params.get("reference"):
+            if not isinstance(recorded.get("reference"), dict):
+                raise ValueError("health.json lacks the reference that params.json records")
+            reference = loaded(params["reference"], recorded["reference"]["source"], fmt, threshold)
+        computed = compute_health(runs, params, manifest, reference)
         passed = computed["healthy"]
         summary = {"healthy": passed, "warnings": computed["warnings"]}
     else:

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -33,9 +34,11 @@ CASE_FIELDS = {
     "expect_change",
     "impact",
     "owner",
+    "min_ratio",
 }
 ATTRIBUTE_FIELDS = ("expect_action", "expect_change", "impact", "owner")
-CHECKS = ("exact", "contains", "label", "json_keys", "json_schema", "command")
+CHECKS = ("exact", "contains", "label", "regex", "fuzzy", "json_keys", "json_schema", "command")
+MAX_PATTERN_CHARS = 1_000
 SCHEMA_TYPES = {"object", "array", "string", "number", "integer", "boolean", "null"}
 MAX_CASES_BYTES = 16 * 1024 * 1024
 MAX_CASES = 10_000
@@ -186,6 +189,19 @@ def load_cases(path: Path) -> list[dict]:
                 raise ValueError(f"{where} json_keys needs expected as a list of key names")
         elif not isinstance(expected, str) or not expected:
             raise ValueError(f"{where} needs a non-empty string expected")
+        if case["check"] == "regex":
+            if len(expected) > MAX_PATTERN_CHARS:
+                raise ValueError(f"{where} regex expected is longer than {MAX_PATTERN_CHARS}")
+            try:
+                re.compile(expected)
+            except re.error as error:
+                raise ValueError(f"{where} regex expected does not compile: {error}") from None
+        if "min_ratio" in case:
+            ratio = case["min_ratio"]
+            if case["check"] != "fuzzy":
+                raise ValueError(f"{where} min_ratio applies to fuzzy checks")
+            if isinstance(ratio, bool) or not isinstance(ratio, (int, float)) or not 0 < ratio <= 1:
+                raise ValueError(f"{where} min_ratio must be a number in (0, 1]")
         if case["check"] == "label":
             labels = case.get("labels")
             if not isinstance(labels, list) or len(labels) < 2 or expected not in labels:
@@ -295,7 +311,78 @@ def manifest_document(cases: list[dict]) -> dict:
     return {"schema_version": provenance.SCHEMA, "cases": entries}
 
 
-def review(cases: list[dict], source: dict) -> dict:
+def required_terms(case: dict) -> list[str]:
+    """Words the grader requires in the output format that the agent must be told about.
+
+    label: every allowed label; json_keys: every key; json_schema: required keys and
+    string enum values at any depth. The expected answer itself is not a requirement to
+    state (that would leak it); exact, contains, regex, fuzzy and command are not checked.
+    """
+    check, expected = case["check"], case.get("expected")
+    if check == "label":
+        return list(case.get("labels") or [])
+    if check == "json_keys":
+        return list(expected or [])
+    if check == "json_schema":
+        terms: list[str] = []
+
+        def walk(schema: object) -> None:
+            if not isinstance(schema, dict):
+                return
+            terms.extend(key for key in schema.get("required") or [] if isinstance(key, str))
+            terms.extend(item for item in schema.get("enum") or [] if isinstance(item, str))
+            for sub in (schema.get("properties") or {}).values():
+                walk(sub)
+            walk(schema.get("items"))
+
+        walk(expected)
+        return list(dict.fromkeys(terms))
+    return []
+
+
+def _mentioned(term: str, text: str) -> bool:
+    """Whole-word match where words are spaced; plain substring for CJK and similar scripts.
+
+    The boundary applies only at an edge that is an ASCII letter, digit or underscore, so
+    "general" is not stated by "generalized", while a Chinese or Japanese label inside a
+    sentence (no spaces) still counts.
+    """
+    needle = " ".join(term.casefold().split())
+    if not needle:
+        return True
+    start = r"(?<![A-Za-z0-9_])" if _ascii_word(needle[0]) else ""
+    end = r"(?![A-Za-z0-9_])" if _ascii_word(needle[-1]) else ""
+    return re.search(start + re.escape(needle) + end, text) is not None
+
+
+def _ascii_word(char: str) -> bool:
+    return char.isascii() and (char.isalnum() or char == "_")
+
+
+def unstated_requirements(cases: list[dict], prompt_text: str) -> list[dict]:
+    """Per case, the required terms that neither the prompt files nor its input mention."""
+    shared = " ".join(prompt_text.casefold().split())
+    items = []
+    for case in cases:
+        terms = required_terms(case)
+        if not terms:
+            continue
+        text = shared + " " + " ".join(case["input"].casefold().split())
+        missing = [term for term in terms if not _mentioned(term, text)]
+        if missing:
+            items.append(
+                {
+                    "case_id": case["id"],
+                    "check": case["check"],
+                    "missing": missing,
+                    "detail": "not mentioned: " + ", ".join(missing[:10]),
+                }
+            )
+    return items
+
+
+def review(cases: list[dict], source: dict, prompts: list[dict] | None = None) -> dict:
+    """Review cases; ``prompts`` ([{name, sha256, text}]) adds the unstated-requirement check."""
     manifest = {
         "source": source,
         "rules": [
@@ -406,6 +493,23 @@ def review(cases: list[dict], source: dict) -> dict:
                 value=(len(cases) - sum(impacts.values())) / len(cases),
             )
         )
+    if prompts is not None:
+        unstated = unstated_requirements(cases, "\n".join(item["text"] for item in prompts))
+        if unstated:
+            terms = sorted({term for item in unstated for term in item["missing"]})
+            findings.append(
+                _finding(
+                    "unstated_requirement",
+                    "warning",
+                    f"{len(unstated)} case(s) are graded on labels, keys or values that neither "
+                    "the prompt nor the case input mentions ("
+                    + ", ".join(repr(term) for term in terms[:8])
+                    + (" …" if len(terms) > 8 else "")
+                    + "). An agent that follows the instructions cannot know them, so these "
+                    "cases fail through no fault of the agent. State them in the prompt.",
+                    items=unstated,
+                )
+            )
     warnings = sum(item["severity"] == "warning" for item in findings)
     return {
         "schema_version": SCHEMA,
@@ -416,6 +520,12 @@ def review(cases: list[dict], source: dict) -> dict:
         "sources": sources["counts"],
         # Additive key, present only when some case declares a suite.
         **({"suites": dict(sorted(suites.items()))} if suites else {}),
+        # Additive key, present only with --prompt.
+        **(
+            {"prompt_files": [{k: item[k] for k in ("name", "sha256")} for item in prompts]}
+            if prompts is not None
+            else {}
+        ),
         # Additive keys, present only when some case declares the attribute.
         **(
             {
@@ -546,7 +656,21 @@ def review_command(args) -> int:
             "name": args.cases.name,
             "sha256": hashlib.sha256(args.cases.read_bytes()).hexdigest(),
         }
-        result = review(cases, source)
+        prompts = None
+        if getattr(args, "prompt", None):
+            prompts = []
+            for path in args.prompt:
+                raw = path.read_bytes()
+                if len(raw) > MAX_CASES_BYTES:
+                    raise ValueError(f"{path.name} exceeds {MAX_CASES_BYTES} bytes")
+                prompts.append(
+                    {
+                        "name": path.name,
+                        "sha256": hashlib.sha256(raw).hexdigest(),
+                        "text": raw.decode("utf-8"),
+                    }
+                )
+        result = review(cases, source, prompts)
         targets = []
         if args.write_split:
             targets.append((args.write_split, split_document(cases)))

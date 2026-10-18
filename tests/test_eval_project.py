@@ -114,7 +114,7 @@ def test_review_findings(project, capsys):
 @pytest.mark.parametrize(
     "case,message",
     [
-        (base_case(check="regex"), "check must be one of"),
+        (base_case(check="glob"), "check must be one of"),
         (base_case(source="guess"), "source must be one of"),
         (base_case(expected="oncall"), "labels (2+) that include expected"),
         (base_case(check="json_keys", expected="x"), "list of key names"),

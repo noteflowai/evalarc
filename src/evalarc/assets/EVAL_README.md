@@ -9,7 +9,7 @@ example cases with your own.
 | `cases.jsonl` | One case per line: `id`, `input`, `expected`, `check`, `source`, optional `labels`, `difficulty`, `held_out`, `suite` (`capability` or `regression`) |
 | `app.py` | The application under evaluation; replace `respond()` with your model call |
 | `prompt.md` | The text the hillclimb loop may edit |
-| `grader.py` | Programmatic checks: `exact`, `contains`, `label`, `json_keys`, `json_schema`, `command` (e.g. unit tests) |
+| `grader.py` | Programmatic checks: `exact`, `contains`, `label`, `regex`, `fuzzy`, `json_keys`, `json_schema`, `command` (e.g. unit tests) |
 | `evaluate.py` | Runs every case for several epochs and writes an Inspect-format log |
 | `propose.py` | Stub proposer for `evalarc hillclimb-run`; replace with your model call |
 | `hillclimb.toml` | Loop configuration: only `prompt.md` may change |
@@ -30,8 +30,11 @@ the hillclimb loop never sees them.
 
 ```bash
 evalarc review-inputs cases.jsonl --output ../review --write-split split.json \
-  --write-manifest cases.manifest.json
+  --write-manifest cases.manifest.json --prompt prompt.md
 ```
+
+`--prompt` warns when a case is graded on a label, JSON key or schema value that
+neither `prompt.md` nor the case input mentions.
 
 Open `../review/index.html`, read every case, and rerun after each edit.
 

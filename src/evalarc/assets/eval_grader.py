@@ -4,6 +4,10 @@ Each case in cases.jsonl names one check:
   exact      the stripped output equals `expected`
   contains   `expected` appears in the output, ignoring case
   label      the stripped output is one of `labels` and equals `expected`
+  regex      the whole stripped output matches the regular expression `expected`
+             (Python re.fullmatch; add ".*" at either end to allow surrounding text)
+  fuzzy      the stripped output is similar to `expected`: difflib's ratio, ignoring
+             case and repeated whitespace, is at least `min_ratio` (default 0.9)
   json_keys  the output is a JSON object containing every key listed in `expected`
   json_schema the output is JSON matching the schema in `expected` (type, required,
              properties, items, enum, minimum/maximum, minLength/maxLength,
@@ -18,8 +22,12 @@ the model under evaluation.
 
 from __future__ import annotations
 
+import difflib
 import json
+import re
 import subprocess
+
+MAX_REGEX_INPUT = 100_000
 
 
 def grade(case: dict, output: str) -> tuple[bool, str]:
@@ -35,6 +43,18 @@ def grade(case: dict, output: str) -> tuple[bool, str]:
         if text not in labels:
             return False, f"{text!r} is not one of {labels}"
         return text == expected, f"expected label {expected!r}"
+    if check == "regex":
+        # Patterns come from cases.jsonl, which you author: keep them simple, since Python
+        # regular expressions have no timeout. An output over the cap fails rather than
+        # being cut, so a truncated output can never pass.
+        if len(text) > MAX_REGEX_INPUT:
+            return False, f"output longer than {MAX_REGEX_INPUT} characters"
+        matched = re.fullmatch(expected, text, re.DOTALL) is not None
+        return matched, f"expected to match {expected!r}"
+    if check == "fuzzy":
+        threshold = case.get("min_ratio", 0.9)
+        ratio = difflib.SequenceMatcher(None, _normal(text), _normal(expected)).ratio()
+        return ratio >= threshold, f"similarity {ratio:.2f} (need {threshold:.2f})"
     if check == "json_keys":
         try:
             value = json.loads(text)
@@ -57,6 +77,10 @@ def grade(case: dict, output: str) -> tuple[bool, str]:
         tail = (done.stdout + done.stderr).strip()[-300:]
         return done.returncode == 0, f"exit {done.returncode}: {tail}"
     raise ValueError(f"unknown check {check!r}")
+
+
+def _normal(text: str) -> str:
+    return " ".join(text.casefold().split())
 
 
 TYPES = {
