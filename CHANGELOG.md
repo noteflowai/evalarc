@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0 — 2026-10-20
+
+- explain each blocking finding in the diff summary. When a diff has at least one blocking change (regressed, less_reliable, unassessed, less_covered or removed), summary.md and the --markdown output ($GITHUB_STEP_SUMMARY or a PR comment) now include a '#### Why the gate failed' section after the changes table. It states the numeric pass threshold that was applied. It then has one row per blocking finding: the kind, a '(within noise)' flag when the change is within sampling noise, the case and check together in one cell, the baseline and current fractions, and the first failing recorded attempt as 'value V · evidence E'. Removed checks show their baseline attempt instead, and less_covered checks show both assessed counts. The section ends with a provenance line giving each input's file name and the first 12 hex characters of its sha256, but only when both digests are recorded. Untrusted values are escaped and cut to 120 characters. The section follows the existing row limit and gives an overflow count that points to diff.json. Summaries with no blocking change are unchanged, and so are diff.json, index.html, exit codes and the gate logic.
+
 ## 0.21.0 — 2026-10-18
 
 - `docs/agent-evals.md` (and Chinese) maps the recommendations of Anthropic's

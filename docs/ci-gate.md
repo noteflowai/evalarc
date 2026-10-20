@@ -44,6 +44,51 @@ skip.
 `index.html` and byte-for-byte copies of both inputs. Their SHA-256 digests are
 recorded in `diff.json`, so a reviewer can rerun the same comparison.
 
+### Why the gate failed
+
+When at least one change blocks the gate, `summary.md` adds a section right after
+the changes table. The same Markdown goes to the `--markdown` file, such as
+`$GITHUB_STEP_SUMMARY` or a PR comment. For each blocking finding, the section
+shows its kind, whether it is within sampling noise, and the first failing
+recorded attempt. It also shows the numeric threshold and the input digests that
+were applied. Below is an excerpt for the Inspect example. The two `regressed`
+rows for `refund-duplicate` come before the row shown, and the digests are
+shortened to placeholders:
+
+```markdown
+#### Why the gate failed
+
+Numeric scores pass at threshold 1; categorical verdicts use the source tool's pass mark.
+
+| Finding | Case / check | Baseline | Current | Failing attempt |
+| --- | --- | ---: | ---: | --- |
+| less reliable (within noise) | `cancel-pending` / `match` | 2/2 | 1/2 | value `I` · evidence `cancel:1006:queued` |
+
+Inputs: baseline `baseline.json` sha256 `<first 12 hex>`, current `current.json` sha256 `<first 12 hex>`
+```
+
+- The case and check share one cell, as `case` / `check`. The threshold is
+  printed with the same number formatting as the headline, so `1.0` shows as `1`.
+- `regressed`, `less_reliable` and `unassessed` rows show the first current
+  attempt that did not pass, as `value V · evidence E`. Parts that were not
+  recorded are left out.
+- `removed` rows read `not recorded in the current run; baseline: ` followed
+  by the first baseline attempt.
+- `less_covered` rows show both assessed counts, for example
+  `assessed 1 of 3 baseline attempts`.
+- A row without usable detail reads `no attempt detail recorded`.
+- Case, check, value and evidence are escaped like the changes table, and long
+  values are cut to 120 characters with an ellipsis.
+- The section uses the same row limit as the changes table. When rows are cut,
+  a final line says how many more blocking findings are in `diff.json`.
+- The `Inputs:` line appears only when both runs record a source name and
+  digest. The full digests stay in `diff.json`.
+
+The section only explains the result. It never changes the gate, the exit code,
+`diff.json` or `index.html`. A summary with no blocking change has no such
+section and is the same as before. That covers a passing gate, an incomplete run
+with no changed checks, and a failure of the opt-in regression suite only.
+
 ## What changes fail the gate
 
 Each check's pass count is compared across all recorded attempts (Inspect
