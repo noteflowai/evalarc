@@ -270,6 +270,8 @@ def render_markdown(result: dict, limit: int = 50) -> str:
         if len(result["changes"]) > limit:
             lines.append(f"\n{len(result['changes']) - limit} more changes are in `diff.json`.")
         lines.append("")
+    # Empty unless a change blocks the gate, so other summaries keep their exact text.
+    lines += _blocking_markdown(result, limit)
     if result.get("generalization") or result.get("leakage"):
         from evalarc.generalization import render_markdown as split_markdown
 
@@ -1298,3 +1300,113 @@ def markdown_text(value: object) -> str:
 
 def _cell(text: str) -> str:
     return "`" + _inline_code_text(text) + "`"
+
+
+# The "Why the gate failed" section: one row per blocking change with its smallest
+# recorded example. It only explains the gate; it never changes which rows block.
+_EXPLAIN_MAX_CHARS = 120
+_NO_ATTEMPT_DETAIL = "no attempt detail recorded"
+_HEX_DIGEST = re.compile(r"[0-9a-f]{12,}")
+
+
+def _clip(value: object) -> str:
+    text = str(value)
+    if len(text) > _EXPLAIN_MAX_CHARS:
+        return text[:_EXPLAIN_MAX_CHARS] + "…"
+    return text
+
+
+def _attempt_text(entry: object) -> str | None:
+    """'value V · evidence E' for one recorded attempt; absent parts are left out."""
+    if not isinstance(entry, dict):
+        return None
+    parts = []
+    if entry.get("value") is not None:
+        parts.append("value " + _cell(_clip(entry["value"])))
+    if entry.get("evidence") not in (None, ""):
+        parts.append("evidence " + _cell(_clip(entry["evidence"])))
+    return " · ".join(parts) or None
+
+
+def _first_attempt(detail: object, failing: bool) -> dict | None:
+    if not isinstance(detail, list):
+        return None
+    for entry in detail:
+        if isinstance(entry, dict) and not (failing and entry.get("passed") is True):
+            return entry
+    return None
+
+
+def _failing_attempt(row: dict) -> str:
+    """The smallest recorded example that explains why one blocking row fails."""
+    kind = row.get("kind")
+    if kind == "removed":
+        shown = _attempt_text(_first_attempt(row.get("baseline_detail"), failing=False))
+        return "not recorded in the current run; baseline: " + (shown or _NO_ATTEMPT_DETAIL)
+    if kind == "less_covered":
+        before, after = row.get("baseline"), row.get("current")
+        if isinstance(before, dict) and isinstance(after, dict):
+            old, new = before.get("assessed"), after.get("assessed")
+            if isinstance(old, int) and isinstance(new, int):
+                return f"assessed {new} of {old} baseline attempts"
+        return _NO_ATTEMPT_DETAIL
+    shown = _attempt_text(_first_attempt(row.get("current_detail"), failing=True))
+    return shown or _NO_ATTEMPT_DETAIL
+
+
+def _provenance_line(result: dict) -> str | None:
+    """Digest prefixes of both inputs, or None when either digest was not recorded."""
+    parts = []
+    for label in ("baseline", "current"):
+        summary = result.get(label)
+        source = summary.get("source") if isinstance(summary, dict) else None
+        if not isinstance(source, dict):
+            return None
+        name, digest = source.get("name"), source.get("sha256")
+        if not (isinstance(name, str) and name and isinstance(digest, str)):
+            return None
+        if not _HEX_DIGEST.fullmatch(digest):
+            return None
+        parts.append(f"{label} {_cell(name)} sha256 `{digest[:12]}`")
+    return "Inputs: " + ", ".join(parts)
+
+
+def _blocking_markdown(result: dict, limit: int) -> list:
+    """Lines explaining each blocking change, or [] so other summaries stay unchanged."""
+    rows = [
+        row
+        for row in result.get("changes") or []
+        if isinstance(row, dict) and row.get("kind") in BLOCKING
+    ]
+    if not rows:
+        return []
+    threshold = result.get("numeric_pass_threshold")
+    numeric = isinstance(threshold, (int, float)) and not isinstance(threshold, bool)
+    shown = _value({"value": threshold}) if numeric and math.isfinite(threshold) else "—"
+    lines = [
+        "#### Why the gate failed",
+        "",
+        f"Numeric scores pass at threshold {shown}; categorical verdicts use the source "
+        "tool's pass mark.",
+        "",
+        "| Finding | Case / check | Baseline | Current | Failing attempt |",
+        "| --- | --- | ---: | ---: | --- |",
+    ]
+    for row in rows[:limit]:
+        finding = row["kind"].replace("_", " ")
+        if row.get("within_sampling_noise") is True:
+            finding += " (within noise)"
+        # Case and check share one cell: together they name the finding, and the row
+        # never repeats the changes table's standalone case cell.
+        lines.append(
+            f"| {finding} | {_cell(row.get('case_id'))} / {_cell(row.get('check'))} | "
+            f"{_fraction(row.get('baseline'))} | {_fraction(row.get('current'))} | "
+            f"{_failing_attempt(row)} |"
+        )
+    if len(rows) > limit:
+        lines.append(f"\n{len(rows) - limit} more blocking finding(s) are in `diff.json`.")
+    provenance = _provenance_line(result)
+    if provenance:
+        lines += ["", provenance]
+    lines.append("")
+    return lines
