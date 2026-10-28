@@ -187,6 +187,51 @@ pass rates. Re-export with `promptfoo eval --output` (or remove the copied row
 in a reviewed commit) and compare again. Rows without an integer `testIdx`
 are not checked, and a copy whose `testIdx` was edited is not detected.
 
+### Numeric pass threshold must match (Inspect)
+
+The Inspect loader turns each finite numeric score into a pass or a fail by
+comparing it with the threshold given to
+`load_results(path, threshold=...)`. A score passes when it is at least the
+threshold. A score of 0.7 passes at 0.5 and fails at 0.8, so two runs loaded at
+different thresholds use different pass definitions. Their `improved` or
+`regressed` rows would then come from the threshold, not from the agent. For
+that reason `diff` refuses an Inspect comparison when all of these hold: both
+runs record a threshold, the two thresholds are unequal, and at least one run
+has a numeric score value.
+
+```text
+inputs are not comparable: numeric pass threshold 0.8 (baseline) != 0.5 (current); numeric Inspect scores were judged against different pass thresholds. Load both runs with the same threshold.
+```
+
+Python callers of `diff` receive `ValueError`, with no partial result and no
+gate verdict. This check runs after the format and task checks, so those errors
+are still reported first, with the same messages. To fix the error, load both
+runs with the same threshold:
+
+```python
+from pathlib import Path
+
+from evalarc.results_diff import diff, load_results
+
+result = diff(
+    load_results(Path("baseline.json"), threshold=0.8),
+    load_results(Path("current.json"), threshold=0.8),
+)
+```
+
+These cases are not affected:
+
+- Equal thresholds. `1` and `1.0` count as equal.
+- Inspect logs whose score values are only letter grades, booleans or missing
+  values. The threshold cannot change their verdicts.
+- promptfoo and JUnit inputs.
+- A hand-built baseline run dict without a `threshold` key. The rule is
+  skipped for it.
+
+As before, `diff` does not support a current run dict without a `threshold`
+key. `numeric_pass_threshold` in `diff.json` still records the current run's
+threshold.
+
 ## Regression corpus
 
 `tests/test_feature_cb4fe5a9ab91.py` pins how the gate handles each kind of
