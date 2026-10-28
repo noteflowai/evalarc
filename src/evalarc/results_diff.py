@@ -98,6 +98,8 @@ def diff(baseline: dict, current: dict) -> dict:
         before, after = baseline["identity"].get(field), current["identity"].get(field)
         if before is not None and after is not None and before != after:
             raise ValueError(f"inputs are not comparable: {field} {before!r} != {after!r}")
+    if baseline["format"] == "inspect":
+        _require_same_numeric_threshold(baseline, current)
     changes, unchanged = [], 0
     for case_id in sorted(set(baseline["cases"]) | set(current["cases"])):
         before_checks = baseline["cases"].get(case_id, {})
@@ -1098,6 +1100,41 @@ def _add_material(material: dict, case_id: str, role: str, text: object) -> None
 
 
 # --- comparison helpers -----------------------------------------------------------
+
+
+def _is_numeric_score(value: object) -> bool:
+    """True for exactly the values _inspect_passed compares with the threshold."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _has_numeric_scores(run: dict) -> bool:
+    for checks in run["cases"].values():
+        for attempts in checks.values():
+            for attempt in attempts or []:
+                if _is_numeric_score(attempt.get("value")):
+                    return True
+    return False
+
+
+def _require_same_numeric_threshold(baseline: dict, current: dict) -> None:
+    """Refuse Inspect runs whose numeric scores were judged at different thresholds.
+
+    The Inspect loader binarizes every finite numeric score with the threshold it was
+    loaded with, so unequal thresholds mean the two sides use different pass
+    definitions and any regressed/improved verdict would be an artifact. Runs without
+    numeric score values (letter grades, booleans) cannot be affected and are allowed.
+    A run dict without a threshold key (hand-built by an API caller) skips the rule.
+    """
+    before, after = baseline.get("threshold"), current.get("threshold")
+    if before is None or after is None or before == after:
+        return
+    if not (_has_numeric_scores(baseline) or _has_numeric_scores(current)):
+        return
+    raise ValueError(
+        f"inputs are not comparable: numeric pass threshold {before!r} (baseline) != "
+        f"{after!r} (current); numeric Inspect scores were judged against different "
+        "pass thresholds. Load both runs with the same threshold."
+    )
 
 
 def _attempt(passed: bool | None, evidence: object = None, value: object = None) -> dict:
