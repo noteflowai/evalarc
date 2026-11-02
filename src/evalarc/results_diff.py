@@ -295,7 +295,7 @@ def render_markdown(result: dict, limit: int = 50) -> str:
 
 
 def render_html(result: dict, destination: Path) -> None:
-    from evalarc.report import _card, _esc, _page, _tone, _verdict
+    from evalarc.report import _card, _esc, _page, _table, _tone, _verdict
 
     before, after = result["baseline"], result["current"]
     passed = (
@@ -388,6 +388,8 @@ def render_html(result: dict, destination: Path) -> None:
         body += "</tbody></table></div>"
     else:
         body += "<p>Every recorded check has the same pass count.</p>"
+    # Empty unless a change blocks the gate, so other reports keep their exact HTML.
+    body += _blocking_html(result, _esc, _table, _tone)
     if result.get("generalization") or result.get("leakage"):
         from evalarc.generalization import render_html as split_html
 
@@ -1353,16 +1355,30 @@ def _clip(value: object) -> str:
     return text
 
 
-def _attempt_text(entry: object) -> str | None:
-    """'value V · evidence E' for one recorded attempt; absent parts are left out."""
+def _attempt_parts(entry: object) -> tuple | None:
+    """(value, evidence) of one recorded attempt, each clipped or None; None if neither."""
     if not isinstance(entry, dict):
         return None
+    value = _clip(entry["value"]) if entry.get("value") is not None else None
+    evidence = _clip(entry["evidence"]) if entry.get("evidence") not in (None, "") else None
+    if value is None and evidence is None:
+        return None
+    return value, evidence
+
+
+def _attempt_markdown_parts(value: str | None, evidence: str | None) -> str:
     parts = []
-    if entry.get("value") is not None:
-        parts.append("value " + _cell(_clip(entry["value"])))
-    if entry.get("evidence") not in (None, ""):
-        parts.append("evidence " + _cell(_clip(entry["evidence"])))
-    return " · ".join(parts) or None
+    if value is not None:
+        parts.append("value " + _cell(value))
+    if evidence is not None:
+        parts.append("evidence " + _cell(evidence))
+    return " · ".join(parts)
+
+
+def _attempt_text(entry: object) -> str | None:
+    """'value V · evidence E' for one recorded attempt; absent parts are left out."""
+    parts = _attempt_parts(entry)
+    return _attempt_markdown_parts(*parts) if parts else None
 
 
 def _first_attempt(detail: object, failing: bool) -> dict | None:
@@ -1374,25 +1390,53 @@ def _first_attempt(detail: object, failing: bool) -> dict | None:
     return None
 
 
-def _failing_attempt(row: dict) -> str:
-    """The smallest recorded example that explains why one blocking row fails."""
+_REMOVED_PREFIX = "not recorded in the current run; baseline: "
+
+
+def _attempt_record(row: dict) -> dict:
+    """Unescaped parts of the smallest recorded example for one blocking row.
+
+    Returns {prefix, value, evidence, text}: text is set when no value/evidence pair
+    is shown. Malformed or missing detail falls back to text and never raises.
+    """
     kind = row.get("kind")
+    prefix = None
+    text = None
+    parts = None
     if kind == "removed":
-        shown = _attempt_text(_first_attempt(row.get("baseline_detail"), failing=False))
-        return "not recorded in the current run; baseline: " + (shown or _NO_ATTEMPT_DETAIL)
-    if kind == "less_covered":
+        prefix = _REMOVED_PREFIX
+        parts = _attempt_parts(_first_attempt(row.get("baseline_detail"), failing=False))
+    elif kind == "less_covered":
+        text = _NO_ATTEMPT_DETAIL
         before, after = row.get("baseline"), row.get("current")
         if isinstance(before, dict) and isinstance(after, dict):
             old, new = before.get("assessed"), after.get("assessed")
             if isinstance(old, int) and isinstance(new, int):
-                return f"assessed {new} of {old} baseline attempts"
-        return _NO_ATTEMPT_DETAIL
-    shown = _attempt_text(_first_attempt(row.get("current_detail"), failing=True))
-    return shown or _NO_ATTEMPT_DETAIL
+                text = f"assessed {new} of {old} baseline attempts"
+    else:
+        parts = _attempt_parts(_first_attempt(row.get("current_detail"), failing=True))
+    if text is None and parts is None:
+        text = _NO_ATTEMPT_DETAIL
+    value, evidence = parts if parts else (None, None)
+    return {"prefix": prefix, "value": value, "evidence": evidence, "text": text}
 
 
-def _provenance_line(result: dict) -> str | None:
-    """Digest prefixes of both inputs, or None when either digest was not recorded."""
+def _attempt_markdown(record: dict) -> str:
+    body = (
+        record["text"]
+        if record["text"] is not None
+        else _attempt_markdown_parts(record["value"], record["evidence"])
+    )
+    return (record["prefix"] or "") + body
+
+
+def _failing_attempt(row: dict) -> str:
+    """The smallest recorded example that explains why one blocking row fails."""
+    return _attempt_markdown(_attempt_record(row))
+
+
+def _provenance_parts(result: dict) -> list | None:
+    """(label, name, digest prefix) for both inputs, or None when either was not recorded."""
     parts = []
     for label in ("baseline", "current"):
         summary = result.get(label)
@@ -1404,41 +1448,123 @@ def _provenance_line(result: dict) -> str | None:
             return None
         if not _HEX_DIGEST.fullmatch(digest):
             return None
-        parts.append(f"{label} {_cell(name)} sha256 `{digest[:12]}`")
-    return "Inputs: " + ", ".join(parts)
+        parts.append((label, name, digest[:12]))
+    return parts
+
+
+def _provenance_line(result: dict) -> str | None:
+    """Digest prefixes of both inputs, or None when either digest was not recorded."""
+    parts = _provenance_parts(result)
+    if parts is None:
+        return None
+    return "Inputs: " + ", ".join(
+        f"{label} {_cell(name)} sha256 `{prefix}`" for label, name, prefix in parts
+    )
+
+
+_THRESHOLD_SENTENCE = (
+    "Numeric scores pass at threshold {}; categorical verdicts use the source tool's pass mark."
+)
+
+
+def _threshold_text(result: dict) -> str:
+    """The numeric pass threshold as the headline formats it, or '—' when unusable."""
+    threshold = result.get("numeric_pass_threshold")
+    numeric = isinstance(threshold, (int, float)) and not isinstance(threshold, bool)
+    return _value({"value": threshold}) if numeric and math.isfinite(threshold) else "—"
+
+
+def _blocking_rows(result: dict) -> list:
+    """Unescaped parts of each blocking change, shared by summary.md and index.html."""
+    rows = []
+    for row in result.get("changes") or []:
+        if not (isinstance(row, dict) and row.get("kind") in BLOCKING):
+            continue
+        finding = row["kind"].replace("_", " ")
+        if row.get("within_sampling_noise") is True:
+            finding += " (within noise)"
+        rows.append(
+            {
+                "finding": finding,
+                "case_id": row.get("case_id"),
+                "check": row.get("check"),
+                "baseline": row.get("baseline"),
+                "current": row.get("current"),
+                "attempt": _attempt_record(row),
+            }
+        )
+    return rows
+
+
+def _blocking_html(result: dict, esc, table, tone) -> str:
+    """The index.html 'Why the gate failed' section, or '' when no change blocks."""
+    rows = _blocking_rows(result)
+    if not rows:
+        return ""
+    cells = []
+    for row in rows:
+        attempt = row["attempt"]
+        if attempt["text"] is not None:
+            shown = esc(attempt["text"])
+        else:
+            parts = []
+            if attempt["value"] is not None:
+                parts.append(f"value <code>{esc(attempt['value'])}</code>")
+            if attempt["evidence"] is not None:
+                parts.append(f"evidence <code>{esc(attempt['evidence'])}</code>")
+            shown = " · ".join(parts)
+        cells.append(
+            [
+                tone(row["finding"], "bad"),
+                f"<code>{esc(row['case_id'])}</code> / <code>{esc(row['check'])}</code>",
+                esc(_fraction(row["baseline"])),
+                esc(_fraction(row["current"])),
+                esc(attempt["prefix"] or "") + shown,
+            ]
+        )
+    out = (
+        "<h2>Why the gate failed</h2><p>"
+        + esc(_THRESHOLD_SENTENCE.format(_threshold_text(result)))
+        + "</p>"
+        + table(
+            "Why the gate failed",
+            ["Finding", "Case / check", "Baseline", "Current", "Failing attempt"],
+            cells,
+        )
+    )
+    provenance = _provenance_parts(result)
+    if provenance:
+        out += (
+            '<p class="metadata">Inputs: '
+            + ", ".join(
+                f"{esc(label)} <code>{esc(name)}</code> sha256 <code>{esc(prefix)}</code>"
+                for label, name, prefix in provenance
+            )
+            + "</p>"
+        )
+    return out
 
 
 def _blocking_markdown(result: dict, limit: int) -> list:
     """Lines explaining each blocking change, or [] so other summaries stay unchanged."""
-    rows = [
-        row
-        for row in result.get("changes") or []
-        if isinstance(row, dict) and row.get("kind") in BLOCKING
-    ]
+    rows = _blocking_rows(result)
     if not rows:
         return []
-    threshold = result.get("numeric_pass_threshold")
-    numeric = isinstance(threshold, (int, float)) and not isinstance(threshold, bool)
-    shown = _value({"value": threshold}) if numeric and math.isfinite(threshold) else "—"
     lines = [
         "#### Why the gate failed",
         "",
-        f"Numeric scores pass at threshold {shown}; categorical verdicts use the source "
-        "tool's pass mark.",
+        _THRESHOLD_SENTENCE.format(_threshold_text(result)),
         "",
         "| Finding | Case / check | Baseline | Current | Failing attempt |",
         "| --- | --- | ---: | ---: | --- |",
     ]
     for row in rows[:limit]:
-        finding = row["kind"].replace("_", " ")
-        if row.get("within_sampling_noise") is True:
-            finding += " (within noise)"
         # Case and check share one cell: together they name the finding, and the row
         # never repeats the changes table's standalone case cell.
         lines.append(
-            f"| {finding} | {_cell(row.get('case_id'))} / {_cell(row.get('check'))} | "
-            f"{_fraction(row.get('baseline'))} | {_fraction(row.get('current'))} | "
-            f"{_failing_attempt(row)} |"
+            f"| {row['finding']} | {_cell(row['case_id'])} / {_cell(row['check'])} | "
+            f"{_fraction(row['baseline'])} | {_fraction(row['current'])} | "
+            f"{_attempt_markdown(row['attempt'])} |"
         )
     if len(rows) > limit:
         lines.append(f"\n{len(rows) - limit} more blocking finding(s) are in `diff.json`.")

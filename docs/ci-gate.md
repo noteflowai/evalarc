@@ -84,8 +84,15 @@ Inputs: baseline `baseline.json` sha256 `<first 12 hex>`, current `current.json`
 - The `Inputs:` line appears only when both runs record a source name and
   digest. The full digests stay in `diff.json`.
 
-The section only explains the result. It never changes the gate, the exit code,
-`diff.json` or `index.html`. A summary with no blocking change has no such
+`index.html`, the report the CLI prints after `Report:`, shows the same
+section below the Changed checks table. It has the same columns, threshold
+sentence and `Inputs:` digest line, built from the same rows. Each finding is
+marked with a ✗ symbol as well as a color, and the table scrolls inside a
+keyboard-focusable region. Unlike `summary.md`, the HTML lists every blocking
+finding with no row limit, as its Changed checks table already does.
+
+The section only explains the result. It never changes the gate, the exit code
+or `diff.json`. A summary or `index.html` with no blocking change has no such
 section and is the same as before. That covers a passing gate, an incomplete run
 with no changed checks, and a failure of the opt-in regression suite only.
 
