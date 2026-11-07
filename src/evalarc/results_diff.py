@@ -844,9 +844,20 @@ def _junit(raw: bytes) -> dict:
     names = set()
     for suite in suites:
         names.add(suite.get("name"))
-        for case in suite.findall("testcase"):
+        for position, case in enumerate(suite.findall("testcase")):
+            name = case.get("name")
+            if name is None or not name.strip():
+                # An unnamed testcase cannot be paired across runs, and every unnamed
+                # testcase in a suite would merge into one check and hide a swap.
+                suite_name = suite.get("name")
+                shown = repr(suite_name) if suite_name else "(unnamed suite)"
+                raise ValueError(
+                    f"JUnit testcase at position {position} in suite {shown} has no name "
+                    "attribute; each testcase needs a name to be compared. Re-export the "
+                    "results with test names or fix the XML."
+                )
             owner = case.get("classname") or suite.get("name") or ""
-            case_id = f"{owner}::{case.get('name')}" if owner else str(case.get("name"))
+            case_id = f"{owner}::{name}" if owner else name
             outcome, evidence = True, None
             for tag, value in (("failure", False), ("error", None), ("skipped", None)):
                 element = case.find(tag)

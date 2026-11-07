@@ -138,7 +138,7 @@ Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
 no samples, malformed input, an Inspect sample repeated in the same epoch, an
 Inspect sample that is not an object or has no integer or string id, a
-promptfoo result row repeated).
+promptfoo result row repeated, a JUnit testcase without a name).
 Treat 2 as a broken pipeline, not a regression.
 
 An Inspect log that contains the same sample ID twice in one epoch (an integer
@@ -193,6 +193,23 @@ merging, concatenating or editing, and counting it would inflate attempts and
 pass rates. Re-export with `promptfoo eval --output` (or remove the copied row
 in a reviewed commit) and compare again. Rows without an integer `testIdx`
 are not checked, and a copy whose `testIdx` was edited is not detected.
+
+A JUnit `<testcase>` whose `name` attribute is missing, empty or only
+whitespace exits 2. The message names the suite and gives the testcase's
+zero-based position among that suite's testcases. A suite without a name is
+shown as `(unnamed suite)`:
+
+```text
+evalarc: JUnit testcase at position 0 in suite 'corpus' has no name attribute; each testcase needs a name to be compared. Re-export the results with test names or fix the XML.
+```
+
+A testcase without a name cannot be paired across runs. Earlier versions gave
+every unnamed testcase in a suite the same invented ID, such as
+`corpus::None`. Those testcases merged into one check, so a failure that moved
+from one unnamed testcase to another read as unchanged and the gate passed.
+Re-export from the runner with test names, or fix the reporter so each
+`<testcase>` has a `name`, then compare again. Testcases with the same
+non-empty classname and name still load as repeated attempts of one check.
 
 ### Numeric pass threshold must match (Inspect)
 
