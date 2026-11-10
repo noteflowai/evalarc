@@ -448,6 +448,19 @@ def _json(raw: bytes, path: Path) -> object:
         raise ValueError(f"{path.name} is not JSON: {error}") from None
 
 
+def _archive_json(path: Path, archive: zipfile.ZipFile, item: zipfile.ZipInfo) -> object:
+    """Parse one .eval member; on failure name the archive and the escaped member."""
+    raw = archive.read(item)
+    try:
+        return json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(
+            f"{path.name} member {_shown_id(item.filename)} is not valid JSON: {error}. "
+            "Re-export the log from Inspect (inspect log dump LOG.eval > LOG.json) or rerun "
+            "the evaluation instead of editing the archive."
+        ) from None
+
+
 def _inspect_document(path: Path, raw: bytes) -> dict:
     if raw[:4] != b"PK\x03\x04":
         document = _json(raw, path)
@@ -462,9 +475,16 @@ def _inspect_document(path: Path, raw: bytes) -> dict:
             header = PurePosixPath("header.json")
             if header not in members:
                 raise ValueError(f"{path.name} has no header.json; the run may be incomplete")
-            document = json.loads(archive.read(members[header]))
+            document = _archive_json(path, archive, members[header])
+            if not isinstance(document, dict):
+                shown = _shown_id(members[header].filename)
+                raise ValueError(
+                    f"{path.name} member {shown} must be a JSON object "
+                    f"(got {_json_type(document)}): the archive is not a usable Inspect log. "
+                    "Re-export it from Inspect or rerun the evaluation."
+                )
             document["samples"] = [
-                json.loads(archive.read(item))
+                _archive_json(path, archive, item)
                 for name, item in sorted(members.items())
                 if name.parent == PurePosixPath("samples") and name.suffix == ".json"
             ]

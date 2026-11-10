@@ -141,6 +141,28 @@ Inspect sample that is not an object or has no integer or string id, a
 promptfoo result row repeated, a JUnit testcase without a name).
 Treat 2 as a broken pipeline, not a regression.
 
+An Inspect `.eval` archive with an unreadable member also exits 2, writes no
+`--output` folder and appends no Markdown. The message names the archive and
+the member. The member name is shown quoted and escaped the same way as sample
+IDs, so a control character never reaches the terminal (an ESC character
+appears as `\x1b`), and a displayed name longer than 80 characters is cut
+and ends in `...`. Inside an archive, member header.json must be a JSON object,
+and it and every `samples/*.json` member must be valid UTF-8 JSON. A member
+that is not valid UTF-8 JSON gives the first message below. A `header.json` that is not a JSON object gives the
+second:
+
+```text
+evalarc: current.eval member 'header.json' is not valid JSON: Expecting value: line 1 column 1 (char 0). Re-export the log from Inspect (inspect log dump LOG.eval > LOG.json) or rerun the evaluation instead of editing the archive.
+evalarc: current.eval member 'header.json' must be a JSON object (got array): the archive is not a usable Inspect log. Re-export it from Inspect or rerun the evaluation.
+```
+
+Earlier versions printed only the decoder position or an internal Python
+error, such as `list indices must be integers or slices, not str`. To recover,
+convert the archive with `inspect log dump LOG.eval > LOG.json`. If Inspect
+cannot read the archive either, rerun the evaluation. One bad member rejects the
+whole input. A sample member that parses but is not an object keeps the
+`sample at position N is not an object` message described below.
+
 An Inspect log that contains the same sample ID twice in one epoch (an integer
 `7` and a string `"7"` count as the same ID) exits 2 and names the sample
 and epoch. Counting the copy as an extra attempt would overstate coverage and
