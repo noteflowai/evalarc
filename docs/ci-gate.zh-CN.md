@@ -58,7 +58,7 @@ promptfoo `--output` 文件中同一结果行（相同的 `testIdx`、`promptIdx
 `testIdx`，因此重复运行仍按同一测试的多次尝试读取；`testIdx` 未变的行是合并、拼接或编辑留下的
 副本，若计入会夸大尝试次数与通过率。请用 `promptfoo eval --output` 重新导出（或在经过审阅的
 提交中删除副本行）后再比较。没有整数 `testIdx` 的行不做此检查，`testIdx` 被改过的副本也无法发现。
-JUnit `<testcase>` 的 `name` 属性缺失、为空或只有空白时，同样以退出码 2 报告，并给出所属套件和该 testcase 在套件内从 0 开始的位置；没有名称的套件显示为 `(unnamed suite)`，例如 `JUnit testcase at position 0 in suite 'corpus' has no name attribute`。没有名称的 testcase 无法在两次运行间配对。此前同一套件中所有无名 testcase 会得到同一个虚构 ID（如 `corpus::None`）并合并为一个检查项，失败从一个无名 testcase 移到另一个时会被读作不变，门禁通过。请让测试运行器带测试名重新导出，或修复报告程序使每个 `<testcase>` 都有 `name`，然后再比较。classname 与 name 都相同且非空的 testcase 仍按同一检查项的多次尝试读取。
+JUnit `<testcase>` 的 `name` 属性缺失、为空或只有空白时，同样以退出码 2 报告，并给出所属套件和该 testcase 在套件内从 0 开始的位置；没有名称的套件显示为 `(unnamed suite)`，例如 `JUnit testcase at position 0 in suite 'corpus' has no name attribute`。没有名称的 testcase 无法在两次运行间配对。此前同一套件中所有无名 testcase 会得到同一个虚构 ID（如 `corpus::None`）并合并为一个检查项，失败从一个无名 testcase 移到另一个时会被读作不变，门禁通过。请让测试运行器带测试名重新导出，或修复报告程序使每个 `<testcase>` 都有 `name`，然后再比较。classname 与 name 都相同且非空的 testcase 仍按同一检查项的多次尝试读取。嵌套 `<testsuite>` 中的 testcase（包括单个根 `<testsuite>` 下的嵌套套件）与其他检查项一样参与比较，ID 取 `classname`，没有时取直接包含它的套件名；此前根 `<testsuite>` 下嵌套套件中的 testcase 会被静默跳过，其中的退化无法使门禁失败。
 Inspect `.eval` 归档中有成员无法读取时，同样以退出码 2 报告，不创建 `--output` 目录，也不追加 Markdown。错误信息给出归档文件名和成员名；成员名与样本 ID 一样加引号并转义显示，控制字符不会原样输出到终端（ESC 显示为 `\x1b`），显示长度超过 80 个字符的名称会被截断并以 `...` 结尾。`header.json` 或 `samples/*.json` 成员不是有效的 UTF-8 JSON 时给出下面第一条信息，`header.json` 不是 JSON 对象时给出第二条：
 
 ```text
