@@ -860,7 +860,11 @@ def _junit(raw: bytes) -> dict:
         raise ValueError("not JUnit XML: expected <testsuites> or <testsuite>")
     cases: dict[str, dict[str, list]] = {}
     usage: dict[str, list] = {}
-    suites = [root] if root.tag == "testsuite" else root.iter("testsuite")
+    # Element.iter includes the element itself, so a root <testsuite> is visited first
+    # and then every nested <testsuite> at any depth; a <testsuites> root is skipped by
+    # the tag filter, so those documents walk exactly the same suites as before. Each
+    # testcase is read only from its direct parent via findall, so none is counted twice.
+    suites = root.iter("testsuite")
     names = set()
     for suite in suites:
         names.add(suite.get("name"))

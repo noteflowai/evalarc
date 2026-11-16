@@ -233,6 +233,12 @@ Re-export from the runner with test names, or fix the reporter so each
 `<testcase>` has a `name`, then compare again. Testcases with the same
 non-empty classname and name still load as repeated attempts of one check.
 
+Testcases in nested `<testsuite>` elements are compared like any other
+check, including suites nested under a single root `<testsuite>`. Their ID
+uses `classname` if present, otherwise the name of the suite that directly
+contains the testcase. Earlier versions silently skipped testcases nested under
+a root `<testsuite>`, so a regression there could not fail the gate.
+
 ### Numeric pass threshold must match (Inspect)
 
 The Inspect loader turns each finite numeric score into a pass or a fail by
