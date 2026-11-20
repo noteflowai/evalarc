@@ -594,6 +594,16 @@ def _inspect(document: dict, threshold: float, keep_messages: bool = False) -> d
             _add_material(material, case_id, "expected", item)
         error = sample.get("error")
         scores = sample.get("scores") or {}
+        if not isinstance(scores, dict):
+            # A truthy non-object scores value cannot be iterated as scorers; rejecting the
+            # whole log keeps a malformed record from hiding its checks from the comparison.
+            raise ValueError(
+                f"Inspect log sample {_shown_id(sample['id'])} at position {position} has "
+                f"scores of type {_json_type(scores)}: expected an object mapping scorer "
+                "names to scores. A sample whose scores cannot be read would hide its checks "
+                "from the comparison. Re-export the log from Inspect (inspect log dump) "
+                "instead of editing it."
+            )
         if error:
             # Kept on the attempt metadata only (not serialized): an errored sample is
             # not a successful case-level trial even when some scorers recorded a pass.
