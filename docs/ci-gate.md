@@ -138,8 +138,23 @@ Exit codes: **0** no check lost passes, **1** at least one did, **2** the files
 could not be read or compared (different formats, different Inspect task names,
 no samples, malformed input, an Inspect sample repeated in the same epoch, an
 Inspect sample that is not an object or has no integer or string id, a
-promptfoo result row repeated, a JUnit testcase without a name).
+promptfoo result row repeated, a JUnit testcase without a name, an Inspect
+`results` headline field of the wrong type).
 Treat 2 as a broken pipeline, not a regression.
+
+When an Inspect log's `results` section cannot be read for the headline score,
+the message names the field path and its JSON type, for example:
+
+    evalarc: Inspect log field results.scores must be an array (got object): the
+    headline score cannot be read. Re-export the log from Inspect (inspect log
+    dump) instead of editing it.
+
+The checked paths are `results`, `results.scores`, `results.scores[N]`,
+`results.headline`, `results.headline.metric`, `results.scores[N].metrics[K]`
+and `results.scores[N].name`. Only fields EvalArc reads to pick the headline
+are checked: groups after the one that supplies the headline are not read, and
+null or empty values still count as absent. `.eval` archives report the same
+message for the `results` section of `header.json`.
 
 An Inspect `.eval` archive with an unreadable member also exits 2, writes no
 `--output` folder and appends no Markdown. The message names the archive and
