@@ -630,16 +630,36 @@ def _inspect(document: dict, threshold: float, keep_messages: bool = False) -> d
                 )
                 _record(outputs, meta, case_id, scorer, digest, checks)
     headline = None
+    # Each check below fires only where this block used to raise an internal exception,
+    # in the same read order, so every log that loaded before keeps the same headline.
+    # Falsy values still count as absent, and unread groups or metrics stay unread.
     results = document.get("results") or {}
+    if not isinstance(results, dict):
+        raise _headline_error("results", "an object", results)
     marker = results.get("headline") or {}
-    for group in results.get("scores") or []:
+    scores = results.get("scores") or []
+    if not isinstance(scores, list):
+        raise _headline_error("results.scores", "an array", scores)
+    for index, group in enumerate(scores):
+        where = f"results.scores[{index}]"
+        if not isinstance(group, dict):
+            raise _headline_error(where, "an object", group)
         metrics = group.get("metrics") or {}
+        if not isinstance(marker, dict):
+            raise _headline_error("results.headline", "an object", marker)
         wanted = marker.get("metric") if group.get("name") == marker.get("score") else None
         if not marker and metrics:
             wanted = next(iter(metrics))
+        if isinstance(metrics, dict) and isinstance(wanted, (list, dict)):
+            raise _headline_error("results.headline.metric", "a string", wanted)
         if wanted in metrics:
-            value = metrics[wanted].get("value")
+            entry = metrics[wanted]
+            if isinstance(metrics, dict) and not isinstance(entry, dict):
+                raise _headline_error(f"{where}.metrics[{_shown_id(wanted)}]", "an object", entry)
+            value = entry.get("value")
             finite = isinstance(value, (int, float)) and math.isfinite(value)
+            if "name" not in group:
+                raise _headline_error(f"{where}.name", "present", _MISSING)
             headline = {"name": f"{group['name']} {wanted}", "value": value if finite else None}
             break
     return {
@@ -659,6 +679,19 @@ def _inspect(document: dict, threshold: float, keep_messages: bool = False) -> d
         "generate_config": _generate_config(spec.get("model_generate_config")),
         "incomplete": document.get("status") not in (None, "success"),
     }
+
+
+_MISSING = object()
+
+
+def _headline_error(field: str, expected: str, value: object) -> ValueError:
+    """Name a malformed field of an Inspect results section and the recovery step."""
+    got = "missing" if value is _MISSING else _json_type(value)
+    return ValueError(
+        f"Inspect log field {field} must be {expected} (got {got}): the headline score "
+        "cannot be read. Re-export the log from Inspect (inspect log dump) instead of "
+        "editing it."
+    )
 
 
 def _shown_id(value: object, limit: int = 80) -> str:
